@@ -16,9 +16,4 @@ public interface SystemMetric<U, I> {
     public abstract void add(Recommendation<U, I> recommendation);
 
     public abstract double evaluate();
-
-    public static interface Factory<U, I> {
-
-        public SystemMetric<U, I> getInstance();
-    }
 }

@@ -11,7 +11,8 @@ import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.recommenders.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
+import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
+import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel.UserIdealRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
@@ -29,7 +30,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
     private final int cutoff;
     private final double alpha;
-    private final RelevanceModel<U, I> relModel;
+    private final IdealRelevanceModel<U, I> relModel;
     private final FeatureData<I, F, ?> featureData;
     private final TObjectDoubleMap<U> idcgMap;
 
@@ -82,7 +83,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
         return ndcg;
     }
 
-    private double idcg(UserRelevanceModel<U, I> urm) {
+    private double idcg(UserIdealRelevanceModel<U, I> urm) {
         double idcg = 0;
 
         TObjectIntMap<F> redundancy = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0);

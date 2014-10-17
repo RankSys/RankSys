@@ -9,8 +9,6 @@ import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.recommenders.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
-import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric.AbstractFactory;
-import es.uam.eps.ir.ranksys.metrics.SystemMetric;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -20,15 +18,14 @@ import static java.util.Arrays.sort;
  *
  * @author saul
  */
-public class GiniIndex<U, I> extends AbstractSystemMetric<U, I, Double> {
+public class GiniIndex<U, I> extends AbstractSystemMetric<U, I> {
 
     private final int cutoff;
     private final TObjectIntMap<I> itemCount;
     private final int numItems;
     private int m;
 
-    public GiniIndex(RecommenderData<U, I, Double> testData, int cutoff, int numItems) {
-        super(testData);
+    public GiniIndex(int cutoff, int numItems) {
         this.cutoff = cutoff;
         this.itemCount = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0);
 
@@ -65,23 +62,4 @@ public class GiniIndex<U, I> extends AbstractSystemMetric<U, I, Double> {
 
         return gi;
     }
-
-    public static class Factory<U, I> extends AbstractFactory<U, I, Double> {
-
-        private final int cutoff;
-        private final int numItems;
-
-        public Factory(RecommenderData<U, I, Double> testData, int cutoff, int numItems) {
-            super(testData);
-            this.cutoff = cutoff;
-            this.numItems = numItems;
-        }
-
-        @Override
-        public SystemMetric<U, I> getInstance() {
-            return new GiniIndex<>(testData, cutoff, numItems);
-        }
-
-    }
-
 }

@@ -15,7 +15,6 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import java.util.Set;
 import java.util.stream.StreamSupport;
 
 /**
@@ -104,11 +103,6 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
                 StreamSupport.stream(testData.getUserPreferences(user).spliterator(), false)
                         .filter(iv -> iv.v >= threshold)
                         .forEach(iv -> gainMap.put(iv.id, (Math.pow(2, iv.v) - 1) / (double) Math.pow(2, maxPreference)));
-            }
-
-            @Override
-            public Set<I> getRelevantItems() {
-                return gainMap.keySet();
             }
 
             @Override

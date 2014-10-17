@@ -14,7 +14,7 @@ import java.util.stream.StreamSupport;
  *
  * @author saul
  */
-public class BinaryRelevanceModel<U, I> implements RelevanceModel<U, I> {
+public class BinaryRelevanceModel<U, I> implements IdealRelevanceModel<U, I> {
 
     private final RecommenderData<U, I, Double> testData;
     private final double threshold;
@@ -25,11 +25,11 @@ public class BinaryRelevanceModel<U, I> implements RelevanceModel<U, I> {
     }
 
     @Override
-    public UserRelevanceModel getUserModel(U user) {
+    public UserIdealRelevanceModel getUserModel(U user) {
         return new UserBinaryRelevanceModel(user);
     }
 
-    private class UserBinaryRelevanceModel implements UserRelevanceModel<U, I> {
+    private class UserBinaryRelevanceModel implements UserIdealRelevanceModel<U, I> {
 
         private final Set<I> relevantItems;
 
