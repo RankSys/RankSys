@@ -8,7 +8,6 @@ package es.uam.eps.ir.ranksys.diversity.intent.metrics;
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.IdValuePair;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.recommenders.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intent.IntentModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;

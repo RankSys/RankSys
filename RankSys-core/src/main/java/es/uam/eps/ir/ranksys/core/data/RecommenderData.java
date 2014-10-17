@@ -22,8 +22,6 @@ public interface RecommenderData<U, I, V> {
 
     public Iterable<IdValuePair<U, V>> getItemPreferences(I i);
 
-    public V getUserItemPreference(U u, I i);
-    
     public void addUser(U user);
     
     public void addItem(I item);
