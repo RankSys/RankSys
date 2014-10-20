@@ -72,29 +72,34 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
     public int numItems(F f) {
         return featMap.getOrDefault(f, Collections.EMPTY_LIST).size();
     }
-    
-        public static <I, F, V> SimpleFeatureData<I, F, V> load(String path, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
+
+    public static <I, F, V> SimpleFeatureData<I, F, V> load(String path, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
         return load(new FileInputStream(path), iParser, fParser, vParser);
     }
-    
+
     public static <I, F, V> SimpleFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
         Map<I, List<IdValuePair<F, V>>> itemMap = new HashMap<>();
         Map<F, List<IdValuePair<I, V>>> featMap = new HashMap<>();
-        
+
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             reader.lines().forEach(l -> {
                 String[] tokens = l.split("\t", 3);
                 I item = iParser.parse(tokens[0]);
                 F feat = fParser.parse(tokens[1]);
-                V value = vParser.parse(tokens[2]);
-                
+                V value;
+                if (tokens.length == 2) {
+                    value = vParser.parse(null);
+                } else {
+                    value = vParser.parse(tokens[2]);
+                }
+
                 List<IdValuePair<F, V>> iList = itemMap.get(item);
                 if (iList == null) {
                     iList = new ArrayList<>();
                     itemMap.put(item, iList);
                 }
                 iList.add(new IdValuePair<>(feat, value));
-                
+
                 List<IdValuePair<I, V>> fList = featMap.get(feat);
                 if (fList == null) {
                     fList = new ArrayList<>();
@@ -103,7 +108,7 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
                 fList.add(new IdValuePair<>(item, value));
             });
         }
-        
+
         return new SimpleFeatureData<>(itemMap, featMap);
     }
 
