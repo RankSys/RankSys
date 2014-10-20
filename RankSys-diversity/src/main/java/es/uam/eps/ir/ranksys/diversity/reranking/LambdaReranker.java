@@ -12,6 +12,7 @@ import es.uam.eps.ir.ranksys.core.util.Stats;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import static java.lang.Math.min;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 /**

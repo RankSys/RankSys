@@ -6,7 +6,6 @@
 package es.uam.eps.ir.ranksys.diversity.intent.metrics;
 
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
-import es.uam.eps.ir.ranksys.core.IdValuePair;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.recommenders.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intent.IntentModel;
@@ -15,7 +14,6 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import java.util.stream.StreamSupport;
 
 /**
  *
@@ -79,13 +77,10 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
             this.testData = testData;
             this.threshold = threshold;
 
-            double _maxPreference = Double.NEGATIVE_INFINITY;
-            for (U u : testData.getAllUsers()) {
-                for (IdValuePair<I, Double> pref : testData.getUserPreferences(u)) {
-                    _maxPreference = Math.max(_maxPreference, pref.v);
-                }
-            }
-            this.maxPreference = _maxPreference;
+            this.maxPreference = testData.getAllUsers().mapToDouble(u -> {
+                return testData.getUserPreferences(u).mapToDouble(pref -> pref.v)
+                        .max().orElse(Double.NEGATIVE_INFINITY);
+            }).max().orElse(Double.NEGATIVE_INFINITY);
         }
 
         @Override
@@ -100,7 +95,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
             public UserERRRelevanceModel(U user) {
                 this.gainMap = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
 
-                StreamSupport.stream(testData.getUserPreferences(user).spliterator(), false)
+                testData.getUserPreferences(user)
                         .filter(iv -> iv.v >= threshold)
                         .forEach(iv -> gainMap.put(iv.id, (Math.pow(2, iv.v) - 1) / (double) Math.pow(2, maxPreference)));
             }

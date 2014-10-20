@@ -1,17 +1,15 @@
 package es.uam.eps.ir.ranksys.core.util.structs;
 
-import static org.apache.commons.lang3.ArrayUtils.indexOf;
-
-public class TIntDoubleTopN {
-
-    private final int[] keys;
+public class LongDoubleTopN {
+    
+    private final long[] keys;
     private final double[] values;
     private int capacity;
     private int size;
 
-    public TIntDoubleTopN(int capacity) {
+    public LongDoubleTopN(int capacity) {
         this.capacity = capacity;
-        keys = new int[capacity];
+        keys = new long[capacity];
         values = new double[capacity];
         size = 0;
     }
@@ -45,7 +43,7 @@ public class TIntDoubleTopN {
         return size == 0;
     }
 
-    public boolean add(int key, double value) {
+    public boolean add(long key, double value) {
         if (size < capacity) {
             int i = size;
             int j = parent(i);
@@ -57,7 +55,7 @@ public class TIntDoubleTopN {
                 j = parent(i);
             }
             size++;
-
+            
             return true;
         } else {
             if (values[0] > value || (values[0] == value && keys[0] > key)) {
@@ -72,26 +70,17 @@ public class TIntDoubleTopN {
                 i = j;
                 j = minChild(i);
             }
-
+            
             return true;
         }
     }
 
-    public int getKeyAt(int i) {
+    public long getKeyAt(int i) {
         return keys[i];
     }
 
     public double getValueAt(int i) {
         return values[i];
-    }
-
-    public double get(int K) {
-        int i = indexOf(keys, K);
-        if (i < 0) {
-            return Double.NaN;
-        } else {
-            return values[i];
-        }
     }
 
     private void reverse() {
@@ -105,7 +94,7 @@ public class TIntDoubleTopN {
     }
 
     private void swap(int i, int j) {
-        int k = keys[i];
+        long k = keys[i];
         keys[i] = keys[j];
         keys[j] = k;
         double v = values[i];
@@ -124,15 +113,15 @@ public class TIntDoubleTopN {
     private int right(int i) {
         return (i + 1) * 2;
     }
-
+    
     private int minChild(int i) {
         int l = left(i);
         int r = right(i);
-
+        
         if (l >= capacity) {
             return -1;
         }
-
+        
         if (r >= size) {
             return l;
         }

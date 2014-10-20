@@ -21,9 +21,9 @@ public class PCItemNovelty<U, I> extends ItemNovelty<U, I> {
     public PCItemNovelty(RecommenderData<U, I, ?> recommenderData) {
         itemNovelty = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 1.0);
         int numUsers = recommenderData.numUsers();
-        for (I i : recommenderData.getAllItems()) {
+        recommenderData.getAllItems().forEach(i -> {
             itemNovelty.put(i, 1 - recommenderData.numUsers(i) / (double) numUsers);
-        }
+        });
     }
 
     @Override

@@ -5,7 +5,6 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intent;
 
-import es.uam.eps.ir.ranksys.core.IdValuePair;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import gnu.trove.impl.Constants;
@@ -15,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  *
@@ -27,10 +25,10 @@ public class IntentModel<U, I, F> {
     private final FeatureData<I, F, ?> featureData;
     private final Map<U, UserIntentModel> userMap;
 
-    public IntentModel(RecommenderData<U, I, Double> totalData, Iterable<U> targetUsers, FeatureData<I, F, ?> featureData) {
+    public IntentModel(RecommenderData<U, I, Double> totalData, Stream<U> targetUsers, FeatureData<I, F, ?> featureData) {
         this.totalData = totalData;
         this.featureData = featureData;
-        userMap = StreamSupport.stream(targetUsers.spliterator(), true)
+        userMap = targetUsers.parallel()
                 .map(user -> new UserIntentModel(user))
                 .collect(Collectors.toMap(uim -> uim.user, uim -> uim));
     }
@@ -49,12 +47,12 @@ public class IntentModel<U, I, F> {
             TObjectDoubleMap<F> auxProb = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
 
             int[] norm = {0};
-            for (IdValuePair<I, Double> iv : totalData.getUserPreferences(user)) {
+            totalData.getUserPreferences(user).forEach(iv -> {
                 featureData.getItemFeatures(iv.id).forEach(fv -> {
                     auxProb.adjustOrPutValue(fv.id, 1.0, 1.0);
                     norm[0]++;
                 });
-            }
+            });
 
             if (norm[0] == 0) {
                 norm[0] = featureData.numFeatures();

@@ -1,15 +1,15 @@
 package es.uam.eps.ir.ranksys.core.util.structs;
 
-public class TLongDoubleTopN {
-    
-    private final long[] keys;
+public class IntDoubleTopN {
+
+    private final int[] keys;
     private final double[] values;
     private int capacity;
     private int size;
 
-    public TLongDoubleTopN(int capacity) {
+    public IntDoubleTopN(int capacity) {
         this.capacity = capacity;
-        keys = new long[capacity];
+        keys = new int[capacity];
         values = new double[capacity];
         size = 0;
     }
@@ -43,7 +43,7 @@ public class TLongDoubleTopN {
         return size == 0;
     }
 
-    public boolean add(long key, double value) {
+    public boolean add(int key, double value) {
         if (size < capacity) {
             int i = size;
             int j = parent(i);
@@ -55,7 +55,7 @@ public class TLongDoubleTopN {
                 j = parent(i);
             }
             size++;
-            
+
             return true;
         } else {
             if (values[0] > value || (values[0] == value && keys[0] > key)) {
@@ -70,12 +70,12 @@ public class TLongDoubleTopN {
                 i = j;
                 j = minChild(i);
             }
-            
+
             return true;
         }
     }
 
-    public long getKeyAt(int i) {
+    public int getKeyAt(int i) {
         return keys[i];
     }
 
@@ -94,7 +94,7 @@ public class TLongDoubleTopN {
     }
 
     private void swap(int i, int j) {
-        long k = keys[i];
+        int k = keys[i];
         keys[i] = keys[j];
         keys[j] = k;
         double v = values[i];
@@ -113,15 +113,15 @@ public class TLongDoubleTopN {
     private int right(int i) {
         return (i + 1) * 2;
     }
-    
+
     private int minChild(int i) {
         int l = left(i);
         int r = right(i);
-        
+
         if (l >= capacity) {
             return -1;
         }
-        
+
         if (r >= size) {
             return l;
         }

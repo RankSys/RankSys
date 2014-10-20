@@ -7,7 +7,6 @@ package es.uam.eps.ir.ranksys.diversity.novelty;
 
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.diversity.pair.ItemDistanceModel;
-import java.util.stream.StreamSupport;
 
 /**
  *
@@ -25,7 +24,7 @@ public class PDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
     @Override
     public double novelty(I i, U u) {
-        return StreamSupport.stream(trainData.getUserPreferences(u).spliterator(), false)
+        return trainData.getUserPreferences(u)
                 .map(jv -> jv.id)
                 .mapToDouble(j -> dist.dist(i, j))
                 .filter(v -> !Double.isNaN(v))

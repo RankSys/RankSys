@@ -9,6 +9,7 @@ import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.recommenders.Recommendation;
+import es.uam.eps.ir.ranksys.core.util.collectors.TObjectDoubleMapCollector;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
@@ -17,10 +18,8 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import java.util.Set;
-import java.util.stream.StreamSupport;
 
 /**
  *
@@ -41,15 +40,9 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
         this.relModel = new BinaryRelevanceModel<>(testData, threshold);
         this.featureData = featureData;
         
-        this.idcgMap = StreamSupport.stream(testData.getAllUsers().spliterator(), true)
-                .map(u -> {
-                    return new IdDoublePair<U>(u, idcg(relModel.getUserModel(u)));
-                })
-                .collect(
-                        () -> new TObjectDoubleHashMap<>(),
-                        (m, iv) -> m.put(iv.id, iv.v),
-                        (m1, m2) -> m1.putAll(m2)
-                );
+        this.idcgMap = testData.getAllUsers().parallel()
+                .map(u -> new IdDoublePair<U>(u, idcg(relModel.getUserModel(u))))
+                .collect(new TObjectDoubleMapCollector<>());
     }
 
     @Override

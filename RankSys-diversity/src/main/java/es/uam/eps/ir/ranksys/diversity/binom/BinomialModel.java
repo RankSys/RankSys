@@ -91,11 +91,11 @@ public class BinomialModel<U, I, F> {
             TObjectDoubleMap<F> probs = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
 
             int n = recommenderData.numItems(user);
-            for (IdValuePair<I, Double> pref : recommenderData.getUserPreferences(user)) {
+            recommenderData.getUserPreferences(user).forEach(pref -> {
                 featureData.getItemFeatures(pref.id).forEach(feature -> {
                     probs.adjustOrPutValue(feature.id, 1.0, 1.0);
                 });
-            }
+            });
 
             probs.transformValues(p -> p / n);
 

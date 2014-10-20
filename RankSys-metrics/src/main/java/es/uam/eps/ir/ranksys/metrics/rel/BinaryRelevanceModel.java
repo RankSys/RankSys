@@ -8,7 +8,6 @@ package es.uam.eps.ir.ranksys.metrics.rel;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  *
@@ -34,7 +33,7 @@ public class BinaryRelevanceModel<U, I> implements IdealRelevanceModel<U, I> {
         private final Set<I> relevantItems;
 
         public UserBinaryRelevanceModel(U user) {
-            this.relevantItems = StreamSupport.stream(testData.getUserPreferences(user).spliterator(), false)
+            this.relevantItems = testData.getUserPreferences(user)
                     .filter(iv -> iv.v >= threshold)
                     .map(iv -> iv.id)
                     .collect(Collectors.toSet());

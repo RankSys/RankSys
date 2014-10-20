@@ -9,14 +9,14 @@ package es.uam.eps.ir.ranksys.core.util.structs;
  *
  * @author saul
  */
-public class TObjectDoubleTopN<T> {
+public class ObjectDoubleTopN<T> {
 
     private final T[] keys;
     private final double[] values;
     private int capacity;
     private int size;
 
-    public TObjectDoubleTopN(int capacity) {
+    public ObjectDoubleTopN(int capacity) {
         this.capacity = capacity;
         keys = (T[]) new Object[capacity];
         values = new double[capacity];

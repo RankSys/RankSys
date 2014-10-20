@@ -9,8 +9,8 @@ import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.recommenders.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.novelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.diversity.reranking.PermutationReranker;
-import es.uam.eps.ir.ranksys.core.util.structs.TIntDoubleTopN;
-import es.uam.eps.ir.ranksys.core.util.structs.TObjectDoubleTopN;
+import es.uam.eps.ir.ranksys.core.util.structs.IntDoubleTopN;
+import es.uam.eps.ir.ranksys.core.util.structs.ObjectDoubleTopN;
 import es.uam.eps.ir.ranksys.core.util.Stats;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -87,7 +87,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
         Stats relStats = getRelStats(recommendation);
         Pair<Stats, TObjectDoubleMap<I>> novInfo = getNovInfo(recommendation);
         
-        TObjectDoubleTopN<I> topN = new TObjectDoubleTopN<>(N);
+        ObjectDoubleTopN<I> topN = new ObjectDoubleTopN<>(N);
         recommendation.getItems().stream().forEach(is -> topN.add(is.id, score(is.v, relStats, novInfo.getRight().get(is.id), novInfo.getLeft())));
         topN.sort();
 
@@ -114,7 +114,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
         Stats relStats = getRelStats(recommendation);
         Pair<Stats, TObjectDoubleMap<I>> novInfo = getNovInfo(recommendation);
         
-        TIntDoubleTopN topN = new TIntDoubleTopN(N);
+        IntDoubleTopN topN = new IntDoubleTopN(N);
         List<IdDoublePair<I>> list = recommendation.getItems();
         for (int i = 0; i < list.size(); i++) {
             topN.add(i, score(list.get(i).v, relStats, novInfo.getRight().get(list.get(i).id), novInfo.getLeft()));

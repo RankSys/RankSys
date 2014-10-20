@@ -10,7 +10,7 @@ import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import static java.lang.Math.log;
-import static java.lang.Math.min;
+import java.util.IntSummaryStatistics;
 
 /**
  *
@@ -21,18 +21,14 @@ public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
     private final TObjectDoubleMap<I> itemNovelty;
 
     public FDItemNovelty(RecommenderData<U, I, ?> recommenderData) {
-        int norm = 0;
-        double maxNov = Double.POSITIVE_INFINITY;
-        for (I i : recommenderData.getAllItems()) {
-            int n = recommenderData.numUsers(i);
-            norm += n;
-            maxNov = min(maxNov, n);
-        }
-        maxNov = -log(maxNov / norm) / log(2);
+        IntSummaryStatistics stats = recommenderData.getAllItems().mapToInt(i -> recommenderData.numUsers(i)).summaryStatistics();
+        long norm = stats.getSum();
+        double maxNov = -log(stats.getMin() / norm) / log(2);
+        
         itemNovelty = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, maxNov);
-        for (I i : recommenderData.getAllItems()) {
+        recommenderData.getAllItems().forEach(i -> {
             itemNovelty.put(i, -log(recommenderData.numUsers(i) / (double) norm) / log(2));
-        }
+        });
     }
 
     @Override
