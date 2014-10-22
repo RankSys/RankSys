@@ -1,7 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma de Madrid, http://ir.ii.uam.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package es.uam.eps.ir.ranksys.metrics.rel;
 
@@ -11,20 +22,22 @@ import java.util.stream.Collectors;
 
 /**
  *
- * @author saul
+ * @author Saúl Vargas (saul.vargas@uam.es)
+ * @author Pablo Castells (pablo.castells@uam.es)
  */
-public class BinaryRelevanceModel<U, I> implements IdealRelevanceModel<U, I> {
+public class BinaryRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
 
     private final RecommenderData<U, I, Double> testData;
     private final double threshold;
 
-    public BinaryRelevanceModel(RecommenderData<U, I, Double> testData, double threshold) {
+    public BinaryRelevanceModel(boolean caching, RecommenderData<U, I, Double> testData, double threshold) {
+        super(caching, testData.getAllUsers());
         this.testData = testData;
         this.threshold = threshold;
     }
 
     @Override
-    public UserIdealRelevanceModel getUserModel(U user) {
+    protected UserIdealRelevanceModel<U, I> get(U user) {
         return new UserBinaryRelevanceModel(user);
     }
 

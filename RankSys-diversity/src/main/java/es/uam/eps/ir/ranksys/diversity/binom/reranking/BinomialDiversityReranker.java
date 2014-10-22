@@ -1,13 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma de Madrid, http://ir.ii.uam.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package es.uam.eps.ir.ranksys.diversity.binom.reranking;
 
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import es.uam.eps.ir.ranksys.core.recommenders.Recommendation;
+import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.diversity.binom.reranking.BinomialCoverageReranker.BinomialCoverageUserReranker;
 import es.uam.eps.ir.ranksys.diversity.binom.reranking.BinomialNonRedundancyReranker.BinomialNonRedundancyUserReranker;
@@ -16,17 +27,17 @@ import java.util.List;
 
 /**
  *
- * @author saul
+ * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class BinomialDiversityReranker<U, I, F> extends LambdaReranker<U, I> {
 
     private final BinomialCoverageReranker<U, I, F> coverageReranker;
     private final BinomialNonRedundancyReranker<U, I, F> nonRedundancyReranker;
     
-    public BinomialDiversityReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double alpha, double lambda, int cutoff) {
+    public BinomialDiversityReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
         super(lambda, cutoff, true);
-        coverageReranker = new BinomialCoverageReranker<>(featureData, binomialModel, alpha, lambda, cutoff);
-        nonRedundancyReranker = new BinomialNonRedundancyReranker<>(featureData, binomialModel, alpha, lambda, cutoff);
+        coverageReranker = new BinomialCoverageReranker<>(featureData, binomialModel, lambda, cutoff);
+        nonRedundancyReranker = new BinomialNonRedundancyReranker<>(featureData, binomialModel, lambda, cutoff);
     }
 
     @Override

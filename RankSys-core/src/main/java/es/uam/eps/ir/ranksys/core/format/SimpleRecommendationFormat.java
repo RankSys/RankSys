@@ -1,12 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma de Madrid, http://ir.ii.uam.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package es.uam.eps.ir.ranksys.core.format;
 
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
-import es.uam.eps.ir.ranksys.core.recommenders.Recommendation;
+import es.uam.eps.ir.ranksys.core.Recommendation;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parsers;
@@ -26,7 +37,7 @@ import java.util.stream.StreamSupport;
 
 /**
  *
- * @author saul
+ * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U, I> {
 
@@ -41,14 +52,14 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
 
     @Override
     public Writer getWriter(String path) throws IOException {
-        return new Writer(path);
+        return new SimpleWriter(path);
     }
 
-    public static class Writer<U, I> implements RecommendationFormat.Writer<U, I> {
+    private class SimpleWriter implements RecommendationFormat.Writer<U, I> {
 
         private final BufferedWriter writer;
 
-        public Writer(String path) throws IOException {
+        public SimpleWriter(String path) throws IOException {
             this.writer = new BufferedWriter(new FileWriter(path));
         }
 
@@ -74,20 +85,14 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
 
     @Override
     public Reader<U, I> getReader(String path) throws IOException {
-        return new Reader<>(uParser, iParser, vParser, path);
+        return new SimpleReader(path);
     }
 
-    public static class Reader<U, I> implements RecommendationFormat.Reader<U, I> {
+    private class SimpleReader implements RecommendationFormat.Reader<U, I> {
 
-        private final Parser<U> uParser;
-        private final Parser<I> iParser;
-        private final Parser<Double> vParser;
         private final String path;
 
-        public Reader(Parser<U> uParser, Parser<I> iParser, Parser<Double> vParser, String path) {
-            this.uParser = uParser;
-            this.iParser = iParser;
-            this.vParser = vParser;
+        public SimpleReader(String path) {
             this.path = path;
         }
 
@@ -95,7 +100,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
         public Stream<Recommendation<U, I>> readAll() throws IOException {
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(path));
-                RecommendationIterator iterator = new RecommendationIterator(reader, uParser, iParser, vParser);
+                RecommendationIterator iterator = new RecommendationIterator(reader);
                 return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
             } catch (IOException ex) {
                 getLogger(SimpleRecommendationFormat.class.getName()).log(Level.SEVERE, null, ex);
@@ -105,22 +110,16 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
 
     }
 
-    private static class RecommendationIterator<U, I> implements Iterator<Recommendation<U, I>> {
+    private class RecommendationIterator implements Iterator<Recommendation<U, I>> {
 
         private U lastU = null;
         private I lastI;
         private Double lastS;
         private final BufferedReader reader;
-        private final Parser<U> uParser;
-        private final Parser<I> iParser;
-        private final Parser<Double> vParser;
         private boolean eos = false;
 
-        public RecommendationIterator(BufferedReader reader, final Parser<U> uParser, final Parser<I> iParser, final Parser<Double> vParser) throws IOException {
+        public RecommendationIterator(BufferedReader reader) throws IOException {
             this.reader = reader;
-            this.uParser = uParser;
-            this.iParser = iParser;
-            this.vParser = vParser;
         }
 
         @Override

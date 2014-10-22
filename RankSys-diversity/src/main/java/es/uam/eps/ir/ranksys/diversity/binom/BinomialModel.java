@@ -1,33 +1,48 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma de Madrid, http://ir.ii.uam.es
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package es.uam.eps.ir.ranksys.diversity.binom;
 
-import es.uam.eps.ir.ranksys.core.IdValuePair;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
+import es.uam.eps.ir.ranksys.core.model.PersonalizableModel;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import java.util.Set;
+import java.util.stream.Stream;
 import org.apache.commons.math3.distribution.BinomialDistribution;
 
 /**
  *
- * @author saul
+ * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class BinomialModel<U, I, F> {
+public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
 
     private final RecommenderData<U, I, Double> recommenderData;
     private final FeatureData<I, F, ?> featureData;
     private final TObjectDoubleMap<F> globalFeatureProbs;
+    private final double alpha;
 
-    public BinomialModel(RecommenderData<U, I, Double> recommenderData, FeatureData<I, F, ?> featureData) {
+    public BinomialModel(boolean caching, Stream<U> targetUsers, RecommenderData<U, I, Double> recommenderData, FeatureData<I, F, ?> featureData, double alpha) {
+        super(caching, targetUsers);
         this.recommenderData = recommenderData;
         this.featureData = featureData;
         this.globalFeatureProbs = getGlobalFeatureProbs();
+        this.alpha = alpha;
     }
 
     public Set<F> getFeatures() {
@@ -38,8 +53,14 @@ public class BinomialModel<U, I, F> {
         return globalFeatureProbs.get(f);
     }
 
-    public UserBinomialModel getUserModel(U u, double alpha) {
+    @Override
+    public UserBinomialModel get(U u) {
         return new UserBinomialModel(u, alpha);
+    }
+
+    @Override
+    public UserBinomialModel getUserModel(U u) {
+        return (UserBinomialModel) super.getUserModel(u);
     }
 
     private TObjectDoubleMap<F> getGlobalFeatureProbs() {
@@ -55,7 +76,7 @@ public class BinomialModel<U, I, F> {
         return probs;
     }
 
-    public class UserBinomialModel {
+    public class UserBinomialModel implements UserModel<U> {
 
         private final TObjectDoubleMap<F> userFeatureProbs;
         private final double alpha;
