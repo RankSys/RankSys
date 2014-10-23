@@ -32,14 +32,12 @@ public class Lazy<T> {
     }
 
     public T get() {
-        T result = object;
+        T result;
 
-        if (result == null) {
-            synchronized (this) {
-                result = object;
-                if (result == null) {
-                    object = result = supplier.get();
-                }
+        synchronized (this) {
+            result = object;
+            if (result == null) {
+                object = result = supplier.get();
             }
         }
 
