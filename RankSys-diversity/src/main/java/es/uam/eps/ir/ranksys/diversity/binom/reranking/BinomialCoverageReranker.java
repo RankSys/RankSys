@@ -65,7 +65,7 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected double nov(U user, IdDoublePair<I> itemValue, List<IdDoublePair<I>> reranked) {
+        protected double nov(IdDoublePair<I> itemValue) {
             double iCoverage = featureData.getItemFeatures(itemValue.id)
                     .map(fv -> fv.id)
                     .filter(uncoveredFeatures::contains)
@@ -78,7 +78,7 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected void update(U user, IdDoublePair<I> bestItemValue) {
+        protected void update(IdDoublePair<I> bestItemValue) {
             double iCoverage = featureData.getItemFeatures(bestItemValue.id).sequential()
                     .map(fv -> fv.id)
                     .filter(uncoveredFeatures::remove)

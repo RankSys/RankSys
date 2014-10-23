@@ -23,7 +23,6 @@ import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.diversity.binom.reranking.BinomialCoverageReranker.BinomialCoverageUserReranker;
 import es.uam.eps.ir.ranksys.diversity.binom.reranking.BinomialNonRedundancyReranker.BinomialNonRedundancyUserReranker;
 import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
-import java.util.List;
 
 /**
  *
@@ -57,14 +56,14 @@ public class BinomialDiversityReranker<U, I, F> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected double nov(U user, IdDoublePair<I> itemValue, List<IdDoublePair<I>> reranked) {
-            return coverageUserReranker.nov(user, itemValue, reranked) * nonRedundancyUserReranker.nov(user, itemValue, reranked);
+        protected double nov(IdDoublePair<I> itemValue) {
+            return coverageUserReranker.nov(itemValue) * nonRedundancyUserReranker.nov(itemValue);
         }
 
         @Override
-        protected void update(U user, IdDoublePair<I> bestItemValue) {
-            coverageUserReranker.update(user, bestItemValue);
-            nonRedundancyUserReranker.update(user, bestItemValue);
+        protected void update(IdDoublePair<I> bestItemValue) {
+            coverageUserReranker.update(bestItemValue);
+            nonRedundancyUserReranker.update(bestItemValue);
         }
 
     }

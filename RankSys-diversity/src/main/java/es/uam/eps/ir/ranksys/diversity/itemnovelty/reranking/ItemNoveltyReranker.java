@@ -21,13 +21,10 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.diversity.reranking.PermutationReranker;
 import es.uam.eps.ir.ranksys.core.util.structs.IntDoubleTopN;
-import es.uam.eps.ir.ranksys.core.util.structs.ObjectDoubleTopN;
 import es.uam.eps.ir.ranksys.core.util.Stats;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *
@@ -39,97 +36,47 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
     private final double lambda;
     private final ItemNovelty<U, I> novelty;
     private final int cutoff;
+    private final boolean norm;
 
-        
-    public ItemNoveltyReranker(double lambda, ItemNovelty<U, I> novelty) {
-        this(lambda, novelty, 0);
+    public ItemNoveltyReranker(double lambda, ItemNovelty<U, I> novelty, boolean norm) {
+        this(lambda, novelty, 0, norm);
     }
 
-    public ItemNoveltyReranker(double lambda, ItemNovelty<U, I> novelty, int cutoff) {
+    public ItemNoveltyReranker(double lambda, ItemNovelty<U, I> novelty, int cutoff, boolean norm) {
         this.lambda = lambda;
         this.novelty = novelty;
         this.cutoff = cutoff;
-    }
-    
-    protected Stats getRelStats(Recommendation<U, I> recommendation) {
-        Stats relStats = new Stats();
-        recommendation.getItems().stream().forEach((iv) -> {
-            relStats.increment(iv.v);
-        });
-        
-        return relStats;
-    }
-    
-    protected Pair<Stats, TObjectDoubleMap<I>> getNovInfo(Recommendation<U, I> recommendation) {
-        TObjectDoubleMap<I> novMap = new TObjectDoubleHashMap<>();
-        Stats novStats = new Stats();
-        U u = recommendation.getUser();
-        recommendation.getItems().stream().forEach((iv) -> {
-            double nov = novelty.novelty(iv.id, u);
-            novMap.put(iv.id, nov);
-            novStats.increment(nov);
-        });
-
-        return Pair.of(novStats, novMap);
-    }
-    
-    protected double norm(double score, Stats stats) {
-        return (score - stats.getMean()) / stats.getStandardDeviation();
-    }
-    
-    protected double score(double rel, Stats relStats, double nov, Stats novStats) {
-        return (1 - lambda) * norm(rel, relStats) + lambda * norm(nov, novStats);
-    }
-
-    @Override
-    public Recommendation<U, I> rerankRecommendation(Recommendation<U, I> recommendation) {
-        int N = cutoff;
-        if (cutoff == 0) {
-            N = recommendation.getItems().size();
-        }
-        
-        if (lambda == 0.0) {
-            List<IdDoublePair<I>> items = recommendation.getItems();
-            items = items.subList(0, Math.min(N, items.size()));
-            
-            return new Recommendation<>(recommendation.getUser(), items);
-        }
-
-        U u = recommendation.getUser();
-        Stats relStats = getRelStats(recommendation);
-        Pair<Stats, TObjectDoubleMap<I>> novInfo = getNovInfo(recommendation);
-        
-        ObjectDoubleTopN<I> topN = new ObjectDoubleTopN<>(N);
-        recommendation.getItems().stream().forEach(is -> topN.add(is.id, score(is.v, relStats, novInfo.getRight().get(is.id), novInfo.getLeft())));
-        topN.sort();
-
-        List<IdDoublePair<I>> items = new ArrayList<>();
-        for (int i = topN.size() - 1; i >= 0; i--) {
-            items.add(new IdDoublePair<>(topN.getKeyAt(i), topN.getValueAt(i)));
-        }
-
-        return new Recommendation<>(recommendation.getUser(), items);
+        this.norm = norm;
     }
 
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation) {
+        U user = recommendation.getUser();
+        ItemNovelty.UserItemNoveltyModel uinm = novelty.getUserModel(user);
+        
         int N = cutoff;
         if (cutoff == 0) {
             N = recommendation.getItems().size();
         }
-        
+
         if (lambda == 0.0) {
             return getBasePerm(Math.min(N, recommendation.getItems().size()));
         }
 
-        U u = recommendation.getUser();
-        Stats relStats = getRelStats(recommendation);
-        Pair<Stats, TObjectDoubleMap<I>> novInfo = getNovInfo(recommendation);
-        
+        TObjectDoubleMap<Object> novMap = new TObjectDoubleHashMap<>();
+        Stats relStats = new Stats();
+        Stats novStats = new Stats();
+        recommendation.getItems().forEach(itemValue -> {
+            double nov = uinm.novelty(itemValue.id);
+            novMap.put(itemValue.id, nov);
+            relStats.accept(itemValue.v);
+            novStats.accept(nov);
+        });
+
         IntDoubleTopN topN = new IntDoubleTopN(N);
         List<IdDoublePair<I>> list = recommendation.getItems();
         for (int i = 0; i < list.size(); i++) {
-            topN.add(i, score(list.get(i).v, relStats, novInfo.getRight().get(list.get(i).id), novInfo.getLeft()));
+            topN.add(i, value(list.get(i), relStats, novMap, novStats));
         }
         topN.sort();
 
@@ -137,8 +84,19 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
         for (int i = 0; i < topN.size(); i++) {
             perm[i] = topN.getKeyAt(topN.size() - i - 1);
         }
-        
+
         return perm;
     }
 
+    protected double norm(double score, Stats stats) {
+        if (norm) {
+            return (score - stats.getMean()) / stats.getStandardDeviation();
+        } else {
+            return score;
+        }
+    }
+
+    protected double value(IdDoublePair<I> iv, Stats relStats, TObjectDoubleMap<Object> novMap, Stats novStats) {
+        return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.get(iv.id), novStats);
+    }
 }

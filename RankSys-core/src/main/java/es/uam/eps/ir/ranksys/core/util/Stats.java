@@ -25,17 +25,13 @@ import static java.lang.Math.sqrt;
 public class Stats {
     
     private int n;
-    double oldM, newM, oldS, newS;
+    private double oldM, newM, oldS, newS;
 
     public Stats() {
         n = 0;
     }
     
-    public void clear() {
-        n = 0;
-    }
-    
-    public void increment(double x) {
+    public void accept(double x) {
         n++;
         
         if (n == 1) {
@@ -49,6 +45,11 @@ public class Stats {
             oldM = newM;
             oldS = newS;
         }
+    }
+    
+    public void combine(Stats otherStats) {
+        n += otherStats.n;
+        throw new UnsupportedOperationException("to be implemented");
     }
     
     public int getN() {

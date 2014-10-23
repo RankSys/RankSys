@@ -22,6 +22,7 @@ import static es.uam.eps.ir.ranksys.diversity.reranking.PermutationReranker.getB
 import es.uam.eps.ir.ranksys.core.util.Stats;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import gnu.trove.set.TIntSet;
 import static java.lang.Math.min;
 import java.util.List;
 
@@ -63,42 +64,36 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
             super(recommendation);
         }
 
-        protected double normRel(double rel) {
+        protected double norm(double score, Stats stats) {
             if (norm) {
-                return (rel - relStats.getMean()) / relStats.getStandardDeviation();
+                return (score - stats.getMean()) / stats.getStandardDeviation();
             } else {
-                return rel;
+                return score;
             }
         }
-
-        protected double normNov(double nov) {
-            if (norm) {
-                return (nov - novStats.getMean()) / novStats.getStandardDeviation();
-            } else {
-                return nov;
-            }
-        }
-
+        
         @Override
-        protected IdDoublePair<I> selectItem(U user, List<IdDoublePair<I>> remaining, List<IdDoublePair<I>> reranked) {
+        protected int selectItem(TIntSet remainingI, List<IdDoublePair<I>> list) {
             novMap = new TObjectDoubleHashMap<>();
             relStats = new Stats();
             novStats = new Stats();
-            remaining.forEach(itemValue -> {
-                double nov = nov(user, itemValue, reranked);
+            remainingI.forEach(i -> {
+                IdDoublePair<I> itemValue = list.get(i);
+                double nov = nov(itemValue);
                 novMap.put(itemValue.id, nov);
-                relStats.increment(itemValue.v);
-                novStats.increment(nov);
+                relStats.accept(itemValue.v);
+                novStats.accept(nov);
+                return true;
             });
-            return super.selectItem(user, remaining, reranked);
+            return super.selectItem(remainingI, list);
         }
 
         @Override
-        protected double value(U user, IdDoublePair<I> iv, List<IdDoublePair<I>> reranked) {
-            return (1 - lambda) * normRel(iv.v) + lambda * normNov(novMap.get(iv.id));
+        protected double value(IdDoublePair<I> iv) {
+            return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.get(iv.id), novStats);
         }
 
-        protected abstract double nov(U user, IdDoublePair<I> iv, List<IdDoublePair<I>> reranked);
+        protected abstract double nov(IdDoublePair<I> iv);
 
     }
 }

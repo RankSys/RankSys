@@ -48,7 +48,7 @@ public abstract class PersonalizableModel<U> {
         return lazyUserMap.get().keySet();
     }
 
-    protected abstract UserModel<U> get(U t);
+    protected abstract UserModel<U> get(U u);
 
     public UserModel<U> getUserModel(U u) {
         if (caching) {

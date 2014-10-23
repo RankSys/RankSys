@@ -25,12 +25,12 @@ import es.uam.eps.ir.ranksys.diversity.itemnovelty.PDItemNovelty;
  */
 public class PDItemNoveltyReranker<U, I> extends ItemNoveltyReranker<U, I> {
 
-    public PDItemNoveltyReranker(double lambda, PDItemNovelty<U, I> novelty) {
-        super(lambda, novelty);
+    public PDItemNoveltyReranker(double lambda, PDItemNovelty<U, I> novelty, boolean norm) {
+        super(lambda, novelty, norm);
     }
     
-    public PDItemNoveltyReranker(double lambda, PDItemNovelty<U, I> novelty, int cutoff) {
-        super(lambda, novelty, cutoff);
+    public PDItemNoveltyReranker(double lambda, PDItemNovelty<U, I> novelty, int cutoff, boolean norm) {
+        super(lambda, novelty, cutoff, norm);
     }
     
 }

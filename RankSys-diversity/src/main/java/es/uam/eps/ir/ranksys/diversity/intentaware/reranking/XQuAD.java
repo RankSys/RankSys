@@ -68,7 +68,7 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
         }
         
         @Override
-        protected double nov(U user, IdDoublePair<I> iv, List<IdDoublePair<I>> reranked) {
+        protected double nov(IdDoublePair<I> iv) {
             return uim.getItemIntents(iv.id)
                     .mapToDouble(f -> {
                         return uim.p(f) * pif(iv, f) * redundancy.get(f);
@@ -76,7 +76,7 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected void update(U user, IdDoublePair<I> biv) {
+        protected void update(IdDoublePair<I> biv) {
             uim.getItemIntents(biv.id).sequential()
                     .forEach(f -> {
                         redundancy.put(f, redundancy.get(f) * (1 - pif(biv, f)));

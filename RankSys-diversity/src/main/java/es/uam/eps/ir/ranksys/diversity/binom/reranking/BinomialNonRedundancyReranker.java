@@ -27,7 +27,6 @@ import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -74,7 +73,7 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         }
 
         @Override
-        protected double nov(U user, IdDoublePair<I> itemValue, List<IdDoublePair<I>> reranked) {
+        protected double nov(IdDoublePair<I> itemValue) {
             Set<F> itemFeatures = featureData.getItemFeatures(itemValue.id)
                     .map(fv -> fv.id)
                     .collect(Collectors.toCollection(() -> new HashSet<>()));
@@ -96,7 +95,7 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         }
 
         @Override
-        protected void update(U user, IdDoublePair<I> bestItemValue) {
+        protected void update(IdDoublePair<I> bestItemValue) {
             featureData.getItemFeatures(bestItemValue.id)
                     .map(fv -> fv.id)
                     .forEach(f -> {

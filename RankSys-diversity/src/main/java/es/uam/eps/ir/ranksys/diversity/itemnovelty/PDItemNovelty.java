@@ -26,21 +26,36 @@ import es.uam.eps.ir.ranksys.diversity.pairwise.ItemDistanceModel;
  */
 public class PDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
-    private final RecommenderData<U, I, ?> trainData;
+    private final RecommenderData<U, I, ?> recommenderData;
     private final ItemDistanceModel<I> dist;
 
-    public PDItemNovelty(RecommenderData<U, I, ?> trainData, ItemDistanceModel<I> dist) {
-        this.trainData = trainData;
+    public PDItemNovelty(boolean caching, RecommenderData<U, I, ?> recommenderData, ItemDistanceModel<I> dist) {
+        super(caching, recommenderData.getAllUsers());
+        this.recommenderData = recommenderData;
         this.dist = dist;
     }
 
     @Override
-    public double novelty(I i, U u) {
-        return trainData.getUserPreferences(u)
-                .map(jv -> jv.id)
-                .mapToDouble(j -> dist.dist(i, j))
-                .filter(v -> !Double.isNaN(v))
-                .average().orElse(0.0);
+    protected UserItemNoveltyModel<U, I> get(U u) {
+        return new UserPDItemNovelty(u);
     }
 
+    private class UserPDItemNovelty implements UserItemNoveltyModel<U, I> {
+
+        private final U u;
+
+        public UserPDItemNovelty(U u) {
+            this.u = u;
+        }
+
+        @Override
+        public double novelty(I i) {
+            return recommenderData.getUserPreferences(u)
+                    .map(jv -> jv.id)
+                    .mapToDouble(j -> dist.dist(i, j))
+                    .filter(v -> !Double.isNaN(v))
+                    .average().orElse(0.0);
+        }
+
+    }
 }

@@ -18,10 +18,12 @@ package es.uam.eps.ir.ranksys.diversity.reranking;
 
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 import static java.lang.Double.isNaN;
 import static java.lang.Math.min;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -57,46 +59,47 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
 
         public int[] rerankPermutation() {
 
-            U user = recommendation.getUser();
             List<IdDoublePair<I>> list = recommendation.getItems();
 
             int[] perm = new int[min(cutoff, list.size())];
-            List<IdDoublePair<I>> remaining = new ArrayList<>(list);
-            List<IdDoublePair<I>> reranked = new ArrayList<>();
+            TIntSet remainingI = new TIntHashSet();
+            IntStream.range(0, list.size()).forEach(i -> remainingI.add(i));
+            int nreranked = 0;
 
-            while (!remaining.isEmpty() && reranked.size() < cutoff) {
-                IdDoublePair<I> bestItem = selectItem(user, remaining, reranked);
+            while (!remainingI.isEmpty() && nreranked < cutoff) {
+                int bestI = selectItem(remainingI, list);
 
-                perm[reranked.size()] = list.indexOf(bestItem);
-                reranked.add(bestItem);
-                remaining.remove(bestItem);
+                perm[nreranked] = bestI;
+                nreranked++;
+                remainingI.remove(bestI);
 
-                update(user, bestItem);
+                update(list.get(bestI));
             }
-            reranked.addAll(remaining);
 
             return perm;
         }
 
-        protected IdDoublePair<I> selectItem(U user, List<IdDoublePair<I>> remaining, List<IdDoublePair<I>> reranked) {
-            double max = Double.NEGATIVE_INFINITY;
-            IdDoublePair<I> bestItemValue = remaining.get(0);
-            for (IdDoublePair<I> itemValue : remaining) {
-                double value = value(user, itemValue, reranked);
+        protected int selectItem(TIntSet remainingI, List<IdDoublePair<I>> list) {
+            double[] max = new double[]{Double.NEGATIVE_INFINITY};
+            int[] bestI = new int[]{remainingI.iterator().next()};
+            remainingI.forEach(i -> {
+                double value = value(list.get(i));
                 if (isNaN(value)) {
-                    continue;
+                    return true;
                 }
-                if (value > max) {
-                    max = value;
-                    bestItemValue = itemValue;
+                if (value > max[0] || (value == max[0] && i < bestI[0])) {
+                    max[0] = value;
+                    bestI[0] = i;
                 }
-            }
-            return bestItemValue;
+                return true;
+            });
+
+            return bestI[0];
         }
 
-        protected abstract double value(U user, IdDoublePair<I> itemValue, List<IdDoublePair<I>> reranked);
+        protected abstract double value(IdDoublePair<I> itemValue);
 
-        protected abstract void update(U user, IdDoublePair<I> bestItemValue);
+        protected abstract void update(IdDoublePair<I> bestItemValue);
     }
 
 }

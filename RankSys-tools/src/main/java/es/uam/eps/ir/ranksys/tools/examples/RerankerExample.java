@@ -23,7 +23,7 @@ import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parsers;
 import es.uam.eps.ir.ranksys.diversity.pairwise.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.diversity.pairwise.JaccardFeatureItemDistanceModel;
-import es.uam.eps.ir.ranksys.diversity.pairwise.reranking.AvgMMR;
+import es.uam.eps.ir.ranksys.diversity.pairwise.reranking.MMR;
 import es.uam.eps.ir.ranksys.diversity.reranking.Reranker;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -44,7 +44,7 @@ public class RerankerExample {
         int cutoff = 100;
         FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(featurePath, Parsers.lp, Parsers.sp, v -> 1.0);
         ItemDistanceModel<Long> dist = new JaccardFeatureItemDistanceModel<>(featureData);
-        Reranker<Long, Long> reranker = new AvgMMR<>(lambda, cutoff, dist);
+        Reranker<Long, Long> reranker = new MMR<>(lambda, cutoff, dist);
 
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(Parsers.lp, Parsers.lp);
 

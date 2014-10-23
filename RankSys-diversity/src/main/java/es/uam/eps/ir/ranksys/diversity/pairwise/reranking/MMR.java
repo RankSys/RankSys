@@ -23,18 +23,17 @@ import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import java.util.List;
 
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
  */
-public class AvgMMR<U, I> extends LambdaReranker<U, I> {
+public class MMR<U, I> extends LambdaReranker<U, I> {
 
     private final ItemDistanceModel<I> dist;
 
-    public AvgMMR(double lambda, int cutoff, ItemDistanceModel<I> dist) {
+    public MMR(double lambda, int cutoff, ItemDistanceModel<I> dist) {
         super(lambda, cutoff, true);
 
         this.dist = dist;
@@ -61,12 +60,12 @@ public class AvgMMR<U, I> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected double nov(U user, IdDoublePair<I> itemValue, List<IdDoublePair<I>> reranked) {
+        protected double nov(IdDoublePair<I> itemValue) {
             return avgDist.get(itemValue.id);
         }
 
         @Override
-        protected void update(U user, IdDoublePair<I> bestItemValue) {
+        protected void update(IdDoublePair<I> bestItemValue) {
             I bestItem = bestItemValue.id;
             avgDist.remove(bestItem);
 

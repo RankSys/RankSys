@@ -44,12 +44,13 @@ public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetr
     public double evaluate(Recommendation<U, I> recommendation) {
         U u = recommendation.getUser();
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getUserModel(u);
+        ItemNovelty.UserItemNoveltyModel uinm = novelty.getUserModel(u);
         
         double nov = 0;
 
         int rank = 0;
         for (IdDoublePair<I> iv : recommendation.getItems()) {
-            nov += userRelModel.gain(iv.id) * novelty.novelty(iv.id, u);
+            nov += userRelModel.gain(iv.id) * uinm.novelty(iv.id);
             rank++;
             if (rank >= cutoff) {
                 break;

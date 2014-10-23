@@ -28,19 +28,39 @@ import gnu.trove.map.hash.TObjectDoubleHashMap;
  */
 public class PCItemNovelty<U, I> extends ItemNovelty<U, I> {
 
-    private final TObjectDoubleMap<I> itemNovelty;
+    private final UserPCItemNoveltyModel nov;
 
     public PCItemNovelty(RecommenderData<U, I, ?> recommenderData) {
-        itemNovelty = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 1.0);
-        int numUsers = recommenderData.numUsers();
-        recommenderData.getAllItems().forEach(i -> {
-            itemNovelty.put(i, 1 - recommenderData.numUsers(i) / (double) numUsers);
-        });
+        super(false, null);
+        this.nov = new UserPCItemNoveltyModel(recommenderData);
     }
 
     @Override
-    public double novelty(I i, U u) {
-        return itemNovelty.get(i);
+    protected UserItemNoveltyModel<U, I> get(U t) {
+        return nov;
     }
 
+    @Override
+    public UserItemNoveltyModel<U, I> getUserModel(U u) {
+        return nov;
+    }
+
+    private class UserPCItemNoveltyModel implements UserItemNoveltyModel<U, I> {
+
+        private final TObjectDoubleMap<I> itemNovelty;
+
+        public UserPCItemNoveltyModel(RecommenderData<U, I, ?> recommenderData) {
+            itemNovelty = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 1.0);
+            int numUsers = recommenderData.numUsers();
+            recommenderData.getAllItems().forEach(i -> {
+                itemNovelty.put(i, 1 - recommenderData.numUsers(i) / (double) numUsers);
+            });
+        }
+
+        @Override
+        public double novelty(I i) {
+            return itemNovelty.get(i);
+        }
+
+    }
 }

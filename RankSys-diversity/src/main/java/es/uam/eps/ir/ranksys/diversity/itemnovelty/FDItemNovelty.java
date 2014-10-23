@@ -30,22 +30,42 @@ import java.util.IntSummaryStatistics;
  */
 public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
-    private final TObjectDoubleMap<I> itemNovelty;
+    private final UserFDItemNoveltyModel nov;
 
     public FDItemNovelty(RecommenderData<U, I, ?> recommenderData) {
-        IntSummaryStatistics stats = recommenderData.getAllItems().mapToInt(i -> recommenderData.numUsers(i)).summaryStatistics();
-        long norm = stats.getSum();
-        double maxNov = -log(stats.getMin() / norm) / log(2);
-        
-        itemNovelty = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, maxNov);
-        recommenderData.getAllItems().forEach(i -> {
-            itemNovelty.put(i, -log(recommenderData.numUsers(i) / (double) norm) / log(2));
-        });
+        super(false, null);
+        this.nov = new UserFDItemNoveltyModel(recommenderData);
     }
 
     @Override
-    public double novelty(I i, U u) {
-        return itemNovelty.get(i);
+    protected UserItemNoveltyModel<U, I> get(U t) {
+        return nov;
     }
 
+    @Override
+    public UserItemNoveltyModel<U, I> getUserModel(U u) {
+        return nov;
+    }
+
+    private class UserFDItemNoveltyModel implements UserItemNoveltyModel<U, I> {
+
+        private final TObjectDoubleMap<I> itemNovelty;
+
+        public UserFDItemNoveltyModel(RecommenderData<U, I, ?> recommenderData) {
+            IntSummaryStatistics stats = recommenderData.getAllItems().mapToInt(i -> recommenderData.numUsers(i)).summaryStatistics();
+            long norm = stats.getSum();
+            double maxNov = -log(stats.getMin() / norm) / log(2);
+
+            itemNovelty = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, maxNov);
+            recommenderData.getAllItems().forEach(i -> {
+                itemNovelty.put(i, -log(recommenderData.numUsers(i) / (double) norm) / log(2));
+            });
+        }
+
+        @Override
+        public double novelty(I i) {
+            return itemNovelty.get(i);
+        }
+
+    }
 }
