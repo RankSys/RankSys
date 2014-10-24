@@ -17,6 +17,7 @@
 package es.uam.eps.ir.ranksys.core.model;
 
 import es.uam.eps.ir.ranksys.core.util.lazy.Lazy;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,7 +46,11 @@ public abstract class PersonalizableModel<U> {
     }
 
     public Set<U> getModeledUsers() {
-        return lazyUserMap.get().keySet();
+        if (caching) {
+            return lazyUserMap.get().keySet();
+        } else {
+            return Collections.EMPTY_SET;
+        }
     }
 
     protected abstract UserModel<U> get(U u);
