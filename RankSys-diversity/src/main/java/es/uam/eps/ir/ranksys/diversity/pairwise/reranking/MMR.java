@@ -41,15 +41,15 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
 
     @Override
     protected LambdaUserReranker getUserReranker(Recommendation<U, I> recommendation) {
-        return new AvgUserMMR(recommendation);
+        return new UserMMR(recommendation);
     }
 
-    public class AvgUserMMR extends LambdaUserReranker {
+    public class UserMMR extends LambdaUserReranker {
 
         private final TObjectDoubleMap<I> avgDist;
         private int n;
 
-        public AvgUserMMR(Recommendation<U, I> recommendation) {
+        public UserMMR(Recommendation<U, I> recommendation) {
             super(recommendation);
 
             n = 0;

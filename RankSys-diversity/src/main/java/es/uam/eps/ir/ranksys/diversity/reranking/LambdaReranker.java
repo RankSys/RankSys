@@ -20,9 +20,9 @@ import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import static es.uam.eps.ir.ranksys.diversity.reranking.PermutationReranker.getBasePerm;
 import es.uam.eps.ir.ranksys.core.util.Stats;
+import gnu.trove.list.TIntList;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import gnu.trove.set.TIntSet;
 import static java.lang.Math.min;
 import java.util.List;
 
@@ -73,7 +73,7 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
         }
         
         @Override
-        protected int selectItem(TIntSet remainingI, List<IdDoublePair<I>> list) {
+        protected int selectItem(TIntList remainingI, List<IdDoublePair<I>> list) {
             novMap = new TObjectDoubleHashMap<>();
             relStats = new Stats();
             novStats = new Stats();

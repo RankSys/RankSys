@@ -18,8 +18,8 @@ package es.uam.eps.ir.ranksys.diversity.reranking;
 
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.linked.TIntLinkedList;
 import static java.lang.Double.isNaN;
 import static java.lang.Math.min;
 import java.util.List;
@@ -62,7 +62,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
             List<IdDoublePair<I>> list = recommendation.getItems();
 
             int[] perm = new int[min(cutoff, list.size())];
-            TIntSet remainingI = new TIntHashSet();
+            TIntList remainingI = new TIntLinkedList();
             IntStream.range(0, list.size()).forEach(i -> remainingI.add(i));
             int nreranked = 0;
 
@@ -79,9 +79,9 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
             return perm;
         }
 
-        protected int selectItem(TIntSet remainingI, List<IdDoublePair<I>> list) {
+        protected int selectItem(TIntList remainingI, List<IdDoublePair<I>> list) {
             double[] max = new double[]{Double.NEGATIVE_INFINITY};
-            int[] bestI = new int[]{remainingI.iterator().next()};
+            int[] bestI = new int[]{remainingI.get(0)};
             remainingI.forEach(i -> {
                 double value = value(list.get(i));
                 if (isNaN(value)) {
