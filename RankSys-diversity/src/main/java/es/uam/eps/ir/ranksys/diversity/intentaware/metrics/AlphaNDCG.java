@@ -22,6 +22,8 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.core.model.PersonalizableModel;
 import es.uam.eps.ir.ranksys.core.model.PersonalizableModel.UserModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
+import es.uam.eps.ir.ranksys.metrics.rank.LogarithmicDiscountModel;
+import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel.UserIdealRelevanceModel;
@@ -45,6 +47,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
     private final IdealRelevanceModel<U, I> relModel;
     private final FeatureData<I, F, ?> featureData;
     private final AlphaNDCGIdeal idcg;
+    private final RankingDiscountModel disc = new LogarithmicDiscountModel();
 
     public AlphaNDCG(int cutoff, double alpha, FeatureData<I, F, ?> featureData, BinaryRelevanceModel<U, I> relModel) {
         super();
@@ -72,7 +75,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
                             int r = redundancy.adjustOrPutValue(f, 1, 1) - 1;
                             return Math.pow(1 - alpha, r);
                         }).sum();
-                ndcg += gain / Math.log(rank + 2) * Math.log(2);
+                ndcg += gain * disc.disc(rank);
             }
 
             rank++;
@@ -112,7 +115,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
             featureData.getItemFeatures(bi).sequential()
                     .map(fv -> fv.id)
                     .forEach(f -> redundancy.adjustOrPutValue(f, 1, 1));
-            ideal += bg / Math.log(rank + 2) * Math.log(2);
+            ideal += bg * disc.disc(rank);
             rank++;
         }
 

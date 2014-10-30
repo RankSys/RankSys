@@ -44,6 +44,8 @@ import es.uam.eps.ir.ranksys.metrics.NDCG;
 import es.uam.eps.ir.ranksys.metrics.Precision;
 import es.uam.eps.ir.ranksys.metrics.RecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.SystemMetric;
+import es.uam.eps.ir.ranksys.metrics.rank.NoDiscountModel;
+import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.NoRelevanceModel;
 import java.util.HashMap;
@@ -78,6 +80,8 @@ public class MetricExample {
         BinaryRelevanceModel<Long, Long> binRel = new BinaryRelevanceModel<>(false, testData, threshold);
         // NO RELEVANCE
         NoRelevanceModel<Long, Long> norel = new NoRelevanceModel<>();
+        // NO RANKING DISCOUNT
+        RankingDiscountModel disc = new NoDiscountModel();
         // INTENT MODEL
         IntentModel<Long, Long, String> intentModel = new IntentModel<>(false, testData.getAllUsers(), totalData, featureData);
 
@@ -93,13 +97,13 @@ public class MetricExample {
         // nDCG
         recMetrics.put("ndcg", new NDCG<>(cutoff, new NDCG.NDCGRelevanceModel<>(false, testData, threshold)));
         // EILD
-        recMetrics.put("eild", new EILD<>(cutoff, dist, norel));
+        recMetrics.put("eild", new EILD<>(cutoff, dist, norel, disc));
         // EPC
-        recMetrics.put("epc", new EPC<>(cutoff, new PCItemNovelty<>(trainData), norel));
+        recMetrics.put("epc", new EPC<>(cutoff, new PCItemNovelty<>(trainData), norel, disc));
         // EFD
-        recMetrics.put("efd", new EFD<>(cutoff, new FDItemNovelty<>(trainData), norel));
+        recMetrics.put("efd", new EFD<>(cutoff, new FDItemNovelty<>(trainData), norel, disc));
         // EPD
-        recMetrics.put("epd", new EPD<>(cutoff, new PDItemNovelty<>(false, trainData, dist), norel));
+        recMetrics.put("epd", new EPD<>(cutoff, new PDItemNovelty<>(false, trainData, dist), norel, disc));
         // ERR-IA
         recMetrics.put("err-ia", new ERRIA<>(cutoff, intentModel, new ERRIA.ERRRelevanceModel<>(false, testData, threshold)));
         // alpha-nDCG

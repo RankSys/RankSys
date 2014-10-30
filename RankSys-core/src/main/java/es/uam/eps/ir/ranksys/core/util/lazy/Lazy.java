@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class Lazy<T> {
+public class Lazy<T> implements Supplier<T> {
 
     private volatile T object;
     private final Supplier<T> supplier;

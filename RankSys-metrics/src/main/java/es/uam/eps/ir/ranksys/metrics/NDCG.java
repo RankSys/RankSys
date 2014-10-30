@@ -22,6 +22,8 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel.UserIdealRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.NDCG.NDCGRelevanceModel.UserNDCGRelevanceModel;
+import es.uam.eps.ir.ranksys.metrics.rank.LogarithmicDiscountModel;
+import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -38,10 +40,12 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
 
     private final NDCGRelevanceModel<U, I> relModel;
     private final int cutoff;
+    private final RankingDiscountModel disc;
 
     public NDCG(int cutoff, NDCGRelevanceModel<U, I> relModel) {
         this.relModel = relModel;
         this.cutoff = cutoff;
+        this.disc = new LogarithmicDiscountModel();
     }
 
     @Override
@@ -52,7 +56,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         int rank = 0;
 
         for (IdDoublePair<I> pair : recommendation.getItems()) {
-            ndcg += userRelModel.gain(pair.id) / Math.log(rank + 2) * Math.log(2);
+            ndcg += userRelModel.gain(pair.id) * disc.disc(rank);
 
             rank++;
             if (rank >= cutoff) {
@@ -75,7 +79,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         int n = Math.min(cutoff, gains.length);
 
         for (int rank = 0; rank < n; rank++) {
-            idcg += gains[rank] / Math.log(rank + 2) * Math.log(2);
+            idcg += gains[rank] * disc.disc(rank);
         }
 
         return idcg;

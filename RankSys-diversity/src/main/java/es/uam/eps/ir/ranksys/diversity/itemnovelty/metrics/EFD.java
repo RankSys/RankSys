@@ -17,6 +17,7 @@
 package es.uam.eps.ir.ranksys.diversity.itemnovelty.metrics;
 
 import es.uam.eps.ir.ranksys.diversity.itemnovelty.FDItemNovelty;
+import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 
 /**
@@ -26,8 +27,8 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
  */
 public class EFD<U, I> extends ItemNoveltyMetric<U, I> {
 
-    public EFD(int cutoff, FDItemNovelty<U, I> novelty, RelevanceModel<U, I> relModel) {
-        super(cutoff, novelty, relModel);
+    public EFD(int cutoff, FDItemNovelty<U, I> novelty, RelevanceModel<U, I> relModel, RankingDiscountModel disc) {
+        super(cutoff, novelty, relModel, disc);
     }
 
 }

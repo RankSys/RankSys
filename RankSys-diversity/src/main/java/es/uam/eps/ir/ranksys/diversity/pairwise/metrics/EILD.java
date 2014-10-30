@@ -16,12 +16,13 @@
  */
 package es.uam.eps.ir.ranksys.diversity.pairwise.metrics;
 
+import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.pairwise.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
+import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -33,18 +34,20 @@ public class EILD<U, I> extends AbstractRecommendationMetric<U, I> {
     private final int cutoff;
     private final ItemDistanceModel<I> distModel;
     private final RelevanceModel<U, I> relModel;
+    private final RankingDiscountModel disc;
 
-    public EILD(int cutoff, ItemDistanceModel<I> distModel, RelevanceModel<U, I> relModel) {
+    public EILD(int cutoff, ItemDistanceModel<I> distModel, RelevanceModel<U, I> relModel, RankingDiscountModel disc) {
         this.cutoff = cutoff;
         this.distModel = distModel;
         this.relModel = relModel;
+        this.disc = disc;
     }
 
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getUserModel(recommendation.getUser());
 
-        List<I> items = recommendation.getItems().stream().map(is -> is.id).collect(Collectors.toList());
+        List<IdDoublePair<I>> items = recommendation.getItems();
         int N = Math.min(cutoff, items.size());
 
         double eild = 0.0;
@@ -56,16 +59,17 @@ public class EILD<U, I> extends AbstractRecommendationMetric<U, I> {
                 if (i == j) {
                     continue;
                 }
-                double dist = distModel.dist(items.get(i), items.get(j));
+                double dist = distModel.dist(items.get(i).id, items.get(j).id);
                 if (!Double.isNaN(dist)) {
-                    ieild += userRelModel.gain(items.get(j)) * dist;
-                    inorm += userRelModel.gain(items.get(j));
+                    double w = disc.disc(Math.max(0, j - i - 1)) * userRelModel.gain(items.get(j).id);
+                    ieild += w * dist;
+                    inorm += w;
                 }
             }
             if (inorm > 0) {
-                eild += userRelModel.gain(items.get(i)) * ieild / inorm;
-                norm++;
+                eild += disc.disc(i) * userRelModel.gain(items.get(i).id) * ieild / inorm;
             }
+            norm += disc.disc(i);
         }
         if (norm > 0) {
             eild /= norm;

@@ -20,6 +20,7 @@ import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
+import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 
 /**
@@ -32,12 +33,14 @@ public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetr
     private final int cutoff;
     private final ItemNovelty<U, I> novelty;
     private final RelevanceModel<U, I> relModel;
+    private final RankingDiscountModel disc;
 
-    public ItemNoveltyMetric(int cutoff, ItemNovelty<U, I> novelty, RelevanceModel<U, I> relevanceModel) {
+    public ItemNoveltyMetric(int cutoff, ItemNovelty<U, I> novelty, RelevanceModel<U, I> relevanceModel, RankingDiscountModel disc) {
         super();
         this.cutoff = cutoff;
         this.novelty = novelty;
         this.relModel = relevanceModel;
+        this.disc = disc;
     }
 
     @Override
@@ -45,18 +48,22 @@ public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetr
         U u = recommendation.getUser();
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getUserModel(u);
         ItemNovelty.UserItemNoveltyModel uinm = novelty.getUserModel(u);
-        
-        double nov = 0;
+
+        double nov = 0.0;
+        double norm = 0.0;
 
         int rank = 0;
         for (IdDoublePair<I> iv : recommendation.getItems()) {
-            nov += userRelModel.gain(iv.id) * uinm.novelty(iv.id);
+            nov += disc.disc(rank) * userRelModel.gain(iv.id) * uinm.novelty(iv.id);
+            norm += disc.disc(rank);
             rank++;
             if (rank >= cutoff) {
                 break;
             }
         }
-        nov /= rank;
+        if (norm > 0.0) {
+            nov /= norm;
+        }
 
         return nov;
     }

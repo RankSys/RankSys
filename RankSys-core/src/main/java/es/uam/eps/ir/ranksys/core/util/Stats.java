@@ -23,48 +23,66 @@ import static java.lang.Math.sqrt;
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class Stats {
-    
+
     private int n;
-    private double oldM, newM, oldS, newS;
+    private double m, s;
+    private double max = Double.NEGATIVE_INFINITY;
+    private double min = Double.POSITIVE_INFINITY;
 
     public Stats() {
         n = 0;
     }
-    
+
     public void accept(double x) {
         n++;
-        
+
         if (n == 1) {
-            oldM = x;
-            newM = x;
-            oldS = 0.0;
+            m = x;
+            s = 0.0;
         } else {
-            newM = oldM + (x - oldM) / n;
-            newS = oldS + (x - oldM) * (x - newM);
+            double oldM = m;
+            double oldS = s;
             
-            oldM = newM;
-            oldS = newS;
+            m = oldM + (x - oldM) / n;
+            s = oldS + (x - oldM) * (x - m);
         }
+        
+        max = Math.max(max, x);
+        min = Math.min(min, x);
     }
-    
+
     public void combine(Stats otherStats) {
         n += otherStats.n;
+        
+        
+        
+        max = Math.max(max, otherStats.max);
+        min = Math.min(min, otherStats.min);
         throw new UnsupportedOperationException("to be implemented");
     }
-    
+
     public int getN() {
         return n;
     }
-    
+
     public double getMean() {
-        return newM;
+        return m;
     }
-    
+
     public double getVariance() {
-        return (n > 1) ? (newS / (n - 1)) : 0.0;
+        return (n > 1) ? (s / (n - 1)) : 0.0;
     }
-    
+
     public double getStandardDeviation() {
         return sqrt(getVariance());
     }
+
+    public double getMax() {
+        return max;
+    }
+
+    public double getMin() {
+        return min;
+    }
+
 }
