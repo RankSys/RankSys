@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <artifactId>RankSys</artifactId>
         <version>0.1</version>
     </parent>
-    <artifactId>RankSys-tools</artifactId>
+    <artifactId>RankSys-examples</artifactId>
     <packaging>jar</packaging>
     
     <dependencies>
@@ -43,4 +43,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+    <name>RankSys-examples</name>
 </project>
