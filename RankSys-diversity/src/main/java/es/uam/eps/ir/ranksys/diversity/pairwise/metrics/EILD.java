@@ -35,13 +35,19 @@ public class EILD<U, I> extends AbstractRecommendationMetric<U, I> {
     private final int cutoff;
     private final ItemDistanceModel<I> distModel;
     private final RelevanceModel<U, I> relModel;
-    private final RankingDiscountModel disc;
+    private final RankingDiscountModel disc1;
+    private final RankingDiscountModel disc2;
 
     public EILD(int cutoff, ItemDistanceModel<I> distModel, RelevanceModel<U, I> relModel, RankingDiscountModel disc) {
+        this(cutoff, distModel, relModel, disc, disc);
+    }
+
+    public EILD(int cutoff, ItemDistanceModel<I> distModel, RelevanceModel<U, I> relModel, RankingDiscountModel disc1, RankingDiscountModel disc2) {
         this.cutoff = cutoff;
         this.distModel = distModel;
         this.relModel = relModel;
-        this.disc = disc;
+        this.disc1 = disc1;
+        this.disc2 = disc2;
     }
 
     @Override
@@ -62,15 +68,15 @@ public class EILD<U, I> extends AbstractRecommendationMetric<U, I> {
                 }
                 double dist = distModel.dist(items.get(i).id, items.get(j).id);
                 if (!Double.isNaN(dist)) {
-                    double w = disc.disc(Math.max(0, j - i - 1)) * userRelModel.gain(items.get(j).id);
+                    double w = disc2.disc(Math.max(0, j - i - 1)) * userRelModel.gain(items.get(j).id);
                     ieild += w * dist;
                     inorm += w;
                 }
             }
             if (inorm > 0) {
-                eild += disc.disc(i) * userRelModel.gain(items.get(i).id) * ieild / inorm;
+                eild += disc1.disc(i) * userRelModel.gain(items.get(i).id) * ieild / inorm;
             }
-            norm += disc.disc(i);
+            norm += disc1.disc(i);
         }
         if (norm > 0) {
             eild /= norm;
