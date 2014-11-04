@@ -17,8 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.core.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import gnu.trove.list.array.TIntArrayList;
 
 /**
  *
@@ -27,48 +26,56 @@ import java.util.List;
 public class FastStringSplitter {
 
     public static CharSequence[] split(String line, int delimiter) {
-        List<Integer> l = limits(line, delimiter);
+        return split(line, delimiter, Integer.MAX_VALUE);
+    }
+
+    public static CharSequence[] split(String line, int delimiter, int n) {
+        TIntArrayList l = limits(line, delimiter, n);
 
         CharSequence[] tokens = new CharSequence[l.size() - 1];
         for (int i = 0; i < tokens.length; i++) {
-            tokens[i] = new StringSegment(line, l.get(i) + 1, l.get(i + 1));
+            tokens[i] = new StringSegment(line, l.getQuick(i) + 1, l.getQuick(i + 1));
         }
 
         return tokens;
     }
 
     public static CharSequence[] split(CharSequence line, int delimiter) {
-        List<Integer> l = limits(line, delimiter);
+        return split(line, delimiter, Integer.MAX_VALUE);
+    }
+
+    public static CharSequence[] split(CharSequence line, int delimiter, int n) {
+        TIntArrayList l = limits(line, delimiter, n);
 
         CharSequence[] tokens = new CharSequence[l.size() - 1];
         for (int i = 0; i < tokens.length; i++) {
-            tokens[i] = new StringSegment(line, l.get(i) + 1, l.get(i + 1));
+            tokens[i] = new StringSegment(line, l.getQuick(i) + 1, l.getQuick(i + 1));
         }
 
         return tokens;
     }
 
-    private static List<Integer> limits(String line, int delimiter) {
-        List<Integer> l = new ArrayList<>();
+    private static TIntArrayList limits(String line, int delimiter, int n) {
+        TIntArrayList l = new TIntArrayList();
 
         int j = -1;
         do {
             l.add(j);
             j = line.indexOf(delimiter, j + 1);
-        } while (j != -1);
+        } while (j != -1 && l.size() <= n - 1);
         l.add(line.length());
 
         return l;
     }
 
-    private static List<Integer> limits(CharSequence line, int delimiter) {
-        List<Integer> l = new ArrayList<>();
+    private static TIntArrayList limits(CharSequence line, int delimiter, int n) {
+        TIntArrayList l = new TIntArrayList();
 
         int j = -1;
         do {
             l.add(j);
             j = indexOf(line, delimiter, j + 1);
-        } while (j != -1);
+        } while (j != -1 && l.size() <= n - 1);
         l.add(line.length());
 
         return l;
