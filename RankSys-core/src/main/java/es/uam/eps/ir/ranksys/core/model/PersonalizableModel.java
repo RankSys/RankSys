@@ -42,6 +42,12 @@ public abstract class PersonalizableModel<U> {
         }
     }
 
+    public void initialize() {
+        if (caching) {
+            lazyUserMap.get();
+        }
+    }
+
     public boolean isCaching() {
         return caching;
     }
