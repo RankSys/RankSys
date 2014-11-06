@@ -28,17 +28,39 @@ public class AverageRecommendationMetric<U, I> extends AbstractSystemMetric<U, I
 
     private final RecommendationMetric<U, I> metric;
     private double sum;
-    private final int numUsers;
+    private int numUsers;
+    private final boolean allUsers;
+    private final boolean ignoreNaN;
 
     public AverageRecommendationMetric(RecommendationMetric<U, I> metric, int numUsers) {
         this.metric = metric;
         this.sum = 0;
         this.numUsers = numUsers;
+        this.allUsers = true;
+        this.ignoreNaN = false;
+    }
+
+    public AverageRecommendationMetric(RecommendationMetric<U, I> metric, boolean ignoreNaN) {
+        this.metric = metric;
+        this.sum = 0;
+        this.numUsers = 0;
+        this.allUsers = false;
+        this.ignoreNaN = ignoreNaN;
     }
 
     @Override
     public void add(Recommendation<U, I> recommendation) {
+        double v = metric.evaluate(recommendation);
+
+        if (ignoreNaN && Double.isNaN(v)) {
+            return;
+        }
+        
         sum += metric.evaluate(recommendation);
+        
+        if (!allUsers) {
+            numUsers++;
+        }
     }
 
     @Override
