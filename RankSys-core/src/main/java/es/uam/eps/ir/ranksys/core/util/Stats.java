@@ -35,6 +35,10 @@ public class Stats {
     }
 
     public void accept(double x) {
+        if (Double.isNaN(x)) {
+            return;
+        }
+        
         n++;
 
         if (n == 1) {

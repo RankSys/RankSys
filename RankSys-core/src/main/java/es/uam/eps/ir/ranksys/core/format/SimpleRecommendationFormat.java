@@ -21,7 +21,7 @@ import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parsers;
+import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.dp;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -44,7 +44,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
 
     private final Parser<U> uParser;
     private final Parser<I> iParser;
-    private final Parser<Double> vParser = Parsers.dp;
+    private final Parser<Double> vParser = dp;
 
     public SimpleRecommendationFormat(Parser<U> uParser, Parser<I> iParser) {
         this.uParser = uParser;
