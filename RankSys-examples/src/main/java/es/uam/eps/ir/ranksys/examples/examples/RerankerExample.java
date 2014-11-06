@@ -21,7 +21,8 @@ import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
 import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parsers;
+import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
+import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp;
 import es.uam.eps.ir.ranksys.diversity.pairwise.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.diversity.pairwise.JaccardFeatureItemDistanceModel;
 import es.uam.eps.ir.ranksys.diversity.pairwise.reranking.MMR;
@@ -43,11 +44,11 @@ public class RerankerExample {
 
         double lambda = 0.5;
         int cutoff = 100;
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(featurePath, Parsers.lp, Parsers.sp, v -> 1.0);
+        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(featurePath, lp, sp, v -> 1.0);
         ItemDistanceModel<Long> dist = new JaccardFeatureItemDistanceModel<>(featureData);
         Reranker<Long, Long> reranker = new MMR<>(lambda, cutoff, dist);
 
-        RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(Parsers.lp, Parsers.lp);
+        RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
 
         try (RecommendationFormat.Writer<Long, Long> writer = format.getWriter(recOut)) {
             format.getReader(recIn).readAll().map(reranker::rerankRecommendation).forEach(rerankedRecommendation -> {

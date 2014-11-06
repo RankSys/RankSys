@@ -25,7 +25,8 @@ import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
 import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parsers;
+import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
+import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp;
 import es.uam.eps.ir.ranksys.diversity.aggregate.metrics.AggregateDiversityMetric;
 import es.uam.eps.ir.ranksys.diversity.aggregate.metrics.GiniIndex;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
@@ -68,13 +69,13 @@ public class MetricExample {
 
         // USER - ITEM - RATING files for train and test
         Parser<Double> parser = (token) -> Double.parseDouble(token.toString().split("\t")[0]); // discard timestamps
-        RecommenderData<Long, Long, Double> trainData = SimpleRecommenderData.load(trainDataPath, Parsers.lp, Parsers.lp, parser);
-        RecommenderData<Long, Long, Double> testData = SimpleRecommenderData.load(testDataPath, Parsers.lp, Parsers.lp, parser);
+        RecommenderData<Long, Long, Double> trainData = SimpleRecommenderData.load(trainDataPath, lp, lp, parser);
+        RecommenderData<Long, Long, Double> testData = SimpleRecommenderData.load(testDataPath, lp, lp, parser);
         RecommenderData<Long, Long, Double> totalData = new ConcatRecommenderData<>(trainData, testData);
         // EVALUATED AT CUTOFF 10
         int cutoff = 10;
         // ITEM - FEATURE file
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(featurePath, Parsers.lp, Parsers.sp, v -> 1.0);
+        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(featurePath, lp, sp, v -> 1.0);
         // COSINE DISTANCE
         ItemDistanceModel<Long> dist = new CosineFeatureItemDistanceModel<>(featureData);
         // BINARY RELEVANCE
@@ -121,7 +122,7 @@ public class MetricExample {
         int numItems = totalData.numItems();
         sysMetrics.put("gini", new GiniIndex<>(cutoff, numItems));
         
-        RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(Parsers.lp, Parsers.lp);
+        RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
 
         format.getReader(recIn).readAll().forEach(rec -> sysMetrics.values().forEach(metric -> metric.add(rec)));
         
