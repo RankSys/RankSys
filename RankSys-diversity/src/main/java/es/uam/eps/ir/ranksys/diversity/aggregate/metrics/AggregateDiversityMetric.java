@@ -20,6 +20,7 @@ package es.uam.eps.ir.ranksys.diversity.aggregate.metrics;
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
+import es.uam.eps.ir.ranksys.metrics.SystemMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 import java.util.HashSet;
@@ -45,7 +46,7 @@ public class AggregateDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
     public void add(Recommendation<U, I> recommendation) {
         U u = recommendation.getUser();
         UserRelevanceModel<U, I> urm = relModel.getUserModel(u);
-        
+
         int rank = 0;
         for (IdDoublePair<I> ivp : recommendation.getItems()) {
             if (urm.isRelevant(ivp.id)) {
@@ -59,7 +60,13 @@ public class AggregateDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
     }
 
     @Override
+    public void combine(SystemMetric<U, I> other) {
+        recommendedItems.addAll(((AggregateDiversityMetric<U, I>) other).recommendedItems);
+    }
+
+    @Override
     public double evaluate() {
         return recommendedItems.size();
     }
+
 }

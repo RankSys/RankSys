@@ -55,11 +55,20 @@ public class AverageRecommendationMetric<U, I> extends AbstractSystemMetric<U, I
         if (ignoreNaN && Double.isNaN(v)) {
             return;
         }
-        
+
         sum += metric.evaluate(recommendation);
-        
+
         if (!allUsers) {
             numUsers++;
+        }
+    }
+
+    @Override
+    public void combine(SystemMetric<U, I> other) {
+        sum += ((AverageRecommendationMetric<U, I>) other).sum;
+
+        if (!allUsers) {
+            numUsers += ((AverageRecommendationMetric<U, I>) other).numUsers;
         }
     }
 
@@ -67,4 +76,5 @@ public class AverageRecommendationMetric<U, I> extends AbstractSystemMetric<U, I
     public double evaluate() {
         return sum / numUsers;
     }
+
 }

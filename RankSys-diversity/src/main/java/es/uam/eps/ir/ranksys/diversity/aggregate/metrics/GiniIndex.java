@@ -20,6 +20,7 @@ package es.uam.eps.ir.ranksys.diversity.aggregate.metrics;
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
+import es.uam.eps.ir.ranksys.metrics.SystemMetric;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -58,6 +59,16 @@ public class GiniIndex<U, I> extends AbstractSystemMetric<U, I> {
             }
         }
         m += rank;
+    }
+
+    @Override
+    public void combine(SystemMetric<U, I> other) {
+        ((GiniIndex<U, I>) other).itemCount.forEachEntry((k, v) -> {
+            itemCount.adjustOrPutValue(k, v, v);
+            return true;
+        });
+        
+        m += ((GiniIndex<U, I>) other).m; 
     }
 
     @Override

@@ -29,4 +29,6 @@ public interface SystemMetric<U, I> {
     public abstract void add(Recommendation<U, I> recommendation);
 
     public abstract double evaluate();
+    
+    public abstract void combine(SystemMetric<U, I> other);
 }
