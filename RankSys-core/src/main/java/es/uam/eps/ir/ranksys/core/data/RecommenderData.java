@@ -18,27 +18,21 @@
 package es.uam.eps.ir.ranksys.core.data;
 
 import es.uam.eps.ir.ranksys.core.IdValuePair;
+import es.uam.eps.ir.ranksys.core.ItemIndex;
+import es.uam.eps.ir.ranksys.core.UserIndex;
 import java.util.stream.Stream;
 
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public interface RecommenderData<U, I, V> {
-
-    public int numUsers();
+public interface RecommenderData<U, I, V> extends UserIndex<U>, ItemIndex<I> {
 
     public int numUsers(I i);
-
-    public int numItems();
 
     public int numItems(U u);
 
     public int numPreferences();
-
-    public Stream<U> getAllUsers();
-
-    public Stream<I> getAllItems();
 
     public Stream<IdValuePair<I, V>> getUserPreferences(U u);
 

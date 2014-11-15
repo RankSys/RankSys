@@ -67,6 +67,11 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
     }
 
     @Override
+    public boolean containsFeature(F f) {
+        return featMap.containsKey(f);
+    }
+
+    @Override
     public int numFeatures() {
         return featMap.size();
     }
@@ -74,6 +79,11 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
     @Override
     public int numFeatures(I i) {
         return itemMap.getOrDefault(i, Collections.EMPTY_LIST).size();
+    }
+
+    @Override
+    public boolean containsItem(I i) {
+        return itemMap.containsKey(i);
     }
 
     @Override

@@ -15,26 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.core.feature;
+package es.uam.eps.ir.ranksys.core;
 
-import es.uam.eps.ir.ranksys.core.FeatureIndex;
-import es.uam.eps.ir.ranksys.core.IdValuePair;
-import es.uam.eps.ir.ranksys.core.ItemIndex;
 import java.util.stream.Stream;
 
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * @author Pablo Castells (pablo.castells@uam.es)
  */
-public interface FeatureData<I, F, V> extends ItemIndex<I>, FeatureIndex<F> {
+public interface UserIndex<U> {
 
-    Stream<IdValuePair<I, V>> getFeatureItems(final F f);
+    public boolean containsUser(U u);
 
-    Stream<IdValuePair<F, V>> getItemFeatures(final I i);
+    public int numUsers();
 
-    int numFeatures(I i);
-
-    int numItems(F f);
+    public Stream<U> getAllUsers();
 
 }

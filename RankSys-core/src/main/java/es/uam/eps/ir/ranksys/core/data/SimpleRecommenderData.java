@@ -48,6 +48,11 @@ public class SimpleRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
     }
 
     @Override
+    public boolean containsUser(U u) {
+        return userMap.containsKey(u);
+    }
+
+    @Override
     public int numUsers() {
         return userMap.size();
     }
@@ -55,6 +60,11 @@ public class SimpleRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
     @Override
     public int numUsers(I i) {
         return itemMap.getOrDefault(i, Collections.EMPTY_LIST).size();
+    }
+
+    @Override
+    public boolean containsItem(I i) {
+        return itemMap.containsKey(i);
     }
 
     @Override
@@ -128,5 +138,5 @@ public class SimpleRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
 
         return new SimpleRecommenderData<>(userMap, itemMap, numPreferences[0]);
     }
-    
+
 }

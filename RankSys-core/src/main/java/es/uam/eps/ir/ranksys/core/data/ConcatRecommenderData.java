@@ -35,6 +35,11 @@ public class ConcatRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
     }
 
     @Override
+    public boolean containsUser(U u) {
+        return d1.containsUser(u) || d2.containsUser(u);
+    }
+
+    @Override
     public int numUsers() {
         return (int) getAllUsers().count();
     }
@@ -42,6 +47,11 @@ public class ConcatRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
     @Override
     public int numUsers(I i) {
         return d1.numUsers(i) + d2.numUsers(i);
+    }
+
+    @Override
+    public boolean containsItem(I i) {
+        return d1.containsItem(i) || d2.containsItem(i);
     }
 
     @Override
