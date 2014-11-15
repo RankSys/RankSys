@@ -32,18 +32,20 @@ public class Lazy<T> implements Supplier<T> {
         this.supplier = supplier;
     }
 
+    @Override
     public T get() {
-        T result;
+        T result = object;
 
-        synchronized (this) {
-            result = object;
-            if (result == null) {
-                object = result = supplier.get();
+        if (result == null) {
+            synchronized (this) {
+                result = object;
+                if (result == null) {
+                    object = result = supplier.get();
+                }
             }
         }
-
+        
         return result;
-
     }
 
 }
