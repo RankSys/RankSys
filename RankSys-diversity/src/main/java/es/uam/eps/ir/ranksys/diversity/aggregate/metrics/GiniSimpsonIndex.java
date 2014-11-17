@@ -32,7 +32,7 @@ public class GiniSimpsonIndex<U, I> extends AbstractSalesDiversityMetric<U, I> {
     public double evaluate() {
         double gsi = 0;
         for (int c : itemCount.values()) {
-            gsi += (c / (double) m) * (c / (double) m);
+            gsi += c * c / (double) (m * m);
         }
         gsi = 1 - gsi;
 
