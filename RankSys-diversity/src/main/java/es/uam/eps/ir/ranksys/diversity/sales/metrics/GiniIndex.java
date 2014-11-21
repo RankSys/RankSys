@@ -15,28 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.diversity.aggregate.metrics;
+package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
-import static java.lang.Math.log;
+import static java.util.Arrays.sort;
 
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * @author Pablo Castells (pablo.castells@uam.es)
  */
-public class Entropy<U, I> extends AbstractSalesDiversityMetric<U, I> {
+public class GiniIndex<U, I> extends AbstractSalesDiversityMetric<U, I> {
 
-    public Entropy(int cutoff) {
+    private final int numItems;
+
+    public GiniIndex(int cutoff, int numItems) {
         super(cutoff);
+        this.numItems = numItems;
     }
 
     @Override
     public double evaluate() {
-        double entropy = 0;
-        for (int c : itemCount.values()) {
-            entropy += c * log(c);
+        double gi = 0;
+        int[] cs = itemCount.values();
+        itemCount.clear();
+        sort(cs);
+        for (int j = 0; j < cs.length; j++) {
+            gi += (2 * (j + (numItems - cs.length) + 1) - numItems - 1) * (cs[j] / (double) m);
         }
-        entropy = (log(m) - entropy / (double) m) / log(2);
+        gi /= (numItems - 1);
+        gi = 1 - gi;
 
-        return entropy;
+        return gi;
     }
 }

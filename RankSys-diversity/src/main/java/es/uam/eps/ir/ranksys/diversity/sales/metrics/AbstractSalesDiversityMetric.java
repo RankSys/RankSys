@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.uam.eps.ir.ranksys.diversity.aggregate.metrics;
+package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;

@@ -32,7 +32,7 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetric<U, I> {
 
     private final int cutoff;
-    private final ItemNovelty<U, I> novelty;
+    protected final ItemNovelty<U, I> novelty;
     private final RelevanceModel<U, I> relModel;
     private final RankingDiscountModel disc;
 

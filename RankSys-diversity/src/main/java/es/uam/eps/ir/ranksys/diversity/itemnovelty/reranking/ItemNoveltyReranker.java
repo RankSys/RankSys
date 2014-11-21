@@ -55,6 +55,10 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
         U user = recommendation.getUser();
         ItemNovelty.UserItemNoveltyModel uinm = novelty.getUserModel(user);
         
+        if (uinm == null) {
+            return new int[0];
+        }
+        
         int N = cutoff;
         if (cutoff == 0) {
             N = recommendation.getItems().size();
@@ -73,17 +77,18 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
             relStats.accept(itemValue.v);
             novStats.accept(nov);
         });
-
+        
         IntDoubleTopN topN = new IntDoubleTopN(N);
         List<IdDoublePair<I>> list = recommendation.getItems();
+        int M = list.size();
         for (int i = 0; i < list.size(); i++) {
-            topN.add(i, value(list.get(i), relStats, novMap, novStats));
+            topN.add(M - i, value(list.get(i), relStats, novMap, novStats));
         }
         topN.sort();
 
         int[] perm = new int[topN.size()];
         for (int i = 0; i < topN.size(); i++) {
-            perm[i] = topN.getKeyAt(topN.size() - i - 1);
+            perm[i] = M - topN.getKeyAt(topN.size() - i - 1);
         }
 
         return perm;

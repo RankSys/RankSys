@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.diversity.aggregate.metrics;
+package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
 /**
  *
@@ -32,7 +32,8 @@ public class GiniSimpsonIndex<U, I> extends AbstractSalesDiversityMetric<U, I> {
     public double evaluate() {
         double gsi = 0;
         for (int c : itemCount.values()) {
-            gsi += c * c / (double) (m * m);
+            double p = c / (double) m;
+            gsi += p * p;
         }
         gsi = 1 - gsi;
 
