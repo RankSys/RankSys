@@ -79,25 +79,20 @@ public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
 
     public class UserBinomialModel implements UserModel<U> {
 
-        private final TObjectDoubleMap<F> userFeatureProbs;
-        private final double alpha;
+        private final U user;
+        private final TObjectDoubleMap<F> featureProbs;
 
         private UserBinomialModel(U user, double alpha) {
-            this.alpha = alpha;
-
-            this.userFeatureProbs = getUserFeatureProbs(user);
+            this.user = user;
+            this.featureProbs = getUserFeatureProbs();
         }
 
         public Set<F> getFeatures() {
-            if (alpha < 1.0) {
-                return globalFeatureProbs.keySet();
-            } else {
-                return userFeatureProbs.keySet();
-            }
+            return featureProbs.keySet();
         }
 
         public double p(F f) {
-            return alpha * userFeatureProbs.get(f) + (1 - alpha) * globalFeatureProbs.get(f);
+            return featureProbs.get(f);
         }
 
         public double longing(F f, int N) {
@@ -105,13 +100,23 @@ public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
         }
 
         public double patience(int k, F f, int N) {
-            BinomialDistribution dist = new BinomialDistribution(null, N, p(f));
-            return 1 - (dist.cumulativeProbability(k - 1) - dist.probability(0)) / (1 - dist.probability(0));
+            double pf = p(f);
+            if (pf > 1.0) {
+                System.out.println("WAAAAT");
+            }
+            
+            BinomialDistribution dist = new BinomialDistribution(null, N, pf);
+            double p0 = Math.pow(1 - pf, N);
+            return 1 - (dist.cumulativeProbability(k - 1) - p0) / (1 - p0);
         }
 
-        private TObjectDoubleMap<F> getUserFeatureProbs(U user) {
+        private TObjectDoubleMap<F> getUserFeatureProbs() {
+            if (alpha == 0.0) {
+                return globalFeatureProbs;
+            }
+            
             TObjectDoubleMap<F> probs = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
-
+            
             int n = recommenderData.numItems(user);
             recommenderData.getUserPreferences(user).forEach(pref -> {
                 featureData.getItemFeatures(pref.id).forEach(feature -> {
@@ -121,6 +126,13 @@ public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
 
             probs.transformValues(p -> p / n);
 
+            if (alpha < 1.0) {
+                globalFeatureProbs.forEachEntry((f, p) -> {
+                    probs.put(f, alpha * probs.get(f) + (1 - alpha) * p);
+                    return true;
+                });
+            }
+            
             return probs;
         }
     }

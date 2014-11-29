@@ -24,7 +24,6 @@ import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
-import java.util.List;
 
 /**
  *
@@ -57,9 +56,9 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
             this.uim = intentModel.getUserModel(recommendation.getUser());
             this.redundancy = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 1.0);
             this.probNorm = new TObjectDoubleHashMap<>();
-            recommendation.getItems().forEach(i -> {
-                uim.getItemIntents(i.id).sequential().forEach(f -> {
-                    probNorm.adjustOrPutValue(f, i.v, i.v);
+            recommendation.getItems().forEach(iv -> {
+                uim.getItemIntents(iv.id).sequential().forEach(f -> {
+                    probNorm.adjustOrPutValue(f, iv.v, iv.v);
                 });
             });
         }
