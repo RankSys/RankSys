@@ -37,8 +37,12 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
     protected final double lambda;
     private final boolean norm;
 
-    public LambdaReranker(double lambda, int cutoff, boolean norm) {
-        super(cutoff);
+    public LambdaReranker(double lambda, int cutoff, boolean norm){
+        this (lambda, cutoff, cutoff, norm);
+    }
+    
+    public LambdaReranker(double lambda, int cutoff1, int cutoff2, boolean norm) {
+        super(cutoff1, cutoff2);
         this.lambda = lambda;
         this.norm = norm;
     }
@@ -46,7 +50,7 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation) {
         if (lambda == 0.0) {
-            return getBasePerm(min(cutoff, recommendation.getItems().size()));
+            return getBasePerm(min(cutoff1, recommendation.getItems().size()));
         } else {
             return super.rerankPermutation(recommendation);
         }

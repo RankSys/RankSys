@@ -34,10 +34,10 @@ public class BinomialDiversityReranker<U, I, F> extends LambdaReranker<U, I> {
     private final BinomialCoverageReranker<U, I, F> coverageReranker;
     private final BinomialNonRedundancyReranker<U, I, F> nonRedundancyReranker;
     
-    public BinomialDiversityReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
-        super(lambda, cutoff, true);
-        coverageReranker = new BinomialCoverageReranker<>(featureData, binomialModel, lambda, cutoff);
-        nonRedundancyReranker = new BinomialNonRedundancyReranker<>(featureData, binomialModel, lambda, cutoff);
+    public BinomialDiversityReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff1, int cutoff2) {
+        super(lambda, cutoff1, cutoff2, true);
+        coverageReranker = new BinomialCoverageReranker<>(featureData, binomialModel, lambda, cutoff1, cutoff2);
+        nonRedundancyReranker = new BinomialNonRedundancyReranker<>(featureData, binomialModel, lambda, cutoff1, cutoff2);
     }
 
     @Override

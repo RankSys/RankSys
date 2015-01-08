@@ -33,14 +33,12 @@ import java.util.stream.IntStream;
  */
 public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
 
-    protected final int cutoff;
+    protected final int cutoff1;
+    protected final int cutoff2;
 
-    public GreedyReranker() {
-        this.cutoff = Integer.MAX_VALUE;
-    }
-
-    public GreedyReranker(int cutoff) {
-        this.cutoff = cutoff;
+    public GreedyReranker(int cutoff1, int cutoff2) {
+        this.cutoff1 = cutoff1;
+        this.cutoff2 = cutoff2;
     }
 
     @Override
@@ -62,12 +60,12 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
 
             List<IdDoublePair<I>> list = recommendation.getItems();
 
-            int[] perm = new int[min(cutoff, list.size())];
+            int[] perm = new int[min(cutoff2, list.size())];
             TIntList remainingI = new TIntLinkedList();
             IntStream.range(0, list.size()).forEach(i -> remainingI.add(i));
             int nreranked = 0;
 
-            while (!remainingI.isEmpty() && nreranked < cutoff) {
+            while (!remainingI.isEmpty() && nreranked < cutoff1) {
                 int bestI = selectItem(remainingI, list);
 
                 perm[nreranked] = bestI;
@@ -75,6 +73,10 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
                 remainingI.remove(bestI);
 
                 update(list.get(bestI));
+            }
+
+            for (int i = nreranked; i < perm.length; i++) {
+                perm[i] = remainingI.removeAt(0);
             }
 
             return perm;

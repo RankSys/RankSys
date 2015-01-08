@@ -23,7 +23,6 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,8 +34,8 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
     private final FeatureData<I, F, ?> featureData;
     private final BinomialModel<U, I, F> binomialModel;
 
-    public BinomialCoverageReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
-        super(lambda, cutoff, true);
+    public BinomialCoverageReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff1, int cutoff2) {
+        super(lambda, cutoff1, cutoff2, true);
         this.featureData = featureData;
         this.binomialModel = binomialModel;
     }
@@ -59,7 +58,7 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
 
             uncoveredFeatures = new HashSet<>(ubm.getFeatures());
             coverage = uncoveredFeatures.stream()
-                    .mapToDouble(f -> ubm.longing(f, cutoff))
+                    .mapToDouble(f -> ubm.longing(f, cutoff1))
                     .reduce((x, y) -> x * y).orElse(1.0);
             coverage = Math.pow(coverage, 1 / (double) ubm.getFeatures().size());
 
@@ -70,7 +69,7 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
             double iCoverage = featureData.getItemFeatures(itemValue.id)
                     .map(fv -> fv.id)
                     .filter(uncoveredFeatures::contains)
-                    .mapToDouble(f -> ubm.longing(f, cutoff))
+                    .mapToDouble(f -> ubm.longing(f, cutoff1))
                     .reduce((x, y) -> x * y).orElse(1.0);
             iCoverage = Math.pow(iCoverage, 1 / (double) ubm.getFeatures().size());
             iCoverage = coverage / iCoverage;
@@ -83,7 +82,7 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
             double iCoverage = featureData.getItemFeatures(bestItemValue.id).sequential()
                     .map(fv -> fv.id)
                     .filter(uncoveredFeatures::remove)
-                    .mapToDouble(f -> ubm.longing(f, cutoff))
+                    .mapToDouble(f -> ubm.longing(f, cutoff1))
                     .reduce((x, y) -> x * y).orElse(1.0);
             iCoverage = Math.pow(iCoverage, 1 / (double) ubm.getFeatures().size());
             coverage /= iCoverage;
