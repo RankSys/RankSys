@@ -101,10 +101,6 @@ public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
 
         public double patience(int k, F f, int N) {
             double pf = p(f);
-            if (pf > 1.0) {
-                System.out.println("WAAAAT");
-            }
-            
             BinomialDistribution dist = new BinomialDistribution(null, N, pf);
             double p0 = Math.pow(1 - pf, N);
             return 1 - (dist.cumulativeProbability(k - 1) - p0) / (1 - p0);
@@ -124,6 +120,10 @@ public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
                 });
             });
 
+            if (probs.isEmpty()) {
+                return globalFeatureProbs;
+            }
+            
             probs.transformValues(p -> p / n);
 
             if (alpha < 1.0) {
