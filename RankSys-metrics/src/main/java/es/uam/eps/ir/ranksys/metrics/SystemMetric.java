@@ -31,4 +31,6 @@ public interface SystemMetric<U, I> {
     public abstract double evaluate();
     
     public abstract void combine(SystemMetric<U, I> other);
+    
+    public abstract void reset();
 }

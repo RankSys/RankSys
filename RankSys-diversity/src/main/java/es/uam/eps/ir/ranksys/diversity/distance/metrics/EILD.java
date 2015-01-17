@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.diversity.pairwise.metrics;
+package es.uam.eps.ir.ranksys.diversity.distance.metrics;
 
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.diversity.pairwise.ItemDistanceModel;
+import es.uam.eps.ir.ranksys.diversity.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;

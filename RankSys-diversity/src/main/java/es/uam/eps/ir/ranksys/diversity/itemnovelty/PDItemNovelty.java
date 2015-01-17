@@ -18,7 +18,7 @@
 package es.uam.eps.ir.ranksys.diversity.itemnovelty;
 
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
-import es.uam.eps.ir.ranksys.diversity.pairwise.ItemDistanceModel;
+import es.uam.eps.ir.ranksys.diversity.distance.ItemDistanceModel;
 
 /**
  *

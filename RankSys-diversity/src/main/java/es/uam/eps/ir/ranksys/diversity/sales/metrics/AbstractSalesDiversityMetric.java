@@ -49,8 +49,14 @@ public abstract class AbstractSalesDiversityMetric<U, I> extends AbstractSystemM
             itemCount.adjustOrPutValue(k, v, v);
             return true;
         });
-        
-        m += ((AbstractSalesDiversityMetric<U, I>) other).m; 
+
+        m += ((AbstractSalesDiversityMetric<U, I>) other).m;
+    }
+
+    @Override
+    public void reset() {
+        this.m = 0;
+        itemCount.clear();
     }
 
 }

@@ -69,4 +69,9 @@ public class AggregateDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
         return recommendedItems.size();
     }
 
+    @Override
+    public void reset() {
+        this.recommendedItems.clear();
+    }
+
 }

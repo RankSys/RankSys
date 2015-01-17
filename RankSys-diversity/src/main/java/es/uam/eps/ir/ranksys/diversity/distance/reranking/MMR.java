@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.diversity.pairwise.reranking;
+package es.uam.eps.ir.ranksys.diversity.distance.reranking;
 
 import es.uam.eps.ir.ranksys.core.IdDoublePair;
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.diversity.pairwise.ItemDistanceModel;
+import es.uam.eps.ir.ranksys.diversity.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;

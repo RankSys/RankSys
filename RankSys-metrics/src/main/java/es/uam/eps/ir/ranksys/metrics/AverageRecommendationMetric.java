@@ -77,4 +77,10 @@ public class AverageRecommendationMetric<U, I> extends AbstractSystemMetric<U, I
         return sum / numUsers;
     }
 
+    @Override
+    public void reset() {
+        this.sum = 0;
+        this.numUsers = 0;
+    }
+
 }

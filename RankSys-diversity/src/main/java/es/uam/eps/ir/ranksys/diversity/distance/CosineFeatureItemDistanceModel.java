@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.diversity.pairwise;
+package es.uam.eps.ir.ranksys.diversity.distance;
 
 import es.uam.eps.ir.ranksys.core.IdValuePair;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
@@ -28,9 +28,9 @@ import java.util.stream.Stream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class JaccardFeatureItemDistanceModel<I, F> extends FeatureItemDistanceModel<I, F, Double> {
+public class CosineFeatureItemDistanceModel<I, F> extends FeatureItemDistanceModel<I, F, Double> {
 
-    public JaccardFeatureItemDistanceModel(FeatureData<I, F, Double> featureData) {
+    public CosineFeatureItemDistanceModel(FeatureData<I, F, Double> featureData) {
         super(featureData);
     }
 
@@ -56,8 +56,8 @@ public class JaccardFeatureItemDistanceModel<I, F> extends FeatureItemDistanceMo
         if (comps[1] == 0) {
             return Double.NaN;
         }
-        
-        return 1 - comps[2] / (comps[0] + comps[1] - comps[2]);
+
+        return 1 - comps[2] / Math.sqrt(comps[0] * comps[1]);
     }
 
 }
