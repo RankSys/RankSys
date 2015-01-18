@@ -4,7 +4,7 @@
  * Saúl Vargas (http://www.saulvargas.es)
  * Pablo Castells (http://ir.ii.uam.es/castells/)
 
-## Citations
+## References
 
 If you publish research that uses RankSys, please cite the papers in the following list that best match the parts of the framework that you used:
  * S. Vargas, L. Baltrunas, A. Karatzoglou, P. Castells. Coverage, Redundancy and Size-Awareness in Genre Diversity for Recommender Systems. 8th ACM Conference on Recommender Systems (RecSys 2014). Foster City, CA, USA, October 2014, pp. 209-216.
