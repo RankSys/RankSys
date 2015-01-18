@@ -19,7 +19,12 @@ package es.uam.eps.ir.ranksys.core.format;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.stream.Stream;
 
 /**
@@ -28,14 +33,30 @@ import java.util.stream.Stream;
  */
 public interface RecommendationFormat<U, I> {
 
-    public Writer<U, I> getWriter(String path) throws IOException;
+    public default Writer<U, I> getWriter(String path) throws IOException {
+        return getWriter(new File(path));
+    }
+    
+    public default Writer<U, I> getWriter(File file) throws IOException {
+        return getWriter(new FileOutputStream(file));
+    }
+    
+    public Writer<U, I> getWriter(OutputStream out) throws IOException;
 
     public interface Writer<U, I> extends Closeable {
 
         public void write(Recommendation<U, I> recommendation) throws IOException;
     }
 
-    public Reader<U, I> getReader(String path) throws IOException;
+    public default Reader<U, I> getReader(String path) throws IOException {
+        return getReader(new File(path));
+    }
+    
+    public default Reader<U, I> getReader(File file) throws IOException {
+        return getReader(new FileInputStream(file));
+    }
+    
+    public Reader<U, I> getReader(InputStream in) throws IOException;
     
     public interface Reader<U, I> {
 

@@ -24,9 +24,11 @@ import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.dp;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -52,16 +54,16 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
     }
 
     @Override
-    public Writer getWriter(String path) throws IOException {
-        return new SimpleWriter(path);
+    public Writer getWriter(OutputStream out) throws IOException {
+        return new SimpleWriter(out);
     }
 
     private class SimpleWriter implements RecommendationFormat.Writer<U, I> {
 
         private final BufferedWriter writer;
 
-        public SimpleWriter(String path) throws IOException {
-            this.writer = new BufferedWriter(new FileWriter(path));
+        public SimpleWriter(OutputStream out) throws IOException {
+            this.writer = new BufferedWriter(new OutputStreamWriter(out));
         }
 
         @Override
@@ -85,22 +87,22 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
     }
 
     @Override
-    public Reader<U, I> getReader(String path) throws IOException {
-        return new SimpleReader(path);
+    public Reader<U, I> getReader(InputStream in) throws IOException {
+        return new SimpleReader(in);
     }
 
     private class SimpleReader implements RecommendationFormat.Reader<U, I> {
 
-        private final String path;
+        private final InputStream in;
 
-        public SimpleReader(String path) {
-            this.path = path;
+        public SimpleReader(InputStream in) {
+            this.in = in;
         }
 
         @Override
         public Stream<Recommendation<U, I>> readAll() throws IOException {
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(path));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                 RecommendationIterator iterator = new RecommendationIterator(reader);
                 return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
             } catch (IOException ex) {
