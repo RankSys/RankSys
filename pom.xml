@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <packaging>pom</packaging>
     <modules>
         <module>RankSys-core</module>
+        <module>RankSys-fast</module>
         <module>RankSys-metrics</module>
         <module>RankSys-diversity</module>
         <module>RankSys-examples</module>
