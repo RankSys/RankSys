@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.linked.TIntLinkedList;
@@ -58,7 +58,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
 
         public int[] rerankPermutation() {
 
-            List<IdDoublePair<I>> list = recommendation.getItems();
+            List<IdDouble<I>> list = recommendation.getItems();
 
             int[] perm = new int[min(cutoff2, list.size())];
             TIntList remainingI = new TIntLinkedList();
@@ -82,7 +82,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
             return perm;
         }
 
-        protected int selectItem(TIntList remainingI, List<IdDoublePair<I>> list) {
+        protected int selectItem(TIntList remainingI, List<IdDouble<I>> list) {
             double[] max = new double[]{Double.NEGATIVE_INFINITY};
             int[] bestI = new int[]{remainingI.get(0)};
             remainingI.forEach(i -> {
@@ -100,9 +100,9 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
             return bestI[0];
         }
 
-        protected abstract double value(IdDoublePair<I> itemValue);
+        protected abstract double value(IdDouble<I> itemValue);
 
-        protected abstract void update(IdDoublePair<I> bestItemValue);
+        protected abstract void update(IdDouble<I> bestItemValue);
     }
 
 }

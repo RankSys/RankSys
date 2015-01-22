@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import static es.uam.eps.ir.ranksys.diversity.reranking.PermutationReranker.getBasePerm;
 import es.uam.eps.ir.ranksys.core.util.Stats;
@@ -78,12 +78,12 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
         }
         
         @Override
-        protected int selectItem(TIntList remainingI, List<IdDoublePair<I>> list) {
+        protected int selectItem(TIntList remainingI, List<IdDouble<I>> list) {
             novMap = new TObjectDoubleHashMap<>();
             relStats = new Stats();
             novStats = new Stats();
             remainingI.forEach(i -> {
-                IdDoublePair<I> itemValue = list.get(i);
+                IdDouble<I> itemValue = list.get(i);
                 double nov = nov(itemValue);
                 novMap.put(itemValue.id, nov);
                 relStats.accept(itemValue.v);
@@ -94,11 +94,11 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
         }
 
         @Override
-        protected double value(IdDoublePair<I> iv) {
+        protected double value(IdDouble<I> iv) {
             return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.get(iv.id), novStats);
         }
 
-        protected abstract double nov(IdDoublePair<I> iv);
+        protected abstract double nov(IdDouble<I> iv);
 
     }
 }

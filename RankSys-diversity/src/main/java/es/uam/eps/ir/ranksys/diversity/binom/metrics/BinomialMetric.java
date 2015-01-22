@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.binom.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
@@ -54,7 +54,7 @@ public abstract class BinomialMetric<U, I, F> extends AbstractRecommendationMetr
 
         int rank = 0;
         int nrel = 0;
-        for (IdDoublePair<I> iv : recommendation.getItems()) {
+        for (IdDouble<I> iv : recommendation.getItems()) {
             if (userRelModel.isRelevant(iv.id)) {
                 featureData.getItemFeatures(iv.id).forEach(fv -> {
                     count.adjustOrPutValue(fv.id, 1, 1);

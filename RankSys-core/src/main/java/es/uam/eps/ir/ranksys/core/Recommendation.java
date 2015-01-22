@@ -26,9 +26,9 @@ import java.util.List;
 public class Recommendation<U, I> {
 
     private final U user;
-    private final List<IdDoublePair<I>> items;
+    private final List<IdDouble<I>> items;
 
-    public Recommendation(U user, List<IdDoublePair<I>> items) {
+    public Recommendation(U user, List<IdDouble<I>> items) {
         this.user = user;
         this.items = items;
     }
@@ -37,7 +37,7 @@ public class Recommendation<U, I> {
         return user;
     }
 
-    public List<IdDoublePair<I>> getItems() {
+    public List<IdDouble<I>> getItems() {
         return items;
     }
 }

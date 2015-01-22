@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.binom.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
@@ -57,12 +57,12 @@ public class BinomialDiversityReranker<U, I, F> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected double nov(IdDoublePair<I> itemValue) {
+        protected double nov(IdDouble<I> itemValue) {
             return coverageUserReranker.nov(itemValue) * nonRedundancyUserReranker.nov(itemValue);
         }
 
         @Override
-        protected void update(IdDoublePair<I> bestItemValue) {
+        protected void update(IdDouble<I> bestItemValue) {
             coverageUserReranker.update(bestItemValue);
             nonRedundancyUserReranker.update(bestItemValue);
         }

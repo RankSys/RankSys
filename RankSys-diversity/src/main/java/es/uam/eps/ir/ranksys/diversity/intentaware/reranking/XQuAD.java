@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
@@ -63,12 +63,12 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
             });
         }
 
-        private double pif(IdDoublePair<I> iv, F f) {
+        private double pif(IdDouble<I> iv, F f) {
             return iv.v / probNorm.get(f);
         }
         
         @Override
-        protected double nov(IdDoublePair<I> iv) {
+        protected double nov(IdDouble<I> iv) {
             return uim.getItemIntents(iv.id)
                     .mapToDouble(f -> {
                         return uim.p(f) * pif(iv, f) * redundancy.get(f);
@@ -76,7 +76,7 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected void update(IdDoublePair<I> biv) {
+        protected void update(IdDouble<I> biv) {
             uim.getItemIntents(biv.id).sequential()
                     .forEach(f -> {
                         redundancy.put(f, redundancy.get(f) * (1 - pif(biv, f)));

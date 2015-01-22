@@ -17,18 +17,18 @@
  */
 package es.uam.eps.ir.ranksys.core;
 
-import java.util.stream.Stream;
-
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public interface UserIndex<U> {
+public class IdDouble <I> {
 
-    public boolean containsUser(U u);
+    public final I id;
+    public final double v;
 
-    public int numUsers();
-
-    public Stream<U> getAllUsers();
+    public IdDouble(I id, double v) {
+        this.id = id;
+        this.v = v;
+    }
 
 }

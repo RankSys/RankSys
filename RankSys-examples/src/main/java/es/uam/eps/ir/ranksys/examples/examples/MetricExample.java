@@ -24,9 +24,10 @@ import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
 import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
+import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp;
+import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.vp;
 import es.uam.eps.ir.ranksys.diversity.sales.metrics.AggregateDiversityMetric;
 import es.uam.eps.ir.ranksys.diversity.sales.metrics.GiniIndex;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
@@ -68,10 +69,9 @@ public class MetricExample {
         Double threshold = Double.parseDouble(args[4]);
 
         // USER - ITEM - RATING files for train and test
-        Parser<Double> parser = (token) -> Double.parseDouble(token.toString().split("\t")[0]); // discard timestamps
-        RecommenderData<Long, Long, Double> trainData = SimpleRecommenderData.load(trainDataPath, lp, lp, parser);
-        RecommenderData<Long, Long, Double> testData = SimpleRecommenderData.load(testDataPath, lp, lp, parser);
-        RecommenderData<Long, Long, Double> totalData = new ConcatRecommenderData<>(trainData, testData);
+        RecommenderData<Long, Long, Void> trainData = SimpleRecommenderData.load(trainDataPath, lp, lp, ddp, vp);
+        RecommenderData<Long, Long, Void> testData = SimpleRecommenderData.load(testDataPath, lp, lp, ddp, vp);
+        RecommenderData<Long, Long, Void> totalData = new ConcatRecommenderData<>(trainData, testData);
         // EVALUATED AT CUTOFF 10
         int cutoff = 10;
         // ITEM - FEATURE file

@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.other.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
@@ -50,7 +50,7 @@ public class SRecall<U, I, F> extends AbstractRecommendationMetric<U, I> {
         Set<F> subtopics = new HashSet<>();
         
         int rank = 0;
-        for (IdDoublePair<I> iv : recommendation.getItems()) {
+        for (IdDouble<I> iv : recommendation.getItems()) {
             if (userRelModel.isRelevant(iv.id)) {
                 subtopics.addAll(featureData.getItemFeatures(iv.id).map(fv -> fv.id).collect(Collectors.toList()));
             }

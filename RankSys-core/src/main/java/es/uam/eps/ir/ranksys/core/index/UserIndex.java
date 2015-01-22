@@ -15,20 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.core;
+package es.uam.eps.ir.ranksys.core.index;
+
+import java.util.stream.Stream;
 
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class IdValuePair<I, V> {
+public interface UserIndex<U> {
 
-    public final I id;
-    public final V v;
+    public boolean containsUser(U u);
 
-    public IdValuePair(I id, V v) {
-        this.id = id;
-        this.v = v;
-    }
+    public int numUsers();
+
+    public Stream<U> getAllUsers();
 
 }

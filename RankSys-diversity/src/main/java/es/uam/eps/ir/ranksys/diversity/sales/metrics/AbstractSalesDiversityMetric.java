@@ -5,7 +5,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
 import es.uam.eps.ir.ranksys.metrics.SystemMetric;
@@ -32,7 +32,7 @@ public abstract class AbstractSalesDiversityMetric<U, I> extends AbstractSystemM
     @Override
     public void add(Recommendation<U, I> recommendation) {
         int rank = 0;
-        for (IdDoublePair<I> ivp : recommendation.getItems()) {
+        for (IdDouble<I> ivp : recommendation.getItems()) {
             itemCount.adjustOrPutValue(ivp.id, 1, 1);
 
             rank++;

@@ -17,19 +17,19 @@
  */
 package es.uam.eps.ir.ranksys.core.data;
 
-import es.uam.eps.ir.ranksys.core.IdValuePair;
+import es.uam.eps.ir.ranksys.core.IdPref;
 import java.util.stream.Stream;
 
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class ConcatRecommenderData<U, I, V> implements RecommenderData<U, I, V> {
+public class ConcatRecommenderData<U, I, O> implements RecommenderData<U, I, O> {
 
-    private final RecommenderData<U, I, V> d1;
-    private final RecommenderData<U, I, V> d2;
+    private final RecommenderData<U, I, O> d1;
+    private final RecommenderData<U, I, O> d2;
 
-    public ConcatRecommenderData(RecommenderData<U, I, V> d1, RecommenderData<U, I, V> d2) {
+    public ConcatRecommenderData(RecommenderData<U, I, O> d1, RecommenderData<U, I, O> d2) {
         this.d1 = d1;
         this.d2 = d2;
     }
@@ -80,12 +80,12 @@ public class ConcatRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
     }
 
     @Override
-    public Stream<IdValuePair<I, V>> getUserPreferences(U u) {
+    public Stream<IdPref<I, O>> getUserPreferences(U u) {
         return Stream.concat(d1.getUserPreferences(u), d2.getUserPreferences(u));
     }
 
     @Override
-    public Stream<IdValuePair<U, V>> getItemPreferences(I i) {
+    public Stream<IdPref<U, O>> getItemPreferences(I i) {
         return Stream.concat(d1.getItemPreferences(i), d2.getItemPreferences(i));
     }
 }

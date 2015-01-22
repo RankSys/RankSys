@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.distance.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
@@ -61,12 +61,12 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected double nov(IdDoublePair<I> itemValue) {
+        protected double nov(IdDouble<I> itemValue) {
             return avgDist.get(itemValue.id);
         }
 
         @Override
-        protected void update(IdDoublePair<I> bestItemValue) {
+        protected void update(IdDouble<I> bestItemValue) {
             I bestItem = bestItemValue.id;
             avgDist.remove(bestItem);
 

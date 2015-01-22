@@ -33,12 +33,12 @@ import org.apache.commons.math3.distribution.BinomialDistribution;
  */
 public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
 
-    private final RecommenderData<U, I, Double> recommenderData;
+    private final RecommenderData<U, I, ?> recommenderData;
     private final FeatureData<I, F, ?> featureData;
     private final TObjectDoubleMap<F> globalFeatureProbs;
     private final double alpha;
 
-    public BinomialModel(boolean caching, Stream<U> targetUsers, RecommenderData<U, I, Double> recommenderData, FeatureData<I, F, ?> featureData, double alpha) {
+    public BinomialModel(boolean caching, Stream<U> targetUsers, RecommenderData<U, I, ?> recommenderData, FeatureData<I, F, ?> featureData, double alpha) {
         super(caching, targetUsers);
         this.recommenderData = recommenderData;
         this.featureData = featureData;

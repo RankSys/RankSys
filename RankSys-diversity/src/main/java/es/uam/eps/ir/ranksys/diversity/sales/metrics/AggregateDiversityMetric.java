@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
 import es.uam.eps.ir.ranksys.metrics.SystemMetric;
@@ -48,7 +48,7 @@ public class AggregateDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
         UserRelevanceModel<U, I> urm = relModel.getUserModel(u);
 
         int rank = 0;
-        for (IdDoublePair<I> ivp : recommendation.getItems()) {
+        for (IdDouble<I> ivp : recommendation.getItems()) {
             if (urm.isRelevant(ivp.id)) {
                 recommendedItems.add(ivp.id);
             }

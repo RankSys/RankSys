@@ -17,14 +17,16 @@
  */
 package es.uam.eps.ir.ranksys.core.util.parsing;
 
+import java.util.stream.IntStream;
+
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class Parsers {
 
-    public static IntegerParser ip = new IntegerParser();
-    public static LongParser lp = new LongParser();
+    public static Parser<Integer> ip = from -> IntStream.range(0, from.length()).map(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
+    public static Parser<Long> lp = from -> IntStream.range(0, from.length()).mapToLong(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
     public static Parser<String> sp = from -> from.toString();
     public static Parser<Float> fp = from -> Float.parseFloat(from.toString());
     public static Parser<Double> dp = from -> Double.parseDouble(from.toString());

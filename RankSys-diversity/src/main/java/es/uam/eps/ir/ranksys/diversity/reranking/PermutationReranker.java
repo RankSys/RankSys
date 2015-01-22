@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +39,10 @@ public abstract class PermutationReranker<U, I> implements Reranker<U, I> {
     }
 
     public static <U, I> Recommendation<U, I> permuteRecommendation(Recommendation<U, I> recommendation, int[] perm) {
-        List<IdDoublePair<I>> from = recommendation.getItems();
-        List<IdDoublePair<I>> to = new ArrayList<>();
+        List<IdDouble<I>> from = recommendation.getItems();
+        List<IdDouble<I>> to = new ArrayList<>();
         for (int i = 0; i < perm.length; i++) {
-            to.add(new IdDoublePair<>(from.get(perm[i]).id, (double) (perm.length - i)));
+            to.add(new IdDouble<>(from.get(perm[i]).id, (double) (perm.length - i)));
         }
 
         return new Recommendation<>(recommendation.getUser(), to);

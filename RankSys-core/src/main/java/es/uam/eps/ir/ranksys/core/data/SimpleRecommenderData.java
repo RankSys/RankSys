@@ -17,7 +17,8 @@
  */
 package es.uam.eps.ir.ranksys.core.data;
 
-import es.uam.eps.ir.ranksys.core.IdValuePair;
+import es.uam.eps.ir.ranksys.core.IdPref;
+import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -35,13 +36,13 @@ import java.util.stream.Stream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class SimpleRecommenderData<U, I, V> implements RecommenderData<U, I, V> {
+public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> {
 
-    private final Map<U, List<IdValuePair<I, V>>> userMap;
-    private final Map<I, List<IdValuePair<U, V>>> itemMap;
+    private final Map<U, List<IdPref<I, O>>> userMap;
+    private final Map<I, List<IdPref<U, O>>> itemMap;
     private final int numPreferences;
 
-    protected SimpleRecommenderData(Map<U, List<IdValuePair<I, V>>> userMap, Map<I, List<IdValuePair<U, V>>> itemMap, int numPreferences) {
+    protected SimpleRecommenderData(Map<U, List<IdPref<I, O>>> userMap, Map<I, List<IdPref<U, O>>> itemMap, int numPreferences) {
         this.userMap = userMap;
         this.itemMap = itemMap;
         this.numPreferences = numPreferences;
@@ -93,46 +94,57 @@ public class SimpleRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
     }
 
     @Override
-    public Stream<IdValuePair<I, V>> getUserPreferences(U u) {
+    public Stream<IdPref<I, O>> getUserPreferences(U u) {
         return userMap.getOrDefault(u, Collections.EMPTY_LIST).stream();
     }
 
     @Override
-    public Stream<IdValuePair<U, V>> getItemPreferences(I i) {
+    public Stream<IdPref<U, O>> getItemPreferences(I i) {
         return itemMap.getOrDefault(i, Collections.EMPTY_LIST).stream();
     }
 
-    public static <U, I, V> SimpleRecommenderData<U, I, V> load(String path, Parser<U> uParser, Parser<I> iParser, Parser<V> vParser) throws IOException {
-        return load(new FileInputStream(path), uParser, iParser, vParser);
+    public static <U, I, V> SimpleRecommenderData<U, I, V> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<V> vParser) throws IOException {
+        return load(new FileInputStream(path), uParser, iParser, dp, vParser);
     }
 
-    public static <U, I, V> SimpleRecommenderData<U, I, V> load(InputStream in, Parser<U> uParser, Parser<I> iParser, Parser<V> vParser) throws IOException {
-        Map<U, List<IdValuePair<I, V>>> userMap = new HashMap<>();
-        Map<I, List<IdValuePair<U, V>>> itemMap = new HashMap<>();
+    public static <U, I, O> SimpleRecommenderData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
+        Map<U, List<IdPref<I, O>>> userMap = new HashMap<>();
+        Map<I, List<IdPref<U, O>>> itemMap = new HashMap<>();
         int[] numPreferences = new int[]{0};
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             reader.lines().forEach(l -> {
-                String[] tokens = l.split("\t", 3);
+                String[] tokens = l.split("\t", 4);
                 U user = uParser.parse(tokens[0]);
                 I item = iParser.parse(tokens[1]);
-                V value = vParser.parse(tokens[2]);
+                double value;
+                if (tokens.length >= 3) {
+                    value = dp.parse(tokens[2]);
+                } else {
+                    value = dp.parse(null);
+                }
+                O other;
+                if (tokens.length == 4) {
+                    other = vParser.parse(tokens[3]);
+                } else {
+                    other = vParser.parse(null);
+                }
 
                 numPreferences[0]++;
 
-                List<IdValuePair<I, V>> uList = userMap.get(user);
+                List<IdPref<I, O>> uList = userMap.get(user);
                 if (uList == null) {
                     uList = new ArrayList<>();
                     userMap.put(user, uList);
                 }
-                uList.add(new IdValuePair<>(item, value));
+                uList.add(new IdPref<>(item, value, other));
 
-                List<IdValuePair<U, V>> iList = itemMap.get(item);
+                List<IdPref<U, O>> iList = itemMap.get(item);
                 if (iList == null) {
                     iList = new ArrayList<>();
                     itemMap.put(item, iList);
                 }
-                iList.add(new IdValuePair<>(user, value));
+                iList.add(new IdPref<>(user, value, other));
             });
         }
 

@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
@@ -56,7 +56,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         double ndcg = 0.0;
         int rank = 0;
 
-        for (IdDoublePair<I> pair : recommendation.getItems()) {
+        for (IdDouble<I> pair : recommendation.getItems()) {
             ndcg += userRelModel.gain(pair.id) * disc.disc(rank);
 
             rank++;
@@ -88,10 +88,10 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
 
     public static class NDCGRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
 
-        private final RecommenderData<U, I, Double> testData;
+        private final RecommenderData<U, I, ?> testData;
         private final double threshold;
 
-        public NDCGRelevanceModel(boolean caching, RecommenderData<U, I, Double> testData, double threshold) {
+        public NDCGRelevanceModel(boolean caching, RecommenderData<U, I, ?> testData, double threshold) {
             super(caching, testData.getAllUsers());
             this.testData = testData;
             this.threshold = threshold;

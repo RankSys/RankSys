@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.core.format;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
@@ -69,7 +69,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
         @Override
         public void write(Recommendation<U, I> recommendation) throws IOException {
             U u = recommendation.getUser();
-            for (IdDoublePair<I> pair : recommendation.getItems()) {
+            for (IdDouble<I> pair : recommendation.getItems()) {
                 writer.write(u.toString());
                 writer.write("\t");
                 writer.write(pair.id.toString());
@@ -160,10 +160,10 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
         public Recommendation<U, I> next() {
             String line = null;
 
-            List<IdDoublePair<I>> list = new ArrayList<>();
+            List<IdDouble<I>> list = new ArrayList<>();
 
             U nextU = lastU;
-            list.add(new IdDoublePair<>(lastI, lastS));
+            list.add(new IdDouble<>(lastI, lastS));
             try {
                 while ((line = reader.readLine()) != null) {
                     CharSequence[] tokens = split(line, '\t');
@@ -171,7 +171,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
                     I i = iParser.parse(tokens[1]);
                     Double s = vParser.parse(tokens[2]);
                     if (u.equals(lastU)) {
-                        list.add(new IdDoublePair<>(i, s));
+                        list.add(new IdDouble<>(i, s));
                     } else {
                         lastU = u;
                         lastI = i;

@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.itemnovelty.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
@@ -58,7 +58,7 @@ public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetr
         double norm = 0.0;
 
         int rank = 0;
-        for (IdDoublePair<I> iv : recommendation.getItems()) {
+        for (IdDouble<I> iv : recommendation.getItems()) {
             nov += disc.disc(rank) * userRelModel.gain(iv.id) * uinm.novelty(iv.id);
             norm += disc.disc(rank);
             rank++;

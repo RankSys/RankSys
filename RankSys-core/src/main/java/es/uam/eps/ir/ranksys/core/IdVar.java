@@ -17,18 +17,18 @@
  */
 package es.uam.eps.ir.ranksys.core;
 
-import java.util.stream.Stream;
-
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public interface FeatureIndex<F> {
+public class IdVar<I, V> {
 
-    public boolean containsFeature(F f);
+    public final I id;
+    public final V v;
 
-    public int numFeatures();
-
-    public Stream<F> getAllFeatures();
+    public IdVar(I id, V v) {
+        this.id = id;
+        this.v = v;
+    }
 
 }

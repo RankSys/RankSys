@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
  */
 public class BinaryRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
 
-    private final RecommenderData<U, I, Double> testData;
+    private final RecommenderData<U, I, ?> testData;
     private final double threshold;
 
-    public BinaryRelevanceModel(boolean caching, RecommenderData<U, I, Double> testData, double threshold) {
+    public BinaryRelevanceModel(boolean caching, RecommenderData<U, I, ?> testData, double threshold) {
         super(caching, testData.getAllUsers());
         this.testData = testData;
         this.threshold = threshold;

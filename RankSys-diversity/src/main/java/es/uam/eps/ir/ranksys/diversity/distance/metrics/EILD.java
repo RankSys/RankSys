@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.distance.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
@@ -54,7 +54,7 @@ public class EILD<U, I> extends AbstractRecommendationMetric<U, I> {
     public double evaluate(Recommendation<U, I> recommendation) {
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getUserModel(recommendation.getUser());
 
-        List<IdDoublePair<I>> items = recommendation.getItems();
+        List<IdDouble<I>> items = recommendation.getItems();
         int N = Math.min(cutoff, items.size());
 
         double eild = 0.0;

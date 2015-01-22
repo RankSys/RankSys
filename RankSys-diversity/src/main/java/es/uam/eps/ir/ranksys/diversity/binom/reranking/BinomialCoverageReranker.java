@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.binom.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
@@ -65,7 +65,7 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected double nov(IdDoublePair<I> itemValue) {
+        protected double nov(IdDouble<I> itemValue) {
             double iCoverage = featureData.getItemFeatures(itemValue.id)
                     .map(fv -> fv.id)
                     .filter(uncoveredFeatures::contains)
@@ -78,7 +78,7 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected void update(IdDoublePair<I> bestItemValue) {
+        protected void update(IdDouble<I> bestItemValue) {
             double iCoverage = featureData.getItemFeatures(bestItemValue.id).sequential()
                     .map(fv -> fv.id)
                     .filter(uncoveredFeatures::remove)

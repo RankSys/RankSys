@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.core;
+package es.uam.eps.ir.ranksys.core.index;
 
 import java.util.stream.Stream;
 
@@ -23,11 +23,12 @@ import java.util.stream.Stream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public interface ItemIndex<I> {
+public interface FeatureIndex<F> {
 
-    public boolean containsItem(I i);
-    
-    public int numItems();
-    
-    public Stream<I> getAllItems();
+    public boolean containsFeature(F f);
+
+    public int numFeatures();
+
+    public Stream<F> getAllFeatures();
+
 }

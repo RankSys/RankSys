@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
@@ -45,7 +45,7 @@ public class Precision<U, I> extends AbstractRecommendationMetric<U, I> {
         int relCount = 0;
         int rank = 0;
 
-        for (IdDoublePair<I> pair : recommendation.getItems()) {
+        for (IdDouble<I> pair : recommendation.getItems()) {
             if (userRelModel.isRelevant(pair.id)) {
                 relCount++;
             }

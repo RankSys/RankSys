@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.itemnovelty.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.diversity.reranking.PermutationReranker;
@@ -79,7 +79,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
         });
         
         IntDoubleTopN topN = new IntDoubleTopN(N);
-        List<IdDoublePair<I>> list = recommendation.getItems();
+        List<IdDouble<I>> list = recommendation.getItems();
         int M = list.size();
         for (int i = 0; i < list.size(); i++) {
             topN.add(M - i, value(list.get(i), relStats, novMap, novStats));
@@ -102,7 +102,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
         }
     }
 
-    protected double value(IdDoublePair<I> iv, Stats relStats, TObjectDoubleMap<Object> novMap, Stats novStats) {
+    protected double value(IdDouble<I> iv, Stats relStats, TObjectDoubleMap<Object> novMap, Stats novStats) {
         return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.get(iv.id), novStats);
     }
 }

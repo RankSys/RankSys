@@ -34,10 +34,10 @@ import java.util.stream.Stream;
  */
 public class IntentModel<U, I, F> extends PersonalizableModel<U> {
 
-    private final RecommenderData<U, I, Double> totalData;
+    private final RecommenderData<U, I, ?> totalData;
     private final FeatureData<I, F, ?> featureData;
 
-    public IntentModel(boolean caching, Stream<U> targetUsers, RecommenderData<U, I, Double> totalData, FeatureData<I, F, ?> featureData) {
+    public IntentModel(boolean caching, Stream<U> targetUsers, RecommenderData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
         super(caching, targetUsers);
         this.totalData = totalData;
         this.featureData = featureData;

@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.core.model.PersonalizableModel;
@@ -68,7 +68,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
         int rank = 0;
         TObjectIntMap<F> redundancy = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0);
 
-        for (IdDoublePair<I> pair : recommendation.getItems()) {
+        for (IdDouble<I> pair : recommendation.getItems()) {
             if (urm.isRelevant(pair.id)) {
                 double gain = featureData.getItemFeatures(pair.id).sequential()
                         .map(fv -> fv.id)

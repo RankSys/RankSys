@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDoublePair;
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
@@ -59,7 +59,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
         });
 
         int[] rank = {0};
-        for (IdDoublePair<I> iv : recommendation.getItems()) {
+        for (IdDouble<I> iv : recommendation.getItems()) {
             if (userRelModel.isRelevant(iv.id)) {
                 double gain = userRelModel.gain(iv.id);
                 uim.getItemIntents(iv.id).forEach(f -> {
@@ -79,11 +79,11 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
     public static class ERRRelevanceModel<U, I> extends RelevanceModel<U, I> {
 
-        private final RecommenderData<U, I, Double> testData;
+        private final RecommenderData<U, I, ?> testData;
         private final double threshold;
         private final double maxPreference;
 
-        public ERRRelevanceModel(boolean caching, RecommenderData<U, I, Double> testData, double threshold) {
+        public ERRRelevanceModel(boolean caching, RecommenderData<U, I, ?> testData, double threshold) {
             super(caching, testData.getAllUsers());
             this.testData = testData;
             this.threshold = threshold;

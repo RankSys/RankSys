@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.core.feature;
 
-import es.uam.eps.ir.ranksys.core.IdValuePair;
+import es.uam.eps.ir.ranksys.core.IdVar;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -38,10 +38,10 @@ import java.util.stream.Stream;
  */
 public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
 
-    private final Map<I, List<IdValuePair<F, V>>> itemMap;
-    private final Map<F, List<IdValuePair<I, V>>> featMap;
+    private final Map<I, List<IdVar<F, V>>> itemMap;
+    private final Map<F, List<IdVar<I, V>>> featMap;
 
-    protected SimpleFeatureData(Map<I, List<IdValuePair<F, V>>> itemMap, Map<F, List<IdValuePair<I, V>>> featMap) {
+    protected SimpleFeatureData(Map<I, List<IdVar<F, V>>> itemMap, Map<F, List<IdVar<I, V>>> featMap) {
         this.itemMap = itemMap;
         this.featMap = featMap;
     }
@@ -57,12 +57,12 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
     }
 
     @Override
-    public Stream<IdValuePair<I, V>> getFeatureItems(F f) {
+    public Stream<IdVar<I, V>> getFeatureItems(F f) {
         return featMap.getOrDefault(f, Collections.EMPTY_LIST).stream();
     }
 
     @Override
-    public Stream<IdValuePair<F, V>> getItemFeatures(I i) {
+    public Stream<IdVar<F, V>> getItemFeatures(I i) {
         return itemMap.getOrDefault(i, Collections.EMPTY_LIST).stream();
     }
 
@@ -101,8 +101,8 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
     }
 
     public static <I, F, V> SimpleFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
-        Map<I, List<IdValuePair<F, V>>> itemMap = new HashMap<>();
-        Map<F, List<IdValuePair<I, V>>> featMap = new HashMap<>();
+        Map<I, List<IdVar<F, V>>> itemMap = new HashMap<>();
+        Map<F, List<IdVar<I, V>>> featMap = new HashMap<>();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             reader.lines().forEach(l -> {
@@ -116,19 +116,19 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
                     value = vParser.parse(tokens[2]);
                 }
 
-                List<IdValuePair<F, V>> iList = itemMap.get(item);
+                List<IdVar<F, V>> iList = itemMap.get(item);
                 if (iList == null) {
                     iList = new ArrayList<>();
                     itemMap.put(item, iList);
                 }
-                iList.add(new IdValuePair<>(feat, value));
+                iList.add(new IdVar<>(feat, value));
 
-                List<IdValuePair<I, V>> fList = featMap.get(feat);
+                List<IdVar<I, V>> fList = featMap.get(feat);
                 if (fList == null) {
                     fList = new ArrayList<>();
                     featMap.put(feat, fList);
                 }
-                fList.add(new IdValuePair<>(item, value));
+                fList.add(new IdVar<>(item, value));
             });
         }
 
