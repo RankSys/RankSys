@@ -25,8 +25,20 @@ import java.util.stream.IntStream;
  */
 public class Parsers {
 
-    public static Parser<Integer> ip = from -> IntStream.range(0, from.length()).map(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
-    public static Parser<Long> lp = from -> IntStream.range(0, from.length()).mapToLong(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
+    public static Parser<Integer> ip = from -> {
+        if (from.charAt(0) == '-') {
+            return -IntStream.range(1, from.length()).map(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
+        } else {
+            return IntStream.range(0, from.length()).map(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
+        }
+    };
+    public static Parser<Long> lp = from -> {
+        if (from.charAt(0) == '-') {
+            return -IntStream.range(1, from.length()).mapToLong(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
+        } else {
+            return IntStream.range(0, from.length()).mapToLong(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
+        }
+    };
     public static Parser<String> sp = from -> from.toString();
     public static Parser<Float> fp = from -> Float.parseFloat(from.toString());
     public static Parser<Double> dp = from -> Double.parseDouble(from.toString());
