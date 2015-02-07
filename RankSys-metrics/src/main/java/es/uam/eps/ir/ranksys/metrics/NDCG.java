@@ -92,7 +92,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         private final double threshold;
 
         public NDCGRelevanceModel(boolean caching, RecommenderData<U, I, ?> testData, double threshold) {
-            super(caching, testData.getAllUsers());
+            super(caching, testData.getUsersWithPreferences());
             this.testData = testData;
             this.threshold = threshold;
         }

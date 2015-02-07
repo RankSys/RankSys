@@ -88,4 +88,24 @@ public class ConcatRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
     public Stream<IdPref<U, O>> getItemPreferences(I i) {
         return Stream.concat(d1.getItemPreferences(i), d2.getItemPreferences(i));
     }
+
+    @Override
+    public int numUsersWithPreferences() {
+        return (int) getUsersWithPreferences().count();
+    }
+
+    @Override
+    public int numItemsWithPreferences() {
+        return (int) getItemsWithPreferences().count();
+    }
+
+    @Override
+    public Stream<U> getUsersWithPreferences() {
+        return Stream.concat(d1.getUsersWithPreferences(), d2.getUsersWithPreferences()).distinct();
+    }
+
+    @Override
+    public Stream<I> getItemsWithPreferences() {
+        return Stream.concat(d1.getItemsWithPreferences(), d2.getItemsWithPreferences()).distinct();
+    }
 }

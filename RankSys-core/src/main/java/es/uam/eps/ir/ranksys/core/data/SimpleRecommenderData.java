@@ -103,6 +103,26 @@ public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
         return itemMap.getOrDefault(i, Collections.EMPTY_LIST).stream();
     }
 
+    @Override
+    public int numUsersWithPreferences() {
+        return userMap.size();
+    }
+
+    @Override
+    public int numItemsWithPreferences() {
+        return itemMap.size();
+    }
+
+    @Override
+    public Stream<U> getUsersWithPreferences() {
+        return userMap.keySet().stream();
+    }
+
+    @Override
+    public Stream<I> getItemsWithPreferences() {
+        return itemMap.keySet().stream();
+    }
+
     public static <U, I, V> SimpleRecommenderData<U, I, V> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<V> vParser) throws IOException {
         return load(new FileInputStream(path), uParser, iParser, dp, vParser);
     }

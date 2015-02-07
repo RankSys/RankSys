@@ -162,6 +162,36 @@ public class SimpleFastRecommenderData<U, I, O> implements FastRecommenderData<U
         return iMap.iidx2item(iidx);
     }
 
+    @Override
+    public IntStream getUidxWithPreferences() {
+        return IntStream.of(uidxMap.keys());
+    }
+
+    @Override
+    public IntStream getIidxWithPreferences() {
+        return IntStream.of(iidxMap.keys());
+    }
+
+    @Override
+    public int numUsersWithPreferences() {
+        return uidxMap.size();
+    }
+
+    @Override
+    public int numItemsWithPreferences() {
+        return iidxMap.size();
+    }
+
+    @Override
+    public Stream<U> getUsersWithPreferences() {
+        return getUidxWithPreferences().mapToObj(this::uidx2user);
+    }
+
+    @Override
+    public Stream<I> getItemsWithPreferences() {
+        return getIidxWithPreferences().mapToObj(this::iidx2item);
+    }
+
     public static <U, I, V> SimpleFastRecommenderData<U, I, V> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<V> vParser) throws IOException {
         return load(new FileInputStream(path), uParser, iParser, dp, vParser);
     }

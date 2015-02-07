@@ -28,11 +28,19 @@ import java.util.stream.Stream;
  */
 public interface RecommenderData<U, I, O> extends UserIndex<U>, ItemIndex<I> {
 
+    public int numUsersWithPreferences();
+
+    public int numItemsWithPreferences();
+
     public int numUsers(I i);
 
     public int numItems(U u);
 
     public int numPreferences();
+
+    public Stream<U> getUsersWithPreferences();
+
+    public Stream<I> getItemsWithPreferences();
 
     public Stream<IdPref<I, O>> getUserPreferences(U u);
 

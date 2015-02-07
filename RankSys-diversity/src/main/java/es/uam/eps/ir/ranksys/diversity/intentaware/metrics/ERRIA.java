@@ -84,11 +84,11 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
         private final double maxPreference;
 
         public ERRRelevanceModel(boolean caching, RecommenderData<U, I, ?> testData, double threshold) {
-            super(caching, testData.getAllUsers());
+            super(caching, testData.getUsersWithPreferences());
             this.testData = testData;
             this.threshold = threshold;
 
-            this.maxPreference = testData.getAllUsers().mapToDouble(u -> {
+            this.maxPreference = testData.getUsersWithPreferences().mapToDouble(u -> {
                 return testData.getUserPreferences(u).mapToDouble(pref -> pref.v)
                         .max().orElse(Double.NEGATIVE_INFINITY);
             }).max().orElse(Double.NEGATIVE_INFINITY);

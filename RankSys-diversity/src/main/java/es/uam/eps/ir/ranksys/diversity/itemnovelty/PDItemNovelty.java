@@ -31,7 +31,7 @@ public class PDItemNovelty<U, I> extends ItemNovelty<U, I> {
     private final ItemDistanceModel<I> dist;
 
     public PDItemNovelty(boolean caching, RecommenderData<U, I, ?> recommenderData, ItemDistanceModel<I> dist) {
-        super(caching, recommenderData.getAllUsers());
+        super(caching, recommenderData.getUsersWithPreferences());
         this.recommenderData = recommenderData;
         this.dist = dist;
     }

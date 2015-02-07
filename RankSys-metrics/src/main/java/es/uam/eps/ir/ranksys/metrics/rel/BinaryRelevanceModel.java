@@ -32,7 +32,7 @@ public class BinaryRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
     private final double threshold;
 
     public BinaryRelevanceModel(boolean caching, RecommenderData<U, I, ?> testData, double threshold) {
-        super(caching, testData.getAllUsers());
+        super(caching, testData.getUsersWithPreferences());
         this.testData = testData;
         this.threshold = threshold;
     }

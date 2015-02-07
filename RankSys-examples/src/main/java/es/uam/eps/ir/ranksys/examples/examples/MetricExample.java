@@ -85,7 +85,7 @@ public class MetricExample {
         // NO RANKING DISCOUNT
         RankingDiscountModel disc = new NoDiscountModel();
         // INTENT MODEL
-        IntentModel<Long, Long, String> intentModel = new IntentModel<>(false, testData.getAllUsers(), totalData, featureData);
+        IntentModel<Long, Long, String> intentModel = new IntentModel<>(false, testData.getUsersWithPreferences(), totalData, featureData);
 
         Map<String, SystemMetric<Long, Long>> sysMetrics = new HashMap<>();
 
@@ -112,14 +112,14 @@ public class MetricExample {
         recMetrics.put("a-ndcg", new AlphaNDCG<>(cutoff, 0.5, featureData, binRel));
 
         // AVERAGE VALUES OF RECOMMENDATION METRICS FOR ITEMS IN TEST
-        int numUsers = testData.numUsers();
+        int numUsers = testData.numUsersWithPreferences();
         recMetrics.forEach((name, metric) -> sysMetrics.put(name, new AverageRecommendationMetric<>(metric, numUsers)));
 
         ////////////////////
         // SYSTEM METRICS //
         ////////////////////
         sysMetrics.put("aggrdiv", new AggregateDiversityMetric<>(cutoff, norel));
-        int numItems = totalData.numItems();
+        int numItems = totalData.numItemsWithPreferences();
         sysMetrics.put("gini", new GiniIndex<>(cutoff, numItems));
         
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
