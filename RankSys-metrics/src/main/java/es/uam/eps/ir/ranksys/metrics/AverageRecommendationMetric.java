@@ -48,19 +48,23 @@ public class AverageRecommendationMetric<U, I> extends AbstractSystemMetric<U, I
         this.ignoreNaN = ignoreNaN;
     }
 
-    @Override
-    public void add(Recommendation<U, I> recommendation) {
+    public double addAndEvaluate(Recommendation<U, I> recommendation) {
         double v = metric.evaluate(recommendation);
 
-        if (ignoreNaN && Double.isNaN(v)) {
-            return;
+        if (!ignoreNaN || !Double.isNaN(v)) {
+            sum += v;
+
+            if (!allUsers) {
+                numUsers++;
+            }
         }
 
-        sum += metric.evaluate(recommendation);
+        return v;
+    }
 
-        if (!allUsers) {
-            numUsers++;
-        }
+    @Override
+    public void add(Recommendation<U, I> recommendation) {
+        addAndEvaluate(recommendation);
     }
 
     @Override

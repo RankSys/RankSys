@@ -17,7 +17,6 @@
  */
 package es.uam.eps.ir.ranksys.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
@@ -42,19 +41,9 @@ public class Precision<U, I> extends AbstractRecommendationMetric<U, I> {
     public double evaluate(Recommendation<U, I> recommendation) {
         UserRelevanceModel<U, I> userRelModel = relModel.getUserModel(recommendation.getUser());
         
-        int relCount = 0;
-        int rank = 0;
-
-        for (IdDouble<I> pair : recommendation.getItems()) {
-            if (userRelModel.isRelevant(pair.id)) {
-                relCount++;
-            }
-            rank++;
-            if (rank >= cutoff) {
-                break;
-            }
-        }
-
-        return relCount / (double) cutoff;
+        return recommendation.getItems().stream()
+                .limit(cutoff)
+                .filter(is -> userRelModel.isRelevant(is.id))
+                .count() / (double) cutoff;
     }
 }

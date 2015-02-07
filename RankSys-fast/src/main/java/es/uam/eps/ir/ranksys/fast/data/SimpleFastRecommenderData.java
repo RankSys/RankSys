@@ -49,7 +49,7 @@ public class SimpleFastRecommenderData<U, I, O> implements FastRecommenderData<U
     private final FastUserIndex<U> uMap;
     private final FastItemIndex<I> iMap;
 
-    public SimpleFastRecommenderData(int numPreferences, TIntObjectMap<List<IdxPref<O>>> uidxMap, TIntObjectMap<List<IdxPref<O>>> iidxMap, FastUserIndex<U> uMap, FastItemIndex<I> iMap) {
+    protected SimpleFastRecommenderData(int numPreferences, TIntObjectMap<List<IdxPref<O>>> uidxMap, TIntObjectMap<List<IdxPref<O>>> iidxMap, FastUserIndex<U> uMap, FastItemIndex<I> iMap) {
         this.numPreferences = numPreferences;
         this.uidxMap = uidxMap;
         this.iidxMap = iidxMap;
