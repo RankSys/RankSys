@@ -32,6 +32,9 @@ public class Parsers {
             return IntStream.range(0, from.length()).map(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
         }
     };
+    public static Parser<Integer> ip2 = from -> (from.charAt(0) == '-' ? -1 : 1) * IntStream.range(0, from.length())
+            .map(i -> from.charAt(i) == '-' ? 0 : (from.charAt(i) - '0'))
+            .reduce(0, (a, b) -> a * 10 + b);
     public static Parser<Long> lp = from -> {
         if (from.charAt(0) == '-') {
             return -IntStream.range(1, from.length()).mapToLong(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
