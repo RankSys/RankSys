@@ -1,4 +1,4 @@
-# RankSys: a Framework for the Experimentation of Novelty and Diversity in Recommender Systems
+# RankSys: Recommender Systems framework focused in item ranking and specialized in novelty and diversity
 
 ## Authors
  * Saúl Vargas (http://www.saulvargas.es)
