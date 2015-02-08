@@ -1,4 +1,4 @@
-# RankSys: a Recommender Systems framework focused on item ranking and specialized in novelty and diversity
+# RankSys: Java 8 Recommender Systems framework for novelty, diversity and much more
 
 ## Authors
  * [Saúl Vargas](http://www.saulvargas.es)
