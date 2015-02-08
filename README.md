@@ -1,4 +1,4 @@
-# RankSys: Recommender Systems framework focused in item ranking and specialized in novelty and diversity
+# RankSys: Recommender Systems framework focused on item ranking and specialized in novelty and diversity
 
 ## Authors
  * Saúl Vargas (http://www.saulvargas.es)
