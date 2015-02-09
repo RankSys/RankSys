@@ -1,10 +1,10 @@
-# RankSys: a Framework for the Experimentation of Novelty and Diversity in Recommender Systems
+# RankSys: Java 8 Recommender Systems framework for novelty, diversity and much more
 
 ## Authors
- * Saúl Vargas (http://www.saulvargas.es)
- * Pablo Castells (http://ir.ii.uam.es/castells/)
+ * [Saúl Vargas](http://www.saulvargas.es)
+ * [Pablo Castells](http://ir.ii.uam.es/castells/)
 
-## Citations
+## References
 
 If you publish research that uses RankSys, please cite the papers in the following list that best match the parts of the framework that you used:
  * S. Vargas, L. Baltrunas, A. Karatzoglou, P. Castells. Coverage, Redundancy and Size-Awareness in Genre Diversity for Recommender Systems. 8th ACM Conference on Recommender Systems (RecSys 2014). Foster City, CA, USA, October 2014, pp. 209-216.
@@ -13,7 +13,7 @@ If you publish research that uses RankSys, please cite the papers in the followi
 
 ## Introduction
 
-RankSys is a new framework for the implementation and evaluation of recommendation algorithms and techniques that has resulted from the work carried out throughout the PhD thesis "Novelty and Diversity Evaluation and Enhancement in Recommender Systems" of Saúl Vargas under the supervision of Professor Pablo Castells. While it is envisioned as a framework for the generic experimentation of recommendation technologies, it is naturally specialized in the evaluation and enhancement of novelty and diversity. RankSys receives its name because it targets explicitly the ranking task problem. We therefore do not consider the case of rating prediction as we consider that it leads to sub-optimal recommendations in terms of user satisfaction and business performance. This decision is reflected in the design of the different core interfaces and components of the framework.
+RankSys is a new framework for the implementation and evaluation of recommendation algorithms and techniques that has resulted from the work carried out throughout the PhD thesis ["Novelty and Diversity Evaluation and Enhancement in Recommender Systems"](http://ir.ii.uam.es/saul/saulvargas-thesis.pdf) of [Saúl Vargas](http://www.saulvargas.es) under the supervision of [Pablo Castells](http://ir.ii.uam.es/castells/). While it is envisioned as a framework for the generic experimentation of recommendation technologies, it is naturally specialized in the evaluation and enhancement of novelty and diversity. RankSys receives its name because it targets explicitly the ranking task problem. We therefore do not consider the case of rating prediction as we consider that it leads to sub-optimal recommendations in terms of user satisfaction and business performance. This decision is reflected in the design of the different core interfaces and components of the framework.
 
 The framework has been programmed with Java 8, which is the most recent version of the popular programming language. We take advantage of many of the new features of the language, such as the use of lambda functions, `Stream`'s and facilities for automatic parallelization of the code. The code licensed under the GPL V3, which allows the free use, study, distribution and modification of the software as long as derived works are distributed under the same license.
 
@@ -115,7 +115,7 @@ public interface SystemMetric<U, I> {
 	public void reset();
 }
 ~~~
-This interface is considerably different to the `RecommendationMetric` interface and has been designed so that the value of the metric can be computed by means of a *mutable reduction* (http://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html\#MutableReduction) of the recommendations provided, thus allowing the calculation of a metric for a system in a parallel fashion. As an example, we provide in RankSys-metrics a `AverageRecommendationMetric` class that calculates the average value across users of any instance of `RecommendationMetric`.
+This interface is considerably different to the `RecommendationMetric` interface and has been designed so that the value of the metric can be computed by means of a [*mutable reduction*](http://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html\#MutableReduction) of the recommendations provided, thus allowing the calculation of a metric for a system in a parallel fashion. As an example, we provide in RankSys-metrics a `AverageRecommendationMetric` class that calculates the average value across users of any instance of `RecommendationMetric`.
 
 Additionally, the module RankSys-metrics provides generic models to take into account the ranking and relevance of the items in recommendations. The ranking model defined in the interface `RankingDiscountModel` defines a discount function based on the rank of an item in a recommendation:
 ~~~
