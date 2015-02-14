@@ -34,7 +34,11 @@ public interface FastItemIndex<I> extends ItemIndex<I> {
 
     @Override
     public default Stream<I> getAllItems() {
-        return IntStream.range(0, numItems()).mapToObj(iidx -> iidx2item(iidx));
+        return getAllIidx().mapToObj(iidx -> iidx2item(iidx));
+    }
+    
+    public default IntStream getAllIidx() {
+        return IntStream.range(0, numItems());
     }
     
     public int item2iidx(I i);

@@ -34,7 +34,11 @@ public interface FastUserIndex<U> extends UserIndex<U> {
 
     @Override
     public default Stream<U> getAllUsers() {
-        return IntStream.range(0, numUsers()).mapToObj(uidx -> uidx2user(uidx));
+        return getAllUidx().mapToObj(uidx -> uidx2user(uidx));
+    }
+    
+    public default IntStream getAllUidx() {
+        return IntStream.range(0, numUsers());
     }
 
     public int user2uidx(U u);

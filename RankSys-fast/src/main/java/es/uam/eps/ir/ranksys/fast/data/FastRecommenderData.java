@@ -38,10 +38,6 @@ public interface FastRecommenderData<U, I, V> extends RecommenderData<U, I, V>, 
     
     public IntStream getIidxWithPreferences();
     
-    public IntStream getAllUidx();
-    
-    public IntStream getAllIidx();
-
     public Stream<IdxPref<V>> getUidxPreferences(int uidx);
 
     public Stream<IdxPref<V>> getIidxPreferences(int iidx);

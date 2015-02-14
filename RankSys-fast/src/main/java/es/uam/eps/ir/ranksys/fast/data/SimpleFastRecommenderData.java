@@ -17,16 +17,11 @@
  */
 package es.uam.eps.ir.ranksys.fast.data;
 
-import es.uam.eps.ir.ranksys.core.IdPref;
 import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.fast.IdxPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.SimpleFastUserIndex;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,60 +36,37 @@ import java.util.stream.Stream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class SimpleFastRecommenderData<U, I, O> implements FastRecommenderData<U, I, O> {
+public class SimpleFastRecommenderData<U, I, O> extends AbstractFastRecommenderData<U, I, O> {
 
     private final int numPreferences;
-    private final TIntObjectMap<List<IdxPref<O>>> uidxMap;
-    private final TIntObjectMap<List<IdxPref<O>>> iidxMap;
-    private final FastUserIndex<U> uMap;
-    private final FastItemIndex<I> iMap;
+    private final List<List<IdxPref<O>>> uidxList;
+    private final List<List<IdxPref<O>>> iidxList;
 
-    protected SimpleFastRecommenderData(int numPreferences, TIntObjectMap<List<IdxPref<O>>> uidxMap, TIntObjectMap<List<IdxPref<O>>> iidxMap, FastUserIndex<U> uMap, FastItemIndex<I> iMap) {
+    protected SimpleFastRecommenderData(int numPreferences, List<List<IdxPref<O>>> uidxList, List<List<IdxPref<O>>> iidxList, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
+        super(uIndex, iIndex);
         this.numPreferences = numPreferences;
-        this.uidxMap = uidxMap;
-        this.iidxMap = iidxMap;
-        this.uMap = uMap;
-        this.iMap = iMap;
+        this.uidxList = uidxList;
+        this.iidxList = iidxList;
     }
 
     @Override
     public int numUsers(int iidx) {
-        return iidxMap.get(iidx).size();
+        return iidxList.get(iidx).size();
     }
 
     @Override
     public int numItems(int uidx) {
-        return uidxMap.get(uidx).size();
-    }
-
-    @Override
-    public IntStream getAllUidx() {
-        return IntStream.range(0, uidxMap.size());
-    }
-
-    @Override
-    public IntStream getAllIidx() {
-        return IntStream.range(0, iidxMap.size());
+        return uidxList.get(uidx).size();
     }
 
     @Override
     public Stream<IdxPref<O>> getUidxPreferences(int uidx) {
-        return uidxMap.get(uidx).stream();
+        return uidxList.get(uidx).stream();
     }
 
     @Override
     public Stream<IdxPref<O>> getIidxPreferences(int iidx) {
-        return iidxMap.get(iidx).stream();
-    }
-
-    @Override
-    public int numUsers(I i) {
-        return numUsers(item2iidx(i));
-    }
-
-    @Override
-    public int numItems(U u) {
-        return numItems(user2uidx(u));
+        return iidxList.get(iidx).stream();
     }
 
     @Override
@@ -103,105 +75,43 @@ public class SimpleFastRecommenderData<U, I, O> implements FastRecommenderData<U
     }
 
     @Override
-    public Stream<IdPref<I, O>> getUserPreferences(U u) {
-        return getUidxPreferences(user2uidx(u)).map(iv -> new IdPref<>(iidx2item(iv.idx), iv.v, iv.o));
-    }
-
-    @Override
-    public Stream<IdPref<U, O>> getItemPreferences(I i) {
-        return getIidxPreferences(item2iidx(i)).map(uv -> new IdPref<>(uidx2user(uv.idx), uv.v, uv.o));
-    }
-
-    @Override
-    public boolean containsUser(U u) {
-        return uMap.containsUser(u);
-    }
-
-    @Override
-    public int numUsers() {
-        return uMap.numUsers();
-    }
-
-    @Override
-    public Stream<U> getAllUsers() {
-        return uMap.getAllUsers();
-    }
-
-    @Override
-    public boolean containsItem(I i) {
-        return iMap.containsItem(i);
-    }
-
-    @Override
-    public int numItems() {
-        return iMap.numItems();
-    }
-
-    @Override
-    public Stream<I> getAllItems() {
-        return iMap.getAllItems();
-    }
-
-    @Override
-    public int user2uidx(U u) {
-        return uMap.user2uidx(u);
-    }
-
-    @Override
-    public U uidx2user(int uidx) {
-        return uMap.uidx2user(uidx);
-    }
-
-    @Override
-    public int item2iidx(I i) {
-        return iMap.item2iidx(i);
-    }
-
-    @Override
-    public I iidx2item(int iidx) {
-        return iMap.iidx2item(iidx);
-    }
-
-    @Override
     public IntStream getUidxWithPreferences() {
-        return IntStream.of(uidxMap.keys());
+        return IntStream.range(0, numUsers())
+                .filter(uidx -> uidxList.get(uidx) != null);
     }
 
     @Override
     public IntStream getIidxWithPreferences() {
-        return IntStream.of(iidxMap.keys());
+        return IntStream.range(0, numItems())
+                .filter(iidx -> iidxList.get(iidx) != null);
     }
 
     @Override
     public int numUsersWithPreferences() {
-        return uidxMap.size();
+        return uidxList.size();
     }
 
     @Override
     public int numItemsWithPreferences() {
-        return iidxMap.size();
+        return iidxList.size();
     }
 
-    @Override
-    public Stream<U> getUsersWithPreferences() {
-        return getUidxWithPreferences().mapToObj(this::uidx2user);
+    public static <U, I, O> SimpleFastRecommenderData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
+        return load(new FileInputStream(path), uParser, iParser, dp, vParser, uIndex, iIndex);
     }
 
-    @Override
-    public Stream<I> getItemsWithPreferences() {
-        return getIidxWithPreferences().mapToObj(this::iidx2item);
-    }
-
-    public static <U, I, V> SimpleFastRecommenderData<U, I, V> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<V> vParser) throws IOException {
-        return load(new FileInputStream(path), uParser, iParser, dp, vParser);
-    }
-
-    public static <U, I, O> SimpleFastRecommenderData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
+    public static <U, I, O> SimpleFastRecommenderData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
         int[] numPreferences = new int[]{0};
-        TIntObjectMap<List<IdxPref<O>>> uidxMap = new TIntObjectHashMap<>();
-        TIntObjectMap<List<IdxPref<O>>> iidxMap = new TIntObjectHashMap<>();
-        SimpleFastUserIndex<U> uMap = new SimpleFastUserIndex<>();
-        SimpleFastItemIndex<I> iMap = new SimpleFastItemIndex<>();
+        
+        List<List<IdxPref<O>>> uidxList = new ArrayList<>();
+        for (int uidx = 0; uidx < uIndex.numUsers(); uidx++) {
+            uidxList.add(null);
+        }
+        
+        List<List<IdxPref<O>>> iidxList = new ArrayList<>();
+        for (int iidx = 0; iidx < iIndex.numItems(); iidx++) {
+            iidxList.add(null);
+        }
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             reader.lines().forEach(l -> {
@@ -221,28 +131,28 @@ public class SimpleFastRecommenderData<U, I, O> implements FastRecommenderData<U
                     other = vParser.parse(null);
                 }
 
-                int uidx = uMap.add(user);
-                int iidx = iMap.add(item);
+                int uidx = uIndex.user2uidx(user);
+                int iidx = iIndex.item2iidx(item);
 
                 numPreferences[0]++;
 
-                List<IdxPref<O>> uList = uidxMap.get(uidx);
+                List<IdxPref<O>> uList = uidxList.get(uidx);
                 if (uList == null) {
                     uList = new ArrayList<>();
-                    uidxMap.put(uidx, uList);
+                    uidxList.set(uidx, uList);
                 }
                 uList.add(new IdxPref<>(iidx, value, other));
 
-                List<IdxPref<O>> iList = iidxMap.get(iidx);
+                List<IdxPref<O>> iList = iidxList.get(iidx);
                 if (iList == null) {
                     iList = new ArrayList<>();
-                    iidxMap.put(iidx, iList);
+                    iidxList.set(iidx, iList);
                 }
                 iList.add(new IdxPref<>(uidx, value, other));
             });
         }
 
-        return new SimpleFastRecommenderData<>(numPreferences[0], uidxMap, iidxMap, uMap, iMap);
+        return new SimpleFastRecommenderData<>(numPreferences[0], uidxList, iidxList, uIndex, iIndex);
     }
 
 }
