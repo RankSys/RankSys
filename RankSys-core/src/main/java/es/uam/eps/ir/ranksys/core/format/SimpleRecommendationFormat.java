@@ -145,7 +145,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
                     }
                     return false;
                 } else {
-                    CharSequence[] tokens = split(line, '\t');
+                    CharSequence[] tokens = split(line, '\t', 4);
                     lastU = uParser.parse(tokens[0]);
                     lastI = iParser.parse(tokens[1]);
                     lastS = vParser.parse(tokens[2]);
@@ -166,7 +166,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
             list.add(new IdDouble<>(lastI, lastS));
             try {
                 while ((line = reader.readLine()) != null) {
-                    CharSequence[] tokens = split(line, '\t');
+                    CharSequence[] tokens = split(line, '\t', 4);
                     U u = uParser.parse(tokens[0]);
                     I i = iParser.parse(tokens[1]);
                     Double s = vParser.parse(tokens[2]);

@@ -128,7 +128,7 @@ public class IdxIndex<T> {
         final BufferedReader in = new BufferedReader(new InputStreamReader(stream));
         String line;
         while ((line = in.readLine()) != null) {
-            CharSequence[] tokens = split(line, '\t');
+            CharSequence[] tokens = split(line, '\t', 3);
             T a = tParser.parse(tokens[0]);
             int b = ip.parse(tokens[1]);
 
