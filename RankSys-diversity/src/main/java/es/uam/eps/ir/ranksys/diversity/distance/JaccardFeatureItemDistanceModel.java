@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.distance;
 
-import es.uam.eps.ir.ranksys.core.IdValuePair;
+import es.uam.eps.ir.ranksys.core.IdObjectPair;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
@@ -35,7 +35,7 @@ public class JaccardFeatureItemDistanceModel<I, F> extends FeatureItemDistanceMo
     }
 
     @Override
-    public double dist(Stream<IdValuePair<F, Double>> features1, Stream<IdValuePair<F, Double>> features2) {
+    public double dist(Stream<IdObjectPair<F, Double>> features1, Stream<IdObjectPair<F, Double>> features2) {
         TObjectDoubleMap<F> auxMap = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
         double[] comps = {0.0, 0.0, 0.0};
 

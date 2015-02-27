@@ -18,7 +18,7 @@
 package es.uam.eps.ir.ranksys.core.feature;
 
 import es.uam.eps.ir.ranksys.core.FeatureIndex;
-import es.uam.eps.ir.ranksys.core.IdValuePair;
+import es.uam.eps.ir.ranksys.core.IdObjectPair;
 import es.uam.eps.ir.ranksys.core.ItemIndex;
 import java.util.stream.Stream;
 
@@ -29,9 +29,9 @@ import java.util.stream.Stream;
  */
 public interface FeatureData<I, F, V> extends ItemIndex<I>, FeatureIndex<F> {
 
-    Stream<IdValuePair<I, V>> getFeatureItems(final F f);
+    Stream<IdObjectPair<I, V>> getFeatureItems(final F f);
 
-    Stream<IdValuePair<F, V>> getItemFeatures(final I i);
+    Stream<IdObjectPair<F, V>> getItemFeatures(final I i);
 
     int numFeatures(I i);
 

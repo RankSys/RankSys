@@ -20,15 +20,32 @@ package es.uam.eps.ir.ranksys.core;
 import java.util.stream.Stream;
 
 /**
+ * Index for a set of features.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public interface FeatureIndex<F> {
 
+    /**
+     * Checks whether the index contains a feature.
+     *
+     * @param f feature
+     * @return true if the index contains the feature, false otherwise
+     */
     public boolean containsFeature(F f);
 
+    /**
+     * Counts the number of indexed features.
+     *
+     * @return the total number of features
+     */
     public int numFeatures();
 
+    /**
+     * Retrieves a stream of the indexed features.
+     *
+     * @return a stream of all the features
+     */
     public Stream<F> getAllFeatures();
 
 }

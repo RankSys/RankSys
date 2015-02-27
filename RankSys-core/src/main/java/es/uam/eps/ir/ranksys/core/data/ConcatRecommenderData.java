@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.core.data;
 
-import es.uam.eps.ir.ranksys.core.IdValuePair;
+import es.uam.eps.ir.ranksys.core.IdObjectPair;
 import java.util.stream.Stream;
 
 /**
@@ -80,12 +80,12 @@ public class ConcatRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
     }
 
     @Override
-    public Stream<IdValuePair<I, V>> getUserPreferences(U u) {
+    public Stream<IdObjectPair<I, V>> getUserPreferences(U u) {
         return Stream.concat(d1.getUserPreferences(u), d2.getUserPreferences(u));
     }
 
     @Override
-    public Stream<IdValuePair<U, V>> getItemPreferences(I i) {
+    public Stream<IdObjectPair<U, V>> getItemPreferences(I i) {
         return Stream.concat(d1.getItemPreferences(i), d2.getItemPreferences(i));
     }
 }

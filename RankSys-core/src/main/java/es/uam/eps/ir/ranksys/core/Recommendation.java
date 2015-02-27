@@ -20,6 +20,7 @@ package es.uam.eps.ir.ranksys.core;
 import java.util.List;
 
 /**
+ * A recommendation issued to a user.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
@@ -28,15 +29,31 @@ public class Recommendation<U, I> {
     private final U user;
     private final List<IdDoublePair<I>> items;
 
+    /**
+     * Constructs the recommendation.
+     *
+     * @param user the user that receives the recommendation
+     * @param items a list of item ID-score pairs sorted by descending score
+     */
     public Recommendation(U user, List<IdDoublePair<I>> items) {
         this.user = user;
         this.items = items;
     }
 
+    /**
+     * Returns the user that receives the recommendation.
+     * 
+     * @return the ID of the user
+     */
     public U getUser() {
         return user;
     }
 
+    /**
+     * Returns the list of item-score pairs.
+     * 
+     * @return a list of item ID-score pairs sorted by descending score
+     */
     public List<IdDoublePair<I>> getItems() {
         return items;
     }
