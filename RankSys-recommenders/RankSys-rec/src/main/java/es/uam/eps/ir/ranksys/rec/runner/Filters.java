@@ -50,6 +50,7 @@ public class Filters {
 //        };
     }
 
+    @SafeVarargs
     public static <U, I> Function<U, Predicate<I>> and(Function<U, Predicate<I>>... filters) {
         return user -> {
             Predicate<I> andPredicate = item -> true;

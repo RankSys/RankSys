@@ -47,13 +47,13 @@ public class BinomialDiversityReranker<U, I, F> extends LambdaReranker<U, I> {
 
     protected class BinomialDiversityUserReranker extends LambdaUserReranker {
 
-        private final BinomialCoverageUserReranker coverageUserReranker;
-        private final BinomialNonRedundancyUserReranker nonRedundancyUserReranker;
+        private final BinomialCoverageReranker<U, I, F>.BinomialCoverageUserReranker coverageUserReranker;
+        private final BinomialNonRedundancyReranker<U, I, F>.BinomialNonRedundancyUserReranker nonRedundancyUserReranker;
         
         public BinomialDiversityUserReranker(Recommendation<U, I> recommendation) {
             super(recommendation);
-            this.coverageUserReranker = (BinomialCoverageUserReranker) coverageReranker.getUserReranker(recommendation);
-            this.nonRedundancyUserReranker = (BinomialNonRedundancyUserReranker) nonRedundancyReranker.getUserReranker(recommendation);
+            this.coverageUserReranker = (BinomialCoverageReranker<U, I, F>.BinomialCoverageUserReranker) coverageReranker.getUserReranker(recommendation);
+            this.nonRedundancyUserReranker =  (BinomialNonRedundancyReranker<U, I, F>.BinomialNonRedundancyUserReranker) nonRedundancyReranker.getUserReranker(recommendation);
         }
 
         @Override

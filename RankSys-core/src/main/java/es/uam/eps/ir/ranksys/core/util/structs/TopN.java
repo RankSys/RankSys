@@ -32,6 +32,7 @@ public class TopN<T> extends AbstractCollection<T> {
     private int capacity;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public TopN(int capacity) {
         this(capacity, (T elem1, T elem2) -> ((Comparable<T>) elem1).compareTo(elem2));
     }

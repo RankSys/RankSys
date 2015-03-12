@@ -48,6 +48,7 @@ public class IntentModel<U, I, F> extends PersonalizableModel<U> {
         return new UserIntentModel(user);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public UserIntentModel getUserModel(U user) {
         return (UserIntentModel) super.getUserModel(user);

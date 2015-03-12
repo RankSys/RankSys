@@ -54,7 +54,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
     }
 
     @Override
-    public Writer getWriter(OutputStream out) throws IOException {
+    public Writer<U, I> getWriter(OutputStream out) throws IOException {
         return new SimpleWriter(out);
     }
 

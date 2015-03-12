@@ -33,7 +33,8 @@ public abstract class RelevanceModel<U, I> extends PersonalizableModel<U> {
 
     @Override
     protected abstract UserRelevanceModel<U, I> get(U user);
-    
+
+    @SuppressWarnings("unchecked")
     @Override
     public UserRelevanceModel<U, I> getUserModel(U user) {
         return (UserRelevanceModel<U, I>) super.getUserModel(user);

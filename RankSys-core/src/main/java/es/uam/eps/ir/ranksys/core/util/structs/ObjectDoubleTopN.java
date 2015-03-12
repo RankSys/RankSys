@@ -28,6 +28,7 @@ public class ObjectDoubleTopN<T> {
     private int capacity;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public ObjectDoubleTopN(int capacity) {
         this.capacity = capacity;
         keys = (T[]) new Object[capacity];
@@ -35,6 +36,7 @@ public class ObjectDoubleTopN<T> {
         size = 0;
     }
 
+    @SuppressWarnings("unchecked")
     public void sort() {
         int origSize = size;
         int origCapacity = capacity;
@@ -64,6 +66,7 @@ public class ObjectDoubleTopN<T> {
         return size == 0;
     }
 
+    @SuppressWarnings("unchecked")
     public boolean add(T key, double value) {
         if (size < capacity) {
             int i = size;
@@ -135,6 +138,7 @@ public class ObjectDoubleTopN<T> {
         return (i + 1) * 2;
     }
 
+    @SuppressWarnings("unchecked")
     private int minChild(int i) {
         int l = left(i);
         int r = right(i);

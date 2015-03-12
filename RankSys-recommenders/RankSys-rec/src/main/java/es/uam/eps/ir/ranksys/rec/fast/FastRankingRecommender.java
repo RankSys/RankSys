@@ -40,7 +40,7 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
     @Override
     public FastRecommendation<U, I> getRecommendation(int uidx, int maxLength, IntPredicate filter) {
         if (uidx == -1) {
-            return new FastRecommendation<>(uidx, Collections.EMPTY_LIST);
+            return new FastRecommendation<>(uidx, new ArrayList<>(0));
         }
 
         TIntDoubleMap scoresMap = getScoresMap(uidx);

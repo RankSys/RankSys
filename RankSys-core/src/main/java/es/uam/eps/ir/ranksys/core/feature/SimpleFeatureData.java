@@ -58,12 +58,12 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
 
     @Override
     public Stream<IdVar<I, V>> getFeatureItems(F f) {
-        return featMap.getOrDefault(f, Collections.EMPTY_LIST).stream();
+        return featMap.getOrDefault(f, new ArrayList<>()).stream();
     }
 
     @Override
     public Stream<IdVar<F, V>> getItemFeatures(I i) {
-        return itemMap.getOrDefault(i, Collections.EMPTY_LIST).stream();
+        return itemMap.getOrDefault(i, new ArrayList<>()).stream();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
 
     @Override
     public int numFeatures(I i) {
-        return itemMap.getOrDefault(i, Collections.EMPTY_LIST).size();
+        return itemMap.getOrDefault(i, new ArrayList<>()).size();
     }
 
     @Override
@@ -93,7 +93,7 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
 
     @Override
     public int numItems(F f) {
-        return featMap.getOrDefault(f, Collections.EMPTY_LIST).size();
+        return featMap.getOrDefault(f, new ArrayList<>()).size();
     }
 
     public static <I, F, V> SimpleFeatureData<I, F, V> load(String path, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {

@@ -34,6 +34,7 @@ public abstract class ItemNovelty<U, I> extends PersonalizableModel<U> {
     @Override
     protected abstract UserItemNoveltyModel<U, I> get(U u);
 
+    @SuppressWarnings("unchecked")
     @Override
     public UserItemNoveltyModel<U, I> getUserModel(U u) {
         return (UserItemNoveltyModel<U, I>) super.getUserModel(u);

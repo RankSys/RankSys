@@ -59,6 +59,7 @@ public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
         return new UserBinomialModel(u, alpha);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public UserBinomialModel getUserModel(U u) {
         return (UserBinomialModel) super.getUserModel(u);

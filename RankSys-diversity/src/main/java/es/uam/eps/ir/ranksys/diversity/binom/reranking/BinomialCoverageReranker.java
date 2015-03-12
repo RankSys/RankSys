@@ -41,7 +41,7 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
     }
 
     @Override
-    protected LambdaUserReranker getUserReranker(Recommendation<U, I> recommendation) {
+    protected BinomialCoverageUserReranker getUserReranker(Recommendation<U, I> recommendation) {
         return new BinomialCoverageUserReranker(recommendation);
     }
 

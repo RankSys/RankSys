@@ -134,6 +134,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
             return new UserAlphaNDCGIdeal(idcg(relModel.getUserModel(u)));
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public UserAlphaNDCGIdeal getUserModel(U u) {
             return (UserAlphaNDCGIdeal) super.getUserModel(u);

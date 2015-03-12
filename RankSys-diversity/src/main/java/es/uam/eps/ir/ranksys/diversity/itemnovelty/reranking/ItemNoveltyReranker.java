@@ -53,7 +53,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation) {
         U user = recommendation.getUser();
-        ItemNovelty.UserItemNoveltyModel uinm = novelty.getUserModel(user);
+        ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getUserModel(user);
         
         if (uinm == null) {
             return new int[0];

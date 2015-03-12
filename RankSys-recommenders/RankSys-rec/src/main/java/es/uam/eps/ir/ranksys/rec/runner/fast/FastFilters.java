@@ -52,7 +52,8 @@ public class FastFilters {
 //        };
     }
 
-    public static <U, I> Function<U, IntPredicate> and(Function<U, IntPredicate>... filters) {
+    @SafeVarargs
+    public static <U> Function<U, IntPredicate> and(Function<U, IntPredicate>... filters) {
         return uidx -> {
             IntPredicate andPredicate = iidx -> true;
             for (Function<U, IntPredicate> filter : filters) {

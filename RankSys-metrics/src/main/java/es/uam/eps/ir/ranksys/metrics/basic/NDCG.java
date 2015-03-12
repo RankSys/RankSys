@@ -52,7 +52,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
 
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
-        UserNDCGRelevanceModel userRelModel = (UserNDCGRelevanceModel) relModel.getUserModel(recommendation.getUser());
+        NDCGRelevanceModel<U,I>.UserNDCGRelevanceModel userRelModel = (NDCGRelevanceModel<U,I>.UserNDCGRelevanceModel) relModel.getUserModel(recommendation.getUser());
 
         double ndcg = 0.0;
         int rank = 0;
@@ -99,7 +99,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         }
 
         @Override
-        protected UserIdealRelevanceModel<U, I> get(U user) {
+        protected UserNDCGRelevanceModel get(U user) {
             return new UserNDCGRelevanceModel(user);
         }
 

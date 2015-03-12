@@ -48,7 +48,7 @@ public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetr
     public double evaluate(Recommendation<U, I> recommendation) {
         U u = recommendation.getUser();
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getUserModel(u);
-        ItemNovelty.UserItemNoveltyModel uinm = novelty.getUserModel(u);
+        ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getUserModel(u);
         
         if (uinm == null) {
             return 0.0;

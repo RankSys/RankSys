@@ -60,7 +60,7 @@ public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
 
     @Override
     public int numUsers(I i) {
-        return itemMap.getOrDefault(i, Collections.EMPTY_LIST).size();
+        return itemMap.getOrDefault(i, new ArrayList<>(0)).size();
     }
 
     @Override
@@ -75,7 +75,7 @@ public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
 
     @Override
     public int numItems(U u) {
-        return userMap.getOrDefault(u, Collections.EMPTY_LIST).size();
+        return userMap.getOrDefault(u, new ArrayList<>()).size();
     }
 
     @Override
@@ -95,12 +95,12 @@ public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
 
     @Override
     public Stream<IdPref<I, O>> getUserPreferences(U u) {
-        return userMap.getOrDefault(u, Collections.EMPTY_LIST).stream();
+        return userMap.getOrDefault(u, new ArrayList<>()).stream();
     }
 
     @Override
     public Stream<IdPref<U, O>> getItemPreferences(I i) {
-        return itemMap.getOrDefault(i, Collections.EMPTY_LIST).stream();
+        return itemMap.getOrDefault(i, new ArrayList<>()).stream();
     }
 
     @Override

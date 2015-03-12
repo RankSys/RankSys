@@ -47,7 +47,7 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
     }
 
     @Override
-    protected LambdaUserReranker getUserReranker(Recommendation<U, I> recommendation) {
+    protected BinomialNonRedundancyUserReranker getUserReranker(Recommendation<U, I> recommendation) {
         return new BinomialNonRedundancyUserReranker(recommendation);
     }
 
