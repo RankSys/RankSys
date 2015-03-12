@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>RankSys-metrics</module>
         <module>RankSys-diversity</module>
         <module>RankSys-examples</module>
+        <module>RankSys-recommenders</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
