@@ -29,7 +29,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <modules>
         <module>RankSys-rec</module>
     </modules>
-    <properties>
-        <netbeans.hint.license>template</netbeans.hint.license>
-    </properties>
 </project>

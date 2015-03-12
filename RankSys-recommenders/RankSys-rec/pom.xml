@@ -37,5 +37,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>RankSys-fast</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.sf.trove4j</groupId>
+            <artifactId>trove4j</artifactId>
+            <version>3.0.3</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

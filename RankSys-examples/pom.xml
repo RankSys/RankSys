@@ -44,5 +44,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-    <name>RankSys-examples</name>
 </project>

@@ -29,6 +29,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>RankSys-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-metrics</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -42,12 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>3.2</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.1</version>
             <type>jar</type>
         </dependency>
     </dependencies>
