@@ -15,14 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.metrics;
+package es.uam.eps.ir.ranksys.metrics.basic;
 
 import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
+import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel.UserIdealRelevanceModel;
-import es.uam.eps.ir.ranksys.metrics.NDCG.NDCGRelevanceModel.UserNDCGRelevanceModel;
+import es.uam.eps.ir.ranksys.metrics.basic.NDCG.NDCGRelevanceModel.UserNDCGRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rank.LogarithmicDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import gnu.trove.impl.Constants;

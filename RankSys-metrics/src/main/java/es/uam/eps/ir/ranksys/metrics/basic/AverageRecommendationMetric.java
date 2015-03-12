@@ -15,9 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.metrics;
+package es.uam.eps.ir.ranksys.metrics.basic;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
+import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
+import es.uam.eps.ir.ranksys.metrics.RecommendationMetric;
+import es.uam.eps.ir.ranksys.metrics.SystemMetric;
 
 /**
  *

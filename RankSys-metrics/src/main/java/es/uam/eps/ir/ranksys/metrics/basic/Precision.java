@@ -15,10 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.metrics;
+package es.uam.eps.ir.ranksys.metrics.basic;
 
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.core.Recommendation;
+import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 
