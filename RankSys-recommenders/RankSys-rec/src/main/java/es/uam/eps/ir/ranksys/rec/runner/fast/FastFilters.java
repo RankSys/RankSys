@@ -45,19 +45,17 @@ public class FastFilters {
     }
 
     public static <U, I, F> Function<U, IntPredicate> withFeatures(FastFeatureData<I, F, ?> featureData) {
-        throw new UnsupportedOperationException("you need to fix this, include a getItemsWithFeatures");
-//        this.itemsWithFeatures = featureData.getAllItems().filter(i -> featureData.numFeatures(i) > 0).collect(Collectors.toSet());
-//        return user -> {
-//            return item -> itemsWithFeatures.contains(item);
-//        };
+        TIntSet itemsWithFeatures = new TIntHashSet();
+        featureData.getIidxWithFeatures().forEach(iidx -> itemsWithFeatures.add(iidx));
+        return user -> iidx -> itemsWithFeatures.contains(iidx);
     }
 
     @SafeVarargs
     public static <U> Function<U, IntPredicate> and(Function<U, IntPredicate>... filters) {
-        return uidx -> {
+        return user -> {
             IntPredicate andPredicate = iidx -> true;
             for (Function<U, IntPredicate> filter : filters) {
-                andPredicate = andPredicate.and(filter.apply(uidx));
+                andPredicate = andPredicate.and(filter.apply(user));
             }
             return andPredicate;
         };

@@ -43,11 +43,8 @@ public class Filters {
     }
 
     public static <U, I, F> Function<U, Predicate<I>> withFeatures(FeatureData<I, F, ?> featureData) {
-        throw new UnsupportedOperationException("you need to fix this, include a getItemsWithFeatures");
-//        this.itemsWithFeatures = featureData.getAllItems().filter(i -> featureData.numFeatures(i) > 0).collect(Collectors.toSet());
-//        return user -> {
-//            return item -> itemsWithFeatures.contains(item);
-//        };
+        Set<I> itemsWithFeatures = featureData.getItemsWithFeatures().collect(Collectors.toSet());
+        return user -> item -> itemsWithFeatures.contains(item);
     }
 
     @SafeVarargs
