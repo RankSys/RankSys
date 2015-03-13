@@ -47,7 +47,7 @@ public class Filters {
         return user -> item -> itemsWithFeatures.contains(item);
     }
 
-    @SafeVarargs
+    @SuppressWarnings("unchecked")
     public static <U, I> Function<U, Predicate<I>> and(Function<U, Predicate<I>>... filters) {
         return user -> {
             Predicate<I> andPredicate = item -> true;

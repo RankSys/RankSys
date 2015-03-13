@@ -50,7 +50,7 @@ public class FastFilters {
         return user -> iidx -> itemsWithFeatures.contains(iidx);
     }
 
-    @SafeVarargs
+    @SuppressWarnings("unchecked")
     public static <U> Function<U, IntPredicate> and(Function<U, IntPredicate>... filters) {
         return user -> {
             IntPredicate andPredicate = iidx -> true;
