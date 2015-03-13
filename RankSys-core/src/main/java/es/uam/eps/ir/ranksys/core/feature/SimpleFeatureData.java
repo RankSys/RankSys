@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,6 +132,26 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
         }
 
         return new SimpleFeatureData<>(itemMap, featMap);
+    }
+
+    @Override
+    public int numItemsWithFeatures() {
+        return itemMap.size();
+    }
+
+    @Override
+    public int numFeaturesWithItems() {
+        return featMap.size();
+    }
+
+    @Override
+    public Stream<I> getItemsWithFeatures() {
+        return itemMap.keySet().stream();
+    }
+
+    @Override
+    public Stream<F> getFeaturesWithItems() {
+        return featMap.keySet().stream();
     }
 
 }

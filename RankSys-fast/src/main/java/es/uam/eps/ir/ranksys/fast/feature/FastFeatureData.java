@@ -21,6 +21,7 @@ import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
 import es.uam.eps.ir.ranksys.fast.IdxVar;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -37,4 +38,7 @@ public interface FastFeatureData<I, F, V> extends FeatureData<I, F, V>, FastItem
 
     int numFeatures(int iidx);
 
+    IntStream getIidxWithFeatures();
+    
+    IntStream getFidxWithItems();
 }

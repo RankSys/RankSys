@@ -17,104 +17,128 @@
  */
 package es.uam.eps.ir.ranksys.fast.feature;
 
-import es.uam.eps.ir.ranksys.core.IdVar;
+import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.fast.IdxVar;
+import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
+import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class SimpleFastFeatureData<I, F, V> implements FastFeatureData<I, F, V>{
+public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F, V> {
+
+    private final List<List<IdxVar<V>>> iidxList;
+    private final List<List<IdxVar<V>>> fidxList;
+
+    protected SimpleFastFeatureData(List<List<IdxVar<V>>> iidxList, List<List<IdxVar<V>>> fidxList, FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
+        super(ii, fi);
+        this.iidxList = iidxList;
+        this.fidxList = fidxList;
+    }
 
     @Override
     public Stream<IdxVar<V>> getIidxFeatures(int iidx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return iidxList.get(iidx).stream();
     }
 
     @Override
     public Stream<IdxVar<V>> getFidxItems(int fidx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return fidxList.get(fidx).stream();
     }
 
     @Override
     public int numItems(int fidx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return fidxList.get(fidx).size();
     }
 
     @Override
     public int numFeatures(int iidx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return iidxList.get(iidx).size();
     }
 
     @Override
-    public Stream<IdVar<I, V>> getFeatureItems(F f) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IntStream getIidxWithFeatures() {
+        return IntStream.range(0, numItems())
+                .filter(iidx -> iidxList.get(iidx) != null);
     }
 
     @Override
-    public Stream<IdVar<F, V>> getItemFeatures(I i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IntStream getFidxWithItems() {
+        return IntStream.range(0, numFeatures())
+                .filter(fidx -> fidxList.get(fidx) != null);
     }
 
     @Override
-    public int numFeatures(I i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int numItemsWithFeatures() {
+        return (int) iidxList.stream()
+                .filter(iv -> iv != null).count();
     }
 
     @Override
-    public int numItems(F f) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean containsItem(I i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int numItems() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Stream<I> getAllItems() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean containsFeature(F f) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int numFeatures() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Stream<F> getAllFeatures() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int item2iidx(I i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public I iidx2item(int iidx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int feature2fidx(F f) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public F fidx2feature(int fidx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int numFeaturesWithItems() {
+        return (int) fidxList.stream()
+                .filter(fv -> fv != null).count();
     }
     
+        public static <I, F, V> SimpleFastFeatureData<I, F, V> load(String path, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) throws IOException {
+        return load(new FileInputStream(path), iParser, fParser, vParser, iIndex, fIndex);
+    }
+
+    public static <I, F, V> SimpleFastFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) throws IOException {
+
+        List<List<IdxVar<V>>> iidxList = new ArrayList<>();
+        for (int iidx=  0; iidx < iIndex.numItems(); iidx++) {
+            iidxList.add(null);
+        }
+        
+        List<List<IdxVar<V>>> fidxList = new ArrayList<>();
+        for (int fidx = 0; fidx < fIndex.numFeatures(); fidx++) {
+            fidxList.add(null);
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            reader.lines().forEach(l -> {
+                CharSequence[] tokens = split(l, '\t', 3);
+                I item = iParser.parse(tokens[0]);
+                F feature = fParser.parse(tokens[1]);
+                V value;
+                if (tokens.length == 3) {
+                    value = vParser.parse(tokens[2]);
+                } else {
+                    value = vParser.parse(null);
+                }
+
+                int iidx = iIndex.item2iidx(item);
+                int fidx = fIndex.feature2fidx(feature);
+
+                List<IdxVar<V>> iList = iidxList.get(iidx);
+                if (iList == null) {
+                    iList = new ArrayList<>();
+                    iidxList.set(iidx, iList);
+                }
+                iList.add(new IdxVar<>(fidx, value));
+
+                List<IdxVar<V>> fList = fidxList.get(fidx);
+                if (fList == null) {
+                    fList = new ArrayList<>();
+                    fidxList.set(fidx, fList);
+                }
+                fList.add(new IdxVar<>(iidx, value));
+            });
+        }
+
+        return new SimpleFastFeatureData<>(iidxList, fidxList, iIndex, fIndex);
+    }
+
 }

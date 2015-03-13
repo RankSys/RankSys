@@ -17,6 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.fast.data;
 
+import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.fast.IdxPref;
@@ -88,12 +89,14 @@ public class SimpleFastRecommenderData<U, I, O> extends AbstractFastRecommenderD
 
     @Override
     public int numUsersWithPreferences() {
-        return uidxList.size();
+        return (int) uidxList.stream()
+                .filter(iv -> iv != null).count();
     }
 
     @Override
     public int numItemsWithPreferences() {
-        return iidxList.size();
+        return (int) iidxList.stream()
+                .filter(iv -> iv != null).count();
     }
 
     public static <U, I, O> SimpleFastRecommenderData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
@@ -115,7 +118,7 @@ public class SimpleFastRecommenderData<U, I, O> extends AbstractFastRecommenderD
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             reader.lines().forEach(l -> {
-                String[] tokens = l.split("\t", 4);
+                CharSequence[] tokens = split(l, '\t', 4);
                 U user = uParser.parse(tokens[0]);
                 I item = iParser.parse(tokens[1]);
                 double value;
