@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.distance;
 
-import es.uam.eps.ir.ranksys.core.IdVar;
+import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
@@ -35,7 +35,7 @@ public class CosineFeatureItemDistanceModel<I, F> extends FeatureItemDistanceMod
     }
 
     @Override
-    public double dist(Stream<IdVar<F, Double>> features1, Stream<IdVar<F, Double>> features2) {
+    public double dist(Stream<IdObject<F, Double>> features1, Stream<IdObject<F, Double>> features2) {
         TObjectDoubleMap<F> auxMap = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
         double[] comps = {0.0, 0.0, 0.0};
 

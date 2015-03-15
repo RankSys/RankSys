@@ -18,14 +18,28 @@
 package es.uam.eps.ir.ranksys.core;
 
 /**
+ * A pair of a user/item/feature ID and a double.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class IdDouble <I> {
 
+    /**
+     * The ID.
+     */
     public final I id;
+
+    /**
+     * The double.
+     */
     public final double v;
 
+    /**
+     *  Constructs an ID-double pair.
+     * 
+     * @param id the ID
+     * @param v the double
+     */
     public IdDouble(I id, double v) {
         this.id = id;
         this.v = v;

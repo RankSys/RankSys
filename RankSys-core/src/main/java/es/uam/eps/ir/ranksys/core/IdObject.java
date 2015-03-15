@@ -18,15 +18,29 @@
 package es.uam.eps.ir.ranksys.core;
 
 /**
+ * A pair of a user/item/feature ID and a typed object.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class IdVar<I, V> {
+public class IdObject<I, V> {
 
+    /**
+     * The ID.
+     */
     public final I id;
+
+    /**
+     * The typed object.
+     */
     public final V v;
 
-    public IdVar(I id, V v) {
+    /**
+     * Constructs an ID-object pair.
+     *
+     * @param id the ID
+     * @param v the object
+     */
+    public IdObject(I id, V v) {
         this.id = id;
         this.v = v;
     }
