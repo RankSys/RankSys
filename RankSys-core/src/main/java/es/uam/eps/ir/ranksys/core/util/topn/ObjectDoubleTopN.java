@@ -75,7 +75,6 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Map.Entry<T, Double>> {
      * @param value double to be added
      * @return true if the pair was added to the heap, false otherwise
      */
-    @SuppressWarnings("unchecked")
     public boolean add(T object, double value) {
         return add(new Entry<>(object, value));
     }
@@ -90,6 +89,7 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Map.Entry<T, Double>> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected int compare(int i, Map.Entry<T, Double> e) {
         double v;
@@ -108,6 +108,7 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Map.Entry<T, Double>> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected int compare(int i, int j) {
         int c = Double.compare(values[i], values[j]);
