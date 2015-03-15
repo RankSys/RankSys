@@ -18,7 +18,7 @@
 package es.uam.eps.ir.ranksys.rec.fast;
 
 import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
-import es.uam.eps.ir.ranksys.core.util.structs.IntDoubleTopN;
+import es.uam.eps.ir.ranksys.core.util.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import gnu.trove.map.TIntDoubleMap;
@@ -61,7 +61,7 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
 
         List<IdxDouble> items = new ArrayList<>();
         for (int i = topN.size() - 1; i >= 0; i--) {
-            items.add(new IdxDouble(topN.getKeyAt(i), topN.getValueAt(i)));
+            items.add(new IdxDouble(topN.getIntAt(i), topN.getDoubleAt(i)));
         }
 
         return new FastRecommendation<>(uidx, items);

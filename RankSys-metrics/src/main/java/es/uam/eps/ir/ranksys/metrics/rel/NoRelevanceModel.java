@@ -29,7 +29,7 @@ public class NoRelevanceModel<U, I> extends RelevanceModel<U, I> {
     private final UserNoRelevanceModel rel = new UserNoRelevanceModel();
 
     public NoRelevanceModel() {
-        super(false, null);
+        super();
     }
     
     @Override
@@ -38,7 +38,7 @@ public class NoRelevanceModel<U, I> extends RelevanceModel<U, I> {
     }
 
     @Override
-    public UserRelevanceModel<U, I> getUserModel(U u) {
+    public UserRelevanceModel<U, I> getModel(U u) {
         return rel;
     }
 

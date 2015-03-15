@@ -19,8 +19,8 @@ package es.uam.eps.ir.ranksys.diversity.intentaware;
 
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import es.uam.eps.ir.ranksys.core.model.PersonalizableModel;
-import es.uam.eps.ir.ranksys.core.model.PersonalizableModel.UserModel;
+import es.uam.eps.ir.ranksys.core.model.UserModel;
+import es.uam.eps.ir.ranksys.core.model.UserModel.Model;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -32,13 +32,19 @@ import java.util.stream.Stream;
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
  */
-public class IntentModel<U, I, F> extends PersonalizableModel<U> {
+public class IntentModel<U, I, F> extends UserModel<U> {
 
     private final RecommenderData<U, I, ?> totalData;
     private final FeatureData<I, F, ?> featureData;
 
-    public IntentModel(boolean caching, Stream<U> targetUsers, RecommenderData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
-        super(caching, targetUsers);
+    public IntentModel(Stream<U> targetUsers, RecommenderData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
+        super(targetUsers);
+        this.totalData = totalData;
+        this.featureData = featureData;
+    }
+
+    public IntentModel(RecommenderData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
+        super();
         this.totalData = totalData;
         this.featureData = featureData;
     }
@@ -50,11 +56,11 @@ public class IntentModel<U, I, F> extends PersonalizableModel<U> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public UserIntentModel getUserModel(U user) {
-        return (UserIntentModel) super.getUserModel(user);
+    public UserIntentModel getModel(U user) {
+        return (UserIntentModel) super.getModel(user);
     }
 
-    public class UserIntentModel implements UserModel<U> {
+    public class UserIntentModel implements Model<U> {
 
         private final TObjectDoubleMap<F> prob;
 

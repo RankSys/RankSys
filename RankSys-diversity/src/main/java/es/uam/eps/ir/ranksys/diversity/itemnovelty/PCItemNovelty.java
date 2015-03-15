@@ -32,7 +32,7 @@ public class PCItemNovelty<U, I> extends ItemNovelty<U, I> {
     private final UserPCItemNoveltyModel nov;
 
     public PCItemNovelty(RecommenderData<U, I, ?> recommenderData) {
-        super(false, null);
+        super();
         this.nov = new UserPCItemNoveltyModel(recommenderData);
     }
 
@@ -42,7 +42,7 @@ public class PCItemNovelty<U, I> extends ItemNovelty<U, I> {
     }
 
     @Override
-    public UserItemNoveltyModel<U, I> getUserModel(U u) {
+    public UserItemNoveltyModel<U, I> getModel(U u) {
         return nov;
     }
 

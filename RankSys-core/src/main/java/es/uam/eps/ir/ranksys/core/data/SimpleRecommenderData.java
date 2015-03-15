@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,8 +32,13 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
+ * Simple map-based recommender data
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <O> type of other information for users and items
  */
 public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> {
 
@@ -41,6 +46,13 @@ public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
     private final Map<I, List<IdPref<U, O>>> itemMap;
     private final int numPreferences;
 
+    /**
+     * Constructor.
+     *
+     * @param userMap user to preferences map
+     * @param itemMap item to preferences map
+     * @param numPreferences total number of preferences
+     */
     protected SimpleRecommenderData(Map<U, List<IdPref<I, O>>> userMap, Map<I, List<IdPref<U, O>>> itemMap, int numPreferences) {
         this.userMap = userMap;
         this.itemMap = itemMap;
@@ -122,10 +134,44 @@ public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
         return itemMap.keySet().stream();
     }
 
-    public static <U, I, V> SimpleRecommenderData<U, I, V> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<V> vParser) throws IOException {
+    /**
+     * Load preferences from a file.
+     * 
+     * Each line is a different preference, with tab-separated fields indicating
+     * user, item, weight and other information.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     * @param <O> type of other information
+     * @param path path of the input file
+     * @param uParser user type parser
+     * @param iParser item type parser
+     * @param dp double parse
+     * @param vParser other info parser
+     * @return a simple map-based RecommenderData with the information read
+     * @throws IOException when path does not exists of IO error
+     */
+    public static <U, I, O> SimpleRecommenderData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
         return load(new FileInputStream(path), uParser, iParser, dp, vParser);
     }
 
+    /**
+     * Load preferences from an input stream.
+     * 
+     * Each line is a different preference, with tab-separated fields indicating
+     * user, item, weight and other information.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     * @param <O> type of other information
+     * @param in input stream to read from
+     * @param uParser user type parser
+     * @param iParser item type parser
+     * @param dp double parse
+     * @param vParser other info parser
+     * @return a simple map-based RecommenderData with the information read
+     * @throws IOException when path does not exists of IO error
+     */
     public static <U, I, O> SimpleRecommenderData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
         Map<U, List<IdPref<I, O>>> userMap = new HashMap<>();
         Map<I, List<IdPref<U, O>>> itemMap = new HashMap<>();

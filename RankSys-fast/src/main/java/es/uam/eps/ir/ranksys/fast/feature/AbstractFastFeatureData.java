@@ -5,7 +5,7 @@
  */
 package es.uam.eps.ir.ranksys.fast.feature;
 
-import es.uam.eps.ir.ranksys.core.IdVar;
+import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import java.util.stream.Stream;
@@ -45,13 +45,13 @@ public abstract class AbstractFastFeatureData<I, F, V> implements FastFeatureDat
     }
 
     @Override
-    public Stream<IdVar<I, V>> getFeatureItems(F f) {
-        return getFidxItems(feature2fidx(f)).map(iv -> new IdVar<>(iidx2item(iv.idx), iv.v));
+    public Stream<IdObject<I, V>> getFeatureItems(F f) {
+        return getFidxItems(feature2fidx(f)).map(iv -> new IdObject<>(iidx2item(iv.idx), iv.v));
     }
 
     @Override
-    public Stream<IdVar<F, V>> getItemFeatures(I i) {
-        return getIidxFeatures(item2iidx(i)).map(fv -> new IdVar<>(fidx2feature(fv.idx), fv.v));
+    public Stream<IdObject<F, V>> getItemFeatures(I i) {
+        return getIidxFeatures(item2iidx(i)).map(fv -> new IdObject<>(fidx2feature(fv.idx), fv.v));
     }
 
     @Override

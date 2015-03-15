@@ -48,8 +48,8 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
-        RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getUserModel(recommendation.getUser());
-        IntentModel<U, I, F>.UserIntentModel uim = intentModel.getUserModel(recommendation.getUser());
+        RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
+        IntentModel<U, I, F>.UserIntentModel uim = intentModel.getModel(recommendation.getUser());
 
         double[] erria = {0.0};
 

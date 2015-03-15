@@ -34,7 +34,7 @@ public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
     private final UserFDItemNoveltyModel nov;
 
     public FDItemNovelty(RecommenderData<U, I, ?> recommenderData) {
-        super(false, null);
+        super();
         this.nov = new UserFDItemNoveltyModel(recommenderData);
     }
 
@@ -44,7 +44,7 @@ public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
     }
 
     @Override
-    public UserItemNoveltyModel<U, I> getUserModel(U u) {
+    public UserItemNoveltyModel<U, I> getModel(U u) {
         return nov;
     }
 

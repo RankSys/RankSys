@@ -53,7 +53,7 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
         public UserXQuAD(Recommendation<U, I> recommendation) {
             super(recommendation);
 
-            this.uim = intentModel.getUserModel(recommendation.getUser());
+            this.uim = intentModel.getModel(recommendation.getUser());
             this.redundancy = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 1.0);
             this.probNorm = new TObjectDoubleHashMap<>();
             recommendation.getItems().forEach(iv -> {

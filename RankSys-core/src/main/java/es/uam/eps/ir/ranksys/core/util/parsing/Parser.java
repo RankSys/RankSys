@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,10 +18,19 @@
 package es.uam.eps.ir.ranksys.core.util.parsing;
 
 /**
+ * Interface to parse a CharSequence.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <T> type of the resulting object
  */
 public interface Parser<T> {
 
+    /**
+     * Parse a CharSequence into an object of type T.
+     * 
+     * @param from input string
+     * @return the object resulting from the parsing
+     */
     public T parse(CharSequence from);
 }

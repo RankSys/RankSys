@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,15 +31,26 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
+ * Simple map-based feature data.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ *
+ * @param <I> type of the items
+ * @param <F> type of the features
+ * @param <V> type of the information about item-feature pairs
  */
 public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
 
     private final Map<I, List<IdObject<F, V>>> itemMap;
     private final Map<F, List<IdObject<I, V>>> featMap;
 
+    /**
+     * Constructor
+     *
+     * @param itemMap item to features map
+     * @param featMap feature to items map
+     */
     protected SimpleFeatureData(Map<I, List<IdObject<F, V>>> itemMap, Map<F, List<IdObject<I, V>>> featMap) {
         this.itemMap = itemMap;
         this.featMap = featMap;
@@ -95,10 +106,62 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
         return featMap.getOrDefault(f, new ArrayList<>()).size();
     }
 
+    @Override
+    public int numItemsWithFeatures() {
+        return itemMap.size();
+    }
+
+    @Override
+    public int numFeaturesWithItems() {
+        return featMap.size();
+    }
+
+    @Override
+    public Stream<I> getItemsWithFeatures() {
+        return itemMap.keySet().stream();
+    }
+
+    @Override
+    public Stream<F> getFeaturesWithItems() {
+        return featMap.keySet().stream();
+    }
+
+    /**
+     * Load feature data from a file.
+     * 
+     * Each line is a different item-feature pair, with tab-separated fields indicating
+     * item, feature and other information.
+     *
+     * @param <I> type of the items
+     * @param <F> type of the features
+     * @param <V> type of the information about item-feature pairs
+     * @param path file path
+     * @param iParser item type parser
+     * @param fParser feature type parser
+     * @param vParser information type parser
+     * @return a simple map-based FeatureData
+     * @throws IOException when path does not exist or IO error
+     */
     public static <I, F, V> SimpleFeatureData<I, F, V> load(String path, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
         return load(new FileInputStream(path), iParser, fParser, vParser);
     }
 
+    /**
+     * Load feature data from a input stream.
+     * 
+     * Each line is a different item-feature pair, with tab-separated fields indicating
+     * item, feature and other information.
+     *
+     * @param <I> type of the items
+     * @param <F> type of the features
+     * @param <V> type of the information about item-feature pairs
+     * @param in input stream
+     * @param iParser item type parser
+     * @param fParser feature type parser
+     * @param vParser information type parser
+     * @return a simple map-based FeatureData
+     * @throws IOException when IO error
+     */
     public static <I, F, V> SimpleFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
         Map<I, List<IdObject<F, V>>> itemMap = new HashMap<>();
         Map<F, List<IdObject<I, V>>> featMap = new HashMap<>();
@@ -132,26 +195,6 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
         }
 
         return new SimpleFeatureData<>(itemMap, featMap);
-    }
-
-    @Override
-    public int numItemsWithFeatures() {
-        return itemMap.size();
-    }
-
-    @Override
-    public int numFeaturesWithItems() {
-        return featMap.size();
-    }
-
-    @Override
-    public Stream<I> getItemsWithFeatures() {
-        return itemMap.keySet().stream();
-    }
-
-    @Override
-    public Stream<F> getFeaturesWithItems() {
-        return featMap.keySet().stream();
     }
 
 }

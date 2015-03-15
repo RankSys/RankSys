@@ -47,8 +47,8 @@ public abstract class BinomialMetric<U, I, F> extends AbstractRecommendationMetr
 
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
-        RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getUserModel(recommendation.getUser());
-        BinomialModel<U, I, F>.UserBinomialModel prob = binomialModel.getUserModel(recommendation.getUser());
+        RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
+        BinomialModel<U, I, F>.UserBinomialModel prob = binomialModel.getModel(recommendation.getUser());
 
         TObjectIntMap<F> count = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0);
 

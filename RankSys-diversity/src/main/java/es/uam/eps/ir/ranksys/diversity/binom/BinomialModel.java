@@ -19,7 +19,7 @@ package es.uam.eps.ir.ranksys.diversity.binom;
 
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import es.uam.eps.ir.ranksys.core.model.PersonalizableModel;
+import es.uam.eps.ir.ranksys.core.model.UserModel;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -31,7 +31,7 @@ import org.apache.commons.math3.distribution.BinomialDistribution;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
+public class BinomialModel<U, I, F> extends UserModel<U> {
 
     private final RecommenderData<U, I, ?> recommenderData;
     private final FeatureData<I, F, ?> featureData;
@@ -61,8 +61,8 @@ public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public UserBinomialModel getUserModel(U u) {
-        return (UserBinomialModel) super.getUserModel(u);
+    public UserBinomialModel getModel(U u) {
+        return (UserBinomialModel) super.getModel(u);
     }
 
     private TObjectDoubleMap<F> getGlobalFeatureProbs() {
@@ -78,7 +78,7 @@ public class BinomialModel<U, I, F> extends PersonalizableModel<U> {
         return probs;
     }
 
-    public class UserBinomialModel implements UserModel<U> {
+    public class UserBinomialModel implements Model<U> {
 
         private final U user;
         private final TObjectDoubleMap<F> featureProbs;

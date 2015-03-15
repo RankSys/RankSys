@@ -40,7 +40,7 @@ public class Precision<U, I> extends AbstractRecommendationMetric<U, I> {
 
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
-        UserRelevanceModel<U, I> userRelModel = relModel.getUserModel(recommendation.getUser());
+        UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
         
         return recommendation.getItems().stream()
                 .limit(cutoff)

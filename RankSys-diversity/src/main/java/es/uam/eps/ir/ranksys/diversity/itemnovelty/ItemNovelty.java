@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.itemnovelty;
 
-import es.uam.eps.ir.ranksys.core.model.PersonalizableModel;
+import es.uam.eps.ir.ranksys.core.model.UserModel;
 import java.util.stream.Stream;
 
 /**
@@ -25,10 +25,18 @@ import java.util.stream.Stream;
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
  */
-public abstract class ItemNovelty<U, I> extends PersonalizableModel<U> {
+public abstract class ItemNovelty<U, I> extends UserModel<U> {
 
     public ItemNovelty(boolean caching, Stream<U> users) {
         super(caching, users);
+    }
+
+    public ItemNovelty() {
+        super();
+    }
+
+    public ItemNovelty(Stream<U> users) {
+        super(users);
     }
 
     @Override
@@ -36,11 +44,11 @@ public abstract class ItemNovelty<U, I> extends PersonalizableModel<U> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public UserItemNoveltyModel<U, I> getUserModel(U u) {
-        return (UserItemNoveltyModel<U, I>) super.getUserModel(u);
+    public UserItemNoveltyModel<U, I> getModel(U u) {
+        return (UserItemNoveltyModel<U, I>) super.getModel(u);
     }
 
-    public interface UserItemNoveltyModel<U, I> extends UserModel<U> {
+    public interface UserItemNoveltyModel<U, I> extends Model<U> {
 
         public double novelty(I i);
     }

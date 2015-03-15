@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,20 +20,31 @@ package es.uam.eps.ir.ranksys.core.util;
 import static java.lang.Math.sqrt;
 
 /**
+ * Calculate common statistics for samples of doubles
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class Stats {
-
-    private int n;
+    
+    private long n;
     private double m, s;
     private double max = Double.NEGATIVE_INFINITY;
     private double min = Double.POSITIVE_INFINITY;
 
+    /**
+     * Constructor.
+     */
     public Stats() {
         n = 0;
     }
 
+    /**
+     * Adds a value and updates the statistics.
+     * 
+     * If the input value is a NaN, it is ignored.
+     * 
+     * @param x value to be added
+     */
     public void accept(double x) {
         if (Double.isNaN(x)) {
             return;
@@ -56,36 +67,72 @@ public class Stats {
         min = Math.min(min, x);
     }
 
-    public void combine(Stats otherStats) {
-        n += otherStats.n;
-        
-        
-        
-        max = Math.max(max, otherStats.max);
-        min = Math.min(min, otherStats.min);
-        throw new UnsupportedOperationException("to be implemented");
+    /**
+     * Combines the statistics for another sample into this.
+     * 
+     * This is useful for performing mutable reductions (Stream.collect).
+     * Unfortunately, the current implementation cannot combine the variances of the samples.
+     *
+     * @param o statistics of other sample
+     */
+    public void combine(Stats o) {
+        max = Math.max(max, o.max);
+        min = Math.min(min, o.min);
+        m = m * (n / (double) (n + o.n)) + o.m * (o.n / (double) (n + o.n));
+        s = Double.NaN;
+        n += o.n;
     }
 
-    public int getN() {
+    /**
+     * Returns the size of the sample.
+     *
+     * @return size of the sample
+     */
+    public long getN() {
         return n;
     }
 
+    /**
+     * Returns the mean of the sample.
+     *
+     * @return mean
+     */
     public double getMean() {
         return m;
     }
 
+    /**
+     * Returns the variance of the sample.
+     *
+     * @return variance
+     */
     public double getVariance() {
-        return (n > 1) ? (s / (n - 1)) : 0.0;
+        return (n > 1) ? (s / (n - 1)) : Double.NaN;
     }
 
+    /**
+     * Returns the standard deviation of the sample.
+     *
+     * @return standard deviation
+     */
     public double getStandardDeviation() {
         return sqrt(getVariance());
     }
 
+    /**
+     * Returns the greatest value of the sample.
+     *
+     * @return maximum value
+     */
     public double getMax() {
         return max;
     }
 
+    /**
+     * Returns the smallest value of the sample.
+     * 
+     * @return minimum value
+     */
     public double getMin() {
         return min;
     }

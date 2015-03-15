@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,9 @@ import java.util.List;
  * A recommendation issued to a user.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the user
+ * @param <I> type of the items
  */
 public class Recommendation<U, I> {
 

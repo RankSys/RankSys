@@ -52,7 +52,7 @@ public class EILD<U, I> extends AbstractRecommendationMetric<U, I> {
 
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
-        RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getUserModel(recommendation.getUser());
+        RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
 
         List<IdDouble<I>> items = recommendation.getItems();
         int N = Math.min(cutoff, items.size());

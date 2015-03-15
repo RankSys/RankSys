@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,14 +21,25 @@ import es.uam.eps.ir.ranksys.core.IdPref;
 import java.util.stream.Stream;
 
 /**
+ * Concatenation of two RecommenderData's
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <O> type of other information for users and items
  */
 public class ConcatRecommenderData<U, I, O> implements RecommenderData<U, I, O> {
 
     private final RecommenderData<U, I, O> d1;
     private final RecommenderData<U, I, O> d2;
 
+    /**
+     * Constructor.
+     *
+     * @param d1 recommender data
+     * @param d2 recommender data
+     */
     public ConcatRecommenderData(RecommenderData<U, I, O> d1, RecommenderData<U, I, O> d2) {
         this.d1 = d1;
         this.d2 = d2;

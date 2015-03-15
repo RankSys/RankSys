@@ -31,12 +31,20 @@ public abstract class IdealRelevanceModel<U, I> extends RelevanceModel<U, I> {
         super(caching, users);
     }
 
+    public IdealRelevanceModel() {
+        super();
+    }
+
+    public IdealRelevanceModel(Stream<U> users) {
+        super(users);
+    }
+
     @Override
     protected abstract UserIdealRelevanceModel<U, I> get(U user);
 
     @Override
-    public UserIdealRelevanceModel<U, I> getUserModel(U user) {
-        return (UserIdealRelevanceModel<U, I>) super.getUserModel(user);
+    public UserIdealRelevanceModel<U, I> getModel(U user) {
+        return (UserIdealRelevanceModel<U, I>) super.getModel(user);
     }
 
     public interface UserIdealRelevanceModel<U, I> extends UserRelevanceModel<U, I> {

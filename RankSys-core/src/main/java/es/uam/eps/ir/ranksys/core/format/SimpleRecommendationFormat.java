@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,8 +39,12 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
+ * Simple format for recommendations: tab-separated user-item-score triplets.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U, I> {
 
@@ -48,6 +52,12 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
     private final Parser<I> iParser;
     private final Parser<Double> vParser = dp;
 
+    /**
+     * Constructor.
+     *
+     * @param uParser user type parser
+     * @param iParser item type parser
+     */
     public SimpleRecommendationFormat(Parser<U> uParser, Parser<I> iParser) {
         this.uParser = uParser;
         this.iParser = iParser;

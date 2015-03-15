@@ -54,7 +54,7 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
         public BinomialCoverageUserReranker(Recommendation<U, I> recommendation) {
             super(recommendation);
 
-            ubm = binomialModel.getUserModel(recommendation.getUser());
+            ubm = binomialModel.getModel(recommendation.getUser());
 
             uncoveredFeatures = new HashSet<>(ubm.getFeatures());
             coverage = uncoveredFeatures.stream()

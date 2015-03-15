@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,19 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.core.util.lazy;
+package es.uam.eps.ir.ranksys.core.util;
 
 import java.util.function.Supplier;
 
 /**
+ * Lazy initializer implementing the Supplier interface.
+ *
+ * Adapted from Apache Commons' LazyInitializer.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <T> type of the initialized object
  */
 public class Lazy<T> implements Supplier<T> {
 
     private volatile T object;
     private final Supplier<T> supplier;
 
+    /**
+     * Constructor.
+     *
+     * @param supplier functions that supplies the value to be lazily initalized
+     */
     public Lazy(Supplier<T> supplier) {
         this.supplier = supplier;
     }
@@ -44,7 +54,7 @@ public class Lazy<T> implements Supplier<T> {
                 }
             }
         }
-        
+
         return result;
     }
 

@@ -20,8 +20,8 @@ package es.uam.eps.ir.ranksys.diversity.intentaware.metrics;
 import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.core.model.PersonalizableModel;
-import es.uam.eps.ir.ranksys.core.model.PersonalizableModel.UserModel;
+import es.uam.eps.ir.ranksys.core.model.UserModel;
+import es.uam.eps.ir.ranksys.core.model.UserModel.Model;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rank.LogarithmicDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
@@ -34,7 +34,6 @@ import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  *
@@ -57,12 +56,12 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
         this.relModel = relModel;
         this.featureData = featureData;
 
-        this.idcg = new AlphaNDCGIdeal(relModel.isCaching(), relModel.getModeledUsers().stream());
+        this.idcg = new AlphaNDCGIdeal();
     }
 
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
-        UserRelevanceModel<U, I> urm = relModel.getUserModel(recommendation.getUser());
+        UserRelevanceModel<U, I> urm = relModel.getModel(recommendation.getUser());
 
         double ndcg = 0.0;
         int rank = 0;
@@ -85,7 +84,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
             }
         }
         if (ndcg > 0) {
-            ndcg /= idcg.getUserModel(recommendation.getUser()).ideal;
+            ndcg /= idcg.getModel(recommendation.getUser()).ideal;
         }
 
         return ndcg;
@@ -123,24 +122,24 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
         return ideal;
     }
 
-    private class AlphaNDCGIdeal extends PersonalizableModel<U> {
+    private class AlphaNDCGIdeal extends UserModel<U> {
 
-        public AlphaNDCGIdeal(boolean caching, Stream<U> users) {
-            super(caching, users);
+        public AlphaNDCGIdeal() {
+            super(relModel);
         }
 
         @Override
         protected UserAlphaNDCGIdeal get(U u) {
-            return new UserAlphaNDCGIdeal(idcg(relModel.getUserModel(u)));
+            return new UserAlphaNDCGIdeal(idcg(relModel.getModel(u)));
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public UserAlphaNDCGIdeal getUserModel(U u) {
-            return (UserAlphaNDCGIdeal) super.getUserModel(u);
+        public UserAlphaNDCGIdeal getModel(U u) {
+            return (UserAlphaNDCGIdeal) super.getModel(u);
         }
 
-        public class UserAlphaNDCGIdeal implements UserModel<U> {
+        public class UserAlphaNDCGIdeal implements Model<U> {
 
             public final double ideal;
 

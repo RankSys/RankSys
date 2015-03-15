@@ -21,7 +21,7 @@ import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.diversity.reranking.PermutationReranker;
-import es.uam.eps.ir.ranksys.core.util.structs.IntDoubleTopN;
+import es.uam.eps.ir.ranksys.core.util.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.core.util.Stats;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
@@ -53,7 +53,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation) {
         U user = recommendation.getUser();
-        ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getUserModel(user);
+        ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getModel(user);
         
         if (uinm == null) {
             return new int[0];
@@ -88,7 +88,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
 
         int[] perm = new int[topN.size()];
         for (int i = 0; i < topN.size(); i++) {
-            perm[i] = M - topN.getKeyAt(topN.size() - i - 1);
+            perm[i] = M - topN.getIntAt(topN.size() - i - 1);
         }
 
         return perm;

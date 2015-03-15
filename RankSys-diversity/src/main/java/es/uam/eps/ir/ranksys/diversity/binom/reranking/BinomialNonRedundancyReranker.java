@@ -61,7 +61,7 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         public BinomialNonRedundancyUserReranker(Recommendation<U, I> recommendation) {
             super(recommendation);
 
-            ubm = binomialModel.getUserModel(recommendation.getUser());
+            ubm = binomialModel.getModel(recommendation.getUser());
 
             featureCount = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0);
 

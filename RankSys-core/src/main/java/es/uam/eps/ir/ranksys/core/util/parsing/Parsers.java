@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,30 +20,47 @@ package es.uam.eps.ir.ranksys.core.util.parsing;
 import java.util.stream.IntStream;
 
 /**
+ * Generic implementations of the interface Parser.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class Parsers {
 
+    /**
+     * Parse to Integer.
+     */
     public static Parser<Integer> ip = from -> {
-        if (from.charAt(0) == '-') {
-            return -IntStream.range(1, from.length()).map(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
-        } else {
-            return IntStream.range(0, from.length()).map(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
-        }
+        int n = from.charAt(0) == '-' ? 1 : 0;
+        int m = from.charAt(0) == '-' ? -1 : 1;
+        return m * IntStream.range(n, from.length()).map(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
     };
-    public static Parser<Integer> ip2 = from -> (from.charAt(0) == '-' ? -1 : 1) * IntStream.range(0, from.length())
-            .map(i -> from.charAt(i) == '-' ? 0 : (from.charAt(i) - '0'))
-            .reduce(0, (a, b) -> a * 10 + b);
+
+    /**
+     * Parse to Long.
+     */
     public static Parser<Long> lp = from -> {
-        if (from.charAt(0) == '-') {
-            return -IntStream.range(1, from.length()).mapToLong(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
-        } else {
-            return IntStream.range(0, from.length()).mapToLong(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
-        }
+        int n = from.charAt(0) == '-' ? 1 : 0;
+        int m = from.charAt(0) == '-' ? -1 : 1;
+        return m * IntStream.range(n, from.length()).mapToLong(i -> (from.charAt(i) - '0')).reduce(0, (a, b) -> a * 10 + b);
     };
+
+    /**
+     * Parse to String.
+     */
     public static Parser<String> sp = from -> from.toString();
+
+    /**
+     * Parse to Float.
+     */
     public static Parser<Float> fp = from -> Float.parseFloat(from.toString());
+
+    /**
+     * Parse to Double.
+     */
     public static Parser<Double> dp = from -> Double.parseDouble(from.toString());
+
+    /**
+     * Parse to Void.
+     */
     public static Parser<Void> vp = from -> null;
 }

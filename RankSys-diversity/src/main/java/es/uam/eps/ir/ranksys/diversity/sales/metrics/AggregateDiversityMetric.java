@@ -45,7 +45,7 @@ public class AggregateDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
     @Override
     public void add(Recommendation<U, I> recommendation) {
         U u = recommendation.getUser();
-        UserRelevanceModel<U, I> urm = relModel.getUserModel(u);
+        UserRelevanceModel<U, I> urm = relModel.getModel(u);
 
         int rank = 0;
         for (IdDouble<I> ivp : recommendation.getItems()) {

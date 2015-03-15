@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,15 +18,37 @@
 package es.uam.eps.ir.ranksys.core;
 
 /**
+ * A user or item preference.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the user or item
+ * @param <O> type of other information
  */
 public class IdPref<I, O> {
 
+    /**
+     * The ID of a user or an item.
+     */
     public final I id;
+
+    /**
+     * The weigth (rating, play count, etc.) of the preference.
+     */
     public final double v;
+
+    /**
+     * Other information (such as an access log, context) of the preference.
+     */
     public final O o;
 
+    /**
+     * Constructs a preference.
+     *
+     * @param id ID of user or item for which the preference is expressed
+     * @param value weight of the preference
+     * @param other other information of the preference
+     */
     public IdPref(I id, double value, O other) {
         this.id = id;
         this.v = value;

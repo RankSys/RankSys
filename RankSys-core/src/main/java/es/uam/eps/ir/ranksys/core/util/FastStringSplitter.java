@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,9 @@
 package es.uam.eps.ir.ranksys.core.util;
 
 /**
+ * Efficient and fast CharSequence splitter.
+ * 
+ * It is a much faster alternative to the String.split method.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
@@ -25,6 +28,13 @@ public class FastStringSplitter {
 
     private static final int N = 100;
     
+    /**
+     * Splits a CharSequence according to the delimiter character.
+     *
+     * @param line CharSequence to be split.
+     * @param delimiter delimiter character.
+     * @return an array of CharSequence's resulting from the split
+     */
     public static CharSequence[] split(CharSequence line, int delimiter) {
         CharSequence[] tokens0 = split(line, delimiter, N);
         
@@ -40,6 +50,14 @@ public class FastStringSplitter {
         }
     }
     
+    /**
+     * Splits a CharSequence according to the delimiter character in a limited number of tokens.
+     *
+     * @param line CharSequence to be split.
+     * @param delimiter delimiter character.
+     * @param n maximum number of tokens to split the input
+     * @return an array of CharSequence's resulting from the split
+     */
     public static CharSequence[] split(CharSequence line, int delimiter, int n) {
         int[] l = limits(line, delimiter, n);
 

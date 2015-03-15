@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,22 @@
 package es.uam.eps.ir.ranksys.core.util.parsing;
 
 /**
+ * Parses a CharSequence to a double
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public interface DoubleParser {
 
+    /**
+     * Parses a CharSequence into a double.
+     *
+     * @param from string to be parsed
+     * @return parsed double
+     */
     public double parse(CharSequence from);
     
+    /**
+     * Default double parser
+     */
     public static final DoubleParser ddp = (token) -> Double.parseDouble(token.toString());
 }

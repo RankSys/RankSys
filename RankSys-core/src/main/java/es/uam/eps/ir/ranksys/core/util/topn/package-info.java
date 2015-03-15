@@ -15,38 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.core.index;
-
-import java.util.stream.Stream;
-
 /**
- * Index for a set of items.
- * 
- * @author Saúl Vargas (saul.vargas@uam.es)
- *
- * @param <I> type of the items
+ * Bounded min-heaps to keep the top-n values.
  */
-public interface ItemIndex<I> {
-
-    /**
-     * Checks whether the index contains an item.
-     *
-     * @param i item
-     * @return true if the index contains the item, false otherwise
-     */
-    public boolean containsItem(I i);
-    
-    /**
-     * Counts the number of indexed items.
-     *
-     * @return the total number of item
-     */
-    public int numItems();
-    
-    /**
-     * Retrieves a stream of the indexed items.
-     *
-     * @return a stream of all the items
-     */
-    public Stream<I> getAllItems();
-}
+package es.uam.eps.ir.ranksys.core.util.topn;
