@@ -26,12 +26,10 @@ import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel.UserIdealRelevanceM
 import es.uam.eps.ir.ranksys.metrics.basic.NDCG.NDCGRelevanceModel.UserNDCGRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rank.LogarithmicDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Arrays;
 import java.util.Set;
-import org.apache.commons.lang3.ArrayUtils;
 
 /**
  *
@@ -75,13 +73,13 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
     private double idcg(UserNDCGRelevanceModel relModel) {
         double[] gains = relModel.getGainValues();
         Arrays.sort(gains);
-        ArrayUtils.reverse(gains);
 
         double idcg = 0;
         int n = Math.min(cutoff, gains.length);
+        int m = gains.length;
 
         for (int rank = 0; rank < n; rank++) {
-            idcg += gains[rank] * disc.disc(rank);
+            idcg += gains[m - rank - 1] * disc.disc(rank);
         }
 
         return idcg;
@@ -105,10 +103,11 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
 
         public class UserNDCGRelevanceModel implements UserIdealRelevanceModel<U, I> {
 
-            private final TObjectDoubleMap<I> gainMap;
+            private final Object2DoubleMap<I> gainMap;
 
             public UserNDCGRelevanceModel(U user) {
-                this.gainMap = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
+                this.gainMap = new Object2DoubleOpenHashMap<>();
+                gainMap.defaultReturnValue(0.0);
 
                 testData.getUserPreferences(user)
                         .filter(iv -> iv.v >= threshold)
@@ -127,11 +126,11 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
 
             @Override
             public double gain(I item) {
-                return gainMap.get(item);
+                return gainMap.getDouble(item);
             }
 
             public double[] getGainValues() {
-                return gainMap.values();
+                return gainMap.values().toDoubleArray();
             }
         }
     }
