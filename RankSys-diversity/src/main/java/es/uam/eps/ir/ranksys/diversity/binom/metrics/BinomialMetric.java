@@ -23,9 +23,8 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 /**
  *
@@ -50,14 +49,15 @@ public abstract class BinomialMetric<U, I, F> extends AbstractRecommendationMetr
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
         BinomialModel<U, I, F>.UserBinomialModel prob = binomialModel.getModel(recommendation.getUser());
 
-        TObjectIntMap<F> count = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0);
+        Object2IntOpenHashMap<F> count = new Object2IntOpenHashMap<>();
+        count.defaultReturnValue(0);
 
         int rank = 0;
         int nrel = 0;
         for (IdDouble<I> iv : recommendation.getItems()) {
             if (userRelModel.isRelevant(iv.id)) {
                 featureData.getItemFeatures(iv.id).forEach(fv -> {
-                    count.adjustOrPutValue(fv.id, 1, 1);
+                    count.addTo(fv.id, 1);
                 });
                 nrel++;
             }
@@ -71,6 +71,6 @@ public abstract class BinomialMetric<U, I, F> extends AbstractRecommendationMetr
         return getResultFromCount(prob, count, nrel, rank);
     }
 
-    protected abstract double getResultFromCount(BinomialModel<U, I, F>.UserBinomialModel prob, TObjectIntMap<F> count, int nrel, int nret);
+    protected abstract double getResultFromCount(BinomialModel<U, I, F>.UserBinomialModel prob, Object2IntMap<F> count, int nrel, int nret);
 
 }

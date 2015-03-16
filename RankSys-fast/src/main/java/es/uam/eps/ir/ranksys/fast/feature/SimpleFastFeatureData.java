@@ -19,7 +19,7 @@ package es.uam.eps.ir.ranksys.fast.feature;
 
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
-import es.uam.eps.ir.ranksys.fast.IdxVar;
+import es.uam.eps.ir.ranksys.fast.IdxObject;
 import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import java.io.BufferedReader;
@@ -38,22 +38,22 @@ import java.util.stream.Stream;
  */
 public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F, V> {
 
-    private final List<List<IdxVar<V>>> iidxList;
-    private final List<List<IdxVar<V>>> fidxList;
+    private final List<List<IdxObject<V>>> iidxList;
+    private final List<List<IdxObject<V>>> fidxList;
 
-    protected SimpleFastFeatureData(List<List<IdxVar<V>>> iidxList, List<List<IdxVar<V>>> fidxList, FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
+    protected SimpleFastFeatureData(List<List<IdxObject<V>>> iidxList, List<List<IdxObject<V>>> fidxList, FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
         super(ii, fi);
         this.iidxList = iidxList;
         this.fidxList = fidxList;
     }
 
     @Override
-    public Stream<IdxVar<V>> getIidxFeatures(int iidx) {
+    public Stream<IdxObject<V>> getIidxFeatures(int iidx) {
         return iidxList.get(iidx).stream();
     }
 
     @Override
-    public Stream<IdxVar<V>> getFidxItems(int fidx) {
+    public Stream<IdxObject<V>> getFidxItems(int fidx) {
         return fidxList.get(fidx).stream();
     }
 
@@ -97,12 +97,12 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
 
     public static <I, F, V> SimpleFastFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) throws IOException {
 
-        List<List<IdxVar<V>>> iidxList = new ArrayList<>();
+        List<List<IdxObject<V>>> iidxList = new ArrayList<>();
         for (int iidx=  0; iidx < iIndex.numItems(); iidx++) {
             iidxList.add(null);
         }
         
-        List<List<IdxVar<V>>> fidxList = new ArrayList<>();
+        List<List<IdxObject<V>>> fidxList = new ArrayList<>();
         for (int fidx = 0; fidx < fIndex.numFeatures(); fidx++) {
             fidxList.add(null);
         }
@@ -122,19 +122,19 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
                 int iidx = iIndex.item2iidx(item);
                 int fidx = fIndex.feature2fidx(feature);
 
-                List<IdxVar<V>> iList = iidxList.get(iidx);
+                List<IdxObject<V>> iList = iidxList.get(iidx);
                 if (iList == null) {
                     iList = new ArrayList<>();
                     iidxList.set(iidx, iList);
                 }
-                iList.add(new IdxVar<>(fidx, value));
+                iList.add(new IdxObject<>(fidx, value));
 
-                List<IdxVar<V>> fList = fidxList.get(fidx);
+                List<IdxObject<V>> fList = fidxList.get(fidx);
                 if (fList == null) {
                     fList = new ArrayList<>();
                     fidxList.set(fidx, fList);
                 }
-                fList.add(new IdxVar<>(iidx, value));
+                fList.add(new IdxObject<>(iidx, value));
             });
         }
 

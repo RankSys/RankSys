@@ -21,9 +21,7 @@ import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
 import es.uam.eps.ir.ranksys.metrics.SystemMetric;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 /**
  *
@@ -32,12 +30,13 @@ import gnu.trove.map.hash.TObjectIntHashMap;
 public abstract class AbstractSalesDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
 
     private final int cutoff;
-    protected final TObjectIntMap<I> itemCount;
+    protected final Object2IntOpenHashMap<I> itemCount;
     protected int m;
 
     public AbstractSalesDiversityMetric(int cutoff) {
         this.cutoff = cutoff;
-        this.itemCount = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0);
+        this.itemCount = new Object2IntOpenHashMap<>();
+        itemCount.defaultReturnValue(0);
         this.m = 0;
     }
 
@@ -45,7 +44,7 @@ public abstract class AbstractSalesDiversityMetric<U, I> extends AbstractSystemM
     public void add(Recommendation<U, I> recommendation) {
         int rank = 0;
         for (IdDouble<I> ivp : recommendation.getItems()) {
-            itemCount.adjustOrPutValue(ivp.id, 1, 1);
+            itemCount.addTo(ivp.id, 1);
 
             rank++;
             if (rank >= cutoff) {
@@ -57,9 +56,8 @@ public abstract class AbstractSalesDiversityMetric<U, I> extends AbstractSystemM
 
     @Override
     public void combine(SystemMetric<U, I> other) {
-        ((AbstractSalesDiversityMetric<U, I>) other).itemCount.forEachEntry((k, v) -> {
-            itemCount.adjustOrPutValue(k, v, v);
-            return true;
+        ((AbstractSalesDiversityMetric<U, I>) other).itemCount.object2IntEntrySet().forEach(e -> {
+            itemCount.addTo(e.getKey(), e.getIntValue());
         });
 
         m += ((AbstractSalesDiversityMetric<U, I>) other).m;

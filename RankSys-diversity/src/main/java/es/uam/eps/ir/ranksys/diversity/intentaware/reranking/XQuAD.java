@@ -21,9 +21,7 @@ import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
 /**
  *
@@ -47,31 +45,32 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
     protected class UserXQuAD extends LambdaUserReranker {
 
         private final IntentModel<U, I, F>.UserIntentModel uim;
-        private final TObjectDoubleMap<F> redundancy;
-        private final TObjectDoubleMap<F> probNorm;
+        private final Object2DoubleOpenHashMap<F> redundancy;
+        private final Object2DoubleOpenHashMap<F> probNorm;
 
         public UserXQuAD(Recommendation<U, I> recommendation) {
             super(recommendation);
 
             this.uim = intentModel.getModel(recommendation.getUser());
-            this.redundancy = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 1.0);
-            this.probNorm = new TObjectDoubleHashMap<>();
+            this.redundancy = new Object2DoubleOpenHashMap<>();
+            redundancy.defaultReturnValue(1.0);
+            this.probNorm = new Object2DoubleOpenHashMap<>();
             recommendation.getItems().forEach(iv -> {
                 uim.getItemIntents(iv.id).sequential().forEach(f -> {
-                    probNorm.adjustOrPutValue(f, iv.v, iv.v);
+                    probNorm.addTo(f, iv.v);
                 });
             });
         }
 
         private double pif(IdDouble<I> iv, F f) {
-            return iv.v / probNorm.get(f);
+            return iv.v / probNorm.getDouble(f);
         }
         
         @Override
         protected double nov(IdDouble<I> iv) {
             return uim.getItemIntents(iv.id)
                     .mapToDouble(f -> {
-                        return uim.p(f) * pif(iv, f) * redundancy.get(f);
+                        return uim.p(f) * pif(iv, f) * redundancy.getDouble(f);
                     }).sum();
         }
 
@@ -79,7 +78,7 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
         protected void update(IdDouble<I> biv) {
             uim.getItemIntents(biv.id).sequential()
                     .forEach(f -> {
-                        redundancy.put(f, redundancy.get(f) * (1 - pif(biv, f)));
+                        redundancy.put(f, redundancy.getDouble(f) * (1 - pif(biv, f)));
                     });
         }
 

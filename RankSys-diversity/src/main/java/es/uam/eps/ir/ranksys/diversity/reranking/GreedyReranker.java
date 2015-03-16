@@ -19,8 +19,7 @@ package es.uam.eps.ir.ranksys.diversity.reranking;
 
 import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.linked.TIntLinkedList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import static java.lang.Double.isNaN;
 import static java.lang.Math.min;
 import java.util.List;
@@ -61,7 +60,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
             List<IdDouble<I>> list = recommendation.getItems();
 
             int[] perm = new int[min(cutoff2, list.size())];
-            TIntList remainingI = new TIntLinkedList();
+            IntArrayList remainingI = new IntArrayList();
             IntStream.range(0, list.size()).forEach(i -> remainingI.add(i));
             int nreranked = 0;
 
@@ -70,31 +69,30 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
 
                 perm[nreranked] = bestI;
                 nreranked++;
-                remainingI.remove(bestI);
+                remainingI.removeInt(bestI);
 
                 update(list.get(bestI));
             }
 
             for (int i = nreranked; i < perm.length; i++) {
-                perm[i] = remainingI.removeAt(0);
+                perm[i] = remainingI.removeInt(0);
             }
 
             return perm;
         }
 
-        protected int selectItem(TIntList remainingI, List<IdDouble<I>> list) {
+        protected int selectItem(IntArrayList remainingI, List<IdDouble<I>> list) {
             double[] max = new double[]{Double.NEGATIVE_INFINITY};
-            int[] bestI = new int[]{remainingI.get(0)};
+            int[] bestI = new int[]{remainingI.getInt(0)};
             remainingI.forEach(i -> {
                 double value = value(list.get(i));
                 if (isNaN(value)) {
-                    return true;
+                    return;
                 }
                 if (value > max[0] || (value == max[0] && i < bestI[0])) {
                     max[0] = value;
                     bestI[0] = i;
                 }
-                return true;
             });
 
             return bestI[0];

@@ -21,8 +21,6 @@ import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
-import es.uam.eps.ir.ranksys.diversity.binom.reranking.BinomialCoverageReranker.BinomialCoverageUserReranker;
-import es.uam.eps.ir.ranksys.diversity.binom.reranking.BinomialNonRedundancyReranker.BinomialNonRedundancyUserReranker;
 import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
 
 /**

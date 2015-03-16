@@ -20,9 +20,8 @@ package es.uam.eps.ir.ranksys.diversity.binom;
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.model.UserModel;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.apache.commons.math3.distribution.BinomialDistribution;
@@ -35,7 +34,7 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
 
     private final RecommenderData<U, I, ?> recommenderData;
     private final FeatureData<I, F, ?> featureData;
-    private final TObjectDoubleMap<F> globalFeatureProbs;
+    private final Object2DoubleMap<F> globalFeatureProbs;
     private final double alpha;
 
     public BinomialModel(boolean caching, Stream<U> targetUsers, RecommenderData<U, I, ?> recommenderData, FeatureData<I, F, ?> featureData, double alpha) {
@@ -51,7 +50,7 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
     }
 
     public double p(F f) {
-        return globalFeatureProbs.get(f);
+        return globalFeatureProbs.getDouble(f);
     }
 
     @Override
@@ -65,15 +64,15 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
         return (UserBinomialModel) super.getModel(u);
     }
 
-    private TObjectDoubleMap<F> getGlobalFeatureProbs() {
-        TObjectDoubleMap<F> probs = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
+    private Object2DoubleMap<F> getGlobalFeatureProbs() {
+        Object2DoubleMap<F> probs = new Object2DoubleOpenHashMap<>();
+        probs.defaultReturnValue(0.0);
 
         int n = recommenderData.numPreferences();
         featureData.getAllFeatures().sequential().forEach(f -> {
             int numPrefs = featureData.getFeatureItems(f).mapToInt(i -> recommenderData.numUsers(i.id)).sum();
-            probs.put(f, numPrefs);
+            probs.put(f, numPrefs / (double) n);
         });
-        probs.transformValues(v -> v / n);
 
         return probs;
     }
@@ -81,7 +80,7 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
     public class UserBinomialModel implements Model<U> {
 
         private final U user;
-        private final TObjectDoubleMap<F> featureProbs;
+        private final Object2DoubleMap<F> featureProbs;
 
         private UserBinomialModel(U user, double alpha) {
             this.user = user;
@@ -93,7 +92,7 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
         }
 
         public double p(F f) {
-            return featureProbs.get(f);
+            return featureProbs.getDouble(f);
         }
 
         public double longing(F f, int N) {
@@ -107,17 +106,18 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
             return 1 - (dist.cumulativeProbability(k - 1) - p0) / (1 - p0);
         }
 
-        private TObjectDoubleMap<F> getUserFeatureProbs() {
+        private Object2DoubleMap<F> getUserFeatureProbs() {
             if (alpha == 0.0) {
                 return globalFeatureProbs;
             }
             
-            TObjectDoubleMap<F> probs = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
+            Object2DoubleOpenHashMap<F> probs = new Object2DoubleOpenHashMap<>();
+            probs.defaultReturnValue(0.0);
             
             int n = recommenderData.numItems(user);
             recommenderData.getUserPreferences(user).forEach(pref -> {
                 featureData.getItemFeatures(pref.id).forEach(feature -> {
-                    probs.adjustOrPutValue(feature.id, 1.0, 1.0);
+                    probs.addTo(feature.id, 1.0);
                 });
             });
 
@@ -125,12 +125,11 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
                 return globalFeatureProbs;
             }
             
-            probs.transformValues(p -> p / n);
-
             if (alpha < 1.0) {
-                globalFeatureProbs.forEachEntry((f, p) -> {
-                    probs.put(f, alpha * probs.get(f) + (1 - alpha) * p);
-                    return true;
+                globalFeatureProbs.object2DoubleEntrySet().forEach(e -> {
+                    F f = e.getKey();
+                    double p = e.getDoubleValue();
+                    probs.put(f, alpha * probs.getDouble(f) / n + (1 - alpha) * p);
                 });
             }
             

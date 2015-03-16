@@ -21,9 +21,8 @@ import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
 import es.uam.eps.ir.ranksys.core.util.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import gnu.trove.map.TIntDoubleMap;
+import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.IntPredicate;
 
@@ -43,18 +42,19 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
             return new FastRecommendation<>(uidx, new ArrayList<>(0));
         }
 
-        TIntDoubleMap scoresMap = getScoresMap(uidx);
+        Int2DoubleMap scoresMap = getScoresMap(uidx);
 
         if (maxLength == 0) {
             maxLength = scoresMap.size();
         }
 
         final IntDoubleTopN topN = new IntDoubleTopN(maxLength);
-        scoresMap.forEachEntry((iidx, score) -> {
+        scoresMap.int2DoubleEntrySet().forEach(e -> {
+            int iidx = e.getIntKey();
+            double score = e.getDoubleValue();
             if (filter.test(iidx)) {
                 topN.add(iidx, score);
             }
-            return true;
         });
 
         topN.sort();
@@ -67,5 +67,5 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
         return new FastRecommendation<>(uidx, items);
     }
 
-    protected abstract TIntDoubleMap getScoresMap(int uidx);
+    protected abstract Int2DoubleMap getScoresMap(int uidx);
 }

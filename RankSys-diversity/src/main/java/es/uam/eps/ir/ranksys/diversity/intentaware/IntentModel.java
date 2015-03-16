@@ -21,9 +21,7 @@ import es.uam.eps.ir.ranksys.core.data.RecommenderData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.model.UserModel;
 import es.uam.eps.ir.ranksys.core.model.UserModel.Model;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -62,15 +60,16 @@ public class IntentModel<U, I, F> extends UserModel<U> {
 
     public class UserIntentModel implements Model<U> {
 
-        private final TObjectDoubleMap<F> prob;
+        private final Object2DoubleOpenHashMap<F> prob;
 
         public UserIntentModel(U user) {
-            TObjectDoubleMap<F> auxProb = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
+            Object2DoubleOpenHashMap<F> auxProb = new Object2DoubleOpenHashMap<>();
+            auxProb.defaultReturnValue(0.0);
 
             int[] norm = {0};
             totalData.getUserPreferences(user).forEach(iv -> {
                 featureData.getItemFeatures(iv.id).forEach(fv -> {
-                    auxProb.adjustOrPutValue(fv.id, 1.0, 1.0);
+                    auxProb.addTo(fv.id, 1.0);
                     norm[0]++;
                 });
             });
@@ -79,7 +78,11 @@ public class IntentModel<U, I, F> extends UserModel<U> {
                 norm[0] = featureData.numFeatures();
                 featureData.getAllFeatures().sequential().forEach(f -> auxProb.put(f, 1.0));
             }
-            auxProb.transformValues(v -> v / norm[0]);
+            
+            auxProb.keySet().forEach(f -> {
+                auxProb.put(f, auxProb.getDouble(f) / norm[0]);
+            });
+//            auxProb.transformValues(v -> v / norm[0]);
 
             this.prob = auxProb;
         }
@@ -93,7 +96,7 @@ public class IntentModel<U, I, F> extends UserModel<U> {
         }
 
         public double p(F f) {
-            return prob.get(f);
+            return prob.getDouble(f);
         }
 
     }

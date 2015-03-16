@@ -22,8 +22,8 @@ import es.uam.eps.ir.ranksys.rec.AbstractRecommender;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -90,7 +90,7 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
 
     @Override
     public FastRecommendation<U, I> getRecommendation(int uidx, IntStream candidates) {
-        TIntSet set = new TIntHashSet();
+        IntSet set = new IntOpenHashSet();
         candidates.forEach(iidx -> set.add(iidx));
 
         return getRecommendation(uidx, 0, item -> set.contains(item));

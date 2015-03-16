@@ -36,7 +36,7 @@ public class GiniIndex<U, I> extends AbstractSalesDiversityMetric<U, I> {
     @Override
     public double evaluate() {
         double gi = 0;
-        int[] cs = itemCount.values();
+        int[] cs = itemCount.values().toIntArray();
         itemCount.clear();
         sort(cs);
         for (int j = 0; j < cs.length; j++) {

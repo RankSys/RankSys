@@ -22,11 +22,9 @@ import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,19 +52,20 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
     protected class BinomialNonRedundancyUserReranker extends LambdaUserReranker {
 
         private final BinomialModel<U, I, F>.UserBinomialModel ubm;
-        private final TObjectIntMap<F> featureCount;
-        private final TObjectDoubleMap<F> patienceNow;
-        private final TObjectDoubleMap<F> patienceLater;
+        private final Object2IntOpenHashMap<F> featureCount;
+        private final Object2DoubleMap<F> patienceNow;
+        private final Object2DoubleMap<F> patienceLater;
 
         public BinomialNonRedundancyUserReranker(Recommendation<U, I> recommendation) {
             super(recommendation);
 
             ubm = binomialModel.getModel(recommendation.getUser());
 
-            featureCount = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0);
+            featureCount = new Object2IntOpenHashMap<>();
+            featureCount.defaultReturnValue(0);
 
-            patienceNow = new TObjectDoubleHashMap<>();
-            patienceLater = new TObjectDoubleHashMap<>();
+            patienceNow = new Object2DoubleOpenHashMap<>();
+            patienceLater = new Object2DoubleOpenHashMap<>();
             ubm.getFeatures().forEach(f -> {
                 patienceNow.put(f, ubm.patience(0, f, cutoff1));
                 patienceLater.put(f, ubm.patience(1, f, cutoff1));
@@ -82,9 +81,9 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
             double iNonRed = featureCount.keySet().stream()
                     .mapToDouble(f -> {
                         if (itemFeatures.contains(f)) {
-                            return patienceLater.get(f);
+                            return patienceLater.getDouble(f);
                         } else {
-                            return patienceNow.get(f);
+                            return patienceNow.getDouble(f);
                         }
                     }).reduce((x, y) -> x * y).orElse(1.0);
             int m = featureCount.size() + (int) itemFeatures.stream()
@@ -100,8 +99,8 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
             featureData.getItemFeatures(bestItemValue.id)
                     .map(fv -> fv.id)
                     .forEach(f -> {
-                        int c = featureCount.adjustOrPutValue(f, 1, 1);
-                        patienceNow.put(f, patienceLater.get(f));
+                        int c = featureCount.addTo(f, 1) + 1;
+                        patienceNow.put(f, patienceLater.getDouble(f));
                         patienceLater.put(f, ubm.patience(c + 1, f, cutoff1));
                     });
         }

@@ -24,9 +24,8 @@ import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
 /**
  *
@@ -53,7 +52,8 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
         double[] erria = {0.0};
 
-        TObjectDoubleMap<F> pNoPrevRel = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
+        Object2DoubleMap<F> pNoPrevRel = new Object2DoubleOpenHashMap<>();
+        pNoPrevRel.defaultReturnValue(0.0);
         uim.getIntents().forEach((f) -> {
             pNoPrevRel.put(f, 1.0);
         });
@@ -63,7 +63,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
             if (userRelModel.isRelevant(iv.id)) {
                 double gain = userRelModel.gain(iv.id);
                 uim.getItemIntents(iv.id).forEach(f -> {
-                    double red = pNoPrevRel.get(f);
+                    double red = pNoPrevRel.getDouble(f);
                     erria[0] += uim.p(f) * gain * red / (1.0 + rank[0]);
                     pNoPrevRel.put(f, red * (1 - gain));
                 });
@@ -101,10 +101,11 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
         public class UserERRRelevanceModel implements UserRelevanceModel<U, I> {
 
-            private final TObjectDoubleMap<I> gainMap;
+            private final Object2DoubleMap<I> gainMap;
 
             public UserERRRelevanceModel(U user) {
-                this.gainMap = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
+                this.gainMap = new Object2DoubleOpenHashMap<>();
+                gainMap.defaultReturnValue(0.0);
 
                 testData.getUserPreferences(user)
                         .filter(iv -> iv.v >= threshold)
@@ -118,7 +119,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
             @Override
             public double gain(I item) {
-                return gainMap.get(item);
+                return gainMap.getDouble(item);
             }
         }
     }

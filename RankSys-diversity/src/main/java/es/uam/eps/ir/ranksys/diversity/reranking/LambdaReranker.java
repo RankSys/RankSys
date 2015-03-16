@@ -21,9 +21,9 @@ import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import static es.uam.eps.ir.ranksys.diversity.reranking.PermutationReranker.getBasePerm;
 import es.uam.eps.ir.ranksys.core.util.Stats;
-import gnu.trove.list.TIntList;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import static java.lang.Math.min;
 import java.util.List;
 
@@ -63,7 +63,7 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
 
         protected Stats relStats;
         protected Stats novStats;
-        protected TObjectDoubleMap<I> novMap;
+        protected Object2DoubleMap<I> novMap;
 
         public LambdaUserReranker(Recommendation<U, I> recommendation) {
             super(recommendation);
@@ -78,8 +78,8 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
         }
         
         @Override
-        protected int selectItem(TIntList remainingI, List<IdDouble<I>> list) {
-            novMap = new TObjectDoubleHashMap<>();
+        protected int selectItem(IntArrayList remainingI, List<IdDouble<I>> list) {
+            novMap = new Object2DoubleOpenHashMap<>();
             relStats = new Stats();
             novStats = new Stats();
             remainingI.forEach(i -> {
@@ -88,14 +88,13 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
                 novMap.put(itemValue.id, nov);
                 relStats.accept(itemValue.v);
                 novStats.accept(nov);
-                return true;
             });
             return super.selectItem(remainingI, list);
         }
 
         @Override
         protected double value(IdDouble<I> iv) {
-            return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.get(iv.id), novStats);
+            return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.getDouble(iv.id), novStats);
         }
 
         protected abstract double nov(IdDouble<I> iv);

@@ -21,15 +21,15 @@ package es.uam.eps.ir.ranksys.fast;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class IdxVar<V> {
+public class IdxObject<V> {
 
     public int idx;
     public V v;
 
-    public IdxVar() {
+    public IdxObject() {
     }
 
-    public IdxVar(int idx, V v) {
+    public IdxObject(int idx, V v) {
         this.idx = idx;
         this.v = v;
     }

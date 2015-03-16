@@ -18,7 +18,7 @@
 package es.uam.eps.ir.ranksys.fast.feature;
 
 import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
-import es.uam.eps.ir.ranksys.fast.IdxVar;
+import es.uam.eps.ir.ranksys.fast.IdxObject;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import java.util.stream.IntStream;
@@ -30,9 +30,9 @@ import java.util.stream.Stream;
  */
 public interface FastFeatureData<I, F, V> extends FeatureData<I, F, V>, FastItemIndex<I>, FastFeatureIndex<F> {
 
-    Stream<IdxVar<V>> getIidxFeatures(final int iidx);
+    Stream<IdxObject<V>> getIidxFeatures(final int iidx);
 
-    Stream<IdxVar<V>> getFidxItems(final int fidx);
+    Stream<IdxObject<V>> getFidxItems(final int fidx);
 
     int numItems(int fidx);
 

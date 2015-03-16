@@ -29,9 +29,7 @@ import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel.UserIdealRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,14 +63,15 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
         double ndcg = 0.0;
         int rank = 0;
-        TObjectIntMap<F> redundancy = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0);
+        Object2IntOpenHashMap<F> redundancy = new Object2IntOpenHashMap<>();
+        redundancy.defaultReturnValue(0);
 
         for (IdDouble<I> pair : recommendation.getItems()) {
             if (urm.isRelevant(pair.id)) {
                 double gain = featureData.getItemFeatures(pair.id).sequential()
                         .map(fv -> fv.id)
                         .mapToDouble(f -> {
-                            int r = redundancy.adjustOrPutValue(f, 1, 1) - 1;
+                            int r = redundancy.addTo(f, 1);
                             return Math.pow(1 - alpha, r);
                         }).sum();
                 ndcg += gain * disc.disc(rank);
@@ -93,7 +92,8 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
     private double idcg(UserIdealRelevanceModel<U, I> urm) {
         double ideal = 0;
 
-        TObjectIntMap<F> redundancy = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0);
+        Object2IntOpenHashMap<F> redundancy = new Object2IntOpenHashMap<>();
+        redundancy.defaultReturnValue(0);
         Set<I> candidates = new HashSet<>(urm.getRelevantItems());
         int rank = 0;
 
@@ -104,7 +104,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
                 double gain = featureData.getItemFeatures(i)
                         .map(fv -> fv.id)
                         .mapToDouble(f -> {
-                            return Math.pow(1 - alpha, redundancy.get(f));
+                            return Math.pow(1 - alpha, redundancy.getInt(f));
                         }).sum();
                 if (gain > bg) {
                     bg = gain;
@@ -114,7 +114,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
             candidates.remove(bi);
             featureData.getItemFeatures(bi).sequential()
                     .map(fv -> fv.id)
-                    .forEach(f -> redundancy.adjustOrPutValue(f, 1, 1));
+                    .forEach(f -> redundancy.addTo(f, 1));
             ideal += bg * disc.disc(rank);
             rank++;
         }

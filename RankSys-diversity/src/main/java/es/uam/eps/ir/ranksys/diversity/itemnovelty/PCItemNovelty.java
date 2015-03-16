@@ -18,9 +18,8 @@
 package es.uam.eps.ir.ranksys.diversity.itemnovelty;
 
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
 /**
  *
@@ -48,10 +47,11 @@ public class PCItemNovelty<U, I> extends ItemNovelty<U, I> {
 
     private class UserPCItemNoveltyModel implements UserItemNoveltyModel<U, I> {
 
-        private final TObjectDoubleMap<I> itemNovelty;
+        private final Object2DoubleMap<I> itemNovelty;
 
         public UserPCItemNoveltyModel(RecommenderData<U, I, ?> recommenderData) {
-            itemNovelty = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 1.0);
+            itemNovelty = new Object2DoubleOpenHashMap<>();
+            itemNovelty.defaultReturnValue(1.0);
             int numUsers = recommenderData.numUsersWithPreferences();
             recommenderData.getItemsWithPreferences().forEach(i -> {
                 itemNovelty.put(i, 1 - recommenderData.numUsers(i) / (double) numUsers);
@@ -60,7 +60,7 @@ public class PCItemNovelty<U, I> extends ItemNovelty<U, I> {
 
         @Override
         public double novelty(I i) {
-            return itemNovelty.get(i);
+            return itemNovelty.getDouble(i);
         }
 
     }

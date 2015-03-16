@@ -21,9 +21,7 @@ import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.diversity.reranking.LambdaReranker;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
 /**
  *
@@ -47,14 +45,15 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
 
     public class UserMMR extends LambdaUserReranker {
 
-        private final TObjectDoubleMap<I> avgDist;
+        private final Object2DoubleOpenHashMap<I> avgDist;
         private int n;
 
         public UserMMR(Recommendation<U, I> recommendation) {
             super(recommendation);
 
             n = 0;
-            avgDist = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
+            avgDist = new Object2DoubleOpenHashMap<>();
+            avgDist.defaultReturnValue(0.0);
             recommendation.getItems().stream().sequential()
                     .map(iv -> iv.id)
                     .forEach(i -> avgDist.put(i, 0.0));
@@ -62,7 +61,7 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
 
         @Override
         protected double nov(IdDouble<I> itemValue) {
-            return avgDist.get(itemValue.id);
+            return avgDist.getDouble(itemValue.id);
         }
 
         @Override
@@ -71,11 +70,11 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
             avgDist.remove(bestItem);
 
             n++;
-            avgDist.transformValues(d -> d * ((n - 1) / (double) n));
-            avgDist.forEachEntry((i, d) -> {
-                double d2 = dist.dist(i, bestItem) / n;
-                avgDist.adjustOrPutValue(i, d2, d2);
-                return true;
+            avgDist.object2DoubleEntrySet().forEach(e -> {
+                I i = e.getKey();
+                double d = e.getDoubleValue();
+                double d2 = dist.dist(i, bestItem);
+                avgDist.addTo(i, (d2 - d) / n);
             });
         }
 

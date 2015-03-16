@@ -18,9 +18,8 @@
 package es.uam.eps.ir.ranksys.diversity.itemnovelty;
 
 import es.uam.eps.ir.ranksys.core.data.RecommenderData;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import static java.lang.Math.log;
 import java.util.IntSummaryStatistics;
 
@@ -50,14 +49,15 @@ public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
     private class UserFDItemNoveltyModel implements UserItemNoveltyModel<U, I> {
 
-        private final TObjectDoubleMap<I> itemNovelty;
+        private final Object2DoubleMap<I> itemNovelty;
 
         public UserFDItemNoveltyModel(RecommenderData<U, I, ?> recommenderData) {
             IntSummaryStatistics stats = recommenderData.getItemsWithPreferences().mapToInt(i -> recommenderData.numUsers(i)).summaryStatistics();
             long norm = stats.getSum();
             double maxNov = -log(stats.getMin() / norm) / log(2);
 
-            itemNovelty = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, maxNov);
+            itemNovelty = new Object2DoubleOpenHashMap<>();
+            itemNovelty.defaultReturnValue(maxNov);
             recommenderData.getItemsWithPreferences().forEach(i -> {
                 itemNovelty.put(i, -log(recommenderData.numUsers(i) / (double) norm) / log(2));
             });
@@ -65,7 +65,7 @@ public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
         @Override
         public double novelty(I i) {
-            return itemNovelty.get(i);
+            return itemNovelty.getDouble(i);
         }
 
     }

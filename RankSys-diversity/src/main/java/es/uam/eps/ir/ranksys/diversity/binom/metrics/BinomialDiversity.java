@@ -20,7 +20,7 @@ package es.uam.eps.ir.ranksys.diversity.binom.metrics;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
-import gnu.trove.map.TObjectIntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 /**
  *
@@ -33,7 +33,7 @@ public class BinomialDiversity<U, I, F> extends BinomialMetric<U, I, F> {
     }
 
     @Override
-    protected double getResultFromCount(BinomialModel<U, I, F>.UserBinomialModel prob, TObjectIntMap<F> count, int nrel, int nret) {
+    protected double getResultFromCount(BinomialModel<U, I, F>.UserBinomialModel prob, Object2IntMap<F> count, int nrel, int nret) {
         return BinomialNonRedundancy.nonRedundancy(prob, count, nrel) * BinomialCoverage.coverage(prob, count, nret);
     }
 }

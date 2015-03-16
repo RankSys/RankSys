@@ -19,9 +19,8 @@ package es.uam.eps.ir.ranksys.diversity.distance;
 
 import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import gnu.trove.impl.Constants;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.stream.Stream;
 
 /**
@@ -36,7 +35,8 @@ public class CosineFeatureItemDistanceModel<I, F> extends FeatureItemDistanceMod
 
     @Override
     public double dist(Stream<IdObject<F, Double>> features1, Stream<IdObject<F, Double>> features2) {
-        TObjectDoubleMap<F> auxMap = new TObjectDoubleHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0.0);
+        Object2DoubleMap<F> auxMap = new Object2DoubleOpenHashMap<>();
+        auxMap.defaultReturnValue(0.0);
         double[] comps = {0.0, 0.0, 0.0};
 
         features1.forEach(fv -> {
@@ -50,7 +50,7 @@ public class CosineFeatureItemDistanceModel<I, F> extends FeatureItemDistanceMod
 
         features2.forEach(fv -> {
             comps[1] += fv.v * fv.v;
-            comps[2] += fv.v * auxMap.get(fv.id);
+            comps[2] += fv.v * auxMap.getDouble(fv.id);
         });
         
         if (comps[1] == 0) {

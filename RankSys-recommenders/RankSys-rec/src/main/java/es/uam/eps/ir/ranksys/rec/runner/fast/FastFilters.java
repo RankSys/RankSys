@@ -19,8 +19,8 @@ package es.uam.eps.ir.ranksys.rec.runner.fast;
 
 import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
 import es.uam.eps.ir.ranksys.fast.feature.FastFeatureData;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
@@ -37,7 +37,7 @@ public class FastFilters {
 
     public static <U, I> Function<U, IntPredicate> notInTrain(FastRecommenderData<U, I, ?> trainData) {
         return user -> {
-            TIntSet set = new TIntHashSet();
+            IntSet set = new IntOpenHashSet();
             trainData.getUidxPreferences(trainData.user2uidx(user)).mapToInt(iv -> iv.idx).forEach(set::add);
 
             return iidx -> !set.contains(iidx);
@@ -45,7 +45,7 @@ public class FastFilters {
     }
 
     public static <U, I, F> Function<U, IntPredicate> withFeatures(FastFeatureData<I, F, ?> featureData) {
-        TIntSet itemsWithFeatures = new TIntHashSet();
+        IntSet itemsWithFeatures = new IntOpenHashSet();
         featureData.getIidxWithFeatures().forEach(iidx -> itemsWithFeatures.add(iidx));
         return user -> iidx -> itemsWithFeatures.contains(iidx);
     }

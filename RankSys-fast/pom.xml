@@ -15,9 +15,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.trove4j</groupId>
-            <artifactId>trove4j</artifactId>
-            <version>3.0.3</version>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>6.6.3</version>
         </dependency>
     </dependencies>
 </project>

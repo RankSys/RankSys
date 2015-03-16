@@ -23,8 +23,8 @@ import es.uam.eps.ir.ranksys.diversity.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.diversity.reranking.PermutationReranker;
 import es.uam.eps.ir.ranksys.core.util.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.core.util.Stats;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.List;
 
 /**
@@ -68,7 +68,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
             return getBasePerm(Math.min(N, recommendation.getItems().size()));
         }
 
-        TObjectDoubleMap<Object> novMap = new TObjectDoubleHashMap<>();
+        Object2DoubleMap<I> novMap = new Object2DoubleOpenHashMap<>();
         Stats relStats = new Stats();
         Stats novStats = new Stats();
         recommendation.getItems().forEach(itemValue -> {
@@ -102,7 +102,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
         }
     }
 
-    protected double value(IdDouble<I> iv, Stats relStats, TObjectDoubleMap<Object> novMap, Stats novStats) {
-        return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.get(iv.id), novStats);
+    protected double value(IdDouble<I> iv, Stats relStats, Object2DoubleMap<I> novMap, Stats novStats) {
+        return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.getDouble(iv.id), novStats);
     }
 }
