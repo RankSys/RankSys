@@ -110,7 +110,7 @@ public class HKVFactorizer<U, I, O> extends ALSFactorizer<U, I, O> {
                 DoubleMatrix1D qi = q.viewRow(iidx);
 
                 A.assign(A2P[iidx], (x, y) -> x + y * (Cui - 1.0));
-                b.assign(qi, (x, y) -> x * y * Rui * Cui);
+                b.assign(qi, (x, y) -> x + y * Rui * Cui);
             });
             LUDecompositionQuick lu = new LUDecompositionQuick(0);
             lu.decompose(A);
