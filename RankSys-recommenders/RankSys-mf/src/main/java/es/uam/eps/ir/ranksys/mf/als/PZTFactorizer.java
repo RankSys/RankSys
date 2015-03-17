@@ -62,7 +62,7 @@ public class PZTFactorizer<U, I, O> extends ALSFactorizer<U, I, O> {
                 return cui * (rui - sui) * (rui - sui) - confidence.apply(0) * sui * sui;
             }).sum();
             
-            double err2 = confidence.apply(0) * su.zSum();
+            double err2 = confidence.apply(0) * su.assign(x -> x * x).zSum();
             
             return err1 + err2;
         }).sum();
