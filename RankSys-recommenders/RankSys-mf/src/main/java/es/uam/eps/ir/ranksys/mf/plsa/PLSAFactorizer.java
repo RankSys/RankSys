@@ -18,7 +18,6 @@
 package es.uam.eps.ir.ranksys.mf.plsa;
 
 import cern.colt.matrix.DoubleMatrix1D;
-import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import static cern.jet.math.Functions.identity;
 import static cern.jet.math.Functions.mult;
@@ -29,10 +28,13 @@ import es.uam.eps.ir.ranksys.mf.Factorizer;
 import es.uam.eps.ir.ranksys.mf.als.ALSFactorizer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -63,10 +65,15 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I, double[]> {
     }
 
     @Override
-    public void factorize(Factorization<U, I> factorization, FastRecommenderData<U, I, double[]> qzData) {
+    public void factorize(Factorization<U, I> factorization, FastRecommenderData<U, I, double[]> data) {
         DenseDoubleMatrix2D pu_z = factorization.getUserMatrix();
         DenseDoubleMatrix2D piz = factorization.getItemMatrix();
 
+        IntSet uidxs = new IntOpenHashSet(data.getUidxWithPreferences().toArray());
+        IntStream.range(0, pu_z.rows()).filter(uidx -> !uidxs.contains(uidx)).forEach(uidx -> pu_z.viewRow(uidx).assign(0.0));
+        IntSet iidxs = new IntOpenHashSet(data.getIidxWithPreferences().toArray());
+        IntStream.range(0, piz.rows()).filter(iidx -> !iidxs.contains(iidx)).forEach(iidx -> piz.viewRow(iidx).assign(0.0));
+        
         for (int z = 0; z < pu_z.columns(); z++) {
             final DoubleMatrix1D pu_Z = pu_z.viewColumn(z);
             pu_Z.assign(mult(1 / pu_Z.aggregate(plus, identity)));
@@ -76,13 +83,13 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I, double[]> {
         for (int t = 1; t <= numIter; t++) {
             long time0 = System.nanoTime();
 
-            expectation(pu_z, piz, qzData);
-            maximization(pu_z, piz, qzData);
+            expectation(pu_z, piz, data);
+            maximization(pu_z, piz, data);
 
             int iter = t;
             long time1 = System.nanoTime() - time0;
 
-            Logger.getLogger(ALSFactorizer.class.getName()).log(Level.INFO, () -> String.format("iteration %3d %.2fs %.6f", iter, time1 / 1_000_000_000.0, error(factorization, qzData)));
+            Logger.getLogger(ALSFactorizer.class.getName()).log(Level.INFO, () -> String.format("iteration %3d %.2fs %.6f", iter, time1 / 1_000_000_000.0, error(factorization, data)));
         }
     }
 

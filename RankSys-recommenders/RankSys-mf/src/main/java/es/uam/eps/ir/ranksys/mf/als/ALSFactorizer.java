@@ -21,8 +21,11 @@ import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
 import es.uam.eps.ir.ranksys.mf.Factorization;
 import es.uam.eps.ir.ranksys.mf.Factorizer;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -51,6 +54,11 @@ public abstract class ALSFactorizer<U, I, O> extends Factorizer<U, I, O> {
         DenseDoubleMatrix2D p = factorization.getUserMatrix();
         DenseDoubleMatrix2D q = factorization.getItemMatrix();
 
+        IntSet uidxs = new IntOpenHashSet(data.getUidxWithPreferences().toArray());
+        IntStream.range(0, p.rows()).filter(uidx -> !uidxs.contains(uidx)).forEach(uidx -> p.viewRow(uidx).assign(0.0));
+        IntSet iidxs = new IntOpenHashSet(data.getIidxWithPreferences().toArray());
+        IntStream.range(0, q.rows()).filter(iidx -> !iidxs.contains(iidx)).forEach(iidx -> q.viewRow(iidx).assign(0.0));
+        
         for (int t = 1; t <= numIter; t++) {
             long time0 = System.nanoTime();
 
