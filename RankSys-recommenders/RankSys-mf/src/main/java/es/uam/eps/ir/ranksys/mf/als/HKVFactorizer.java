@@ -90,10 +90,8 @@ public class HKVFactorizer<U, I, O> extends ALSFactorizer<U, I, O> {
         }
 
         DenseDoubleMatrix2D[] A2P = new DenseDoubleMatrix2D[q.rows()];
-        for (int iidx = 0; iidx < q.rows(); iidx++) {
-            A2P[iidx] = new DenseDoubleMatrix2D(K, K);
-        }
         data.getIidxWithPreferences().parallel().forEach(iidx -> {
+            A2P[iidx] = new DenseDoubleMatrix2D(K, K);
             DoubleMatrix1D qi = q.viewRow(iidx);
             ALG.multOuter(qi, qi, A2P[iidx]);
         });
