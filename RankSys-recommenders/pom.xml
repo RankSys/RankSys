@@ -28,5 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <packaging>pom</packaging>
     <modules>
         <module>RankSys-rec</module>
+        <module>RankSys-nn</module>
+        <module>RankSys-mf</module>
     </modules>
 </project>
