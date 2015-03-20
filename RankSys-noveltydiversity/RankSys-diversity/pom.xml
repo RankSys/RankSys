@@ -43,5 +43,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>RankSys-metrics</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>es.uam.eps.ir</groupId>
+            <artifactId>RankSys-core</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>6.6.3</version>
+        </dependency>
     </dependencies>
 </project>
