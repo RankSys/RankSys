@@ -26,29 +26,30 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * @author Pablo Castells (pablo.castells@uam.es)
  */
-public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
+public class RXQuAD<U, I, F> extends LambdaReranker<U, I> {
 
     private final IntentModel<U, I, F> intentModel;
+    private final double alpha;
 
-    public XQuAD(IntentModel<U, I, F> intentModel, double lambda, int cutoff, boolean norm) {
+    public RXQuAD(IntentModel<U, I, F> intentModel, double alpha, double lambda, int cutoff, boolean norm) {
         super(lambda, cutoff, norm);
         this.intentModel = intentModel;
+        this.alpha = alpha;
     }
 
     @Override
     protected LambdaUserReranker getUserReranker(Recommendation<U, I> recommendation) {
-        return new UserXQuAD(recommendation);
+        return new UserRXQuAD(recommendation);
     }
 
-    protected class UserXQuAD extends LambdaUserReranker {
+    protected class UserRXQuAD extends LambdaUserReranker {
 
         private final IntentModel<U, I, F>.UserIntentModel uim;
         private final Object2DoubleOpenHashMap<F> redundancy;
         private final Object2DoubleOpenHashMap<F> probNorm;
 
-        public UserXQuAD(Recommendation<U, I> recommendation) {
+        public UserRXQuAD(Recommendation<U, I> recommendation) {
             super(recommendation);
 
             this.uim = intentModel.getModel(recommendation.getUser());
@@ -57,15 +58,17 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
             this.probNorm = new Object2DoubleOpenHashMap<>();
             recommendation.getItems().forEach(iv -> {
                 uim.getItemIntents(iv.id).sequential().forEach(f -> {
-                    probNorm.addTo(f, iv.v);
+                    if (!probNorm.containsKey(f)) {
+                        probNorm.put(f, iv.v);
+                    }
                 });
             });
         }
 
         private double pif(IdDouble<I> iv, F f) {
-            return iv.v / probNorm.getDouble(f);
+            return (Math.pow(2, iv.v / probNorm.getDouble(f)) - 1) / 2.0;
         }
-        
+
         @Override
         protected double nov(IdDouble<I> iv) {
             return uim.getItemIntents(iv.id)
@@ -78,7 +81,7 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
         protected void update(IdDouble<I> biv) {
             uim.getItemIntents(biv.id).sequential()
                     .forEach(f -> {
-                        redundancy.put(f, redundancy.getDouble(f) * (1 - pif(biv, f)));
+                        redundancy.put(f, redundancy.getDouble(f) * (1 - alpha * pif(biv, f)));
                     });
         }
 
