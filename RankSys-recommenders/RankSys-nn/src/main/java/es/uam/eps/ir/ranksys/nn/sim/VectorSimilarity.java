@@ -18,7 +18,7 @@
 package es.uam.eps.ir.ranksys.nn.sim;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -34,10 +34,10 @@ import static java.util.stream.Stream.builder;
  */
 public abstract class VectorSimilarity implements Similarity {
 
-    private final FastRecommenderData<?, ?, ?> data;
+    private final FastPreferenceData<?, ?, ?> data;
     private final Int2DoubleMap norm2Map;
 
-    public VectorSimilarity(FastRecommenderData<?, ?, ?> data) {
+    public VectorSimilarity(FastPreferenceData<?, ?, ?> data) {
         this.data = data;
         this.norm2Map = new Int2DoubleOpenHashMap();
         norm2Map.defaultReturnValue(0.0);

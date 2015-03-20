@@ -24,8 +24,8 @@ import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import cern.colt.matrix.linalg.LUDecompositionQuick;
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
-import es.uam.eps.ir.ranksys.fast.data.TransposedRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 
 /**
  *
@@ -50,7 +50,7 @@ public class HKVFactorizer<U, I, O> extends ALSFactorizer<U, I, O> {
     }
 
     @Override
-    public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastRecommenderData<U, I, O> data) {
+    public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, O> data) {
         double error = data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
             DoubleMatrix1D pu = p.viewRow(uidx);
             DoubleMatrix1D su = q.zMult(pu, null);
@@ -71,16 +71,16 @@ public class HKVFactorizer<U, I, O> extends ALSFactorizer<U, I, O> {
     }
 
     @Override
-    public void set_minP(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, FastRecommenderData<U, I, O> data) {
+    public void set_minP(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, FastPreferenceData<U, I, O> data) {
         set_min(p, q, confidence, lambdaP, data);
     }
 
     @Override
-    public void set_minQ(final DenseDoubleMatrix2D q, final DenseDoubleMatrix2D p, FastRecommenderData<U, I, O> data) {
-        set_min(q, p, confidence, lambdaQ, new TransposedRecommenderData<>(data));
+    public void set_minQ(final DenseDoubleMatrix2D q, final DenseDoubleMatrix2D p, FastPreferenceData<U, I, O> data) {
+        set_min(q, p, confidence, lambdaQ, new TransposedPreferenceData<>(data));
     }
 
-    private static <U, I, O> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleFunction confidence, double lambda, FastRecommenderData<U, I, O> data) {
+    private static <U, I, O> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleFunction confidence, double lambda, FastPreferenceData<U, I, O> data) {
         final int K = p.columns();
 
         DenseDoubleMatrix2D A1P = new DenseDoubleMatrix2D(K, K);

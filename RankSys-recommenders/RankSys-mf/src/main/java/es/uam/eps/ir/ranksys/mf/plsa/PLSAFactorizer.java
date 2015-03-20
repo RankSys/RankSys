@@ -22,7 +22,7 @@ import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import static cern.jet.math.Functions.identity;
 import static cern.jet.math.Functions.mult;
 import static cern.jet.math.Functions.plus;
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.mf.Factorization;
 import es.uam.eps.ir.ranksys.mf.Factorizer;
 import es.uam.eps.ir.ranksys.mf.als.ALSFactorizer;
@@ -49,7 +49,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I, double[]> {
     }
 
     @Override
-    public double error(Factorization<U, I> factorization, FastRecommenderData<U, I, double[]> data) {
+    public double error(Factorization<U, I> factorization, FastPreferenceData<U, I, double[]> data) {
         DenseDoubleMatrix2D pu_z = factorization.getUserMatrix();
         DenseDoubleMatrix2D piz = factorization.getItemMatrix();
 
@@ -65,7 +65,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I, double[]> {
     }
 
     @Override
-    public void factorize(Factorization<U, I> factorization, FastRecommenderData<U, I, double[]> data) {
+    public void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, double[]> data) {
         DenseDoubleMatrix2D pu_z = factorization.getUserMatrix();
         DenseDoubleMatrix2D piz = factorization.getItemMatrix();
 
@@ -93,7 +93,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I, double[]> {
         }
     }
 
-    private void expectation(final DenseDoubleMatrix2D pz_u, final DenseDoubleMatrix2D piz, FastRecommenderData<U, I, double[]> qzData) {
+    private void expectation(final DenseDoubleMatrix2D pz_u, final DenseDoubleMatrix2D piz, FastPreferenceData<U, I, double[]> qzData) {
         qzData.getUidxWithPreferences().parallel().forEach(uidx -> {
             qzData.getUidxPreferences(uidx).forEach(iqz -> {
                 int iidx = iqz.idx;
@@ -106,7 +106,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I, double[]> {
         });
     }
 
-    private void maximization(DenseDoubleMatrix2D pu_z, final DenseDoubleMatrix2D piz, final FastRecommenderData<U, I, double[]> qzData) {
+    private void maximization(DenseDoubleMatrix2D pu_z, final DenseDoubleMatrix2D piz, final FastPreferenceData<U, I, double[]> qzData) {
         Int2ObjectMap<Lock> lockMap = new Int2ObjectOpenHashMap<>();
         qzData.getIidxWithPreferences().forEach(iidx -> lockMap.put(iidx, new ReentrantLock()));
 

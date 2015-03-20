@@ -20,7 +20,7 @@ package es.uam.eps.ir.ranksys.rec.fast;
 import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.rec.AbstractRecommender;
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -35,9 +35,9 @@ import java.util.stream.IntStream;
  */
 public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<U, I> implements FastRecommender<U, I> {
 
-    protected final FastRecommenderData<U, I, ?> fastData;
+    protected final FastPreferenceData<U, I, ?> fastData;
 
-    public AbstractFastRecommender(FastRecommenderData<U, I, ?> data) {
+    public AbstractFastRecommender(FastPreferenceData<U, I, ?> data) {
         super(data);
 
         this.fastData = data;

@@ -15,12 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.fast.data;
+package es.uam.eps.ir.ranksys.fast.preference;
 
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.core.data.RecommenderData;
-import es.uam.eps.ir.ranksys.fast.IdxPref;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -28,7 +27,7 @@ import java.util.stream.Stream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public interface FastRecommenderData<U, I, V> extends RecommenderData<U, I, V>, FastUserIndex<U>, FastItemIndex<I> {
+public interface FastPreferenceData<U, I, V> extends PreferenceData<U, I, V>, FastUserIndex<U>, FastItemIndex<I> {
 
     public int numUsers(int iidx);
 

@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.core.data;
+package es.uam.eps.ir.ranksys.core.preference;
 
-import es.uam.eps.ir.ranksys.core.IdPref;
 import es.uam.eps.ir.ranksys.core.index.ItemIndex;
 import es.uam.eps.ir.ranksys.core.index.UserIndex;
 import java.util.stream.Stream;
@@ -31,7 +30,7 @@ import java.util.stream.Stream;
  * @param <I> type of the items
  * @param <O> type of other information for users and items
  */
-public interface RecommenderData<U, I, O> extends UserIndex<U>, ItemIndex<I> {
+public interface PreferenceData<U, I, O> extends UserIndex<U>, ItemIndex<I> {
 
     /**
      * Returns the number of users with preferences.

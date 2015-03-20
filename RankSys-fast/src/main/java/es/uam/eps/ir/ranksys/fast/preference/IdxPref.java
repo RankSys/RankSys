@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package es.uam.eps.ir.ranksys.fast.preference;
+
 /**
- * Classes for accessing user-item preferences.
+ *
+ * @author Saúl Vargas (saul.vargas@uam.es)
  */
-package es.uam.eps.ir.ranksys.core.data;
+public class IdxPref<O> {
+
+    public final int idx;
+    public final double v;
+    public final O o;
+
+    public IdxPref(int idx, double value, O other) {
+        this.idx = idx;
+        this.v = value;
+        this.o = other;
+    }
+
+}

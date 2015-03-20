@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.fast.data;
+package es.uam.eps.ir.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.IdPref;
+import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import java.util.stream.Stream;
@@ -26,12 +26,12 @@ import java.util.stream.Stream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public abstract class AbstractFastRecommenderData<U, I, O> implements FastRecommenderData<U, I, O> {
+public abstract class AbstractFastPreferenceData<U, I, O> implements FastPreferenceData<U, I, O> {
 
     private final FastUserIndex<U> ui;
     private final FastItemIndex<I> ii;
 
-    public AbstractFastRecommenderData(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex) {
+    public AbstractFastPreferenceData(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex) {
         this.ui = userIndex;
         this.ii = itemIndex;
     }

@@ -18,7 +18,7 @@
 package es.uam.eps.ir.ranksys.rec.fast.basic;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
     private final Random random;
     private final List<IdxDouble> randomList;
 
-    public RandomRecommender(FastRecommenderData<U, I, ?> data) {
+    public RandomRecommender(FastPreferenceData<U, I, ?> data) {
         super(data);
         random = new Random();
         randomList = data.getAllIidx().mapToObj(iidx -> new IdxDouble(iidx, Double.NaN)).collect(Collectors.toList());

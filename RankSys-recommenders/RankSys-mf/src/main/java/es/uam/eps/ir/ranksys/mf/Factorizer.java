@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.mf;
 
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 
 /**
  *
@@ -25,7 +25,7 @@ import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
  */
 public abstract class Factorizer<U, I, O> {
 
-    public abstract double error(Factorization<U, I> factorization, FastRecommenderData<U, I, O> data);
+    public abstract double error(Factorization<U, I> factorization, FastPreferenceData<U, I, O> data);
 
-    public abstract void factorize(Factorization<U, I> factorization, FastRecommenderData<U, I, O> data);
+    public abstract void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, O> data);
 }

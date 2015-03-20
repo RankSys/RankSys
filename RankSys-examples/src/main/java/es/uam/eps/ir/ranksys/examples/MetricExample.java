@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.examples.examples;
+package es.uam.eps.ir.ranksys.examples;
 
-import es.uam.eps.ir.ranksys.core.data.ConcatRecommenderData;
-import es.uam.eps.ir.ranksys.core.data.RecommenderData;
-import es.uam.eps.ir.ranksys.core.data.SimpleRecommenderData;
+import es.uam.eps.ir.ranksys.core.preference.ConcatPreferenceData;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
+import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
 import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
@@ -69,9 +69,9 @@ public class MetricExample {
         Double threshold = Double.parseDouble(args[4]);
 
         // USER - ITEM - RATING files for train and test
-        RecommenderData<Long, Long, Void> trainData = SimpleRecommenderData.load(trainDataPath, lp, lp, ddp, vp);
-        RecommenderData<Long, Long, Void> testData = SimpleRecommenderData.load(testDataPath, lp, lp, ddp, vp);
-        RecommenderData<Long, Long, Void> totalData = new ConcatRecommenderData<>(trainData, testData);
+        PreferenceData<Long, Long, Void> trainData = SimplePreferenceData.load(trainDataPath, lp, lp, ddp, vp);
+        PreferenceData<Long, Long, Void> testData = SimplePreferenceData.load(testDataPath, lp, lp, ddp, vp);
+        PreferenceData<Long, Long, Void> totalData = new ConcatPreferenceData<>(trainData, testData);
         // EVALUATED AT CUTOFF 10
         int cutoff = 10;
         // ITEM - FEATURE file

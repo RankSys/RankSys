@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.itemnovelty;
 
-import es.uam.eps.ir.ranksys.core.data.RecommenderData;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import static java.lang.Math.log;
@@ -32,7 +32,7 @@ public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
     private final UserFDItemNoveltyModel nov;
 
-    public FDItemNovelty(RecommenderData<U, I, ?> recommenderData) {
+    public FDItemNovelty(PreferenceData<U, I, ?> recommenderData) {
         super();
         this.nov = new UserFDItemNoveltyModel(recommenderData);
     }
@@ -51,7 +51,7 @@ public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
         private final Object2DoubleMap<I> itemNovelty;
 
-        public UserFDItemNoveltyModel(RecommenderData<U, I, ?> recommenderData) {
+        public UserFDItemNoveltyModel(PreferenceData<U, I, ?> recommenderData) {
             IntSummaryStatistics stats = recommenderData.getItemsWithPreferences().mapToInt(i -> recommenderData.numUsers(i)).summaryStatistics();
             long norm = stats.getSum();
             double maxNov = -log(stats.getMin() / norm) / log(2);

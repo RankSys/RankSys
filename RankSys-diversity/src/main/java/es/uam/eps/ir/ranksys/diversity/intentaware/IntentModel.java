@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware;
 
-import es.uam.eps.ir.ranksys.core.data.RecommenderData;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.model.UserModel;
 import es.uam.eps.ir.ranksys.core.model.UserModel.Model;
@@ -32,16 +32,16 @@ import java.util.stream.Stream;
  */
 public class IntentModel<U, I, F> extends UserModel<U> {
 
-    private final RecommenderData<U, I, ?> totalData;
+    private final PreferenceData<U, I, ?> totalData;
     private final FeatureData<I, F, ?> featureData;
 
-    public IntentModel(Stream<U> targetUsers, RecommenderData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
+    public IntentModel(Stream<U> targetUsers, PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
         super(targetUsers);
         this.totalData = totalData;
         this.featureData = featureData;
     }
 
-    public IntentModel(RecommenderData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
+    public IntentModel(PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
         super();
         this.totalData = totalData;
         this.featureData = featureData;

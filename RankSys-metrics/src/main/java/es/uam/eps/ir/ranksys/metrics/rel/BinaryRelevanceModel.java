@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.metrics.rel;
 
-import es.uam.eps.ir.ranksys.core.data.RecommenderData;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
  */
 public class BinaryRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
 
-    private final RecommenderData<U, I, ?> testData;
+    private final PreferenceData<U, I, ?> testData;
     private final double threshold;
 
-    public BinaryRelevanceModel(boolean caching, RecommenderData<U, I, ?> testData, double threshold) {
+    public BinaryRelevanceModel(boolean caching, PreferenceData<U, I, ?> testData, double threshold) {
         super(caching, testData.getUsersWithPreferences());
         this.testData = testData;
         this.threshold = threshold;

@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.nn.user.sim;
 
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.SetCosineSimilarity;
 
 /**
@@ -26,7 +26,7 @@ import es.uam.eps.ir.ranksys.nn.sim.SetCosineSimilarity;
  */
 public class SetCosineUserSimilarity<U> extends UserSimilarity<U> {
 
-    public SetCosineUserSimilarity(FastRecommenderData<U, ?, ?> recommenderData, double alpha) {
+    public SetCosineUserSimilarity(FastPreferenceData<U, ?, ?> recommenderData, double alpha) {
         super(recommenderData, new SetCosineSimilarity(recommenderData, alpha));
     }
 

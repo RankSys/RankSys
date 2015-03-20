@@ -15,10 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.fast.data;
+package es.uam.eps.ir.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.IdPref;
-import es.uam.eps.ir.ranksys.fast.IdxPref;
+import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -26,11 +25,11 @@ import java.util.stream.Stream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class TransposedRecommenderData<I, U, O> implements FastRecommenderData<I, U, O> {
+public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, U, O> {
 
-    private final FastRecommenderData<U, I, O> d;
+    private final FastPreferenceData<U, I, O> d;
 
-    public TransposedRecommenderData(FastRecommenderData<U, I, O> recommenderData) {
+    public TransposedPreferenceData(FastPreferenceData<U, I, O> recommenderData) {
         this.d = recommenderData;
     }
 

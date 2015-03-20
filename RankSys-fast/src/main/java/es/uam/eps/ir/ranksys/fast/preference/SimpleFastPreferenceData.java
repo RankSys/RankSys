@@ -15,12 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.fast.data;
+package es.uam.eps.ir.ranksys.fast.preference;
 
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
-import es.uam.eps.ir.ranksys.fast.IdxPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import java.io.BufferedReader;
@@ -37,13 +36,13 @@ import java.util.stream.Stream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class SimpleFastRecommenderData<U, I, O> extends AbstractFastRecommenderData<U, I, O> {
+public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceData<U, I, O> {
 
     private final int numPreferences;
     private final List<List<IdxPref<O>>> uidxList;
     private final List<List<IdxPref<O>>> iidxList;
 
-    protected SimpleFastRecommenderData(int numPreferences, List<List<IdxPref<O>>> uidxList, List<List<IdxPref<O>>> iidxList, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
+    protected SimpleFastPreferenceData(int numPreferences, List<List<IdxPref<O>>> uidxList, List<List<IdxPref<O>>> iidxList, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
         super(uIndex, iIndex);
         this.numPreferences = numPreferences;
         this.uidxList = uidxList;
@@ -99,11 +98,11 @@ public class SimpleFastRecommenderData<U, I, O> extends AbstractFastRecommenderD
                 .filter(iv -> iv != null).count();
     }
 
-    public static <U, I, O> SimpleFastRecommenderData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
+    public static <U, I, O> SimpleFastPreferenceData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
         return load(new FileInputStream(path), uParser, iParser, dp, vParser, uIndex, iIndex);
     }
 
-    public static <U, I, O> SimpleFastRecommenderData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
+    public static <U, I, O> SimpleFastPreferenceData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
         int[] numPreferences = new int[]{0};
         
         List<List<IdxPref<O>>> uidxList = new ArrayList<>();
@@ -155,7 +154,7 @@ public class SimpleFastRecommenderData<U, I, O> extends AbstractFastRecommenderD
             });
         }
 
-        return new SimpleFastRecommenderData<>(numPreferences[0], uidxList, iidxList, uIndex, iIndex);
+        return new SimpleFastPreferenceData<>(numPreferences[0], uidxList, iidxList, uIndex, iIndex);
     }
 
 }

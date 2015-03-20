@@ -18,7 +18,7 @@
 package es.uam.eps.ir.ranksys.rec.fast.basic;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import static java.util.Collections.sort;
@@ -34,7 +34,7 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     private final List<IdxDouble> popList;
 
-    public PopularityRecommender(FastRecommenderData<U, I, ?> data) {
+    public PopularityRecommender(FastPreferenceData<U, I, ?> data) {
         super(data);
 
         popList = data.getIidxWithPreferences().mapToObj(iidx -> new IdxDouble(iidx, (double) data.numUsers(iidx))).collect(Collectors.toList());

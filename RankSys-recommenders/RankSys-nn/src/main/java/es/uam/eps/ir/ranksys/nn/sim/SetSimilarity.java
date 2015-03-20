@@ -18,7 +18,7 @@
 package es.uam.eps.ir.ranksys.nn.sim;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -34,9 +34,9 @@ import static java.util.stream.Stream.builder;
  */
 public abstract class SetSimilarity implements Similarity {
 
-    private final FastRecommenderData<?, ?, ?> data;
+    private final FastPreferenceData<?, ?, ?> data;
 
-    public SetSimilarity(FastRecommenderData<?, ?, ?> data) {
+    public SetSimilarity(FastPreferenceData<?, ?, ?> data) {
         this.data = data;
     }
 

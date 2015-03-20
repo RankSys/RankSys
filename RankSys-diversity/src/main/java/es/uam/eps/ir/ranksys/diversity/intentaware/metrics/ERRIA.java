@@ -18,7 +18,7 @@
 package es.uam.eps.ir.ranksys.diversity.intentaware.metrics;
 
 import es.uam.eps.ir.ranksys.core.IdDouble;
-import es.uam.eps.ir.ranksys.core.data.RecommenderData;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
@@ -79,11 +79,11 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
     public static class ERRRelevanceModel<U, I> extends RelevanceModel<U, I> {
 
-        private final RecommenderData<U, I, ?> testData;
+        private final PreferenceData<U, I, ?> testData;
         private final double threshold;
         private final double maxPreference;
 
-        public ERRRelevanceModel(boolean caching, RecommenderData<U, I, ?> testData, double threshold) {
+        public ERRRelevanceModel(boolean caching, PreferenceData<U, I, ?> testData, double threshold) {
             super(caching, testData.getUsersWithPreferences());
             this.testData = testData;
             this.threshold = threshold;

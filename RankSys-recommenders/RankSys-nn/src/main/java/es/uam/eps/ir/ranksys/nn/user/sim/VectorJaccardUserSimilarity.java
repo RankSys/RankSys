@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.nn.user.sim;
 
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.VectorJaccardSimilarity;
 
 /**
@@ -26,7 +26,7 @@ import es.uam.eps.ir.ranksys.nn.sim.VectorJaccardSimilarity;
  */
 public class VectorJaccardUserSimilarity<U> extends UserSimilarity<U> {
 
-    public VectorJaccardUserSimilarity(FastRecommenderData<U, ?, ?> data) {
+    public VectorJaccardUserSimilarity(FastPreferenceData<U, ?, ?> data) {
         super(data, new VectorJaccardSimilarity(data));
     }
     

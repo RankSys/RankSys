@@ -17,8 +17,8 @@
  */
 package es.uam.eps.ir.ranksys.nn.item.sim;
 
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
-import es.uam.eps.ir.ranksys.fast.data.TransposedRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.SetCosineSimilarity;
 
 /**
@@ -27,8 +27,8 @@ import es.uam.eps.ir.ranksys.nn.sim.SetCosineSimilarity;
  */
 public class SetCosineItemSimilarity<I> extends ItemSimilarity<I> {
 
-    public SetCosineItemSimilarity(FastRecommenderData<?, I, ?> data, double alpha) {
-        super(data, new SetCosineSimilarity(new TransposedRecommenderData<>(data), alpha));
+    public SetCosineItemSimilarity(FastPreferenceData<?, I, ?> data, double alpha) {
+        super(data, new SetCosineSimilarity(new TransposedPreferenceData<>(data), alpha));
     }
 
 }

@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.itemnovelty;
 
-import es.uam.eps.ir.ranksys.core.data.RecommenderData;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.diversity.distance.ItemDistanceModel;
 
 /**
@@ -27,10 +27,10 @@ import es.uam.eps.ir.ranksys.diversity.distance.ItemDistanceModel;
  */
 public class PDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
-    private final RecommenderData<U, I, ?> recommenderData;
+    private final PreferenceData<U, I, ?> recommenderData;
     private final ItemDistanceModel<I> dist;
 
-    public PDItemNovelty(boolean caching, RecommenderData<U, I, ?> recommenderData, ItemDistanceModel<I> dist) {
+    public PDItemNovelty(boolean caching, PreferenceData<U, I, ?> recommenderData, ItemDistanceModel<I> dist) {
         super(caching, recommenderData.getUsersWithPreferences());
         this.recommenderData = recommenderData;
         this.dist = dist;

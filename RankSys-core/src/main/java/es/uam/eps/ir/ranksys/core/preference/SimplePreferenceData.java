@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.core.data;
+package es.uam.eps.ir.ranksys.core.preference;
 
-import es.uam.eps.ir.ranksys.core.IdPref;
 import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import java.io.BufferedReader;
@@ -32,7 +31,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * Simple map-based recommender data
+ * Simple map-based preference data
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * 
@@ -40,7 +39,7 @@ import java.util.stream.Stream;
  * @param <I> type of the items
  * @param <O> type of other information for users and items
  */
-public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> {
+public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
 
     private final Map<U, List<IdPref<I, O>>> userMap;
     private final Map<I, List<IdPref<U, O>>> itemMap;
@@ -53,7 +52,7 @@ public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
      * @param itemMap item to preferences map
      * @param numPreferences total number of preferences
      */
-    protected SimpleRecommenderData(Map<U, List<IdPref<I, O>>> userMap, Map<I, List<IdPref<U, O>>> itemMap, int numPreferences) {
+    protected SimplePreferenceData(Map<U, List<IdPref<I, O>>> userMap, Map<I, List<IdPref<U, O>>> itemMap, int numPreferences) {
         this.userMap = userMap;
         this.itemMap = itemMap;
         this.numPreferences = numPreferences;
@@ -151,7 +150,7 @@ public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
      * @return a simple map-based RecommenderData with the information read
      * @throws IOException when path does not exists of IO error
      */
-    public static <U, I, O> SimpleRecommenderData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
+    public static <U, I, O> SimplePreferenceData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
         return load(new FileInputStream(path), uParser, iParser, dp, vParser);
     }
 
@@ -172,7 +171,7 @@ public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
      * @return a simple map-based RecommenderData with the information read
      * @throws IOException when path does not exists of IO error
      */
-    public static <U, I, O> SimpleRecommenderData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
+    public static <U, I, O> SimplePreferenceData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
         Map<U, List<IdPref<I, O>>> userMap = new HashMap<>();
         Map<I, List<IdPref<U, O>>> itemMap = new HashMap<>();
         int[] numPreferences = new int[]{0};
@@ -213,7 +212,7 @@ public class SimpleRecommenderData<U, I, O> implements RecommenderData<U, I, O> 
             });
         }
 
-        return new SimpleRecommenderData<>(userMap, itemMap, numPreferences[0]);
+        return new SimplePreferenceData<>(userMap, itemMap, numPreferences[0]);
     }
 
 }

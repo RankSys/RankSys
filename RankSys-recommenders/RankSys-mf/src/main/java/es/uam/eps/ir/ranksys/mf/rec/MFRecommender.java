@@ -20,7 +20,7 @@ package es.uam.eps.ir.ranksys.mf.rec;
 import cern.colt.matrix.DoubleMatrix1D;
 import es.uam.eps.ir.ranksys.core.util.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import es.uam.eps.ir.ranksys.mf.Factorization;
@@ -36,7 +36,7 @@ public class MFRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     private final Factorization<U, I> factorization;
 
-    public MFRecommender(FastRecommenderData<U, I, ?> data, Factorization<U, I> factorization) {
+    public MFRecommender(FastPreferenceData<U, I, ?> data, Factorization<U, I> factorization) {
         super(data);
         this.factorization = factorization;
     }

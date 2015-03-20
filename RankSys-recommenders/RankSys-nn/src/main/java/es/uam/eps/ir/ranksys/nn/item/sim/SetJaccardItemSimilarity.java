@@ -17,8 +17,8 @@
  */
 package es.uam.eps.ir.ranksys.nn.item.sim;
 
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
-import es.uam.eps.ir.ranksys.fast.data.TransposedRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.SetJaccardSimilarity;
 
 /**
@@ -27,7 +27,7 @@ import es.uam.eps.ir.ranksys.nn.sim.SetJaccardSimilarity;
  */
 public class SetJaccardItemSimilarity<I> extends ItemSimilarity<I> {
 
-    public SetJaccardItemSimilarity(FastRecommenderData<?, I, ?> data) {
-        super(data, new SetJaccardSimilarity(new TransposedRecommenderData<>(data)));
+    public SetJaccardItemSimilarity(FastPreferenceData<?, I, ?> data) {
+        super(data, new SetJaccardSimilarity(new TransposedPreferenceData<>(data)));
     }
 }

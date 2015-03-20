@@ -22,9 +22,9 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.EigenvalueDecomposition;
-import es.uam.eps.ir.ranksys.fast.IdxPref;
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
-import es.uam.eps.ir.ranksys.fast.data.TransposedRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import static java.lang.Math.sqrt;
 import java.util.stream.Stream;
 
@@ -50,7 +50,7 @@ public class PZTFactorizer<U, I, O> extends ALSFactorizer<U, I, O> {
     }
 
     @Override
-    public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastRecommenderData<U, I, O> data) {
+    public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, O> data) {
         double error = data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
             DoubleMatrix1D pu = p.viewRow(uidx);
             DoubleMatrix1D su = q.zMult(pu, null);
@@ -71,16 +71,16 @@ public class PZTFactorizer<U, I, O> extends ALSFactorizer<U, I, O> {
     }
 
     @Override
-    public void set_minP(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, FastRecommenderData<U, I, O> data) {
+    public void set_minP(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, FastPreferenceData<U, I, O> data) {
         set_min(p, q, confidence, lambdaP, data);
     }
 
     @Override
-    public void set_minQ(final DenseDoubleMatrix2D q, final DenseDoubleMatrix2D p, FastRecommenderData<U, I, O> data) {
-        set_min(q, p, confidence, lambdaQ, new TransposedRecommenderData<>(data));
+    public void set_minQ(final DenseDoubleMatrix2D q, final DenseDoubleMatrix2D p, FastPreferenceData<U, I, O> data) {
+        set_min(q, p, confidence, lambdaQ, new TransposedPreferenceData<>(data));
     }
 
-    private static <U, I, O> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleFunction confidence, double lambda, FastRecommenderData<U, I, O> data) {
+    private static <U, I, O> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleFunction confidence, double lambda, FastPreferenceData<U, I, O> data) {
         DoubleMatrix2D gt = getGt(p, q, lambda);
 
         data.getUidxWithPreferences().parallel().forEach(uidx -> {

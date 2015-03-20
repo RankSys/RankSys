@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.binom;
 
-import es.uam.eps.ir.ranksys.core.data.RecommenderData;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.model.UserModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
@@ -32,12 +32,12 @@ import org.apache.commons.math3.distribution.BinomialDistribution;
  */
 public class BinomialModel<U, I, F> extends UserModel<U> {
 
-    private final RecommenderData<U, I, ?> recommenderData;
+    private final PreferenceData<U, I, ?> recommenderData;
     private final FeatureData<I, F, ?> featureData;
     private final Object2DoubleMap<F> globalFeatureProbs;
     private final double alpha;
 
-    public BinomialModel(boolean caching, Stream<U> targetUsers, RecommenderData<U, I, ?> recommenderData, FeatureData<I, F, ?> featureData, double alpha) {
+    public BinomialModel(boolean caching, Stream<U> targetUsers, PreferenceData<U, I, ?> recommenderData, FeatureData<I, F, ?> featureData, double alpha) {
         super(caching, targetUsers);
         this.recommenderData = recommenderData;
         this.featureData = featureData;

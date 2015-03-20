@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.nn.user;
 
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.rec.fast.FastRankingRecommender;
 import es.uam.eps.ir.ranksys.nn.user.neighborhood.UserNeighborhood;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
@@ -36,7 +36,7 @@ public class UserNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
     protected final UserNeighborhood<U> neighborhood;
     protected final int q;
 
-    public UserNeighborhoodRecommender(FastRecommenderData<U, I, ?> data, UserNeighborhood<U> neighborhood, int q) {
+    public UserNeighborhoodRecommender(FastPreferenceData<U, I, ?> data, UserNeighborhood<U> neighborhood, int q) {
         super(data);
         this.neighborhood = neighborhood;
         this.q = q;

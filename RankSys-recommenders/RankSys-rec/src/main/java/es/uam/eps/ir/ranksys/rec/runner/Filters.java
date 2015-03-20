@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.rec.runner;
 
-import es.uam.eps.ir.ranksys.core.data.RecommenderData;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import java.util.Set;
 import java.util.function.Function;
@@ -34,7 +34,7 @@ public class Filters {
         return user -> item -> true;
     }
 
-    public static <U, I> Function<U, Predicate<I>> notInTrain(RecommenderData<U, I, ?> trainData) {
+    public static <U, I> Function<U, Predicate<I>> notInTrain(PreferenceData<U, I, ?> trainData) {
         return user -> {
             Set<I> set = trainData.getUserPreferences(user).map(iv -> iv.id).collect(Collectors.toSet());
 

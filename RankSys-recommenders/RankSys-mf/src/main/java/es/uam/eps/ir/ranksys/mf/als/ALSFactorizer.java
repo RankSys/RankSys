@@ -18,7 +18,7 @@
 package es.uam.eps.ir.ranksys.mf.als;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.mf.Factorization;
 import es.uam.eps.ir.ranksys.mf.Factorizer;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -40,7 +40,7 @@ public abstract class ALSFactorizer<U, I, O> extends Factorizer<U, I, O> {
     }
 
     @Override
-    public double error(Factorization<U, I> factorization, FastRecommenderData<U, I, O> data) {
+    public double error(Factorization<U, I> factorization, FastPreferenceData<U, I, O> data) {
 
         DenseDoubleMatrix2D p = factorization.getUserMatrix();
         DenseDoubleMatrix2D q = factorization.getItemMatrix();
@@ -49,7 +49,7 @@ public abstract class ALSFactorizer<U, I, O> extends Factorizer<U, I, O> {
     }
 
     @Override
-    public void factorize(Factorization<U, I> factorization, FastRecommenderData<U, I, O> data) {
+    public void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, O> data) {
 
         DenseDoubleMatrix2D p = factorization.getUserMatrix();
         DenseDoubleMatrix2D q = factorization.getItemMatrix();
@@ -72,9 +72,9 @@ public abstract class ALSFactorizer<U, I, O> extends Factorizer<U, I, O> {
         }
     }
 
-    protected abstract double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastRecommenderData<U, I, O> data);
+    protected abstract double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, O> data);
 
-    protected abstract void set_minP(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastRecommenderData<U, I, O> data);
+    protected abstract void set_minP(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, O> data);
 
-    protected abstract void set_minQ(DenseDoubleMatrix2D q, DenseDoubleMatrix2D p, FastRecommenderData<U, I, O> data);
+    protected abstract void set_minQ(DenseDoubleMatrix2D q, DenseDoubleMatrix2D p, FastPreferenceData<U, I, O> data);
 }

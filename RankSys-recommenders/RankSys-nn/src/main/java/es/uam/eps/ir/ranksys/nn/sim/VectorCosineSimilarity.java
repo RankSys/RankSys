@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.nn.sim;
 
-import es.uam.eps.ir.ranksys.fast.data.FastRecommenderData;
+import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import static java.lang.Math.pow;
 
 /**
@@ -28,7 +28,7 @@ public class VectorCosineSimilarity extends VectorSimilarity {
 
     private final double alpha;
 
-    public VectorCosineSimilarity(FastRecommenderData<?, ?, ?> data, double alpha) {
+    public VectorCosineSimilarity(FastPreferenceData<?, ?, ?> data, double alpha) {
         super(data);
         this.alpha = alpha;
     }
