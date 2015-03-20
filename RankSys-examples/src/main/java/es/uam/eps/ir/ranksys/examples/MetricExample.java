@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,15 +33,11 @@ import es.uam.eps.ir.ranksys.diversity.sales.metrics.GiniIndex;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.metrics.AlphaNDCG;
 import es.uam.eps.ir.ranksys.diversity.intentaware.metrics.ERRIA;
-import es.uam.eps.ir.ranksys.diversity.itemnovelty.FDItemNovelty;
-import es.uam.eps.ir.ranksys.diversity.itemnovelty.PCItemNovelty;
-import es.uam.eps.ir.ranksys.diversity.itemnovelty.PDItemNovelty;
-import es.uam.eps.ir.ranksys.diversity.itemnovelty.metrics.EFD;
-import es.uam.eps.ir.ranksys.diversity.itemnovelty.metrics.EPC;
-import es.uam.eps.ir.ranksys.diversity.itemnovelty.metrics.EPD;
-import es.uam.eps.ir.ranksys.diversity.distance.CosineFeatureItemDistanceModel;
-import es.uam.eps.ir.ranksys.diversity.distance.ItemDistanceModel;
+import es.uam.eps.ir.ranksys.novdiv.distance.CosineFeatureItemDistanceModel;
+import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.diversity.distance.metrics.EILD;
+import es.uam.eps.ir.ranksys.diversity.unexp.PDItemNovelty;
+import es.uam.eps.ir.ranksys.diversity.unexp.metrics.EPD;
 import es.uam.eps.ir.ranksys.metrics.basic.AverageRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.basic.NDCG;
 import es.uam.eps.ir.ranksys.metrics.basic.Precision;
@@ -51,6 +47,10 @@ import es.uam.eps.ir.ranksys.metrics.rank.NoDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.NoRelevanceModel;
+import es.uam.eps.ir.ranksys.novelty.longtail.FDItemNovelty;
+import es.uam.eps.ir.ranksys.novelty.longtail.PCItemNovelty;
+import es.uam.eps.ir.ranksys.novelty.longtail.metrics.EFD;
+import es.uam.eps.ir.ranksys.novelty.longtail.metrics.EPC;
 import java.util.HashMap;
 import java.util.Map;
 

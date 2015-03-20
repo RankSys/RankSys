@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,10 +23,10 @@ import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp;
-import es.uam.eps.ir.ranksys.diversity.distance.ItemDistanceModel;
-import es.uam.eps.ir.ranksys.diversity.distance.JaccardFeatureItemDistanceModel;
+import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
+import es.uam.eps.ir.ranksys.novdiv.distance.JaccardFeatureItemDistanceModel;
 import es.uam.eps.ir.ranksys.diversity.distance.reranking.MMR;
-import es.uam.eps.ir.ranksys.diversity.reranking.Reranker;
+import es.uam.eps.ir.ranksys.novdiv.reranking.Reranker;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 

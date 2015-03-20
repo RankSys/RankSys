@@ -15,7 +15,4 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * Classes for accessing user-item preferences.
- */
 package es.uam.eps.ir.ranksys.core.preference;
