@@ -18,13 +18,14 @@
 package es.uam.eps.ir.ranksys.rec.fast;
 
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.core.util.topn.IntDoubleTopN;
+import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntPredicate;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -59,10 +60,9 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
 
         topN.sort();
 
-        List<IdxDouble> items = new ArrayList<>();
-        for (int i = topN.size() - 1; i >= 0; i--) {
-            items.add(new IdxDouble(topN.getIntAt(i), topN.getDoubleAt(i)));
-        }
+        List<IdxDouble> items = topN.reverseStream()
+                .map(e -> new IdxDouble(e))
+                .collect(Collectors.toList());
 
         return new FastRecommendation<>(uidx, items);
     }

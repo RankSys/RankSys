@@ -17,20 +17,53 @@
  */
 package es.uam.eps.ir.ranksys.fast;
 
+import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class IdxDouble {
+public class IdxDouble implements Int2DoubleMap.Entry{
 
-    public int idx;
-    public double v;
-
-    public IdxDouble() {
-    }
+    public final int idx;
+    public final double v;
 
     public IdxDouble(int idx, double v) {
         this.idx = idx;
         this.v = v;
+    }
+    
+    public IdxDouble(Int2DoubleMap.Entry e) {
+        this(e.getIntKey(), e.getDoubleValue());
+    }
+
+    @Override
+    public int getIntKey() {
+        return idx;
+    }
+
+    @Override
+    public double setValue(double value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public double getDoubleValue() {
+        return v;
+    }
+
+    @Override
+    public Integer getKey() {
+        return idx;
+    }
+
+    @Override
+    public Double getValue() {
+        return v;
+    }
+
+    @Override
+    public Double setValue(Double value) {
+        throw new UnsupportedOperationException();
     }
 }

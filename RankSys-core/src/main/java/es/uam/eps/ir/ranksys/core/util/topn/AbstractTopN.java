@@ -19,6 +19,9 @@ package es.uam.eps.ir.ranksys.core.util.topn;
 
 import java.util.AbstractCollection;
 import java.util.Iterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Bounded min-heap to keep just the top-n greatest objects.
@@ -54,14 +57,15 @@ public abstract class AbstractTopN<T> extends AbstractCollection<T> {
     public int size() {
         return size;
     }
-
+    
     /**
-     * Returns the i-th element in the heap.
-     * 
-     * @param i index of the element
-     * @return the element in the heap
+     * Returns the element at the top of the heap.
+     *
+     * @return the element at the top of the heap
      */
-    public abstract T get(int i);
+    public T peek() {
+        return get(0);
+    }
 
     @Override
     public boolean add(T elem) {
@@ -155,6 +159,23 @@ public abstract class AbstractTopN<T> extends AbstractCollection<T> {
             }
         };
     }
+    
+    /**
+     * Creates a stream in reverse order.
+     *
+     * @return stream in reverse order
+     */
+    public Stream<T> reverseStream() {
+        return StreamSupport.stream(Spliterators.spliterator(reverseIterator(), size(), 0), false);
+    }
+
+    /**
+     * Returns the i-th element in the heap.
+     * 
+     * @param i index of the element
+     * @return the element in the heap
+     */
+    protected abstract T get(int i);
 
     /**
      * Sets the element in the i-th position of the heap.

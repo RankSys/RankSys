@@ -20,8 +20,8 @@ package es.uam.eps.ir.ranksys.novdiv.itemnovelty.reranking;
 import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.novdiv.itemnovelty.ItemNovelty;
-import es.uam.eps.ir.ranksys.core.util.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.core.util.Stats;
+import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
@@ -86,10 +86,9 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
         }
         topN.sort();
 
-        int[] perm = new int[topN.size()];
-        for (int i = 0; i < topN.size(); i++) {
-            perm[i] = M - topN.getIntAt(topN.size() - i - 1);
-        }
+        int[] perm = topN.reverseStream()
+                .mapToInt(e -> M - e.getIntKey())
+                .toArray();
 
         return perm;
     }

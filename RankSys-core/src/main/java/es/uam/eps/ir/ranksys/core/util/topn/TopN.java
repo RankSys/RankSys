@@ -57,7 +57,7 @@ public class TopN<T> extends AbstractTopN<T> {
     }
 
     @Override
-    public T get(int i) {
+    protected T get(int i) {
         return heap[i];
     }
 

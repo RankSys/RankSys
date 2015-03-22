@@ -15,21 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.core.util.topn;
+package es.uam.eps.ir.ranksys.fast.utils.topn;
 
-import it.unimi.dsi.fastutil.objects.AbstractObject2DoubleMap.BasicEntry;
-import it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry;
+import es.uam.eps.ir.ranksys.core.util.topn.AbstractTopN;
+import it.unimi.dsi.fastutil.ints.Int2DoubleMap.Entry;
+import it.unimi.dsi.fastutil.ints.AbstractInt2DoubleMap.BasicEntry;
 
 /**
- * Bounded min-heap to keep just the top-n greatest object-double pairs according to the value of the double.
+ * Bounded min-heap to keep just the top-n greatest integer-double pairs according to the value of the double.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- *
- * @param <T> type of the object
  */
-public class ObjectDoubleTopN<T> extends AbstractTopN<Entry<T>> {
+public class IntDoubleTopN extends AbstractTopN<Entry> {
 
-    private final T[] keys;
+    private final int[] keys;
     private final double[] values;
 
     /**
@@ -37,64 +36,62 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Entry<T>> {
      *
      * @param capacity maximum capacity of the heap
      */
-    @SuppressWarnings("unchecked")
-    public ObjectDoubleTopN(int capacity) {
+    public IntDoubleTopN(int capacity) {
         super(capacity);
-        keys = (T[]) new Object[capacity];
+        keys = new int[capacity];
         values = new double[capacity];
     }
 
     /**
-     * Tries to add an object-double pair to the heap.
+     * Tries to add an integer-double pair to the heap.
      *
-     * @param object object to be added
+     * @param key integer to be added
      * @param value double to be added
      * @return true if the pair was added to the heap, false otherwise
      */
-    public boolean add(T object, double value) {
-        return add(new BasicEntry<>(object, value));
+    public boolean add(int key, double value) {
+        return add(new BasicEntry(key, value));
     }
 
     @Override
-    protected Entry<T> get(int i) {
-        return new BasicEntry<>(keys[i], values[i]);
+    protected Entry get(int i) {
+        return new BasicEntry(keys[i], values[i]);
     }
 
     @Override
-    protected void set(int i, Entry<T> e) {
-        keys[i] = e.getKey();
+    protected void set(int i, Entry e) {
+        keys[i] = e.getIntKey();
         values[i] = e.getDoubleValue();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected int compare(int i, Entry<T> e) {
+    protected int compare(int i, Entry e) {
+        int k = e.getIntKey();
         double v = e.getDoubleValue();
 
         int c = Double.compare(values[i], v);
         if (c != 0) {
             return c;
         } else {
-            c = ((Comparable<T>) keys[i]).compareTo(e.getKey());
+            c = Integer.compare(keys[i], k);
             return c;
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected int compare(int i, int j) {
         int c = Double.compare(values[i], values[j]);
         if (c != 0) {
             return c;
         } else {
-            c = ((Comparable<T>) keys[i]).compareTo(keys[j]);
+            c = Integer.compare(keys[i], keys[j]);
             return c;
         }
     }
 
     @Override
     protected void swap(int i, int j) {
-        T k = keys[i];
+        int k = keys[i];
         keys[i] = keys[j];
         keys[j] = k;
         double v = values[i];

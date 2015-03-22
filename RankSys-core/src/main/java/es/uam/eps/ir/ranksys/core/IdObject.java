@@ -17,15 +17,17 @@
  */
 package es.uam.eps.ir.ranksys.core;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+
 /**
  * A pair of a user/item/feature ID and a typed object.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <I> type of the user/item/feature ID
  * @param <V> type of the object
  */
-public class IdObject<I, V> {
+public class IdObject<I, V> implements Object2ObjectMap.Entry<I, V> {
 
     /**
      * The ID.
@@ -46,6 +48,30 @@ public class IdObject<I, V> {
     public IdObject(I id, V v) {
         this.id = id;
         this.v = v;
+    }
+
+    /**
+     * Constructs an ID-object pair by copying an existing pair.
+     *
+     * @param e ID-object pair
+     */
+    public IdObject(Object2ObjectMap.Entry<I, V> e) {
+        this(e.getKey(), e.getValue());
+    }
+
+    @Override
+    public I getKey() {
+        return id;
+    }
+
+    @Override
+    public V getValue() {
+        return v;
+    }
+
+    @Override
+    public V setValue(V value) {
+        throw new UnsupportedOperationException();
     }
 
 }

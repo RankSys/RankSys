@@ -17,14 +17,16 @@
  */
 package es.uam.eps.ir.ranksys.core;
 
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+
 /**
  * A pair of a user/item/feature ID and a double.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <I> type of the user/item/feature
  */
-public class IdDouble <I> {
+public class IdDouble<I> implements Object2DoubleMap.Entry<I> {
 
     /**
      * The ID.
@@ -37,14 +39,48 @@ public class IdDouble <I> {
     public final double v;
 
     /**
-     *  Constructs an ID-double pair.
-     * 
+     * Constructs an ID-double pair.
+     *
      * @param id the ID
      * @param v the double
      */
     public IdDouble(I id, double v) {
         this.id = id;
         this.v = v;
+    }
+
+    /**
+     * Constructs an ID-double pair by copying an existing pair.
+     *
+     * @param e ID-double pair.
+     */
+    public IdDouble(Object2DoubleMap.Entry<I> e) {
+        this(e.getKey(), e.getDoubleValue());
+    }
+
+    @Override
+    public double setValue(double value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public double getDoubleValue() {
+        return v;
+    }
+
+    @Override
+    public I getKey() {
+        return id;
+    }
+
+    @Override
+    public Double getValue() {
+        return v;
+    }
+
+    @Override
+    public Double setValue(Double value) {
+        throw new UnsupportedOperationException();
     }
 
 }

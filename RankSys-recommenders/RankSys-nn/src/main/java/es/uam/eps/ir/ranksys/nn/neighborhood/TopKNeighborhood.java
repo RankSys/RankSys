@@ -17,8 +17,8 @@
  */
 package es.uam.eps.ir.ranksys.nn.neighborhood;
 
-import es.uam.eps.ir.ranksys.core.util.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
+import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
@@ -60,11 +60,6 @@ public class TopKNeighborhood implements Neighborhood {
 
         candidates.forEach(is -> topN.add(is.idx, is.v));
 
-        Builder<IdxDouble> builder = builder();
-        for (int i = 0; i < topN.size(); i++) {
-            builder.accept(new IdxDouble(topN.getIntAt(i), topN.getDoubleAt(i)));
-        }
-        
-        return builder.build();
+        return topN.stream().map(e -> new IdxDouble(e));
     }
 }
