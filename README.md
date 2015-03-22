@@ -11,7 +11,7 @@ If you publish research that uses RankSys, please cite the papers in the followi
  * S. Vargas, L. Baltrunas, A. Karatzoglou, P. Castells. Coverage, Redundancy and Size-Awareness in Genre Diversity for Recommender Systems. 8th ACM Conference on Recommender Systems (RecSys 2014). Foster City, CA, USA, October 2014, pp. 209-216.
  * S. Vargas, P. Castells, D. Vallet. Explicit Relevance Models in Intent-Oriented Information Retrieval Diversification. 35th International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2012). Portland, OR, USA, August 2012, pp. 75-84.
  * S. Vargas, P. Castells. Rank and Relevance in Novelty and Diversity Metrics for Recommender Systems. 5th ACM Conference on Recommender Systems (RecSys 2011). Chicago, Illinois, October 2011, pp. 109-116.
- * S. Vargas, P. Castells, D. Vallet. Intent-oriented Diversity in Recommender Systems. 34th international ACM SIGIR conference on Research and development in Information Retrieval (SIGIR 2012). Beijing, PR China, pp. 1211-1212.
+ * S. Vargas, P. Castells, D. Vallet. Intent-oriented Diversity in Recommender Systems. 34th international ACM SIGIR conference on Research and development in Information Retrieval (SIGIR 2011). Beijing, PR China, pp. 1211-1212.
 
 ## Introduction
 
@@ -173,11 +173,11 @@ public abstract class ItemNovelty<U, I> extends
 }
 ~~~
 
-In the current version of the framework, three sub-classes of `ItemNovelty` are included to represent the popularity complement (PC), free discovery (FD) and profile distance (PD) item novelty models defined in (Vargas and Castells 2011) and (Vargas 2015).
+In the current version of the framework, three sub-classes of `ItemNovelty` are included to represent the popularity complement (PC), free discovery (FD) and profile distance (PD) item novelty models defined in (Vargas and Castells 2011) and in Chapter 4 of (Vargas 2015).
 
 ### Distance-Based Metrics and Re-Ranking Strategies
 
-For better readability of the code, the intra-list distance-based metrics and re-ranking algorithms of (Vargas and Castells 2011) and Chapter 4 in (Vargas 2015) do not extend from the previous item novelty model package and are separated in its own package `es.uam.eps.ir.ranksys.diversity.distance`. This package defines an `ItemDistanceModel` for considering different definitions for the distance between items:
+For better readability of the code, the intra-list distance-based metrics and re-ranking algorithms in (Vargas and Castells 2011) and in Chapter 4 of (Vargas 2015) do not extend from the previous item novelty model package and are separated in its own package `es.uam.eps.ir.ranksys.diversity.distance`. This package defines an `ItemDistanceModel` for considering different definitions for the distance between items:
 ~~~
 public interface ItemDistanceModel<I> {
     public double dist(I i, I j);
@@ -191,11 +191,11 @@ Rank and relevance-unware Sales Diversity metrics in Chapter 4 of (Vargas 2015) 
 
 ### Intent-Aware Metrics and Re-Ranking Strategies
 
-Our adaptation of the Intent-Aware metrics and diversification techniques in Chapter 5 of (Vargas 2015) is contained in the package `es.uam.eps.ir.ranksys.diversity.intentaware`. The basis of this package is the `IntentModel` class, which represents the concept of user aspect space when it is defined by item features in the user profile. This `IntentModel` is then used in the implementations of the metrics ERR-IA (Agrawal et al. 2009) and &alpha;-nDCG (Clarke et al. 2008) and the xQuAD diversification method (Santos et al. 2010) provided in this package.
+Our adaptation of the Intent-Aware metrics and diversification techniques in (Vargas et. al 2011) and in Chapter 5 of (Vargas 2015) is contained in the package `es.uam.eps.ir.ranksys.diversity.intentaware`. The basis of this package is the `IntentModel` class, which represents the concept of user aspect space when it is defined by item features in the user profile. This `IntentModel` is then used in the implementations of the metrics ERR-IA (Agrawal et al. 2009) and &alpha;-nDCG (Clarke et al. 2008) and the xQuAD diversification method (Santos et al. 2010) provided in this package.
 
 ### Binomial Metrics and Re-Ranking Strategies
 
-The metrics and re-ranking strategies of the Binomial framework proposed in Chapter 6 are found in package `es.uam.eps.ir.ranksys.diversity.binom`. All of them use the `BinomialModel` class, which implements the binomial probability model that defines the coverage and redundancy scores for a given recommendation list size. Metrics and re-ranking strategies for coverage, redundancy and joint diversity are included in this package.
+The metrics and re-ranking strategies of the Binomial framework proposed in (Vargas et al. 2014) and in Chapter 6 of (Vargas 2015) are found in package `es.uam.eps.ir.ranksys.diversity.binom`. All of them use the `BinomialModel` class, which implements the binomial probability model that defines the coverage and redundancy scores for a given recommendation list size. Metrics and re-ranking strategies for coverage, redundancy and joint diversity are included in this package.
 
 ## Examples
 
