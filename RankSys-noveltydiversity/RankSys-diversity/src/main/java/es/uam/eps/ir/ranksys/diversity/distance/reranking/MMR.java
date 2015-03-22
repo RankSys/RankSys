@@ -22,6 +22,7 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.novdiv.reranking.LambdaReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import java.util.function.ToDoubleFunction;
 
 /**
  *
@@ -67,13 +68,14 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
         @Override
         protected void update(IdDouble<I> bestItemValue) {
             I bestItem = bestItemValue.id;
+            ToDoubleFunction<I> bDist = dist.dist(bestItem);
             avgDist.remove(bestItem);
 
             n++;
             avgDist.object2DoubleEntrySet().forEach(e -> {
                 I i = e.getKey();
                 double d = e.getDoubleValue();
-                double d2 = dist.dist(i, bestItem);
+                double d2 = bDist.applyAsDouble(i);
                 avgDist.addTo(i, (d2 - d) / n);
             });
         }

@@ -17,47 +17,21 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.distance;
 
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
-import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
-import java.util.stream.Stream;
 
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class JaccardFeatureItemDistanceModel<I, F> extends FeatureItemDistanceModel<I, F, Double> {
+public class JaccardFeatureItemDistanceModel<I, F> extends VectorFeatureItemDistanceModel<I, F> {
 
     public JaccardFeatureItemDistanceModel(FeatureData<I, F, Double> featureData) {
         super(featureData);
     }
 
     @Override
-    public double dist(Stream<IdObject<F, Double>> features1, Stream<IdObject<F, Double>> features2) {
-        Object2DoubleMap<F> auxMap = new Object2DoubleOpenHashMap<>();
-        auxMap.defaultReturnValue(0.0);
-        double[] comps = {0.0, 0.0, 0.0};
-
-        features1.forEach(fv -> {
-            auxMap.put(fv.id, fv.v);
-            comps[0] += fv.v * fv.v;
-        });
-        
-        if (comps[0] == 0) {
-            return Double.NaN;
-        }
-
-        features2.forEach(fv -> {
-            comps[1] += fv.v * fv.v;
-            comps[2] += fv.v * auxMap.getDouble(fv.id);
-        });
-        
-        if (comps[1] == 0) {
-            return Double.NaN;
-        }
-        
-        return 1 - comps[2] / (comps[0] + comps[1] - comps[2]);
+    protected double dist(double prod, double norm2A, double norm2B) {
+        return 1 - prod / (norm2A + norm2B - prod);
     }
 
 }

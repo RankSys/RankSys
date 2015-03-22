@@ -20,6 +20,9 @@ package es.uam.eps.ir.ranksys.novdiv.reranking;
 import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import static java.lang.Double.isNaN;
 import static java.lang.Math.min;
 import java.util.List;
@@ -59,31 +62,29 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
 
             List<IdDouble<I>> list = recommendation.getItems();
 
-            int[] perm = new int[min(cutoff2, list.size())];
-            IntArrayList remainingI = new IntArrayList();
+            IntList perm = new IntArrayList();
+            IntLinkedOpenHashSet remainingI = new IntLinkedOpenHashSet();
             IntStream.range(0, list.size()).forEach(i -> remainingI.add(i));
-            int nreranked = 0;
 
-            while (!remainingI.isEmpty() && nreranked < cutoff1) {
+            while (!remainingI.isEmpty() && perm.size() < cutoff1) {
                 int bestI = selectItem(remainingI, list);
 
-                perm[nreranked] = bestI;
-                nreranked++;
-                remainingI.removeInt(bestI);
+                perm.add(bestI);
+                remainingI.remove(bestI);
 
                 update(list.get(bestI));
             }
 
-            for (int i = nreranked; i < perm.length; i++) {
-                perm[i] = remainingI.removeInt(0);
+            while (perm.size() < min(cutoff2, list.size())) {
+                perm.add(remainingI.removeFirstInt());
             }
 
-            return perm;
+            return perm.toIntArray();
         }
 
-        protected int selectItem(IntArrayList remainingI, List<IdDouble<I>> list) {
+        protected int selectItem(IntSortedSet remainingI, List<IdDouble<I>> list) {
             double[] max = new double[]{Double.NEGATIVE_INFINITY};
-            int[] bestI = new int[]{remainingI.getInt(0)};
+            int[] bestI = new int[]{remainingI.firstInt()};
             remainingI.forEach(i -> {
                 double value = value(list.get(i));
                 if (isNaN(value)) {

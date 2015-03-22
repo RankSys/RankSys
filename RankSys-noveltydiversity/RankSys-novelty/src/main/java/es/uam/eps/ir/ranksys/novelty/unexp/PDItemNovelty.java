@@ -15,11 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.diversity.unexp;
+package es.uam.eps.ir.ranksys.novelty.unexp;
 
 import es.uam.eps.ir.ranksys.novdiv.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
+import java.util.function.ToDoubleFunction;
 
 /**
  *
@@ -52,9 +53,10 @@ public class PDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
         @Override
         public double novelty(I i) {
+            ToDoubleFunction<I> iDist = dist.dist(i);
             return recommenderData.getUserPreferences(u)
                     .map(jv -> jv.id)
-                    .mapToDouble(j -> dist.dist(i, j))
+                    .mapToDouble(j -> iDist.applyAsDouble(j))
                     .filter(v -> !Double.isNaN(v))
                     .average().orElse(0.0);
         }

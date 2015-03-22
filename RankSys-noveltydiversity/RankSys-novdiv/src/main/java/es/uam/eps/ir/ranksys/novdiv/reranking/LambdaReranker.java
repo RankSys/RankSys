@@ -21,7 +21,7 @@ import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import static es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker.getBasePerm;
 import es.uam.eps.ir.ranksys.core.util.Stats;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import static java.lang.Math.min;
@@ -78,7 +78,7 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
         }
         
         @Override
-        protected int selectItem(IntArrayList remainingI, List<IdDouble<I>> list) {
+        protected int selectItem(IntSortedSet remainingI, List<IdDouble<I>> list) {
             novMap = new Object2DoubleOpenHashMap<>();
             relStats = new Stats();
             novStats = new Stats();

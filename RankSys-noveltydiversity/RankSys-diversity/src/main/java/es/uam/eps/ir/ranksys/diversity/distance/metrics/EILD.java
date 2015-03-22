@@ -24,6 +24,7 @@ import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import java.util.List;
+import java.util.function.ToDoubleFunction;
 
 /**
  *
@@ -62,11 +63,12 @@ public class EILD<U, I> extends AbstractRecommendationMetric<U, I> {
         for (int i = 0; i < N; i++) {
             double ieild = 0.0;
             double inorm = 0.0;
+            ToDoubleFunction<I> iDist = distModel.dist(items.get(i).id);
             for (int j = 0; j < N; j++) {
                 if (i == j) {
                     continue;
                 }
-                double dist = distModel.dist(items.get(i).id, items.get(j).id);
+                double dist = iDist.applyAsDouble(items.get(j).id);
                 if (!Double.isNaN(dist)) {
                     double w = disc2.disc(Math.max(0, j - i - 1)) * userRelModel.gain(items.get(j).id);
                     ieild += w * dist;

@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.diversity.unexp.reranking;
+package es.uam.eps.ir.ranksys.novelty.unexp.reranking;
 
 import es.uam.eps.ir.ranksys.novdiv.itemnovelty.reranking.ItemNoveltyReranker;
-import es.uam.eps.ir.ranksys.diversity.unexp.PDItemNovelty;
+import es.uam.eps.ir.ranksys.novelty.unexp.PDItemNovelty;
 
 /**
  *

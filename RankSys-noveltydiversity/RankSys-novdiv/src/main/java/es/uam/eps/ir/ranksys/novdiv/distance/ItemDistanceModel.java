@@ -17,6 +17,8 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.distance;
 
+import java.util.function.ToDoubleFunction;
+
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
@@ -24,5 +26,9 @@ package es.uam.eps.ir.ranksys.novdiv.distance;
  */
 public interface ItemDistanceModel<I> {
 
-    public double dist(I i, I j);
+    public ToDoubleFunction<I> dist(I i);
+    
+    public default double dist(I i, I j) {
+        return dist(i).applyAsDouble(j);
+    }
 }

@@ -19,13 +19,14 @@ package es.uam.eps.ir.ranksys.novdiv.distance;
 
 import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 
 /**
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public abstract  class FeatureItemDistanceModel<I, F, V> implements ItemDistanceModel<I> {
+public abstract class FeatureItemDistanceModel<I, F, V> implements ItemDistanceModel<I> {
 
     private final FeatureData<I, F, V> featureData;
 
@@ -34,9 +35,13 @@ public abstract  class FeatureItemDistanceModel<I, F, V> implements ItemDistance
     }
 
     @Override
-    public double dist(I i, I j) {
-        return dist(featureData.getItemFeatures(i), featureData.getItemFeatures(j));
+    public ToDoubleFunction<I> dist(I i) {
+        Stream<IdObject<F, V>> features1 = featureData.getItemFeatures(i);
+        ToDoubleFunction<Stream<IdObject<F, V>>> iDist = dist(features1);
+        return j -> {
+            return iDist.applyAsDouble(featureData.getItemFeatures(j));
+        };
     }
 
-    public abstract double dist(Stream<IdObject<F, V>> features1, Stream<IdObject<F, V>> features2);
+    public abstract ToDoubleFunction<Stream<IdObject<F, V>>> dist(Stream<IdObject<F, V>> features1);
 }
