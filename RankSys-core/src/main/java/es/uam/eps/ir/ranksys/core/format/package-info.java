@@ -15,4 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Write and read format for recommendations in files.
+ */
 package es.uam.eps.ir.ranksys.core.format;
