@@ -53,5 +53,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>RankSys-novdiv</artifactId>
             <version>0.1</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>RankSys-nn</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>RankSys-mf</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>RankSys-rec</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

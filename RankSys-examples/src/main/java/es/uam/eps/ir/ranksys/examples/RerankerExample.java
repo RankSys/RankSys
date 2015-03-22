@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 
 /**
+ * Example main of re-rankers.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)

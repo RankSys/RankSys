@@ -36,8 +36,8 @@ import es.uam.eps.ir.ranksys.diversity.intentaware.metrics.ERRIA;
 import es.uam.eps.ir.ranksys.novdiv.distance.CosineFeatureItemDistanceModel;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.diversity.distance.metrics.EILD;
-import es.uam.eps.ir.ranksys.diversity.unexp.PDItemNovelty;
-import es.uam.eps.ir.ranksys.diversity.unexp.metrics.EPD;
+import es.uam.eps.ir.ranksys.novelty.unexp.PDItemNovelty;
+import es.uam.eps.ir.ranksys.novelty.unexp.metrics.EPD;
 import es.uam.eps.ir.ranksys.metrics.basic.AverageRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.basic.NDCG;
 import es.uam.eps.ir.ranksys.metrics.basic.Precision;
@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Example main of metrics.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
@@ -121,11 +122,11 @@ public class MetricExample {
         sysMetrics.put("aggrdiv", new AggregateDiversityMetric<>(cutoff, norel));
         int numItems = totalData.numItemsWithPreferences();
         sysMetrics.put("gini", new GiniIndex<>(cutoff, numItems));
-        
+
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
 
         format.getReader(recIn).readAll().forEach(rec -> sysMetrics.values().forEach(metric -> metric.add(rec)));
-        
+
         sysMetrics.forEach((name, metric) -> System.out.println(name + "\t" + metric.evaluate()));
     }
 }
