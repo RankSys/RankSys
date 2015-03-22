@@ -17,6 +17,6 @@
  */
 
 /**
- * Classes for accessing user-item preferences.
+ * Core classes of RankSys-fast.
  */
-package es.uam.eps.ir.ranksys.core.preference;
+package es.uam.eps.ir.ranksys.fast;

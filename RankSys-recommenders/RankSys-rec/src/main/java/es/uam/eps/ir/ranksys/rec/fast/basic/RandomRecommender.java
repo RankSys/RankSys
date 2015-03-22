@@ -46,7 +46,7 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
     }
 
     @Override
-    public FastRecommendation<U, I> getRecommendation(int uidx, int maxLength, IntPredicate filter) {
+    public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
         if (maxLength == 0) {
             maxLength = randomList.size();
         }
@@ -63,6 +63,6 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
             j = (j + 1) % randomList.size();
         }
 
-        return new FastRecommendation<>(uidx, recommended);
+        return new FastRecommendation(uidx, recommended);
     }
 }

@@ -22,8 +22,13 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
+ * Fast version of ItemIndex, where items are internally represented with 
+ * numerical indices from 0 (inclusive) to the number of indexed items
+ * (exclusive).
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
  */
 public interface FastItemIndex<I> extends ItemIndex<I> {
 
@@ -37,11 +42,28 @@ public interface FastItemIndex<I> extends ItemIndex<I> {
         return getAllIidx().mapToObj(iidx -> iidx2item(iidx));
     }
     
+    /**
+     * Gets all the indices of the items.
+     *
+     * @return a stream of indexes of items
+     */
     public default IntStream getAllIidx() {
         return IntStream.range(0, numItems());
     }
     
+    /**
+     * Returns the index assigned to the item.
+     *
+     * @param i item
+     * @return the index of the item, or -1 if the item does not exist
+     */
     public int item2iidx(I i);
 
+    /**
+     * Returns the item represented with the index.
+     *
+     * @param iidx item index
+     * @return the item whose index is iidx
+     */
     public I iidx2item(int iidx);
 }

@@ -19,16 +19,22 @@ package es.uam.eps.ir.ranksys.fast.index;
 
 import es.uam.eps.ir.ranksys.fast.utils.IdxIndex;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
+ * Simple implementation of FastFeatureIndex backed by a bi-map IdxIndex
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <F> type of the features
  */
 public class SimpleFastFeatureIndex<F> implements FastFeatureIndex<F> {
 
     private final IdxIndex<F> fMap;
 
+    /**
+     * Constructor.
+     *
+     */
     public SimpleFastFeatureIndex() {
         this.fMap = new IdxIndex<>();
     }
@@ -45,7 +51,7 @@ public class SimpleFastFeatureIndex<F> implements FastFeatureIndex<F> {
 
     @Override
     public Stream<F> getAllFeatures() {
-        return StreamSupport.stream(fMap.getIds().spliterator(), false);
+        return fMap.getIds();
     }
 
     @Override
@@ -58,6 +64,13 @@ public class SimpleFastFeatureIndex<F> implements FastFeatureIndex<F> {
         return fMap.get(fidx);
     }
 
+    /**
+     * Add a new feature to the index. If the feature already exists, nothing is
+     * done.
+     *
+     * @param f id of the feature
+     * @return index of the feature
+     */
     public int add(F f) {
         return fMap.add(f);
     }

@@ -43,12 +43,12 @@ public class MFRecommender<U, I> extends AbstractFastRecommender<U, I> {
     }
 
     @Override
-    public FastRecommendation<U, I> getRecommendation(int uidx, int maxLength, IntPredicate filter) {
+    public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
         DoubleMatrix1D pu;
 
         pu = factorization.getUserVector(uidx2user(uidx));
         if (pu == null) {
-            return new FastRecommendation<>(uidx, new ArrayList<>());
+            return new FastRecommendation(uidx, new ArrayList<>());
         }
 
         if (maxLength == 0) {
@@ -69,6 +69,6 @@ public class MFRecommender<U, I> extends AbstractFastRecommender<U, I> {
                 .map(e -> new IdxDouble(e))
                 .collect(Collectors.toList());
 
-        return new FastRecommendation<>(uidx, items);
+        return new FastRecommendation(uidx, items);
     }
 }

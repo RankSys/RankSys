@@ -17,21 +17,66 @@
  */
 package es.uam.eps.ir.ranksys.fast;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+
 /**
+ * Pair of user/item/feature index with a typed object.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ *
+ * @param <V> type of the object
  */
-public class IdxObject<V> {
+public class IdxObject<V> implements Int2ObjectMap.Entry<V> {
 
-    public int idx;
-    public V v;
+    /**
+     * User/item/feature index.
+     */
+    public final int idx;
 
-    public IdxObject() {
-    }
+    /**
+     * Typed object.
+     */
+    public final V v;
 
+    /**
+     * Constructor.
+     *
+     * @param idx index
+     * @param v object
+     */
     public IdxObject(int idx, V v) {
         this.idx = idx;
         this.v = v;
+    }
+
+    /**
+     * Constructor that copies a index-object entry.
+     *
+     * @param e entry whose contents are copied
+     */
+    public IdxObject(Int2ObjectMap.Entry<V> e) {
+        this.idx = e.getIntKey();
+        this.v = e.getValue();
+    }
+
+    @Override
+    public int getIntKey() {
+        return idx;
+    }
+
+    @Override
+    public Integer getKey() {
+        return idx;
+    }
+
+    @Override
+    public V getValue() {
+        return v;
+    }
+
+    @Override
+    public V setValue(V value) {
+        throw new UnsupportedOperationException();
     }
 
 }

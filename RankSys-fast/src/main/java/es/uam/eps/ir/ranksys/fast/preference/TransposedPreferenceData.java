@@ -22,13 +22,25 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
+ * Transposed preferences, where users and items change roles. This class is
+ * useful to simplify the implementation of many algorithms that work user or
+ * item-wise, such as similarities or matrix factorization.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
+ * @param <U> type of the users
+ * @param <O> type of other information about preferences
  */
 public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, U, O> {
 
     private final FastPreferenceData<U, I, O> d;
 
+    /**
+     * Constructor.
+     *
+     * @param recommenderData preference data to be tranposed
+     */
     public TransposedPreferenceData(FastPreferenceData<U, I, O> recommenderData) {
         this.d = recommenderData;
     }

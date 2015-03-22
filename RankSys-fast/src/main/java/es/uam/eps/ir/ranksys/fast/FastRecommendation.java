@@ -20,23 +20,40 @@ package es.uam.eps.ir.ranksys.fast;
 import java.util.List;
 
 /**
+ * Fast recommendation, where users and items are identified by index.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class FastRecommendation<U, I> {
+public class FastRecommendation {
 
     private final int uidx;
     private final List<IdxDouble> iidxs;
 
+    /**
+     * Constructor.
+     *
+     * @param uidx index of the user
+     * @param iidxs list of item-score pairs identified by index.
+     */
     public FastRecommendation(int uidx, List<IdxDouble> iidxs) {
         this.uidx = uidx;
         this.iidxs = iidxs;
     }
 
+    /**
+     * Returns the index of the user for which the recommendation is issued.
+     *
+     * @return the index of the user
+     */
     public int getUidx() {
         return uidx;
     }
 
+    /**
+     * Returns the list of item-score pairs identified by index.
+     *
+     * @return the list of item-score pairs
+     */
     public List<IdxDouble> getIidxs() {
         return iidxs;
     }

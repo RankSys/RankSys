@@ -17,6 +17,6 @@
  */
 
 /**
- * Classes for accessing user-item preferences.
+ * Fast versions of TopN.
  */
-package es.uam.eps.ir.ranksys.core.preference;
+package es.uam.eps.ir.ranksys.fast.utils.topn;

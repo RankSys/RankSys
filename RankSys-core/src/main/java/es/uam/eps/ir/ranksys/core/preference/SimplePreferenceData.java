@@ -147,7 +147,7 @@ public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
      * @param iParser item type parser
      * @param dp double parse
      * @param vParser other info parser
-     * @return a simple map-based RecommenderData with the information read
+     * @return a simple map-based PreferenceData with the information read
      * @throws IOException when path does not exists of IO error
      */
     public static <U, I, O> SimplePreferenceData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
@@ -168,7 +168,7 @@ public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
      * @param iParser item type parser
      * @param dp double parse
      * @param vParser other info parser
-     * @return a simple map-based RecommenderData with the information read
+     * @return a simple map-based PreferenceData with the information read
      * @throws IOException when path does not exists of IO error
      */
     public static <U, I, O> SimplePreferenceData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {

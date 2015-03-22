@@ -74,22 +74,22 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
     }
 
     @Override
-    public FastRecommendation<U, I> getRecommendation(int uidx, int maxLength) {
+    public FastRecommendation getRecommendation(int uidx, int maxLength) {
         return getRecommendation(uidx, maxLength, iidx -> true);
     }
 
     @Override
     public Recommendation<U, I> getRecommendation(U u, int maxLength, Predicate<I> filter) {
-        FastRecommendation<U, I> rec = getRecommendation(user2uidx(u), maxLength, iidx -> filter.test(iidx2item(iidx)));
+        FastRecommendation rec = getRecommendation(user2uidx(u), maxLength, iidx -> filter.test(iidx2item(iidx)));
 
         return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream().map(iv -> new IdDouble<>(iidx2item(iv.idx), iv.v)).collect(Collectors.toList()));
     }
 
     @Override
-    public abstract FastRecommendation<U, I> getRecommendation(int uidx, int maxLength, IntPredicate filter);
+    public abstract FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter);
 
     @Override
-    public FastRecommendation<U, I> getRecommendation(int uidx, IntStream candidates) {
+    public FastRecommendation getRecommendation(int uidx, IntStream candidates) {
         IntSet set = new IntOpenHashSet();
         candidates.forEach(iidx -> set.add(iidx));
 

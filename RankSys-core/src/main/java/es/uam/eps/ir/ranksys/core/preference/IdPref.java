@@ -33,7 +33,7 @@ public class IdPref<I, O> {
     public final I id;
 
     /**
-     * The weigth (rating, play count, etc.) of the preference.
+     * The weight (rating, play count, etc.) of the preference.
      */
     public final double v;
 

@@ -21,32 +21,37 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
+ * Bi-map-like structure to back fast version of user/item/feature indexes.
+ * It keeps to maps: id-to-index and index-to-id. Value of indexes go from 0 
+ * (included) to the number of elements (excluded).
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <T> type of the user/item/feature
  */
 public class IdxIndex<T> {
 
     private final Object2IntMap<T> t2imap;
     private final List<T> i2tmap;
 
+    /**
+     * Constructor.
+     */
     public IdxIndex() {
         t2imap = new Object2IntOpenHashMap<>();
         t2imap.defaultReturnValue(-1);
         i2tmap = new ArrayList<>();
     }
 
-    private IdxIndex(Object2IntMap<T> t2imap, ArrayList<T> i2tmap, int count) {
-        this.t2imap = t2imap;
-        this.i2tmap = i2tmap;
-    }
-    
-    public IdxIndex(IdxIndex<T> mapper) {
-        t2imap = new Object2IntOpenHashMap<>(mapper.t2imap);
-        i2tmap = new ArrayList<>(mapper.i2tmap);
-    }
-
+    /**
+     * Adds an element to the structure.
+     *
+     * @param t element to be added
+     * @return the index of the element
+     */
     public int add(T t) {
         int idx = t2imap.getInt(t);
         if (idx == -1) {
@@ -59,31 +64,51 @@ public class IdxIndex<T> {
         }
     }
     
-    public void remove(T t) {
-        int idx = t2imap.getInt(t);
-        if (idx != -1) {
-            t2imap.removeInt(t);
-            i2tmap.remove(idx);
-        }
-    }
-    
+    /**
+     * Gets the index of the element.
+     *
+     * @param t element
+     * @return index of the element
+     */
     public int get(T t) {
         return t2imap.getInt(t);
     }
 
+    /**
+     * Gets the element assigned to the index.
+     *
+     * @param idx index
+     * @return the element whose index is idx
+     */
     public T get(int idx) {
         return i2tmap.get(idx);
     }
 
+    /**
+     * Checks whether the structure contains this element.
+     *
+     * @param t element
+     * @return does the structure contain this element?
+     */
     public boolean containsId(T t) {
         return t2imap.containsKey(t);
     }
 
+    /**
+     * Returns the number of stored elements.
+     *
+     * @return the number of stored elements
+     */
     public int size() {
         return t2imap.size();
     }
 
-    public Iterable<T> getIds() {
-        return t2imap.keySet();
+    /**
+     * Returns a stream of the elements stored in the structure.
+     *
+     * @return a stream of the elements stored in the structure
+     */
+    public Stream<T> getIds() {
+        return t2imap.keySet().stream();
     }
 }

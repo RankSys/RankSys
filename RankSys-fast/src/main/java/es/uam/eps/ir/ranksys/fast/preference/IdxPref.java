@@ -18,15 +18,36 @@
 package es.uam.eps.ir.ranksys.fast.preference;
 
 /**
+ * A user or item preference by indexes.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <O> type of other information
  */
 public class IdxPref<O> {
 
+    /**
+     * The index of a user or an item.
+     */
     public final int idx;
+
+    /**
+     * The weight (rating, play count, etc.) of the preference.
+     */
     public final double v;
+
+    /**
+     * Other information (such as an access log, context) of the preference.
+     */
     public final O o;
 
+    /**
+     * Constructor.
+     *
+     * @param idx index of user or item for which the preference is expressed
+     * @param value weight of the preference
+     * @param other other information of the preference
+     */
     public IdxPref(int idx, double value, O other) {
         this.idx = idx;
         this.v = value;

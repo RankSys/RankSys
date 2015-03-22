@@ -19,16 +19,22 @@ package es.uam.eps.ir.ranksys.fast.index;
 
 import es.uam.eps.ir.ranksys.fast.utils.IdxIndex;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
+ * Simple implementation of FastUserIndex backed by a bi-map IdxIndex
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
  */
 public class SimpleFastUserIndex<U> implements FastUserIndex<U> {
 
     private final IdxIndex<U> uMap;
 
+    /**
+     * Constructor.
+     *
+     */
     public SimpleFastUserIndex() {
         this.uMap = new IdxIndex<>();
     }
@@ -45,7 +51,7 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U> {
 
     @Override
     public Stream<U> getAllUsers() {
-        return StreamSupport.stream(uMap.getIds().spliterator(), false);
+        return uMap.getIds();
     }
 
     @Override
@@ -58,6 +64,13 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U> {
         return uMap.get(uidx);
     }
 
+    /**
+     * Add a new user to the index. If the user already exists, nothing is
+     * done.
+     *
+     * @param u id of the user
+     * @return index of the user
+     */
     public int add(U u) {
         return uMap.add(u);
     }

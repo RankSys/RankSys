@@ -19,16 +19,22 @@ package es.uam.eps.ir.ranksys.fast.index;
 
 import es.uam.eps.ir.ranksys.fast.utils.IdxIndex;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
+ * Simple implementation of FastItemIndex backed by a bi-map IdxIndex
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
  */
 public class SimpleFastItemIndex<I> implements FastItemIndex<I> {
 
     private final IdxIndex<I> iMap;
 
+    /**
+     * Constructor.
+     *
+     */
     public SimpleFastItemIndex() {
         this.iMap = new IdxIndex<>();
     }
@@ -45,7 +51,7 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I> {
 
     @Override
     public Stream<I> getAllItems() {
-        return StreamSupport.stream(iMap.getIds().spliterator(), false);
+        return iMap.getIds();
     }
 
     @Override
@@ -58,6 +64,13 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I> {
         return iMap.get(iidx);
     }
 
+    /**
+     * Add a new item to the index. If the item already exists, nothing is
+     * done.
+     *
+     * @param i id of the item
+     * @return index of the item
+     */
     public int add(I i) {
         return iMap.add(i);
     }

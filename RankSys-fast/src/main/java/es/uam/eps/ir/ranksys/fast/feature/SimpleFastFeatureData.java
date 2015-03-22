@@ -33,14 +33,27 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
+ * Simple implementation of FastFeatureData backed by nested lists.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
+ * @param <F> type of the features
+ * @param <V> type of the information about item-feature pairs
  */
 public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F, V> {
 
     private final List<List<IdxObject<V>>> iidxList;
     private final List<List<IdxObject<V>>> fidxList;
 
+    /**
+     * Constructor.
+     *
+     * @param iidxList list of lists of item-feature pairs by item index
+     * @param fidxList list of lists of item-feature pairs by feature index
+     * @param ii item index
+     * @param fi feature index
+     */
     protected SimpleFastFeatureData(List<List<IdxObject<V>>> iidxList, List<List<IdxObject<V>>> fidxList, FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
         super(ii, fi);
         this.iidxList = iidxList;
@@ -91,10 +104,46 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
                 .filter(fv -> fv != null).count();
     }
     
-        public static <I, F, V> SimpleFastFeatureData<I, F, V> load(String path, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) throws IOException {
+    /**
+     * Load feature data from a file.
+     * 
+     * Each line is a different item-feature pair, with tab-separated fields indicating
+     * item, feature and other information.
+     *
+     * @param <I> type of the items
+     * @param <F> type of the features
+     * @param <V> type of the information about item-feature pairs
+     * @param path file path
+     * @param iParser item type parser
+     * @param fParser feature type parser
+     * @param vParser information type parser
+     * @param iIndex item index
+     * @param fIndex feature index
+     * @return a simple map-based FeatureData
+     * @throws IOException when path does not exist or IO error
+     */
+    public static <I, F, V> SimpleFastFeatureData<I, F, V> load(String path, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) throws IOException {
         return load(new FileInputStream(path), iParser, fParser, vParser, iIndex, fIndex);
     }
 
+    /**
+     * Load feature data from a input stream.
+     * 
+     * Each line is a different item-feature pair, with tab-separated fields indicating
+     * item, feature and other information.
+     *
+     * @param <I> type of the items
+     * @param <F> type of the features
+     * @param <V> type of the information about item-feature pairs
+     * @param in input stream
+     * @param iParser item type parser
+     * @param fParser feature type parser
+     * @param vParser information type parser
+     * @param iIndex item index
+     * @param fIndex feature index
+     * @return a simple map-based FeatureData
+     * @throws IOException when IO error
+     */
     public static <I, F, V> SimpleFastFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) throws IOException {
 
         List<List<IdxObject<V>>> iidxList = new ArrayList<>();

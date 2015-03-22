@@ -33,8 +33,13 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
+ * Simple implementation of FastPreferenceData backed by nested lists.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <O> type of other information for preferences
  */
 public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceData<U, I, O> {
 
@@ -42,6 +47,15 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
     private final List<List<IdxPref<O>>> uidxList;
     private final List<List<IdxPref<O>>> iidxList;
 
+    /**
+     * Constructor.
+     *
+     * @param numPreferences number of total preferences
+     * @param uidxList list of lists of preferences by user index
+     * @param iidxList list of lists of preferences by item index
+     * @param uIndex user index
+     * @param iIndex item index
+     */
     protected SimpleFastPreferenceData(int numPreferences, List<List<IdxPref<O>>> uidxList, List<List<IdxPref<O>>> iidxList, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
         super(uIndex, iIndex);
         this.numPreferences = numPreferences;
@@ -98,10 +112,48 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
                 .filter(iv -> iv != null).count();
     }
 
+    /**
+     * Load preferences from a file.
+     * 
+     * Each line is a different preference, with tab-separated fields indicating
+     * user, item, weight and other information.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     * @param <O> type of other information
+     * @param path path of the input file
+     * @param uParser user type parser
+     * @param iParser item type parser
+     * @param dp double parse
+     * @param vParser other info parser
+     * @param uIndex user index
+     * @param iIndex item index
+     * @return a simple list-of-lists FastPreferenceData with the information read
+     * @throws IOException when path does not exists of IO error
+     */
     public static <U, I, O> SimpleFastPreferenceData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
         return load(new FileInputStream(path), uParser, iParser, dp, vParser, uIndex, iIndex);
     }
 
+    /**
+     * Load preferences from an input stream.
+     * 
+     * Each line is a different preference, with tab-separated fields indicating
+     * user, item, weight and other information.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     * @param <O> type of other information
+     * @param in input stream to read from
+     * @param uParser user type parser
+     * @param iParser item type parser
+     * @param dp double parse
+     * @param vParser other info parser
+     * @param uIndex user index
+     * @param iIndex item index
+     * @return a simple list-of-lists FastPreferenceData with the information read
+     * @throws IOException when path does not exists of IO error
+     */
     public static <U, I, O> SimpleFastPreferenceData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
         int[] numPreferences = new int[]{0};
         

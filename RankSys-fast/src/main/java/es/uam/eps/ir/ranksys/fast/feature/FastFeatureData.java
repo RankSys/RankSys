@@ -25,20 +25,60 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
+ * Fast version of FeatureData, where item-feature relationships are
+ * stored internally by the indexes provided by FastItemIndex and FastFeatureIndex.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
+ * @param <F> type of the features
+ * @param <V> type of the information about item-feature pairs
  */
 public interface FastFeatureData<I, F, V> extends FeatureData<I, F, V>, FastItemIndex<I>, FastFeatureIndex<F> {
 
+    /**
+     * Returns the features associated with an item.
+     *
+     * @param iidx item index
+     * @return features associated with the item
+     */
     Stream<IdxObject<V>> getIidxFeatures(final int iidx);
 
+    /**
+     * Returns the items having a feature.
+     *
+     * @param fidx feature index
+     * @return items having the feature
+     */
     Stream<IdxObject<V>> getFidxItems(final int fidx);
 
+    /**
+     * Returns the number of items having a feature.
+     *
+     * @param fidx feature index
+     * @return number of items having the feature
+     */
     int numItems(int fidx);
 
+    /**
+     * Returns the number of features associated with an item.
+     *
+     * @param iidx item index
+     * @return number of features associated with the item
+     */
     int numFeatures(int iidx);
 
+    /**
+     * Returns the indexes of the items with features.
+     *
+     * @return a stream of indexes of items with features
+     */
     IntStream getIidxWithFeatures();
     
+    /**
+     * Returns the features that are associated with items.
+     *
+     * @return a stream of indexes of features with items
+     */
     IntStream getFidxWithItems();
 }

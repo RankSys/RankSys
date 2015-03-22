@@ -20,19 +20,38 @@ package es.uam.eps.ir.ranksys.fast;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 
 /**
+ * A pair of a user/item/feature index and a double.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class IdxDouble implements Int2DoubleMap.Entry{
 
+    /**
+     * User/item/feature index.
+     */
     public final int idx;
+
+    /**
+     * The double.
+     */
     public final double v;
 
+    /**
+     * Constructor.
+     *
+     * @param idx index
+     * @param v double
+     */
     public IdxDouble(int idx, double v) {
         this.idx = idx;
         this.v = v;
     }
     
+    /**
+     * Constructor that copies an index-double entry.
+     *
+     * @param e entry whose contents are copied
+     */
     public IdxDouble(Int2DoubleMap.Entry e) {
         this(e.getIntKey(), e.getDoubleValue());
     }

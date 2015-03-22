@@ -38,9 +38,9 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
     }
 
     @Override
-    public FastRecommendation<U, I> getRecommendation(int uidx, int maxLength, IntPredicate filter) {
+    public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
         if (uidx == -1) {
-            return new FastRecommendation<>(uidx, new ArrayList<>(0));
+            return new FastRecommendation(uidx, new ArrayList<>(0));
         }
 
         Int2DoubleMap scoresMap = getScoresMap(uidx);
@@ -64,7 +64,7 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
                 .map(e -> new IdxDouble(e))
                 .collect(Collectors.toList());
 
-        return new FastRecommendation<>(uidx, items);
+        return new FastRecommendation(uidx, items);
     }
 
     protected abstract Int2DoubleMap getScoresMap(int uidx);

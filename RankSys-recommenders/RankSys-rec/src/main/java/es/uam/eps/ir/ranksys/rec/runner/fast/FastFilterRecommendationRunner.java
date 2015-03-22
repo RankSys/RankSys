@@ -55,7 +55,7 @@ public class FastFilterRecommendationRunner<U, I> extends AbstractRecommendation
     @Override
     public void run(Recommender<U, I> recommender, OutputStream out) throws IOException {
         run(user -> {
-            FastRecommendation<U, I> rec = ((FastRecommender<U, I>) recommender).getRecommendation(userIndex.user2uidx(user), maxLength, userFilter.apply(user));
+            FastRecommendation rec = ((FastRecommender<U, I>) recommender).getRecommendation(userIndex.user2uidx(user), maxLength, userFilter.apply(user));
             
             return new Recommendation<>(userIndex.uidx2user(rec.getUidx()), rec.getIidxs().stream().map(iv -> new IdDouble<I>(itemIndex.iidx2item(iv.idx), iv.v)).collect(Collectors.toList()));
         }, out);

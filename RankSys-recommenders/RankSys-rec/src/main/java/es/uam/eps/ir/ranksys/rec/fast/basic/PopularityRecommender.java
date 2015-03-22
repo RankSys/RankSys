@@ -42,7 +42,7 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
     }
 
     @Override
-    public FastRecommendation<U, I> getRecommendation(int uidx, int maxLength, IntPredicate filter) {
+    public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
         if (maxLength == 0) {
             maxLength = data.numItemsWithPreferences();
         }
@@ -52,6 +52,6 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
                 .limit(maxLength)
                 .collect(Collectors.toList());
         
-        return new FastRecommendation<>(uidx, items);
+        return new FastRecommendation(uidx, items);
     }
 }

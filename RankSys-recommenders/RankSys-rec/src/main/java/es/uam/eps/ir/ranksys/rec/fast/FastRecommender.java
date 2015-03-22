@@ -30,10 +30,10 @@ import java.util.stream.IntStream;
  */
 public interface FastRecommender<U, I> extends Recommender<U, I>, FastUserIndex<U>, FastItemIndex<I> {
 
-    public FastRecommendation<U, I> getRecommendation(int uidx, int maxLength);
+    public FastRecommendation getRecommendation(int uidx, int maxLength);
 
-    public FastRecommendation<U, I> getRecommendation(int uidx, int maxLength, IntPredicate filter);
+    public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter);
 
-    public FastRecommendation<U, I> getRecommendation(int uidx, IntStream candidates);
+    public FastRecommendation getRecommendation(int uidx, IntStream candidates);
 
 }

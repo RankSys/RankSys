@@ -22,8 +22,13 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
+ * Fast version of FeatureIndex, where features are internally represented with 
+ * numerical indices from 0 (inclusive) to the number of indexed features
+ * (exclusive).
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <F> type of the features
  */
 public interface FastFeatureIndex<F> extends FeatureIndex<F> {
 
@@ -37,8 +42,20 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
         return IntStream.range(0, numFeatures()).mapToObj(fidx -> fidx2feature(fidx));
     }
 
+    /**
+     * Returns the index assigned to the feature.
+     *
+     * @param f feature
+     * @return the index of the feature, or -1 if the feature does not exist
+     */
     public int feature2fidx(F f);
 
+    /**
+     * Returns the feature represented with the index.
+     *
+     * @param fidx feature index
+     * @return the feature whose index is fidx
+     */
     public F fidx2feature(int fidx);
 
 }

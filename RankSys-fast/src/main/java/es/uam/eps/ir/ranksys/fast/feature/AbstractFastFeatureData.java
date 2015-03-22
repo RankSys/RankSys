@@ -23,14 +23,26 @@ import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import java.util.stream.Stream;
 
 /**
+ * Abstract FastFeatureData, implementing the interfaces of FastItemIndex and
+ * FastFeatureIndex by delegating to implementations of these.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
+ * @param <F> type of the features
+ * @param <V> type of the information about item-feature pairs
  */
 public abstract class AbstractFastFeatureData<I, F, V> implements FastFeatureData<I, F, V> {
 
     private final FastItemIndex<I> ii;
     private final FastFeatureIndex<F> fi;
 
+    /**
+     * Constructor.
+     *
+     * @param ii item index
+     * @param fi feature index
+     */
     protected AbstractFastFeatureData(FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
         this.ii = ii;
         this.fi = fi;
