@@ -73,7 +73,7 @@ public abstract class UserModel<U> {
      * @param model another model from which we see
      */
     public UserModel(UserModel<U> model) {
-        this(model.caching, model.lazyUserMap.get().keySet().stream());
+        this(model.caching, model.caching ? model.lazyUserMap.get().keySet().stream() : null);
     }
 
     /**
