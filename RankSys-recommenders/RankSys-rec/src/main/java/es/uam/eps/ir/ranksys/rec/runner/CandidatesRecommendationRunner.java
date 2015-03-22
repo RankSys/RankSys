@@ -31,16 +31,16 @@ import java.util.function.Function;
  */
 public class CandidatesRecommendationRunner<U, I> extends AbstractRecommendationRunner<U, I> {
 
-    private final Function<U, List<I>> candidatesProvider;
+    private final Function<U, List<I>> candidatesSupplier;
 
-    public CandidatesRecommendationRunner(Set<U> users, RecommendationFormat<U, I> format, Function<U, List<I>> candidatesProvider) {
+    public CandidatesRecommendationRunner(Set<U> users, RecommendationFormat<U, I> format, Function<U, List<I>> candidatesSupplier) {
         super(users.stream(), format);
-        this.candidatesProvider = candidatesProvider;
+        this.candidatesSupplier = candidatesSupplier;
     }
 
     @Override
     public void run(Recommender<U, I> recommender, OutputStream out) throws IOException {
-        run(user -> recommender.getRecommendation(user, candidatesProvider.apply(user).stream()), out);
+        run(user -> recommender.getRecommendation(user, candidatesSupplier.apply(user).stream()), out);
     }
 
 }
