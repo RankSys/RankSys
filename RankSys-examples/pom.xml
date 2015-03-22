@@ -68,5 +68,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>RankSys-rec</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>es.uam.eps.ir</groupId>
+            <artifactId>RankSys-fast</artifactId>
+            <version>0.1</version>
+        </dependency>
     </dependencies>
 </project>

@@ -17,7 +17,6 @@
  */
 package es.uam.eps.ir.ranksys.mf.als;
 
-import cern.colt.function.DoubleFunction;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
@@ -26,6 +25,7 @@ import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import static java.lang.Math.sqrt;
+import java.util.function.DoubleUnaryOperator;
 import java.util.stream.Stream;
 
 /**
@@ -36,13 +36,13 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
 
     private final double lambdaP;
     private final double lambdaQ;
-    private final DoubleFunction confidence;
+    private final DoubleUnaryOperator confidence;
 
-    public PZTFactorizer(double lambda, DoubleFunction confidence, int numIter) {
+    public PZTFactorizer(double lambda, DoubleUnaryOperator confidence, int numIter) {
         this(lambda, lambda, confidence, numIter);
     }
 
-    public PZTFactorizer(double lambdaP, double lambdaQ, DoubleFunction confidence, int numIter) {
+    public PZTFactorizer(double lambdaP, double lambdaQ, DoubleUnaryOperator confidence, int numIter) {
         super(numIter);
         this.lambdaP = lambdaP;
         this.lambdaQ = lambdaQ;
@@ -58,11 +58,11 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
             double err1 = data.getUidxPreferences(uidx).mapToDouble(iv -> {
                 double rui = iv.v;
                 double sui = su.getQuick(iv.idx);
-                double cui = confidence.apply(rui);
-                return cui * (rui - sui) * (rui - sui) - confidence.apply(0) * sui * sui;
+                double cui = confidence.applyAsDouble(rui);
+                return cui * (rui - sui) * (rui - sui) - confidence.applyAsDouble(0) * sui * sui;
             }).sum();
             
-            double err2 = confidence.apply(0) * su.assign(x -> x * x).zSum();
+            double err2 = confidence.applyAsDouble(0) * su.assign(x -> x * x).zSum();
             
             return err1 + err2;
         }).sum();
@@ -80,7 +80,7 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
         set_min(q, p, confidence, lambdaQ, new TransposedPreferenceData<>(data));
     }
 
-    private static <U, I, O> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleFunction confidence, double lambda, FastPreferenceData<U, I, O> data) {
+    private static <U, I, O> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleUnaryOperator confidence, double lambda, FastPreferenceData<U, I, O> data) {
         DoubleMatrix2D gt = getGt(p, q, lambda);
 
         data.getUidxWithPreferences().parallel().forEach(uidx -> {
@@ -108,7 +108,7 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
         return gt;
     }
 
-    private static <O> void prepareRR1(int L, DoubleMatrix1D w, DoubleMatrix2D gt, DoubleMatrix2D q, int N, Stream<IdxPref<O>> prefs, DoubleFunction confidence, double lambda) {
+    private static <O> void prepareRR1(int L, DoubleMatrix1D w, DoubleMatrix2D gt, DoubleMatrix2D q, int N, Stream<IdxPref<O>> prefs, DoubleUnaryOperator confidence, double lambda) {
         int K = (int) w.size();
 
         double[][] x = new double[K + N][K];
@@ -123,7 +123,7 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
         }
         prefs.forEach(iv -> {
             q.viewRow(iv.idx).toArray(x[j[0]]);
-            double Cui = confidence.apply(iv.v);
+            double Cui = confidence.applyAsDouble(iv.v);
             y[j[0]] = (Cui * iv.v) / (Cui - 1);
             c[j[0]] = Cui - 1;
             j[0]++;

@@ -17,7 +17,6 @@
  */
 package es.uam.eps.ir.ranksys.examples;
 
-import cern.colt.function.DoubleFunction;
 import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
 import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
@@ -56,6 +55,8 @@ import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.DoubleFunction;
+import java.util.function.DoubleUnaryOperator;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Supplier;
@@ -125,7 +126,7 @@ public class RecommenderExample {
             int k = 50;
             double lambda = 0.1;
             double alpha = 1.0;
-            DoubleFunction confidence = x -> 1 + alpha * x;
+            DoubleUnaryOperator confidence = x -> 1 + alpha * x;
             int numIter = 20;
             
             Factorization<Long, Long> factorization = new HKVFactorizer<Long, Long>(lambda, confidence, numIter).factorize(k, trainData);
@@ -138,7 +139,7 @@ public class RecommenderExample {
             int k = 50;
             double lambda = 0.1;
             double alpha = 1.0;
-            DoubleFunction confidence = x -> 1 + alpha * x;
+            DoubleUnaryOperator confidence = x -> 1 + alpha * x;
             int numIter = 20;
             
             Factorization<Long, Long> factorization = new PZTFactorizer<Long, Long>(lambda, confidence, numIter).factorize(k, trainData);
