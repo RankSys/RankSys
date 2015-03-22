@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  * Simple implementation of FastPreferenceData backed by nested lists.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  * @param <O> type of other information for preferences
@@ -75,12 +75,20 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
 
     @Override
     public Stream<IdxPref<O>> getUidxPreferences(int uidx) {
-        return uidxList.get(uidx).stream();
+        if (uidxList.get(uidx) == null) {
+            return Stream.empty();
+        } else {
+            return uidxList.get(uidx).stream();
+        }
     }
 
     @Override
     public Stream<IdxPref<O>> getIidxPreferences(int iidx) {
-        return iidxList.get(iidx).stream();
+        if (iidxList.get(iidx) == null) {
+            return Stream.empty();
+        } else {
+            return iidxList.get(iidx).stream();
+        }
     }
 
     @Override
@@ -114,9 +122,8 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
 
     /**
      * Load preferences from a file.
-     * 
-     * Each line is a different preference, with tab-separated fields indicating
-     * user, item, weight and other information.
+     *
+     * Each line is a different preference, with tab-separated fields indicating user, item, weight and other information.
      *
      * @param <U> type of the users
      * @param <I> type of the items
@@ -137,9 +144,8 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
 
     /**
      * Load preferences from an input stream.
-     * 
-     * Each line is a different preference, with tab-separated fields indicating
-     * user, item, weight and other information.
+     *
+     * Each line is a different preference, with tab-separated fields indicating user, item, weight and other information.
      *
      * @param <U> type of the users
      * @param <I> type of the items
@@ -156,12 +162,12 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
      */
     public static <U, I, O> SimpleFastPreferenceData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
         int[] numPreferences = new int[]{0};
-        
+
         List<List<IdxPref<O>>> uidxList = new ArrayList<>();
         for (int uidx = 0; uidx < uIndex.numUsers(); uidx++) {
             uidxList.add(null);
         }
-        
+
         List<List<IdxPref<O>>> iidxList = new ArrayList<>();
         for (int iidx = 0; iidx < iIndex.numItems(); iidx++) {
             iidxList.add(null);

@@ -17,14 +17,21 @@
  */
 package es.uam.eps.ir.ranksys.fast.index;
 
+import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.fast.utils.IdxIndex;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.stream.Stream;
 
 /**
  * Simple implementation of FastFeatureIndex backed by a bi-map IdxIndex
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <F> type of the features
  */
 public class SimpleFastFeatureIndex<F> implements FastFeatureIndex<F> {
@@ -35,7 +42,7 @@ public class SimpleFastFeatureIndex<F> implements FastFeatureIndex<F> {
      * Constructor.
      *
      */
-    public SimpleFastFeatureIndex() {
+    protected SimpleFastFeatureIndex() {
         this.fMap = new IdxIndex<>();
     }
 
@@ -65,14 +72,46 @@ public class SimpleFastFeatureIndex<F> implements FastFeatureIndex<F> {
     }
 
     /**
-     * Add a new feature to the index. If the feature already exists, nothing is
-     * done.
+     * Add a new feature to the index. If the feature already exists, nothing is done.
      *
      * @param f id of the feature
      * @return index of the feature
      */
-    public int add(F f) {
+    protected int add(F f) {
         return fMap.add(f);
+    }
+
+    /**
+     * Creates a feature index from a file where the first column lists the features.
+     *
+     * @param <F> type of the features
+     * @param path path of the file
+     * @param fParser feature type parser
+     * @return a fast feature index
+     * @throws IOException when file does not exist or when IO error
+     */
+    public static <F> SimpleFastFeatureIndex<F> load(String path, Parser<F> fParser) throws IOException {
+        return load(new FileInputStream(path), fParser);
+    }
+
+    /**
+     * Creates a feature index from an input stream where the first column lists the features.
+     *
+     * @param <F> type of the features
+     * @param in input stream
+     * @param iParser feature type parser
+     * @return a fast feature index
+     * @throws IOException when IO error
+     */
+    public static <F> SimpleFastFeatureIndex<F> load(InputStream in, Parser<F> iParser) throws IOException {
+        SimpleFastFeatureIndex<F> featureIndex = new SimpleFastFeatureIndex<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            reader.lines()
+                    .map(line -> iParser.parse(split(line, '\t')[0]))
+                    .sorted()
+                    .forEach(f -> featureIndex.add(f));
+        }
+        return featureIndex;
     }
 
 }

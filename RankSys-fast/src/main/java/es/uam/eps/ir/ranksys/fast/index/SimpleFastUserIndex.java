@@ -17,7 +17,14 @@
  */
 package es.uam.eps.ir.ranksys.fast.index;
 
+import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.fast.utils.IdxIndex;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.stream.Stream;
 
 /**
@@ -31,11 +38,7 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U> {
 
     private final IdxIndex<U> uMap;
 
-    /**
-     * Constructor.
-     *
-     */
-    public SimpleFastUserIndex() {
+    protected SimpleFastUserIndex() {
         this.uMap = new IdxIndex<>();
     }
 
@@ -65,14 +68,45 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U> {
     }
 
     /**
-     * Add a new user to the index. If the user already exists, nothing is
-     * done.
+     * Add a new user to the index. If the user already exists, nothing is done.
      *
      * @param u id of the user
      * @return index of the user
      */
-    public int add(U u) {
+    protected int add(U u) {
         return uMap.add(u);
     }
+    
+    /**
+     * Creates a user index from a file where the first column lists the users.
+     *
+     * @param <U> type of the users
+     * @param path path of the file
+     * @param uParser user type parser
+     * @return a fast user index
+     * @throws IOException when file does not exist or when IO error
+     */
+    public static <U> SimpleFastUserIndex<U> load(String path, Parser<U> uParser) throws IOException {
+        return load(new FileInputStream(path), uParser);
+    }
 
+    /**
+     * Creates a user index from an input stream where the first column lists the users.
+     *
+     * @param <U> type of the users
+     * @param in input stream
+     * @param uParser user type parser
+     * @return a fast user index
+     * @throws IOException when IO error
+     */
+    public static <U> SimpleFastUserIndex<U> load(InputStream in, Parser<U> uParser) throws IOException {
+        SimpleFastUserIndex<U> userIndex = new SimpleFastUserIndex<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            reader.lines()
+                    .map(line -> uParser.parse(split(line, '\t')[0]))
+                    .sorted()
+                    .forEach(u -> userIndex.add(u));
+        }
+        return userIndex;
+    }
 }

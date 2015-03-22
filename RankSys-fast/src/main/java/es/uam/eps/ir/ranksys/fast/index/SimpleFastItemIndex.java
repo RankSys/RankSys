@@ -17,14 +17,21 @@
  */
 package es.uam.eps.ir.ranksys.fast.index;
 
+import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.fast.utils.IdxIndex;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.stream.Stream;
 
 /**
  * Simple implementation of FastItemIndex backed by a bi-map IdxIndex
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <I> type of the items
  */
 public class SimpleFastItemIndex<I> implements FastItemIndex<I> {
@@ -35,7 +42,7 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I> {
      * Constructor.
      *
      */
-    public SimpleFastItemIndex() {
+    protected SimpleFastItemIndex() {
         this.iMap = new IdxIndex<>();
     }
 
@@ -65,14 +72,46 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I> {
     }
 
     /**
-     * Add a new item to the index. If the item already exists, nothing is
-     * done.
+     * Add a new item to the index. If the item already exists, nothing is done.
      *
      * @param i id of the item
      * @return index of the item
      */
-    public int add(I i) {
+    protected int add(I i) {
         return iMap.add(i);
+    }
+
+    /**
+     * Creates a item index from a file where the first column lists the items.
+     *
+     * @param <I> type of the items
+     * @param path path of the file
+     * @param iParser item type parser
+     * @return a fast item index
+     * @throws IOException when file does not exist or when IO error
+     */
+    public static <I> SimpleFastItemIndex<I> load(String path, Parser<I> iParser) throws IOException {
+        return load(new FileInputStream(path), iParser);
+    }
+
+    /**
+     * Creates a item index from an input stream where the first column lists the item.
+     *
+     * @param <I> type of the items
+     * @param in input stream
+     * @param iParser item type parser
+     * @return a fast item index
+     * @throws IOException when IO error
+     */
+    public static <I> SimpleFastItemIndex<I> load(InputStream in, Parser<I> iParser) throws IOException {
+        SimpleFastItemIndex<I> itemIndex = new SimpleFastItemIndex<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            reader.lines()
+                    .map(line -> iParser.parse(split(line, '\t')[0]))
+                    .sorted()
+                    .forEach(i -> itemIndex.add(i));
+        }
+        return itemIndex;
     }
 
 }
