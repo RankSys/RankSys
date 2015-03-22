@@ -20,18 +20,26 @@ package es.uam.eps.ir.ranksys.metrics.rel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 
 /**
+ * Relevance model in which every item is judged as relevant.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ *
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class NoRelevanceModel<U, I> extends RelevanceModel<U, I> {
-    
+
     private final UserNoRelevanceModel rel = new UserNoRelevanceModel();
 
+    /**
+     * Constructor. No need to cache anything here.
+     *
+     */
     public NoRelevanceModel() {
         super();
     }
-    
+
     @Override
     protected UserRelevanceModel<U, I> get(U user) {
         return rel;
@@ -53,7 +61,7 @@ public class NoRelevanceModel<U, I> extends RelevanceModel<U, I> {
         public double gain(I item) {
             return 1.0;
         }
-        
+
     }
-    
+
 }

@@ -23,8 +23,13 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
 /**
+ * Background discount model: assumes the relevance of unseen items in a test
+ * subset with a pre-fixed gain value.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class BackgroundBinaryRelevanceModel<U, I> extends RelevanceModel<U, I> {
 
@@ -32,6 +37,14 @@ public class BackgroundBinaryRelevanceModel<U, I> extends RelevanceModel<U, I> {
     private final double threshold;
     private final double background;
 
+    /**
+     * Constructor.
+     *
+     * @param caching are the user relevance models being cached?
+     * @param testData test subset of preferences
+     * @param threshold relevance threshold
+     * @param background gain of unseen items in the test subset
+     */
     public BackgroundBinaryRelevanceModel(boolean caching, PreferenceData<U, I, ?> testData, double threshold, double background) {
         super(caching, testData.getUsersWithPreferences());
         this.testData = testData;

@@ -18,6 +18,7 @@
 package es.uam.eps.ir.ranksys.metrics.rank;
 
 /**
+ * No discount: disc(k) = 1.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)

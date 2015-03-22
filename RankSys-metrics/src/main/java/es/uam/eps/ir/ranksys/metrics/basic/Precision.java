@@ -24,15 +24,25 @@ import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 
 /**
+ * Precision metric: proportion of relevant items in a recommendation list.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class Precision<U, I> extends AbstractRecommendationMetric<U, I> {
 
     private final RelevanceModel<U, I> relModel;
     private final int cutoff;
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum length of recommended lists
+     * @param relModel relevance model
+     */
     public Precision(int cutoff, BinaryRelevanceModel<U, I> relModel) {
         this.relModel = relModel;
         this.cutoff = cutoff;

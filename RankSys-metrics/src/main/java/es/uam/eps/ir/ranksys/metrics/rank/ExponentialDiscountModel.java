@@ -18,6 +18,7 @@
 package es.uam.eps.ir.ranksys.metrics.rank;
 
 /**
+ * Exponential ranking discount: disc(k) = base^k.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
@@ -26,6 +27,11 @@ public class ExponentialDiscountModel implements RankingDiscountModel {
 
     private final double base;
 
+    /**
+     * Constructor.
+     *
+     * @param base base of the exponent
+     */
     public ExponentialDiscountModel(double base) {
         this.base = base;
     }

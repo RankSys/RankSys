@@ -22,15 +22,27 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Relevance model in which the items in a preference subset with a value
+ * equal or above a threshold are judged as relevant.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class BinaryRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
 
     private final PreferenceData<U, I, ?> testData;
     private final double threshold;
 
+    /**
+     * Constructor
+     *
+     * @param caching are the user relevance models being cached?
+     * @param testData test subset of the preferences
+     * @param threshold relevance threshold
+     */
     public BinaryRelevanceModel(boolean caching, PreferenceData<U, I, ?> testData, double threshold) {
         super(caching, testData.getUsersWithPreferences());
         this.testData = testData;

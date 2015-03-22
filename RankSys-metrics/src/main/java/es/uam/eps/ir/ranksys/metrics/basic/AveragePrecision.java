@@ -25,14 +25,24 @@ import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel.UserIdealRelevanceM
 import static java.lang.Math.min;
 
 /**
+ * Average Precision: average of the precision at each recall level.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class AveragePrecision<U, I> extends AbstractRecommendationMetric<U, I> {
 
     private final IdealRelevanceModel<U, I> relModel;
-    public final int cutoff;
+    private final int cutoff;
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff cutoff of the metric
+     * @param relevanceModel relevance model
+     */
     public AveragePrecision(int cutoff, IdealRelevanceModel<U, I> relevanceModel) {
         super();
         this.relModel = relevanceModel;

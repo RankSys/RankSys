@@ -21,13 +21,15 @@ import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 
 /**
+ * Number of recommended items.
+ *
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class NumRetrieved<U, I> extends AbstractRecommendationMetric<U, I> {
-
-    public NumRetrieved() {
-    }
 
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {

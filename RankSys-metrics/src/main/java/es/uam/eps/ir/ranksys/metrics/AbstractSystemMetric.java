@@ -18,9 +18,14 @@
 package es.uam.eps.ir.ranksys.metrics;
 
 /**
+ * Abstract system metric. Future common functionalities for system
+ * metrics will be implemented here.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class AbstractSystemMetric<U, I> implements SystemMetric<U, I> {
 }

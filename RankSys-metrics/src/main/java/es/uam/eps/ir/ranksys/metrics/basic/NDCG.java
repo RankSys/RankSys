@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
@@ -18,23 +18,31 @@
 package es.uam.eps.ir.ranksys.metrics.basic;
 
 import es.uam.eps.ir.ranksys.core.IdDouble;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
-import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
-import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel.UserIdealRelevanceModel;
-import es.uam.eps.ir.ranksys.metrics.basic.NDCG.NDCGRelevanceModel.UserNDCGRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rank.LogarithmicDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
+import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Arrays;
 import java.util.Set;
 
 /**
+ * Normalized Discounted Cumulative Gain metric.
+ * 
+ * See: Kalervo Järvelin and Jaana Kekäläinen. 2000. IR evaluation methods for
+ * retrieving highly relevant documents. In Proceedings of the 23rd annual
+ * international ACM SIGIR conference on Research and development in 
+ * information retrieval (SIGIR '00). ACM, New York, NY, USA, 41-48. 
+ * DOI=10.1145/345508.345545 http://doi.acm.org/10.1145/345508.345545 
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
 
@@ -42,6 +50,12 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
     private final int cutoff;
     private final RankingDiscountModel disc;
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum length of evaluated recommendation lists
+     * @param relModel relevance model
+     */
     public NDCG(int cutoff, NDCGRelevanceModel<U, I> relModel) {
         this.relModel = relModel;
         this.cutoff = cutoff;
@@ -50,7 +64,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
 
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
-        NDCGRelevanceModel<U,I>.UserNDCGRelevanceModel userRelModel = (NDCGRelevanceModel<U,I>.UserNDCGRelevanceModel) relModel.getModel(recommendation.getUser());
+        NDCGRelevanceModel<U, I>.UserNDCGRelevanceModel userRelModel = (NDCGRelevanceModel<U, I>.UserNDCGRelevanceModel) relModel.getModel(recommendation.getUser());
 
         double ndcg = 0.0;
         int rank = 0;
@@ -70,7 +84,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         return ndcg;
     }
 
-    private double idcg(UserNDCGRelevanceModel relModel) {
+    private double idcg(NDCGRelevanceModel.UserNDCGRelevanceModel relModel) {
         double[] gains = relModel.getGainValues();
         Arrays.sort(gains);
 
@@ -85,11 +99,25 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         return idcg;
     }
 
+    /**
+     * Relevance model for nDCG, in which the gains of all relevant documents
+     * need to be known for the normalization of the metric.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     */
     public static class NDCGRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
 
         private final PreferenceData<U, I, ?> testData;
         private final double threshold;
 
+        /**
+         * Constructors.
+         *
+         * @param caching are the user relevance models being cached?
+         * @param testData test subset of preferences
+         * @param threshold relevance threshold
+         */
         public NDCGRelevanceModel(boolean caching, PreferenceData<U, I, ?> testData, double threshold) {
             super(caching, testData.getUsersWithPreferences());
             this.testData = testData;
@@ -101,10 +129,19 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
             return new UserNDCGRelevanceModel(user);
         }
 
-        public class UserNDCGRelevanceModel implements UserIdealRelevanceModel<U, I> {
+        /**
+         * User relevance model for nDCG.
+         *
+         */
+        public class UserNDCGRelevanceModel implements IdealRelevanceModel.UserIdealRelevanceModel<U, I> {
 
             private final Object2DoubleMap<I> gainMap;
 
+            /**
+             * Constructor.
+             *
+             * @param user user whose relevance model is computed
+             */
             public UserNDCGRelevanceModel(U user) {
                 this.gainMap = new Object2DoubleOpenHashMap<>();
                 gainMap.defaultReturnValue(0.0);
@@ -129,9 +166,15 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
                 return gainMap.getDouble(item);
             }
 
+            /**
+             * Get the vector of gains of the relevant items.
+             *
+             * @return array of positive relevance gains
+             */
             public double[] getGainValues() {
                 return gainMap.values().toDoubleArray();
             }
         }
     }
+
 }

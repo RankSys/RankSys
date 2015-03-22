@@ -18,6 +18,7 @@
 package es.uam.eps.ir.ranksys.metrics.rank;
 
 /**
+ * Logarithmic discount: disc(k) = 1 / log_2(k + 2).
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
