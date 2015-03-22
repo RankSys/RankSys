@@ -32,7 +32,7 @@ import java.util.stream.Stream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class PZTFactorizer<U, I, O> extends ALSFactorizer<U, I, O> {
+public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
 
     private final double lambdaP;
     private final double lambdaQ;
@@ -50,7 +50,7 @@ public class PZTFactorizer<U, I, O> extends ALSFactorizer<U, I, O> {
     }
 
     @Override
-    public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, O> data) {
+    public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data) {
         double error = data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
             DoubleMatrix1D pu = p.viewRow(uidx);
             DoubleMatrix1D su = q.zMult(pu, null);
@@ -71,12 +71,12 @@ public class PZTFactorizer<U, I, O> extends ALSFactorizer<U, I, O> {
     }
 
     @Override
-    public void set_minP(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, FastPreferenceData<U, I, O> data) {
+    public void set_minP(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data) {
         set_min(p, q, confidence, lambdaP, data);
     }
 
     @Override
-    public void set_minQ(final DenseDoubleMatrix2D q, final DenseDoubleMatrix2D p, FastPreferenceData<U, I, O> data) {
+    public void set_minQ(final DenseDoubleMatrix2D q, final DenseDoubleMatrix2D p, FastPreferenceData<U, I, ?> data) {
         set_min(q, p, confidence, lambdaQ, new TransposedPreferenceData<>(data));
     }
 

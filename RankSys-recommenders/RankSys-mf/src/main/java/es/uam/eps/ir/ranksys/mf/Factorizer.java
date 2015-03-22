@@ -23,9 +23,11 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public abstract class Factorizer<U, I, O> {
+public abstract class Factorizer<U, I> {
 
-    public abstract double error(Factorization<U, I> factorization, FastPreferenceData<U, I, O> data);
+    public abstract double error(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data);
 
-    public abstract void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, O> data);
+    public abstract Factorization<U, I> factorize(int K, FastPreferenceData<U, I, ?> data);
+
+    public abstract void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data);
 }

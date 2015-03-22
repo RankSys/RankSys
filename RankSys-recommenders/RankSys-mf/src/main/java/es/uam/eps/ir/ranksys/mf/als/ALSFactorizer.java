@@ -17,12 +17,14 @@
  */
 package es.uam.eps.ir.ranksys.mf.als;
 
+import cern.colt.function.DoubleFunction;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.mf.Factorization;
 import es.uam.eps.ir.ranksys.mf.Factorizer;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
+import static java.lang.Math.sqrt;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -31,7 +33,7 @@ import java.util.stream.IntStream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public abstract class ALSFactorizer<U, I, O> extends Factorizer<U, I, O> {
+public abstract class ALSFactorizer<U, I> extends Factorizer<U, I> {
 
     private final int numIter;
 
@@ -40,7 +42,7 @@ public abstract class ALSFactorizer<U, I, O> extends Factorizer<U, I, O> {
     }
 
     @Override
-    public double error(Factorization<U, I> factorization, FastPreferenceData<U, I, O> data) {
+    public double error(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data) {
 
         DenseDoubleMatrix2D p = factorization.getUserMatrix();
         DenseDoubleMatrix2D q = factorization.getItemMatrix();
@@ -49,7 +51,15 @@ public abstract class ALSFactorizer<U, I, O> extends Factorizer<U, I, O> {
     }
 
     @Override
-    public void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, O> data) {
+    public Factorization<U, I> factorize(int K, FastPreferenceData<U, I, ?> data) {
+        DoubleFunction init = x -> sqrt(1.0 / K) * Math.random();
+        Factorization<U, I> factorization = new Factorization<>(data, data, K, init);
+        factorize(factorization, data);
+        return factorization;
+    }
+
+    @Override
+    public void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data) {
 
         DenseDoubleMatrix2D p = factorization.getUserMatrix();
         DenseDoubleMatrix2D q = factorization.getItemMatrix();
@@ -72,9 +82,9 @@ public abstract class ALSFactorizer<U, I, O> extends Factorizer<U, I, O> {
         }
     }
 
-    protected abstract double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, O> data);
+    protected abstract double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data);
 
-    protected abstract void set_minP(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, O> data);
+    protected abstract void set_minP(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data);
 
-    protected abstract void set_minQ(DenseDoubleMatrix2D q, DenseDoubleMatrix2D p, FastPreferenceData<U, I, O> data);
+    protected abstract void set_minQ(DenseDoubleMatrix2D q, DenseDoubleMatrix2D p, FastPreferenceData<U, I, ?> data);
 }
