@@ -7,6 +7,7 @@
 ## References
 
 If you publish research that uses RankSys, please cite the papers in the following list that best match the parts of the framework that you used:
+ * P. Castells, N. Hurley and S. Vargas. Novelty and Diversity in Recommender Systems. In Ricci, F., Rokach, L., and Shapira, B., editors, Recommender Systems Handbook 2nd Edition. Springer US. In press.
  * S. Vargas. Novelty and Diversity Evaluation and Enhancement in Recommender Systems. PhD Thesis. Universidad Autónoma de Madrid, Spain, February 2015.
  * S. Vargas, L. Baltrunas, A. Karatzoglou, P. Castells. Coverage, Redundancy and Size-Awareness in Genre Diversity for Recommender Systems. 8th ACM Conference on Recommender Systems (RecSys 2014). Foster City, CA, USA, October 2014, pp. 209-216.
  * S. Vargas, P. Castells, D. Vallet. Explicit Relevance Models in Intent-Oriented Information Retrieval Diversification. 35th International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2012). Portland, OR, USA, August 2012, pp. 75-84.
@@ -15,7 +16,7 @@ If you publish research that uses RankSys, please cite the papers in the followi
 
 ## Introduction
 
-RankSys is a new framework for the implementation and evaluation of recommendation algorithms and techniques that has resulted from a line of research work that is currently documented in several publications (see above) and a PhD thesis (["Novelty and Diversity Evaluation and Enhancement in Recommender Systems"](http://ir.ii.uam.es/saul/saulvargas-thesis.pdf)).  While it is envisioned as a framework for the generic experimentation of recommendation technologies, it includes substantial support focusing on the evaluation and enhancement of novelty and diversity. RankSys derives its name from explicitly targeting the ranking task problem, rather than rating prediction. This decision is reflected in the design of the different core interfaces and components of the framework.
+RankSys is a new framework for the implementation and evaluation of recommendation algorithms and techniques that has resulted from a line of research work that is currently documented in several publications (see above) and a [PhD thesis](http://ir.ii.uam.es/saul/saulvargas-thesis.pdf) (Vargas 2015).  While it is envisioned as a framework for the generic experimentation of recommendation technologies, it includes substantial support focusing on the evaluation and enhancement of novelty and diversity. RankSys derives its name from explicitly targeting the ranking task problem, rather than rating prediction. This decision is reflected in the design of the different core interfaces and components of the framework.
 
 The framework has been programmed with Java 8, which is the most recent version of the popular programming language. We take advantage of many of the new features of the language, such as the use of lambda functions, `Stream`'s and facilities for automatic parallelization of the code. The code licensed under the GPL V3, which allows the free use, study, distribution and modification of the software as long as derived works are distributed under the same license.
 
@@ -77,7 +78,7 @@ public class Recommendation<U, I> {
 }
 ~~~
 
-In our experiments, recommendations can be conveniently stored in files for later access of metrics that evaluate their accuracy, novelty or diversity. For that purpose, we include a `RecommendationFormat` interface, the implementations of which specify the format in which recommendations are written in and read from files:
+Recommendations can be conveniently stored in files for later access of metrics that evaluate their accuracy, novelty or diversity. For that purpose, we include a `RecommendationFormat` interface, the implementations of which specify the format in which recommendations are written in and read from files:
 ~~~
 public interface RecommendationFormat<U, I> {
     ...
@@ -125,7 +126,7 @@ public interface RankingDiscountModel {
     public double disc(int k);
 }
 ~~~
-Implementations of this interface can be plugged into metrics to consider different ranking discounts. We provide four different classes that implement this interface: `NoDiscountModel` for ignoring any rank position discount, `LogarithmicDiscountModel` as in nDCG, `ExponentialDiscountModel` as in RBP and `ReciprocalDiscount` as in ERR.
+Implementations of this interface can be plugged into metrics to consider different ranking discounts. We provide four different classes that implement this interface: `NoDiscountModel` for ignoring any rank position discount, `LogarithmicDiscountModel` as in nDCG, `ExponentialDiscountModel` as in RBP (Moffat and Zobel 2008) and `ReciprocalDiscount` as in ERR (Chapelle et al. 2009).
 The relevance model considers the perception of the users about the relevance of the recommended items. It is defined in the abstract class `RelevanceModel`, which extends an auxiliary `PersonalizableModel` class that allows the caching of the resulting user relevance models:
 ~~~
 public abstract class RelevanceModel<U, I> extends
@@ -147,7 +148,7 @@ The module RankSys-diversity contains the implementation of an array of novelty 
 
 ### Re-ranking Strategies
 
-The novelty and diversity enhancement algorithms take the form of a re-ranking operations on the output of baseline recommendations. Two types of re-ranking are supported: one that is the result of a direct re-scoring of the scores provided by the original recommendation ranking, and a greedy selection in which some set-wise magnitude is maximized by iteratively selection those items that maximize it. In both cases, we provide a high-level interface `Reranker` which, given an original recommendation, returns another recommendation that is a re-ranking of the first:
+The novelty and diversity enhancement algorithms take the form of re-ranking operations on the output of baseline recommendations. Two types of re-ranking are supported: one that is the result of a direct re-scoring of the scores provided by the original recommendation ranking, and a greedy selection in which some set-wise magnitude is maximized by iteratively selection those items that maximize it. In both cases, we provide a high-level interface `Reranker` which, given an original recommendation, returns another recommendation that is a re-ranking of the first:
 ~~~
 public interface Reranker<U, I> {
     public Recommendation<U, I> rerankRecommendation
@@ -161,7 +162,7 @@ As a direct instantiable implementation of this `PermutationReranker`, we includ
 
 ### Item Novelty Metrics and Re-Ranking Strategies
 
-The user-side metrics defined in (Vargas and Castells 2011) and in Chapter 4 of (Vargas 2015) - with the exception of EILD - are implemented in package `es.uam.eps.ir.ranksys.diversity.itemnovelty`. This package includes a generic `ItemNovelty` interface for personalized novelty models, which is the base for the abstract `ItemNoveltyMetric` class for metrics and the abstract `ItemNoveltyReranker` class for direct re-ranking strategies:
+The user-side metrics defined in (Vargas and Castells 2011, Vargas 2015 - Chapter 4) - with the exception of EILD - are implemented in package `es.uam.eps.ir.ranksys.diversity.itemnovelty`. This package includes a generic `ItemNovelty` interface for personalized novelty models, which is the base for the abstract `ItemNoveltyMetric` class for metrics and the abstract `ItemNoveltyReranker` class for direct re-ranking strategies:
 ~~~
 public abstract class ItemNovelty<U, I> extends
  PersonalizableModel<U> {
@@ -173,11 +174,11 @@ public abstract class ItemNovelty<U, I> extends
 }
 ~~~
 
-In the current version of the framework, three sub-classes of `ItemNovelty` are included to represent the popularity complement (PC), free discovery (FD) and profile distance (PD) item novelty models defined in (Vargas and Castells 2011) and in Chapter 4 of (Vargas 2015).
+In the current version of the framework, three sub-classes of `ItemNovelty` are included to represent the popularity complement (PC), free discovery (FD) and profile distance (PD) item novelty models defined in (Vargas and Castells 2011, Vargas 2015 - Chapter 4).
 
 ### Distance-Based Metrics and Re-Ranking Strategies
 
-For better readability of the code, the intra-list distance-based metrics and re-ranking algorithms in (Vargas and Castells 2011) and in Chapter 4 of (Vargas 2015) do not extend from the previous item novelty model package and are separated in its own package `es.uam.eps.ir.ranksys.diversity.distance`. This package defines an `ItemDistanceModel` for considering different definitions for the distance between items:
+For better readability of the code, the intra-list distance-based metrics and re-ranking algorithms in (Vargas and Castells 2011, Vargas 2015 - Chapter 4) do not extend from the previous item novelty model package and are separated in its own package `es.uam.eps.ir.ranksys.diversity.distance`. This package defines an `ItemDistanceModel` for considering different definitions for the distance between items:
 ~~~
 public interface ItemDistanceModel<I> {
     public double dist(I i, I j);
@@ -187,15 +188,15 @@ We include an abstract class `FeatureItemDistanceModel` that takes a `FeatureDat
 
 ### Sales Diversity Metrics
 
-Rank and relevance-unware Sales Diversity metrics in Chapter 4 of (Vargas 2015) are implemented in the package `es.uam.eps.ir.ranksys.diversity.sales.metrics`. Since these are business-side metrics, they implement the interface `SystemMetric`. In particular, the implemented metrics are Aggregate Diversity, Entropy, Gini Index and Gini-Simpson Index. Since the three last metrics are based on the number of times each item is recommended to the community of users, they conveniently extend the abstract `AbstractSalesDiversityMetric` class that implements the count of how many items each item is recommended to users.
+Rank and relevance-unware Sales Diversity metrics in (Castells et al. In press, Vargas 2015 - Chapter 4) are implemented in the package `es.uam.eps.ir.ranksys.diversity.sales.metrics`. Since these are business-side metrics, they implement the interface `SystemMetric`. In particular, the implemented metrics are Aggregate Diversity, Entropy, Gini Index and Gini-Simpson Index. Since the three last metrics are based on the number of times each item is recommended to the community of users, they conveniently extend the abstract `AbstractSalesDiversityMetric` class that implements the count of how many items each item is recommended to users.
 
 ### Intent-Aware Metrics and Re-Ranking Strategies
 
-Our adaptation of the Intent-Aware metrics and diversification techniques in (Vargas et. al 2011) and in Chapter 5 of (Vargas 2015) is contained in the package `es.uam.eps.ir.ranksys.diversity.intentaware`. The basis of this package is the `IntentModel` class, which represents the concept of user aspect space when it is defined by item features in the user profile. This `IntentModel` is then used in the implementations of the metrics ERR-IA (Agrawal et al. 2009) and &alpha;-nDCG (Clarke et al. 2008) and the xQuAD diversification method (Santos et al. 2010) provided in this package.
+Our adaptation of the Intent-Aware metrics and diversification techniques in (Vargas et. al 2011, Vargas 2015 - Chapter 5) is contained in the package `es.uam.eps.ir.ranksys.diversity.intentaware`. The basis of this package is the `IntentModel` class, which represents the concept of user aspect space when it is defined by item features in the user profile. This `IntentModel` is then used in the implementations of the metrics ERR-IA (Agrawal et al. 2009) and &alpha;-nDCG (Clarke et al. 2008) and the xQuAD diversification method (Santos et al. 2010) provided in this package.
 
 ### Binomial Metrics and Re-Ranking Strategies
 
-The metrics and re-ranking strategies of the Binomial framework proposed in (Vargas et al. 2014) and in Chapter 6 of (Vargas 2015) are found in package `es.uam.eps.ir.ranksys.diversity.binom`. All of them use the `BinomialModel` class, which implements the binomial probability model that defines the coverage and redundancy scores for a given recommendation list size. Metrics and re-ranking strategies for coverage, redundancy and joint diversity are included in this package.
+The metrics and re-ranking strategies of the Binomial framework proposed in (Vargas et al. 2014, Vargas 2015 - Chapter 6) are found in package `es.uam.eps.ir.ranksys.diversity.binom`. All of them use the `BinomialModel` class, which implements the binomial probability model that defines the coverage and redundancy scores for a given recommendation list size. Metrics and re-ranking strategies for coverage, redundancy and joint diversity are included in this package.
 
 ## Examples
 
