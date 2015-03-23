@@ -72,18 +72,15 @@ public abstract class SetSimilarity implements Similarity {
 
     @Override
     public Stream<IdxDouble> similarElems(int idx1) {
-        Int2IntMap intersectionMap = getIntersectionMap(idx1);
-
-        final int na = data.numItems(idx1);
-
-        Builder<IdxDouble> builder = builder();
-        intersectionMap.int2IntEntrySet().forEach(e -> {
-            int idx2 = e.getIntKey();
-            int coo = e.getIntValue();
-            builder.accept(new IdxDouble(idx2, sim(coo, na, data.numItems(idx2))));
-        });
-
-        return builder.build();
+        int na = data.numItems(idx1);
+        
+        return getIntersectionMap(idx1).int2IntEntrySet().stream()
+                .map(e -> {
+                    int idx2 = e.getIntKey();
+                    int coo = e.getIntValue();
+                    int nb = data.numItems(idx2);
+                    return new IdxDouble(idx2, sim(coo, na, nb));
+                });
     }
 
     protected abstract double sim(int intersectionSize, int na, int nb);

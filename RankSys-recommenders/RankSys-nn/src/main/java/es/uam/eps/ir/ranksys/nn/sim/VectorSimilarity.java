@@ -21,12 +21,8 @@ import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.IntToDoubleFunction;
 import java.util.stream.Stream;
-import java.util.stream.Stream.Builder;
-import static java.util.stream.Stream.builder;
 
 /**
  *
@@ -48,14 +44,14 @@ public abstract class VectorSimilarity implements Similarity {
     public IntToDoubleFunction similarity(int idx1) {
         Int2DoubleOpenHashMap map = new Int2DoubleOpenHashMap();
         data.getUidxPreferences(idx1).forEach(iv -> map.put(iv.idx, iv.v));
-        
+
         double n2a = norm2Map.get(idx1);
-        
+
         return idx2 -> {
             double prod = data.getUidxPreferences(idx2)
                     .mapToDouble(iv -> iv.v * map.get(iv.idx))
                     .sum();
-            
+
             return sim(prod, n2a, norm2Map.get(idx2));
         };
     }
@@ -81,18 +77,15 @@ public abstract class VectorSimilarity implements Similarity {
 
     @Override
     public Stream<IdxDouble> similarElems(int idx1) {
-        Int2DoubleMap productMap = getProductMap(idx1);
-
         double n2a = norm2Map.get(idx1);
 
-        Builder<IdxDouble> builder = builder();
-        productMap.int2DoubleEntrySet().forEach(e -> {
-            int idx2 = e.getIntKey();
-            double coo = e.getDoubleValue();
-            builder.accept(new IdxDouble(idx2, sim(coo, n2a, norm2Map.get(idx2))));
-        });
-
-        return builder.build();
+        return getProductMap(idx1).int2DoubleEntrySet().stream()
+                .map(e -> {
+                    int idx2 = e.getIntKey();
+                    double coo = e.getDoubleValue();
+                    double n2b = norm2Map.get(idx2);
+                    return new IdxDouble(idx2, sim(coo, n2a, n2b));
+                });
     }
 
     protected abstract double sim(double product, double norm2A, double norm2B);
