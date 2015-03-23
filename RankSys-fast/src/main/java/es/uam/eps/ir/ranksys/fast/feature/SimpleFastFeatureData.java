@@ -62,11 +62,17 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
 
     @Override
     public Stream<IdxObject<V>> getIidxFeatures(int iidx) {
+        if (iidxList.get(iidx) == null) {
+            return Stream.empty();
+        }
         return iidxList.get(iidx).stream();
     }
 
     @Override
     public Stream<IdxObject<V>> getFidxItems(int fidx) {
+        if (fidxList.get(fidx) == null) {
+            return Stream.empty();
+        }
         return fidxList.get(fidx).stream();
     }
 
@@ -170,6 +176,10 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
 
                 int iidx = iIndex.item2iidx(item);
                 int fidx = fIndex.feature2fidx(feature);
+                
+                if (iidx == -1 || fidx == -1) {
+                    return;
+                }
 
                 List<IdxObject<V>> iList = iidxList.get(iidx);
                 if (iList == null) {
