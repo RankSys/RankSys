@@ -21,8 +21,6 @@ import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.stream.Stream;
-import java.util.stream.Stream.Builder;
-import static java.util.stream.Stream.builder;
 
 /**
  *
@@ -31,18 +29,10 @@ import static java.util.stream.Stream.builder;
 public class TopKNeighborhood implements Neighborhood {
 
     private final Similarity sim;
-    private final Neighborhood superNeighborhood;
     private final int k;
 
     public TopKNeighborhood(Similarity sim, int k) {
         this.sim = sim;
-        this.superNeighborhood = null;
-        this.k = k;
-    }
-
-    public TopKNeighborhood(Neighborhood superNeighborhood, int k) {
-        this.sim = null;
-        this.superNeighborhood = superNeighborhood;
         this.k = k;
     }
 
@@ -50,15 +40,7 @@ public class TopKNeighborhood implements Neighborhood {
     public Stream<IdxDouble> getNeighbors(int idx) {
 
         IntDoubleTopN topN = new IntDoubleTopN(k);
-
-        Stream<IdxDouble> candidates;
-        if (sim != null) {
-            candidates = sim.similarElems(idx);
-        } else {
-            candidates = superNeighborhood.getNeighbors(idx);
-        }
-
-        candidates.forEach(is -> topN.add(is.idx, is.v));
+        sim.similarElems(idx).forEach(is -> topN.add(is.idx, is.v));
 
         return topN.stream().map(e -> new IdxDouble(e));
     }

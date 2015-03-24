@@ -29,10 +29,4 @@ public class TopKItemNeighborhood<I> extends ItemNeighborhood<I> {
     public TopKItemNeighborhood(ItemSimilarity<I> sim, int k) {
         super(sim, new TopKNeighborhood(sim, k));
     }
-
-    @SuppressWarnings("unchecked")
-    public TopKItemNeighborhood(TopKItemNeighborhood<I> superNeighborhood, int k) {
-        super(superNeighborhood, new TopKNeighborhood((TopKNeighborhood) superNeighborhood.neighborhood, k));
-    }
-
 }

@@ -29,9 +29,4 @@ public class TopKUserNeighborhood<U> extends UserNeighborhood<U> {
     public TopKUserNeighborhood(UserSimilarity<U> sim, int k) {
         super(sim, new TopKNeighborhood(sim, k));
     }
-
-    public TopKUserNeighborhood(UserNeighborhood<U> superNeighborhood, int k) {
-        super(superNeighborhood, new TopKNeighborhood(superNeighborhood.neighborhood, k));
-    }
-
 }
