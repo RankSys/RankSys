@@ -130,7 +130,7 @@ public class RecommenderExample {
             
             Factorization<Long, Long> factorization = new HKVFactorizer<Long, Long>(lambda, confidence, numIter).factorize(k, trainData);
             
-            return new MFRecommender<>(trainData, factorization);
+            return new MFRecommender<>(userIndex, itemIndex, factorization);
         });
 
         // implicit matrix factorization of Pilaszy et al. 2010
@@ -143,7 +143,7 @@ public class RecommenderExample {
             
             Factorization<Long, Long> factorization = new PZTFactorizer<Long, Long>(lambda, confidence, numIter).factorize(k, trainData);
             
-            return new MFRecommender<>(trainData, factorization);
+            return new MFRecommender<>(userIndex, itemIndex, factorization);
         });
 
         // probabilistic latent semantic analysis of Hofmann 2004
@@ -153,7 +153,7 @@ public class RecommenderExample {
             
             Factorization<Long, Long> factorization = new PLSAFactorizer<Long, Long>(numIter).factorize(k, trainData);
             
-            return new MFRecommender<>(trainData, factorization);
+            return new MFRecommender<>(userIndex, itemIndex, factorization);
         });
 
         ////////////////////////////////
