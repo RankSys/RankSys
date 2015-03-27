@@ -28,8 +28,15 @@ import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import java.util.function.DoubleUnaryOperator;
 
 /**
+ * Implicit matrix factorization of Hu, Koren and Volinsky.
  *
+ * Y. Hu, Y. Koren, C. Volinsky. Collaborative filtering for implicit feedback
+ * datasets. ICDM 2008.
+ * 
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
 
@@ -38,10 +45,25 @@ public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
     private final double lambdaQ;
     private final DoubleUnaryOperator confidence;
 
+    /**
+     * Constructor. Same regularization factor for user and item matrices.
+     *
+     * @param lambda regularization factor
+     * @param confidence confidence function
+     * @param numIter number of iterations
+     */
     public HKVFactorizer(double lambda, DoubleUnaryOperator confidence, int numIter) {
         this(lambda, lambda, confidence, numIter);
     }
 
+    /**
+     * Constructor. Different regularization factors for user and item matrices.
+     *
+     * @param lambdaP regularization factor for user matrix
+     * @param lambdaQ regularization factor for item matrix
+     * @param confidence confidence function
+     * @param numIter number of iterations
+     */
     public HKVFactorizer(double lambdaP, double lambdaQ, DoubleUnaryOperator confidence, int numIter) {
         super(numIter);
         this.lambdaP = lambdaP;

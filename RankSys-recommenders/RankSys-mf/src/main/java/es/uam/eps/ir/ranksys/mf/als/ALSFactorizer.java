@@ -30,13 +30,22 @@ import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 /**
+ * Generic alternating least-squares factorizer.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class ALSFactorizer<U, I> extends Factorizer<U, I> {
 
     private final int numIter;
 
+    /**
+     * Constructor.
+     *
+     * @param numIter number of least-squares calculations
+     */
     public ALSFactorizer(int numIter) {
         this.numIter = numIter;
     }
@@ -82,9 +91,31 @@ public abstract class ALSFactorizer<U, I> extends Factorizer<U, I> {
         }
     }
 
+    /**
+     * Squared loss of two matrices.
+     *
+     * @param p user matrix
+     * @param q item matrix
+     * @param data preference data
+     * @return squared loss
+     */
     protected abstract double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data);
 
+    /**
+     * User matrix least-squares step.
+     *
+     * @param p user matrix
+     * @param q item matrix
+     * @param data preference data
+     */
     protected abstract void set_minP(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data);
 
+    /**
+     * Item matrix least-squares step.
+     *
+     * @param q item matrix
+     * @param p user matrix
+     * @param data preference data
+     */
     protected abstract void set_minQ(DenseDoubleMatrix2D q, DenseDoubleMatrix2D p, FastPreferenceData<U, I, ?> data);
 }

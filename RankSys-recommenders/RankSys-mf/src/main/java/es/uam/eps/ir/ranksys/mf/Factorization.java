@@ -28,8 +28,6 @@ import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -41,8 +39,12 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
+ * Matrix factorization.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
 
@@ -52,6 +54,14 @@ public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
     private final FastUserIndex<U> uIndex;
     private final FastItemIndex<I> iIndex;
 
+    /**
+     * Constructor.
+     *
+     * @param uIndex fast user index
+     * @param iIndex fast item index
+     * @param K dimension of the latent feature space
+     * @param initFunction function to initialize the cells of the matrices
+     */
     public Factorization(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, int K, DoubleFunction initFunction) {
         this.userMatrix = new DenseDoubleMatrix2D(uIndex.numUsers(), K);
         this.userMatrix.assign(initFunction);
@@ -62,6 +72,15 @@ public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
         this.iIndex = iIndex;
     }
 
+    /**
+     * Constructor for stored factorizations.
+     *
+     * @param uIndex fast user index
+     * @param iIndex fast item index
+     * @param userMatrix user matrix
+     * @param itemMatrix item matrix
+     * @param K dimension of the latent feature space
+     */
     protected Factorization(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, DenseDoubleMatrix2D userMatrix, DenseDoubleMatrix2D itemMatrix, int K) {
         this.userMatrix = userMatrix;
         this.itemMatrix = itemMatrix;
@@ -110,6 +129,12 @@ public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
         return iIndex.containsItem(i);
     }
 
+    /**
+     * Returns the row of the user matrix corresponding to the given user.
+     *
+     * @param u user
+     * @return row of the user matrix
+     */
     public DoubleMatrix1D getUserVector(U u) {
         int uidx = user2uidx(u);
         if (uidx < 0) {
@@ -119,6 +144,12 @@ public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
         }
     }
 
+    /**
+     * Returns the row of the item matrix corresponding to the given item.
+     *
+     * @param i item
+     * @return row of the item matrix
+     */
     public DoubleMatrix1D getItemVector(I i) {
         int iidx = item2iidx(i);
         if (iidx < 0) {
@@ -128,14 +159,29 @@ public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
         }
     }
 
+    /**
+     * Returns the whole user matrix.
+     *
+     * @return the whole user matrix
+     */
     public DenseDoubleMatrix2D getUserMatrix() {
         return userMatrix;
     }
 
+    /**
+     * Returns the whole item matrix.
+     *
+     * @return the whole item matrix
+     */
     public DenseDoubleMatrix2D getItemMatrix() {
         return itemMatrix;
     }
 
+    /**
+     * Returns the dimension of the latent feature space.
+     *
+     * @return the dimension of the latent feature space
+     */
     public int getK() {
         return K;
     }
@@ -168,14 +214,20 @@ public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
         return new DenseDoubleMatrix2D(m);
     }
 
-    public void save(String basename) throws IOException {
-        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(basename))) {
+    /**
+     * Saves this matrix factorization to a compressed output stream.
+     *
+     * @param out output stream
+     * @throws IOException when IO error
+     */
+    public void save(OutputStream out) throws IOException {
+        try (ZipOutputStream zip = new ZipOutputStream(out)) {
             zip.putNextEntry(new ZipEntry("info"));
-            PrintStream out = new PrintStream(zip);
-            out.println(numUsers());
-            out.println(numItems());
-            out.println(K);
-            out.flush();
+            PrintStream ps = new PrintStream(zip);
+            ps.println(numUsers());
+            ps.println(numItems());
+            ps.println(K);
+            ps.flush();
             zip.closeEntry();
 
             zip.putNextEntry(new ZipEntry("userMatrix"));
@@ -188,17 +240,29 @@ public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
         }
     }
 
-    public static <U, I, V> Factorization<U, I> load(String basename, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, Parser<U> uParser, Parser<I> iParser) throws IOException {
-        BufferedReader in;
+    /**
+     * Loads a matrix from a compressed input stream.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     * @param in input stream
+     * @param uIndex fast user index
+     * @param iIndex fast item index
+     * @param uParser user type parser
+     * @param iParser item type parser
+     * @return a factorization
+     * @throws IOException when IO error
+     */
+    public static <U, I> Factorization<U, I> load(InputStream in, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, Parser<U> uParser, Parser<I> iParser) throws IOException {
         int K;
         DenseDoubleMatrix2D userMatrix;
         DenseDoubleMatrix2D itemMatrix;
-        try (ZipInputStream zip = new ZipInputStream(new FileInputStream(basename))) {
+        try (ZipInputStream zip = new ZipInputStream(in)) {
             zip.getNextEntry();
-            in = new BufferedReader(new InputStreamReader(zip));
-            int numUsers = ip.parse(in.readLine());
-            int numItems = ip.parse(in.readLine());
-            K = ip.parse(in.readLine());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(zip));
+            int numUsers = ip.parse(reader.readLine());
+            int numItems = ip.parse(reader.readLine());
+            K = ip.parse(reader.readLine());
             zip.closeEntry();
 
             zip.getNextEntry();

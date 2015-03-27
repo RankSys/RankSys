@@ -20,14 +20,39 @@ package es.uam.eps.ir.ranksys.mf;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 
 /**
+ * Factorizer. Abstract class for matrix factorization algorithms.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class Factorizer<U, I> {
 
+    /**
+     * Global loss of the factorization.
+     *
+     * @param factorization matrix factorization
+     * @param data preference data
+     * @return the global loss
+     */
     public abstract double error(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data);
 
+    /**
+     * Creates and calculates a factorization.
+     *
+     * @param K size of the latent feature space.
+     * @param data preference data
+     * @return a matrix factorization
+     */
     public abstract Factorization<U, I> factorize(int K, FastPreferenceData<U, I, ?> data);
 
+    /**
+     * Calculates the factorization by using a previously generate matrix 
+     * factorization.
+     *
+     * @param factorization matrix factorization
+     * @param data preference data
+     */
     public abstract void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data);
 }

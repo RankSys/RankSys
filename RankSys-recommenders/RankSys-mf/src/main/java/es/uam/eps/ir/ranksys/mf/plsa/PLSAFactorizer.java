@@ -43,13 +43,25 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
+ * Probabilistic Latent Semantic Analysis of Hofmann.
+ * 
+ * T. Hofmann. Latent Semantic Models for Collaborative Filtering. ToIS, Vol 22
+ * No. 1, January 2004.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
 
     private final int numIter;
 
+    /**
+     * Constructor.
+     *
+     * @param numIter number of expectation-maximization steps
+     */
     public PLSAFactorizer(int numIter) {
         this.numIter = numIter;
     }

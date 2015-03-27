@@ -29,8 +29,18 @@ import java.util.function.DoubleUnaryOperator;
 import java.util.stream.Stream;
 
 /**
+ * Fast ALS-based factorization of Pilászy, Zibriczky and Tikk.
+ * 
+ * I. Pilászy, D. Zibriczky and D. Tikk. Fast ALS-based Matrix Factorization
+ * for Explicit and Implicit Feedback Datasets. RecSys 2010.
+ * 
+ * It is a much faster alternative (with slightly worse performance) than that of
+ * Hu, Koren and Volinsky.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
 
@@ -38,10 +48,25 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
     private final double lambdaQ;
     private final DoubleUnaryOperator confidence;
 
+    /**
+     * Constructor. Same regularization factor for user and item matrices.
+     *
+     * @param lambda regularization factor
+     * @param confidence confidence function
+     * @param numIter number of iterations
+     */
     public PZTFactorizer(double lambda, DoubleUnaryOperator confidence, int numIter) {
         this(lambda, lambda, confidence, numIter);
     }
 
+    /**
+     * Constructor. Different regularization factors for user and item matrices.
+     *
+     * @param lambdaP regularization factor for user matrix
+     * @param lambdaQ regularization factor for item matrix
+     * @param confidence confidence function
+     * @param numIter number of iterations
+     */
     public PZTFactorizer(double lambdaP, double lambdaQ, DoubleUnaryOperator confidence, int numIter) {
         super(numIter);
         this.lambdaP = lambdaP;
