@@ -32,19 +32,37 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * Generic recommendation runner. This class handles the print of the output.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class AbstractRecommendationRunner<U, I> implements RecommendationRunner<U, I> {
 
     private final List<U> users;
     private final RecommendationFormat<U, I> format;
 
+    /**
+     * Constructor.
+     *
+     * @param users target users for which recommendations are generated
+     * @param format output recommendation format
+     */
     public AbstractRecommendationRunner(Stream<U> users, RecommendationFormat<U, I> format) {
         this.users = users.sorted().collect(Collectors.toList());
         this.format = format;
     }
 
+    /**
+     * Prints the recommendations.
+     *
+     * @param recProvider function that provides the recommendations by calling
+     * a recommender
+     * @param out output stream through which recommendations are printed
+     * @throws IOException when IO error
+     */
     protected void run(Function<U, Recommendation<U, I>> recProvider, OutputStream out) throws IOException {
         try (RecommendationFormat.Writer<U, I> writer = format.getWriter(out)) {
             Map<U, Recommendation<U, I>> pendingRecommendations = new HashMap<>();

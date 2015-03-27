@@ -26,13 +26,26 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
+ * Recommender runner that generates recommendations using the candidate
+ * recommender method.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class CandidatesRecommendationRunner<U, I> extends AbstractRecommendationRunner<U, I> {
 
     private final Function<U, List<I>> candidatesSupplier;
 
+    /**
+     * Constructor.
+     *
+     * @param users target users for which recommendations are generated
+     * @param format output recommendation format
+     * @param candidatesSupplier function that provide the candidate items for
+     * each user
+     */
     public CandidatesRecommendationRunner(Set<U> users, RecommendationFormat<U, I> format, Function<U, List<I>> candidatesSupplier) {
         super(users.stream(), format);
         this.candidatesSupplier = candidatesSupplier;

@@ -31,14 +31,32 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
+ * Abstract (fast) recommender. It implements the free and candidate-based 
+ * recommendation methods as variants of the filter recommendation.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<U, I> implements FastRecommender<U, I> {
 
+    /**
+     * Fast user index.
+     */
     protected final FastUserIndex<U> uIndex;
+
+    /**
+     * Fast item index.
+     */
     protected final FastItemIndex<I> iIndex;
 
+    /**
+     * Constructor.
+     *
+     * @param uIndex user index
+     * @param iIndex item index
+     */
     public AbstractFastRecommender(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
         super();
 

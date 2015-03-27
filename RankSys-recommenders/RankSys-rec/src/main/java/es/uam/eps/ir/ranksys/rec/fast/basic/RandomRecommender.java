@@ -30,14 +30,25 @@ import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
 
 /**
+ * Random recommender. It provides non-personalized recommendations without
+ * by extracting a sequence of a shuffled list of the items.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     private final Random random;
     private final List<IdxDouble> randomList;
 
+    /**
+     * Constructor.
+     *
+     * @param uIndex fast user index
+     * @param iIndex fast item index
+     */
     public RandomRecommender(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
         super(uIndex, iIndex);
         random = new Random();

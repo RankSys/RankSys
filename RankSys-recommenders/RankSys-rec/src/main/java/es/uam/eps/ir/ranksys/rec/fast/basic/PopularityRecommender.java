@@ -27,13 +27,23 @@ import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
 
 /**
+ * Popularity-based recommender. Non-personalized recommender that returns the
+ * most popular items according to the preference data provided.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     private final List<IdxDouble> popList;
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     */
     public PopularityRecommender(FastPreferenceData<U, I, ?> data) {
         super(data, data);
 

@@ -34,8 +34,13 @@ import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 
 /**
+ * Fast filter runner. It creates recommendations by using the filter method in the
+ * fast recommenders.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class FastFilterRecommendationRunner<U, I> extends AbstractRecommendationRunner<U, I> {
 
@@ -44,6 +49,16 @@ public class FastFilterRecommendationRunner<U, I> extends AbstractRecommendation
     private final Function<U, IntPredicate> userFilter;
     private final int maxLength;
 
+    /**
+     * Constructor.
+     *
+     * @param userIndex fast user index
+     * @param itemIndex fast item index
+     * @param users target users
+     * @param format output recommendation format
+     * @param userFilter item filter provider for each user
+     * @param maxLength maximum length of the recommendation lists, 0 for no limit
+     */
     public FastFilterRecommendationRunner(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex, Set<U> users, RecommendationFormat<U, I> format, Function<U, IntPredicate> userFilter, int maxLength) {
         super(users.stream(), format);
         this.userIndex = userIndex;

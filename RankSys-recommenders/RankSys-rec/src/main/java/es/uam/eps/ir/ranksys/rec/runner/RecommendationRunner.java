@@ -23,15 +23,35 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * Recommendation runner. Implementing classes provide convenient ways of 
+ * generating recommendations according to a specific recommendation 
+ * evaluation methodology and storing/printing them.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public interface RecommendationRunner<U, I> {
 
+    /**
+     * Runs the recommender and stores the recommendations in a file.
+     *
+     * @param recommender recommender to be run
+     * @param path path of the file where the recommendations are saved
+     * @throws IOException when file does not exist or other IO error
+     */
     public default void run(Recommender<U, I> recommender, String path) throws IOException {
         run(recommender, new FileOutputStream(path));
     }
     
-    
+    /**
+     * Runs the recommender and prints the recommendations to an output
+     * stream.
+     *
+     * @param recommender recommender to be run
+     * @param out output stream
+     * @throws IOException when an IO error
+     */
     public void run(Recommender<U, I> recommender, OutputStream out) throws IOException;
 }

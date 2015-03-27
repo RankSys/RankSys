@@ -31,8 +31,13 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
+ * Provider of candidates for recommendation consisting in the preferences in a
+ * test set plus a set of randomly selected items from a test file for each user.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class TestPlusNCandidatesSupplier<U, I> implements Supplier<Stream<IdObject<U, List<I>>>> {
 
@@ -41,6 +46,15 @@ public class TestPlusNCandidatesSupplier<U, I> implements Supplier<Stream<IdObje
     private final Parser<I> iParser;
     private final String candidatesPath;
 
+    /**
+     * Constructor.
+     *
+     * @param testData test preference data
+     * @param uParser user type parser
+     * @param iParser item type parser
+     * @param candidatesPath path to the file of random items to add to the
+     * candidates
+     */
     public TestPlusNCandidatesSupplier(PreferenceData<U, I, ?> testData, Parser<U> uParser, Parser<I> iParser, String candidatesPath) {
         this.testData = testData;
         this.uParser = uParser;

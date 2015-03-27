@@ -25,15 +25,32 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
+ * Filters for the filter recommender method in Recommender.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class Filters {
 
+    /**
+     * False item filter as it admits every item.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     * @return item filters that return true always
+     */
     public static <U, I> Function<U, Predicate<I>> all() {
         return user -> item -> true;
     }
 
+    /**
+     * Item filter that discards items in the training preference data.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     * @param trainData preference data
+     * @return item filters for each using returning true if the
+     * user-item pair was not observed in the preference data
+     */
     public static <U, I> Function<U, Predicate<I>> notInTrain(PreferenceData<U, I, ?> trainData) {
         return user -> {
             Set<I> set = trainData.getUserPreferences(user).map(iv -> iv.id).collect(Collectors.toSet());
@@ -42,11 +59,29 @@ public class Filters {
         };
     }
 
+    /**
+     * Item filter that discard items for which no feature data is available.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     * @param <F> type of the features
+     * @param featureData feature data
+     * @return item filters that return true when there is any feature
+     * information for the item
+     */
     public static <U, I, F> Function<U, Predicate<I>> withFeatures(FeatureData<I, F, ?> featureData) {
         Set<I> itemsWithFeatures = featureData.getItemsWithFeatures().collect(Collectors.toSet());
         return user -> item -> itemsWithFeatures.contains(item);
     }
 
+    /**
+     * AND of two or more filters.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     * @param filters a number of item filters
+     * @return an item filter which does a logical AND to two or more filters
+     */
     @SuppressWarnings("unchecked")
     public static <U, I> Function<U, Predicate<I>> and(Function<U, Predicate<I>>... filters) {
         return user -> {

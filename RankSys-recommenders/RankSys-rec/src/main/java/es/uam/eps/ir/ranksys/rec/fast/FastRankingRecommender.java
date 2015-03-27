@@ -29,11 +29,22 @@ import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 
 /**
+ * Recommender for top-n recommendations. It selects and orders the items whose
+ * predicted scores are among the n greatest.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
+    /**
+     * Constructor.
+     *
+     * @param uIndex user index
+     * @param iIndex item index
+     */
     public FastRankingRecommender(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
         super(uIndex, iIndex);
     }
@@ -68,5 +79,11 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
         return new FastRecommendation(uidx, items);
     }
 
+    /**
+     * Returns a map of item-score pairs.
+     *
+     * @param uidx index of the user whose scores are predicted
+     * @return a map of item-score pairs
+     */
     protected abstract Int2DoubleMap getScoresMap(int uidx);
 }

@@ -26,14 +26,27 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
+ * Filter runner. It creates recommendations by using the filter method in the
+ * recommenders.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class FilterRecommendationRunner<U, I> extends AbstractRecommendationRunner<U, I> {
 
     private final Function<U, Predicate<I>> userFilter;
     private final int maxLength;
 
+    /**
+     * Constructor.
+     *
+     * @param users target users, those for which recommendations are generated.
+     * @param format output recommendation format
+     * @param userFilter item filter provider for each user
+     * @param maxLength maximum length of the recommendation lists, 0 for no limit
+     */
     public FilterRecommendationRunner(Set<U> users, RecommendationFormat<U, I> format, Function<U, Predicate<I>> userFilter, int maxLength) {
         super(users.stream(), format);
         
