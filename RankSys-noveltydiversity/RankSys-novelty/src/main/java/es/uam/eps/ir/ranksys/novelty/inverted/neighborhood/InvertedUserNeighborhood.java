@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.nn.user.neighborhood;
+package es.uam.eps.ir.ranksys.novelty.inverted.neighborhood;
 
-import es.uam.eps.ir.ranksys.nn.neighborhood.InvertedNeighborhood;
+import es.uam.eps.ir.ranksys.nn.user.neighborhood.UserNeighborhood;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 

@@ -39,8 +39,8 @@ public class RXQuAD<U, I, F> extends LambdaReranker<U, I> {
     }
 
     @Override
-    protected LambdaUserReranker getUserReranker(Recommendation<U, I> recommendation) {
-        return new UserRXQuAD(recommendation);
+    protected LambdaUserReranker getUserReranker(Recommendation<U, I> recommendation, int maxLength) {
+        return new UserRXQuAD(recommendation, maxLength);
     }
 
     protected class UserRXQuAD extends LambdaUserReranker {
@@ -49,8 +49,8 @@ public class RXQuAD<U, I, F> extends LambdaReranker<U, I> {
         private final Object2DoubleOpenHashMap<F> redundancy;
         private final Object2DoubleOpenHashMap<F> probNorm;
 
-        public UserRXQuAD(Recommendation<U, I> recommendation) {
-            super(recommendation);
+        public UserRXQuAD(Recommendation<U, I> recommendation, int maxLength) {
+            super(recommendation, maxLength);
 
             this.uim = intentModel.getModel(recommendation.getUser());
             this.redundancy = new Object2DoubleOpenHashMap<>();

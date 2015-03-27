@@ -37,27 +37,23 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
     protected final double lambda;
     private final boolean norm;
 
-    public LambdaReranker(double lambda, int cutoff, boolean norm){
-        this (lambda, cutoff, cutoff, norm);
-    }
-    
-    public LambdaReranker(double lambda, int cutoff1, int cutoff2, boolean norm) {
-        super(cutoff1, cutoff2);
+    public LambdaReranker(double lambda, int cutoff, boolean norm) {
+        super(cutoff);
         this.lambda = lambda;
         this.norm = norm;
     }
 
     @Override
-    public int[] rerankPermutation(Recommendation<U, I> recommendation) {
+    public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
         if (lambda == 0.0) {
-            return getBasePerm(min(cutoff1, recommendation.getItems().size()));
+            return getBasePerm(min(maxLength, recommendation.getItems().size()));
         } else {
-            return super.rerankPermutation(recommendation);
+            return super.rerankPermutation(recommendation, maxLength);
         }
     }
 
     @Override
-    protected abstract GreedyUserReranker<U, I> getUserReranker(Recommendation<U, I> recommendation);
+    protected abstract GreedyUserReranker<U, I> getUserReranker(Recommendation<U, I> recommendation, int maxLength);
 
     protected abstract class LambdaUserReranker extends GreedyUserReranker<U, I> {
 
@@ -65,8 +61,8 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
         protected Stats novStats;
         protected Object2DoubleMap<I> novMap;
 
-        public LambdaUserReranker(Recommendation<U, I> recommendation) {
-            super(recommendation);
+        public LambdaUserReranker(Recommendation<U, I> recommendation, int maxLength) {
+            super(recommendation, maxLength);
         }
 
         protected double norm(double score, Stats stats) {

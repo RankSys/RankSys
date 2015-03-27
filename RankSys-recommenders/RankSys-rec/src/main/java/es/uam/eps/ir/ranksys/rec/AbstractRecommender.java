@@ -18,7 +18,6 @@
 package es.uam.eps.ir.ranksys.rec;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -30,10 +29,7 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractRecommender<U, I> implements Recommender<U, I> {
 
-    protected PreferenceData<U, I, ?> data;
-
-    public AbstractRecommender(PreferenceData<U, I, ?> data) {
-        this.data = data;
+    public AbstractRecommender() {
     }
 
     @Override

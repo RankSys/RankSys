@@ -29,9 +29,4 @@ public class TemporalItemNoveltyReranker<U, I> extends ItemNoveltyReranker<U, I>
     public TemporalItemNoveltyReranker(double lambda, ItemNovelty<U, I> novelty, boolean norm) {
         super(lambda, novelty, norm);
     }
-
-    public TemporalItemNoveltyReranker(double lambda, ItemNovelty<U, I> novelty, int cutoff, boolean norm) {
-        super(lambda, novelty, cutoff, norm);
-    }
-
 }

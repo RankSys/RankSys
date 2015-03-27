@@ -52,13 +52,15 @@ public class RerankerExample {
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
 
         try (RecommendationFormat.Writer<Long, Long> writer = format.getWriter(recOut)) {
-            format.getReader(recIn).readAll().map(reranker::rerankRecommendation).forEach(rerankedRecommendation -> {
-                try {
-                    writer.write(rerankedRecommendation);
-                } catch (IOException ex) {
-                    throw new UncheckedIOException(ex);
-                }
-            });
+            format.getReader(recIn).readAll()
+                    .map(rec -> reranker.rerankRecommendation(rec, cutoff))
+                    .forEach(rerankedRecommendation -> {
+                        try {
+                            writer.write(rerankedRecommendation);
+                        } catch (IOException ex) {
+                            throw new UncheckedIOException(ex);
+                        }
+                    });
         }
     }
 }

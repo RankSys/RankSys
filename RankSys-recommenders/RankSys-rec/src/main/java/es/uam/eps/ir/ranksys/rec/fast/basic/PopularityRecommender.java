@@ -24,7 +24,7 @@ import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import static java.util.Collections.sort;
 import java.util.List;
 import java.util.function.IntPredicate;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 /**
  *
@@ -35,22 +35,24 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
     private final List<IdxDouble> popList;
 
     public PopularityRecommender(FastPreferenceData<U, I, ?> data) {
-        super(data);
+        super(data, data);
 
-        popList = data.getIidxWithPreferences().mapToObj(iidx -> new IdxDouble(iidx, (double) data.numUsers(iidx))).collect(Collectors.toList());
+        popList = data.getIidxWithPreferences()
+                .mapToObj(iidx -> new IdxDouble(iidx, (double) data.numUsers(iidx)))
+                .collect(toList());
         sort(popList, (p1, p2) -> Double.compare(p2.v, p1.v));
     }
 
     @Override
     public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
         if (maxLength == 0) {
-            maxLength = data.numItemsWithPreferences();
+            maxLength = popList.size();
         }
         
         List<IdxDouble> items = popList.stream()
                 .filter(is -> filter.test(is.idx))
                 .limit(maxLength)
-                .collect(Collectors.toList());
+                .collect(toList());
         
         return new FastRecommendation(uidx, items);
     }

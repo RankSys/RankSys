@@ -17,10 +17,11 @@
  */
 package es.uam.eps.ir.ranksys.rec.fast;
 
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
+import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
+import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,8 @@ import java.util.stream.Collectors;
  */
 public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
-    public FastRankingRecommender(FastPreferenceData<U, I, ?> data) {
-        super(data);
+    public FastRankingRecommender(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
+        super(uIndex, iIndex);
     }
 
     @Override

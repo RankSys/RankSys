@@ -18,15 +18,16 @@
 package es.uam.eps.ir.ranksys.rec.fast.basic;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
+import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
+import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import java.util.ArrayList;
 import static java.util.Collections.shuffle;
 import java.util.List;
 import java.util.Random;
 import java.util.function.IntPredicate;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 /**
  *
@@ -37,10 +38,12 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
     private final Random random;
     private final List<IdxDouble> randomList;
 
-    public RandomRecommender(FastPreferenceData<U, I, ?> data) {
-        super(data);
+    public RandomRecommender(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
+        super(uIndex, iIndex);
         random = new Random();
-        randomList = data.getAllIidx().mapToObj(iidx -> new IdxDouble(iidx, Double.NaN)).collect(Collectors.toList());
+        randomList = iIndex.getAllIidx()
+                .mapToObj(iidx -> new IdxDouble(iidx, Double.NaN))
+                .collect(toList());
 
         shuffle(randomList);
     }

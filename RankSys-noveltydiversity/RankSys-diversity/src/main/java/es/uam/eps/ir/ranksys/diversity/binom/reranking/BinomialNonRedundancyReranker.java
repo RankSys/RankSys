@@ -38,15 +38,15 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
     private final FeatureData<I, F, ?> featureData;
     private final BinomialModel<U, I, F> binomialModel;
 
-    public BinomialNonRedundancyReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff1, int cutoff2) {
-        super(lambda, cutoff1, cutoff2, true);
+    public BinomialNonRedundancyReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
+        super(lambda, cutoff, true);
         this.featureData = featureData;
         this.binomialModel = binomialModel;
     }
 
     @Override
-    protected BinomialNonRedundancyUserReranker getUserReranker(Recommendation<U, I> recommendation) {
-        return new BinomialNonRedundancyUserReranker(recommendation);
+    protected BinomialNonRedundancyUserReranker getUserReranker(Recommendation<U, I> recommendation, int maxLength) {
+        return new BinomialNonRedundancyUserReranker(recommendation, maxLength);
     }
 
     protected class BinomialNonRedundancyUserReranker extends LambdaUserReranker {
@@ -56,8 +56,8 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         private final Object2DoubleMap<F> patienceNow;
         private final Object2DoubleMap<F> patienceLater;
 
-        public BinomialNonRedundancyUserReranker(Recommendation<U, I> recommendation) {
-            super(recommendation);
+        public BinomialNonRedundancyUserReranker(Recommendation<U, I> recommendation, int maxLength) {
+            super(recommendation, maxLength);
 
             ubm = binomialModel.getModel(recommendation.getUser());
 
@@ -67,8 +67,8 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
             patienceNow = new Object2DoubleOpenHashMap<>();
             patienceLater = new Object2DoubleOpenHashMap<>();
             ubm.getFeatures().forEach(f -> {
-                patienceNow.put(f, ubm.patience(0, f, cutoff1));
-                patienceLater.put(f, ubm.patience(1, f, cutoff1));
+                patienceNow.put(f, ubm.patience(0, f, cutoff));
+                patienceLater.put(f, ubm.patience(1, f, cutoff));
             });
         }
 
@@ -101,7 +101,7 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
                     .forEach(f -> {
                         int c = featureCount.addTo(f, 1) + 1;
                         patienceNow.put(f, patienceLater.getDouble(f));
-                        patienceLater.put(f, ubm.patience(c + 1, f, cutoff1));
+                        patienceLater.put(f, ubm.patience(c + 1, f, cutoff));
                     });
         }
 

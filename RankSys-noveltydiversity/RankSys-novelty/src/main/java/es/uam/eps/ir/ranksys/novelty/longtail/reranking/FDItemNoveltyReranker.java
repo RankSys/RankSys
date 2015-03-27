@@ -30,9 +30,4 @@ public class FDItemNoveltyReranker<U, I> extends ItemNoveltyReranker<U, I> {
     public FDItemNoveltyReranker(double lambda, FDItemNovelty<U, I> novelty, boolean norm) {
         super(lambda, novelty, norm);
     }
-    
-    public FDItemNoveltyReranker(double lambda, FDItemNovelty<U, I> novelty, int cutoff, boolean norm) {
-        super(lambda, novelty, cutoff, norm);
-    }
-    
 }

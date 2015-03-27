@@ -18,6 +18,7 @@
 package es.uam.eps.ir.ranksys.novdiv.reranking;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
+import static java.lang.Math.min;
 
 /**
  *
@@ -26,8 +27,8 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
 public class NullReranker<U, I> extends PermutationReranker<U, I> {
 
     @Override
-    public int[] rerankPermutation(Recommendation<U, I> recommendation) {
-        return getBasePerm(recommendation.getItems().size());
+    public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
+        return getBasePerm(min(maxLength, recommendation.getItems().size()));
     }
 
 }

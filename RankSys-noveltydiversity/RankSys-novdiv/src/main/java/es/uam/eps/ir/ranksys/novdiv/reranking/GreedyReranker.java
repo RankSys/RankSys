@@ -35,27 +35,27 @@ import java.util.stream.IntStream;
  */
 public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
 
-    protected final int cutoff1;
-    protected final int cutoff2;
+    protected final int cutoff;
 
-    public GreedyReranker(int cutoff1, int cutoff2) {
-        this.cutoff1 = cutoff1;
-        this.cutoff2 = cutoff2;
+    public GreedyReranker(int cutoff) {
+        this.cutoff = cutoff;
     }
 
     @Override
-    public int[] rerankPermutation(Recommendation<U, I> recommendation) {
-        return getUserReranker(recommendation).rerankPermutation();
+    public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
+        return getUserReranker(recommendation, maxLength).rerankPermutation();
     }
 
-    protected abstract GreedyUserReranker<U, I> getUserReranker(Recommendation<U, I> recommendation);
+    protected abstract GreedyUserReranker<U, I> getUserReranker(Recommendation<U, I> recommendation, int maxLength);
 
     protected abstract class GreedyUserReranker<U, I> {
 
         protected final Recommendation<U, I> recommendation;
+        protected final int maxLength;
 
-        public GreedyUserReranker(Recommendation<U, I> recommendation) {
+        public GreedyUserReranker(Recommendation<U, I> recommendation, int maxLength) {
             this.recommendation = recommendation;
+            this.maxLength = maxLength;
         }
 
         public int[] rerankPermutation() {
@@ -66,7 +66,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
             IntLinkedOpenHashSet remainingI = new IntLinkedOpenHashSet();
             IntStream.range(0, list.size()).forEach(i -> remainingI.add(i));
 
-            while (!remainingI.isEmpty() && perm.size() < cutoff1) {
+            while (!remainingI.isEmpty() && perm.size() < min(maxLength, cutoff)) {
                 int bestI = selectItem(remainingI, list);
 
                 perm.add(bestI);
@@ -75,7 +75,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
                 update(list.get(bestI));
             }
 
-            while (perm.size() < min(cutoff2, list.size())) {
+            while (perm.size() < min(maxLength, list.size())) {
                 perm.add(remainingI.removeFirstInt());
             }
 

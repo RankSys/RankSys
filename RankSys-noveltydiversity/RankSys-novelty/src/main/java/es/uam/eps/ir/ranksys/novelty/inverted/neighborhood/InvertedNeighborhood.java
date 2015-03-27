@@ -15,10 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.nn.neighborhood;
+package es.uam.eps.ir.ranksys.novelty.inverted.neighborhood;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.IdxObject;
+import es.uam.eps.ir.ranksys.nn.neighborhood.Neighborhood;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import java.util.function.IntPredicate;

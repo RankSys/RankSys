@@ -26,5 +26,5 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
  */
 public interface Reranker<U, I> {
 
-    public Recommendation<U, I> rerankRecommendation(Recommendation<U, I> recommendation);
+    public Recommendation<U, I> rerankRecommendation(Recommendation<U, I> recommendation, int maxLength);
 }

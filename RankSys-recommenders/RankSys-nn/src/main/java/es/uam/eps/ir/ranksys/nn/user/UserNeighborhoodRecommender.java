@@ -28,16 +28,18 @@ import static java.lang.Math.pow;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  *
- * @param <U>
- * @param <I>
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class UserNeighborhoodRecommender<U, I> extends FastRankingRecommender<U, I> {
 
+    protected final FastPreferenceData<U, I, ?> data;
     protected final UserNeighborhood<U> neighborhood;
     protected final int q;
 
     public UserNeighborhoodRecommender(FastPreferenceData<U, I, ?> data, UserNeighborhood<U> neighborhood, int q) {
-        super(data);
+        super(data, data);
+        this.data = data;
         this.neighborhood = neighborhood;
         this.q = q;
     }
@@ -52,7 +54,7 @@ public class UserNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
         scoresMap.defaultReturnValue(0.0);
         neighborhood.getNeighbors(uidx).forEach(vs -> {
             double w = pow(vs.v, q);
-            fastData.getUidxPreferences(vs.idx).forEach(iv -> {
+            data.getUidxPreferences(vs.idx).forEach(iv -> {
                 double p = w * iv.v;
                 scoresMap.addTo(iv.idx, p);
             });

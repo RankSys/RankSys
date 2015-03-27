@@ -38,7 +38,7 @@ public class MFRecommender<U, I> extends AbstractFastRecommender<U, I> {
     private final Factorization<U, I> factorization;
 
     public MFRecommender(FastPreferenceData<U, I, ?> data, Factorization<U, I> factorization) {
-        super(data);
+        super(data, data);
         this.factorization = factorization;
     }
 

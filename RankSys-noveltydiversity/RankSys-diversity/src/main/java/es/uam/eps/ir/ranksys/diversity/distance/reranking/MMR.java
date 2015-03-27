@@ -40,8 +40,8 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
     }
 
     @Override
-    protected LambdaUserReranker getUserReranker(Recommendation<U, I> recommendation) {
-        return new UserMMR(recommendation);
+    protected LambdaUserReranker getUserReranker(Recommendation<U, I> recommendation, int maxLength) {
+        return new UserMMR(recommendation, maxLength);
     }
 
     public class UserMMR extends LambdaUserReranker {
@@ -49,8 +49,8 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
         private final Object2DoubleOpenHashMap<I> avgDist;
         private int n;
 
-        public UserMMR(Recommendation<U, I> recommendation) {
-            super(recommendation);
+        public UserMMR(Recommendation<U, I> recommendation, int maxLength) {
+            super(recommendation, maxLength);
 
             n = 0;
             avgDist = new Object2DoubleOpenHashMap<>();

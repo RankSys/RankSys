@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * 
- * @param <U>
+ * @param <U> type of the users
  */
 public abstract class UserSimilarity<U> implements Similarity, FastUserIndex<U> {
 

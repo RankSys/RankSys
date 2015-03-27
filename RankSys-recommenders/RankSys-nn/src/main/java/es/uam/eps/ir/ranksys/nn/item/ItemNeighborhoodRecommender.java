@@ -30,11 +30,13 @@ import static java.lang.Math.pow;
  */
 public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U, I> {
 
+    protected final FastPreferenceData<U, I, ?> data;
     protected final ItemNeighborhood<I> neighborhood;
     protected final int q;
 
     public ItemNeighborhoodRecommender(FastPreferenceData<U, I, ?> data, ItemNeighborhood<I> neighborhood, int q) {
-        super(data);
+        super(data, data);
+        this.data = data;
         this.neighborhood = neighborhood;
         this.q = q;
     }
@@ -43,7 +45,7 @@ public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
     protected Int2DoubleMap getScoresMap(int uidx) {
         Int2DoubleOpenHashMap scoresMap = new Int2DoubleOpenHashMap();
         scoresMap.defaultReturnValue(0.0);
-        fastData.getUidxPreferences(uidx).forEach(jp -> {
+        data.getUidxPreferences(uidx).forEach(jp -> {
             neighborhood.getNeighbors(jp.idx).forEach(is -> {
                 double w = pow(is.v, q);
                 scoresMap.addTo(is.idx, w * jp.v);

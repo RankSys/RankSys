@@ -55,7 +55,6 @@ import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.DoubleFunction;
 import java.util.function.DoubleUnaryOperator;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
@@ -88,7 +87,7 @@ public class RecommenderExample {
 
         // random recommendation
         recMap.put("rnd", () -> {
-            return new RandomRecommender<>(trainData);
+            return new RandomRecommender<>(trainData, trainData);
         });
 
         // most-popular recommendation

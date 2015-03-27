@@ -29,11 +29,11 @@ import java.util.List;
  */
 public abstract class PermutationReranker<U, I> implements Reranker<U, I> {
 
-    public abstract int[] rerankPermutation(Recommendation<U, I> recommendation);
+    public abstract int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength);
 
     @Override
-    public Recommendation<U, I> rerankRecommendation(Recommendation<U, I> recommendation) {
-        int[] perm = rerankPermutation(recommendation);
+    public Recommendation<U, I> rerankRecommendation(Recommendation<U, I> recommendation, int maxLength) {
+        int[] perm = rerankPermutation(recommendation, maxLength);
 
         return permuteRecommendation(recommendation, perm);
     }

@@ -20,8 +20,9 @@ package es.uam.eps.ir.ranksys.rec.fast;
 import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.rec.AbstractRecommender;
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
+import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
+import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.IntPredicate;
@@ -35,42 +36,44 @@ import java.util.stream.IntStream;
  */
 public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<U, I> implements FastRecommender<U, I> {
 
-    protected final FastPreferenceData<U, I, ?> fastData;
+    protected final FastUserIndex<U> uIndex;
+    protected final FastItemIndex<I> iIndex;
 
-    public AbstractFastRecommender(FastPreferenceData<U, I, ?> data) {
-        super(data);
+    public AbstractFastRecommender(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
+        super();
 
-        this.fastData = data;
+        this.uIndex = uIndex;
+        this.iIndex = iIndex;
     }
 
     @Override
     public int numUsers() {
-        return fastData.numUsers();
+        return uIndex.numUsers();
     }
 
     @Override
     public int user2uidx(U u) {
-        return fastData.user2uidx(u);
+        return uIndex.user2uidx(u);
     }
 
     @Override
     public U uidx2user(int uidx) {
-        return fastData.uidx2user(uidx);
+        return uIndex.uidx2user(uidx);
     }
 
     @Override
     public int numItems() {
-        return fastData.numItems();
+        return iIndex.numItems();
     }
 
     @Override
     public int item2iidx(I i) {
-        return fastData.item2iidx(i);
+        return iIndex.item2iidx(i);
     }
 
     @Override
     public I iidx2item(int iidx) {
-        return fastData.iidx2item(iidx);
+        return iIndex.iidx2item(iidx);
     }
 
     @Override

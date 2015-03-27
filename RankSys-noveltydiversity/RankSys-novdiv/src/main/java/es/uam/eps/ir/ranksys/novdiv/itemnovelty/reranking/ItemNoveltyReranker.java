@@ -36,22 +36,16 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
 
     private final double lambda;
     private final ItemNovelty<U, I> novelty;
-    private final int cutoff;
     private final boolean norm;
 
     public ItemNoveltyReranker(double lambda, ItemNovelty<U, I> novelty, boolean norm) {
-        this(lambda, novelty, 0, norm);
-    }
-
-    public ItemNoveltyReranker(double lambda, ItemNovelty<U, I> novelty, int cutoff, boolean norm) {
         this.lambda = lambda;
         this.novelty = novelty;
-        this.cutoff = cutoff;
         this.norm = norm;
     }
 
     @Override
-    public int[] rerankPermutation(Recommendation<U, I> recommendation) {
+    public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
         U user = recommendation.getUser();
         ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getModel(user);
         
@@ -59,8 +53,8 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
             return new int[0];
         }
         
-        int N = cutoff;
-        if (cutoff == 0) {
+        int N = maxLength;
+        if (maxLength == 0) {
             N = recommendation.getItems().size();
         }
 

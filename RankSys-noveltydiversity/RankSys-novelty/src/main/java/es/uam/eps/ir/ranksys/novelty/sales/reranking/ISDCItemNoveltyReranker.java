@@ -29,9 +29,4 @@ public class ISDCItemNoveltyReranker<U, I> extends ItemNoveltyReranker<U, I> {
     public ISDCItemNoveltyReranker(double lambda, ISDCItemNovelty<U, I> novelty, boolean norm) {
         super(lambda, novelty, norm);
     }
-
-    public ISDCItemNoveltyReranker(double lambda, ISDCItemNovelty<U, I> novelty, int cutoff, boolean norm) {
-        super(lambda, novelty, cutoff, norm);
-    }
-
 }

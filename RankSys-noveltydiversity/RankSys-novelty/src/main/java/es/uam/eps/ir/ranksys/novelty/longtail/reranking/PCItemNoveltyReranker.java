@@ -30,10 +30,4 @@ public class PCItemNoveltyReranker<U, I> extends ItemNoveltyReranker<U, I> {
     public PCItemNoveltyReranker(double lambda, PCItemNovelty<U, I> novelty, boolean norm) {
         super(lambda, novelty, norm);
     }
-    
-    
-    public PCItemNoveltyReranker(double lambda, PCItemNovelty<U, I> novelty, int cutoff, boolean norm) {
-        super(lambda, novelty, cutoff, norm);
-    }
-    
 }
