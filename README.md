@@ -1,4 +1,5 @@
-# RankSys: Java 8 Recommender Systems framework for novelty, diversity and much more
+# RankSys
+## Java 8 Recommender Systems framework for novelty, diversity and much more
 
 ## Authors
  * [Saúl Vargas](http://www.saulvargas.es)
