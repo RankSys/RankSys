@@ -25,15 +25,46 @@ import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import static java.lang.Math.pow;
 
 /**
+ * Item-based nearest neighbors recommender.
+ * 
+ * F. Aiolli. Efficient Top-N Recommendation for Very Large Scale Binary Rated
+ * Datasets. RecSys 2013.
+ * 
+ * P. Cremonesi, Y. Koren, and R. Turrin. Performance of 
+ * recommender algorithms on top-N recommendation tasks. RecSys 2010.
+ * 
+ * B. Sarwar, G. Karypis, J. Konstan, and J. Riedl. Item-based collaborative
+ * filtering recommendation algorithms. WWW 2001.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U, I> {
 
+    /**
+     * Preference data.
+     */
     protected final FastPreferenceData<U, I, ?> data;
+
+    /**
+     * Item neighborhoods.
+     */
     protected final ItemNeighborhood<I> neighborhood;
+
+    /**
+     * Exponent of the similarity.
+     */
     protected final int q;
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     * @param neighborhood item neighborhood
+     * @param q exponent of the similarity
+     */
     public ItemNeighborhoodRecommender(FastPreferenceData<U, I, ?> data, ItemNeighborhood<I> neighborhood, int q) {
         super(data, data);
         this.data = data;

@@ -25,6 +25,7 @@ import java.util.function.IntToDoubleFunction;
 import java.util.stream.Stream;
 
 /**
+ * Vector similarity. Based on the inner product of item/user profiles as vectors.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
@@ -33,6 +34,11 @@ public abstract class VectorSimilarity implements Similarity {
     private final FastPreferenceData<?, ?, ?> data;
     private final Int2DoubleMap norm2Map;
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     */
     public VectorSimilarity(FastPreferenceData<?, ?, ?> data) {
         this.data = data;
         this.norm2Map = new Int2DoubleOpenHashMap();
@@ -88,5 +94,13 @@ public abstract class VectorSimilarity implements Similarity {
                 });
     }
 
+    /**
+     * Calculates the similarity value.
+     *
+     * @param product value of the inner product of vectors
+     * @param norm2A square of the norm of the first vector
+     * @param norm2B square of the norm of the second vector
+     * @return similarity value
+     */
     protected abstract double sim(double product, double norm2A, double norm2B);
 }

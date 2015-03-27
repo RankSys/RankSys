@@ -26,16 +26,30 @@ import es.uam.eps.ir.ranksys.nn.neighborhood.CachedNeighborhood;
 import java.util.stream.Stream;
 
 /**
+ * Cached user similarity. See {@link CachedNeighborhood}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
  */
 public class CachedUserNeighborhood<U> extends UserNeighborhood<U> {
 
+    /**
+     * Constructor that calculates and caches user neighborhoods.
+     *
+     * @param neighborhood user neighborhood to be cached
+     */
     public CachedUserNeighborhood(UserNeighborhood<U> neighborhood) {
         super(neighborhood, new CachedNeighborhood(neighborhood.numUsers(), neighborhood));
     }
 
-    public CachedUserNeighborhood(FastUserIndex<U> data, Stream<IdObject<U, Stream<IdDouble<U>>>> neighborhoods) {
-        super(data, new CachedNeighborhood(data.numUsers(), neighborhoods.map(un -> new IdxObject<>(data.user2uidx(un.id), un.v.map(vs -> new IdxDouble(data.user2uidx(vs.id), vs.v))))));
+    /**
+     * Constructor that caches a stream of previously calculated neighborhoods.
+     *
+     * @param uIndex fast user index
+     * @param neighborhoods stream of already calculated neighborhoods
+     */
+    public CachedUserNeighborhood(FastUserIndex<U> uIndex, Stream<IdObject<U, Stream<IdDouble<U>>>> neighborhoods) {
+        super(uIndex, new CachedNeighborhood(uIndex.numUsers(), neighborhoods.map(un -> new IdxObject<>(uIndex.user2uidx(un.id), un.v.map(vs -> new IdxDouble(uIndex.user2uidx(vs.id), vs.v))))));
     }
 }

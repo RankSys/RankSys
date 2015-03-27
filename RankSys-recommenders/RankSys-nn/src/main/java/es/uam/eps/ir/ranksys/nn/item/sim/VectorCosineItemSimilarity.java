@@ -22,11 +22,20 @@ import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.VectorCosineSimilarity;
 
 /**
+ * Vector cosine item similarity. See {@link VectorCosineSimilarity}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
  */
 public class VectorCosineItemSimilarity<I> extends ItemSimilarity<I> {
 
+    /**
+     * Constructor.
+     *
+     * @param data preference
+     * @param alpha asymmetry of the similarity, set to 0.5 to standard cosine.
+     */
     public VectorCosineItemSimilarity(FastPreferenceData<?, I, ?> data, double alpha) {
         super(data, new VectorCosineSimilarity(new TransposedPreferenceData<>(data), alpha));
     }

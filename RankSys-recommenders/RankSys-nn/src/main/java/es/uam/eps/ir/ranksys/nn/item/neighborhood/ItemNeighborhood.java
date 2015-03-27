@@ -25,32 +25,48 @@ import java.util.stream.Stream;
 import static java.util.stream.StreamSupport.stream;
 
 /**
+ * Item neighborhood. Wraps a generic neighborhood and a fast item index.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
  */
 public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex<I> {
 
-    protected final FastItemIndex<I> indexedItem;
+    /**
+     * Fast item index.
+     */
+    protected final FastItemIndex<I> iIndex;
+
+    /**
+     * Generic neighborhood.
+     */
     protected final Neighborhood neighborhood;
 
-    public ItemNeighborhood(FastItemIndex<I> recommenderData, Neighborhood neighborhood) {
-        this.indexedItem = recommenderData;
+    /**
+     * Constructor.
+     *
+     * @param iIndex fast item index
+     * @param neighborhood generic fast neighborhood
+     */
+    public ItemNeighborhood(FastItemIndex<I> iIndex, Neighborhood neighborhood) {
+        this.iIndex = iIndex;
         this.neighborhood = neighborhood;
     }
 
     @Override
     public int numItems() {
-        return indexedItem.numItems();
+        return iIndex.numItems();
     }
 
     @Override
     public I iidx2item(int iidx) {
-        return indexedItem.iidx2item(iidx);
+        return iIndex.iidx2item(iidx);
     }
 
     @Override
     public int item2iidx(I i) {
-        return indexedItem.item2iidx(i);
+        return iIndex.item2iidx(i);
     }
 
     @Override
@@ -58,6 +74,12 @@ public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex
         return neighborhood.getNeighbors(idx);
     }
 
+    /**
+     * Returns a stream of item neighbors
+     *
+     * @param i item whose neighborhood is returned
+     * @return a stream of item-score pairs
+     */
     public Stream<IdDouble<I>> getNeighbors(I i) {
         return stream(getNeighbors(item2iidx(i)).spliterator(), false)
                 .map(iv -> new IdDouble<>(iidx2item(iv.idx), iv.v));

@@ -21,11 +21,20 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.VectorCosineSimilarity;
 
 /**
+ * Vector cosine user similarity. See {@link VectorCosineSimilarity}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
  */
 public class VectorCosineUserSimilarity<U> extends UserSimilarity<U> {
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     * @param alpha asymmetry factor, set to 0.5 to standard cosine.
+     */
     public VectorCosineUserSimilarity(FastPreferenceData<U, ?, ?> data, double alpha) {
         super(data, new VectorCosineSimilarity(data, alpha));
     }

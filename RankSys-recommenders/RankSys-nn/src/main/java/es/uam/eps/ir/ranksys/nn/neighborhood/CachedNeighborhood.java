@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Stream.empty;
 
 /**
+ * Cached neighborhood. Stores user neighborhoods.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
@@ -34,6 +35,12 @@ public class CachedNeighborhood implements Neighborhood {
     private final IntArrayList[] idxla;
     private final DoubleArrayList[] simla;
 
+    /**
+     * Constructor that calculates and caches neighborhoods.
+     *
+     * @param n number of users/items
+     * @param neighborhood generic neighborhood to be cached
+     */
     public CachedNeighborhood(int n, Neighborhood neighborhood) {
 
         this.idxla = new IntArrayList[n];
@@ -51,6 +58,12 @@ public class CachedNeighborhood implements Neighborhood {
         });
     }
 
+    /**
+     * Constructor that caches a stream of previously calculated neighborhoods.
+     *
+     * @param n number of users/items
+     * @param neighborhoods stream of already calculated neighborhoods
+     */
     public CachedNeighborhood(int n, Stream<IdxObject<Stream<IdxDouble>>> neighborhoods) {
 
         this.idxla = new IntArrayList[n];

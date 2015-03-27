@@ -21,11 +21,20 @@ import es.uam.eps.ir.ranksys.nn.item.sim.ItemSimilarity;
 import es.uam.eps.ir.ranksys.nn.neighborhood.ThresholdNeighborhood;
 
 /**
+ * Threshold item neighborhood. See {@link ThresholdNeighborhood}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
  */
 public class ThresholdItemNeighborhood<I> extends ItemNeighborhood<I>{
 
+    /**
+     * Constructor
+     *
+     * @param sim item similarity
+     * @param threshold minimum value to be considered as neighbor
+     */
     public ThresholdItemNeighborhood(ItemSimilarity<I> sim, double threshold) {
         super(sim, new ThresholdNeighborhood(sim, threshold));
     }

@@ -21,11 +21,20 @@ import es.uam.eps.ir.ranksys.nn.item.sim.ItemSimilarity;
 import es.uam.eps.ir.ranksys.nn.neighborhood.TopKNeighborhood;
 
 /**
+ * Top-k item neighborhood. See {@link TopKNeighborhood}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
  */
 public class TopKItemNeighborhood<I> extends ItemNeighborhood<I> {
 
+    /**
+     * Constructor.
+     *
+     * @param sim item similarity
+     * @param k maximum size of neighborhood
+     */
     public TopKItemNeighborhood(ItemSimilarity<I> sim, int k) {
         super(sim, new TopKNeighborhood(sim, k));
     }

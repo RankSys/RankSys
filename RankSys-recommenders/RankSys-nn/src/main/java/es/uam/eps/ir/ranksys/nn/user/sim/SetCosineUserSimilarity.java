@@ -21,11 +21,20 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.SetCosineSimilarity;
 
 /**
+ * Set cosine user similarity. See {@link SetCosineSimilarity}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
  */
 public class SetCosineUserSimilarity<U> extends UserSimilarity<U> {
 
+    /**
+     * Constructor.
+     *
+     * @param recommenderData preference data
+     * @param alpha asymmetry of the similarity, set to 0.5 for standard cosine
+     */
     public SetCosineUserSimilarity(FastPreferenceData<U, ?, ?> recommenderData, double alpha) {
         super(recommenderData, new SetCosineSimilarity(recommenderData, alpha));
     }

@@ -21,11 +21,19 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.SetJaccardSimilarity;
 
 /**
+ * Set Jaccard user similarity. See {@link SetJaccardSimilarity}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
  */
 public class SetJaccardUserSimilarity<U> extends UserSimilarity<U> {
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     */
     public SetJaccardUserSimilarity(FastPreferenceData<U, ?, ?> data) {
         super(data, new SetJaccardSimilarity(data));
     }

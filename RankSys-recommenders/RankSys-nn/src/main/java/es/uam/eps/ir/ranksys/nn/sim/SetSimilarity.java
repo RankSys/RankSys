@@ -25,10 +25,9 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.IntToDoubleFunction;
 import java.util.stream.Stream;
-import java.util.stream.Stream.Builder;
-import static java.util.stream.Stream.builder;
 
 /**
+ * Set similarity. Based on the intersection of item/user profiles as sets.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
@@ -36,6 +35,11 @@ public abstract class SetSimilarity implements Similarity {
 
     private final FastPreferenceData<?, ?, ?> data;
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     */
     public SetSimilarity(FastPreferenceData<?, ?, ?> data) {
         this.data = data;
     }
@@ -83,5 +87,13 @@ public abstract class SetSimilarity implements Similarity {
                 });
     }
 
+    /**
+     * Calculates the similarity value.
+     *
+     * @param intersectionSize size of the intersection of sets
+     * @param na size of the first set
+     * @param nb size of the second set
+     * @return similarity value
+     */
     protected abstract double sim(int intersectionSize, int na, int nb);
 }

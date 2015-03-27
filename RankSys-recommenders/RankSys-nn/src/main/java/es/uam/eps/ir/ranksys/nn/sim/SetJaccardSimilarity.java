@@ -20,11 +20,19 @@ package es.uam.eps.ir.ranksys.nn.sim;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 
 /**
+ * Set Jaccard similarity.
+ * 
+ * sim(A, B) = |A n B| / |A u B|
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class SetJaccardSimilarity extends SetSimilarity {
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     */
     public SetJaccardSimilarity(FastPreferenceData<?, ?, ?> data) {
         super(data);
     }

@@ -15,25 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.nn.item.neighborhood;
-
-import es.uam.eps.ir.ranksys.nn.neighborhood.CachedNeighborhood;
 
 /**
- * Cached item neighborhood. See {@link CachedNeighborhood}.
- *
- * @author Saúl Vargas (saul.vargas@uam.es)
- * 
- * @param <I> type of the items
+ * Similarities.
  */
-public class CachedItemNeighborhood<I> extends ItemNeighborhood<I> {
-
-    /**
-     * Constructor
-     *
-     * @param neighborhood item neighborhood to be cached
-     */
-    public CachedItemNeighborhood(ItemNeighborhood<I> neighborhood) {
-        super(neighborhood, new CachedNeighborhood(neighborhood.numItems(), neighborhood));
-    }
-}
+package es.uam.eps.ir.ranksys.nn.sim;

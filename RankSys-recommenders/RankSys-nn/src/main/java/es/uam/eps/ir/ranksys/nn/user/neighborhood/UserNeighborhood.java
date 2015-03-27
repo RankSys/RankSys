@@ -24,32 +24,48 @@ import es.uam.eps.ir.ranksys.nn.neighborhood.Neighborhood;
 import java.util.stream.Stream;
 
 /**
+ * User neighborhood. Wraps a generic neighborhood and a fast user index.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
  */
 public abstract class UserNeighborhood<U> implements Neighborhood, FastUserIndex<U> {
 
-    protected final FastUserIndex<U> indexedUser;
+    /**
+     * Fast user index.
+     */
+    protected final FastUserIndex<U> uIndex;
+
+    /**
+     * Generic fast neighborhood.
+     */
     protected final Neighborhood neighborhood;
 
-    public UserNeighborhood(FastUserIndex<U> indexedUser, Neighborhood neighborhood) {
-        this.indexedUser = indexedUser;
+    /**
+     * Constructor
+     *
+     * @param uIndex fast user index
+     * @param neighborhood generic fast neighborhood
+     */
+    public UserNeighborhood(FastUserIndex<U> uIndex, Neighborhood neighborhood) {
+        this.uIndex = uIndex;
         this.neighborhood = neighborhood;
     }
 
     @Override
     public int numUsers() {
-        return indexedUser.numUsers();
+        return uIndex.numUsers();
     }
 
     @Override
     public int user2uidx(U u) {
-        return indexedUser.user2uidx(u);
+        return uIndex.user2uidx(u);
     }
 
     @Override
     public U uidx2user(int uidx) {
-        return indexedUser.uidx2user(uidx);
+        return uIndex.uidx2user(uidx);
     }
 
     @Override
@@ -57,6 +73,12 @@ public abstract class UserNeighborhood<U> implements Neighborhood, FastUserIndex
         return neighborhood.getNeighbors(idx);
     }
 
+    /**
+     * Returns a stream of user neighbors
+     *
+     * @param u user whose neighborhood is returned
+     * @return a stream of user-score pairs
+     */
     public Stream<IdDouble<U>> getNeighbors(U u) {
         return getNeighbors(user2uidx(u))
                 .map(uv -> new IdDouble<>(uidx2user(uv.idx), uv.v));

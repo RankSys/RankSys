@@ -21,11 +21,20 @@ import es.uam.eps.ir.ranksys.nn.neighborhood.ThresholdNeighborhood;
 import es.uam.eps.ir.ranksys.nn.user.sim.UserSimilarity;
 
 /**
+ * Threshold user neighborhood. See {@link ThresholdNeighborhood}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
  */
 public class ThresholdUserNeighborhood<U> extends UserNeighborhood<U> {
 
+    /**
+     * Constructor
+     *
+     * @param sim user similarity
+     * @param threshold minimum value to be considered as neighbor
+     */
     public ThresholdUserNeighborhood(UserSimilarity<U> sim, double threshold) {
         super(sim, new ThresholdNeighborhood(sim, threshold));
     }

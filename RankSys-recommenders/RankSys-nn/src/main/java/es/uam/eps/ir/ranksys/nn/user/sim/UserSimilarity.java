@@ -26,6 +26,7 @@ import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 
 /**
+ * User similarity. It wraps a generic fast similarity and a fast user index.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * 
@@ -33,42 +34,80 @@ import java.util.stream.Stream;
  */
 public abstract class UserSimilarity<U> implements Similarity, FastUserIndex<U> {
 
-    protected final FastUserIndex<U> indexedUser;
+    /**
+     * Fast user index.
+     */
+    protected final FastUserIndex<U> uIndex;
+
+    /**
+     * Generic fast similarity.
+     */
     protected final Similarity sim;
 
-    protected UserSimilarity(FastUserIndex<U> indexedUser, Similarity sim) {
-        this.indexedUser = indexedUser;
+    /**
+     * Constructor.
+     *
+     * @param uIndex fast user index
+     * @param sim generic fast similarity
+     */
+    protected UserSimilarity(FastUserIndex<U> uIndex, Similarity sim) {
+        this.uIndex = uIndex;
         this.sim = sim;
     }
 
     @Override
     public int numUsers() {
-        return indexedUser.numUsers();
+        return uIndex.numUsers();
     }
 
     @Override
     public int user2uidx(U u) {
-        return indexedUser.user2uidx(u);
+        return uIndex.user2uidx(u);
     }
 
     @Override
     public U uidx2user(int uidx) {
-        return indexedUser.uidx2user(uidx);
+        return uIndex.uidx2user(uidx);
     }
 
+    /**
+     * Returns a function returning similarities with the user
+     *
+     * @param u1 user
+     * @return a function returning similarities with the user
+     */
     public ToDoubleFunction<U> similarity(U u1) {
         return u2 -> sim.similarity(user2uidx(u1)).applyAsDouble(user2uidx(u2));
     }
     
+    /**
+     * Returns the similarity between a pair of users.
+     *
+     * @param u1 first user
+     * @param u2 second user
+     * @return similarity value between the users
+     */
     public double similarity(U u1, U u2) {
         return sim.similarity(user2uidx(u1), user2uidx(u2));
     }
 
+    /**
+     * Returns all the users that are similar to the user.
+     *
+     * @param u user
+     * @return a stream of user-similarity pairs
+     */
     public Stream<IdDouble<U>> similarUsers(U u) {
         return similarUsers(user2uidx(u))
                 .map(us -> new IdDouble<U>(uidx2user(us.idx), us.v));
     }
 
+    /**
+     * Returns all the users that are similar to the user - fast version.
+     *
+     * @param uidx user
+     * @return a stream of user-similarity pairs
+     */
     public Stream<IdxDouble> similarUsers(int uidx) {
         return sim.similarElems(uidx);
     }

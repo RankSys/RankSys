@@ -21,11 +21,20 @@ import es.uam.eps.ir.ranksys.nn.neighborhood.TopKNeighborhood;
 import es.uam.eps.ir.ranksys.nn.user.sim.UserSimilarity;
 
 /**
+ * User top-K neighborhood. See {@link TopKNeighborhood}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
  */
 public class TopKUserNeighborhood<U> extends UserNeighborhood<U> {
 
+    /**
+     * Constructor.
+     *
+     * @param sim user similarity
+     * @param k maximum size of neighborhood
+     */
     public TopKUserNeighborhood(UserSimilarity<U> sim, int k) {
         super(sim, new TopKNeighborhood(sim, k));
     }

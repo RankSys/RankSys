@@ -21,11 +21,19 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.VectorJaccardSimilarity;
 
 /**
+ * Vector Jaccard user similarity. See {@link VectorJaccardSimilarity}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
  */
 public class VectorJaccardUserSimilarity<U> extends UserSimilarity<U> {
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     */
     public VectorJaccardUserSimilarity(FastPreferenceData<U, ?, ?> data) {
         super(data, new VectorJaccardSimilarity(data));
     }

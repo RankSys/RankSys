@@ -22,6 +22,8 @@ import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.stream.Stream;
 
 /**
+ * Threshold neighborhood. Items with a similarity above a threshold are kept
+ * as neighbors.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
@@ -30,6 +32,12 @@ public class ThresholdNeighborhood implements Neighborhood {
     private final Similarity sim;
     private final double threshold;
 
+    /**
+     * Constructor.
+     *
+     * @param sim similarity
+     * @param threshold minimum value to be considered as neighbor
+     */
     public ThresholdNeighborhood(Similarity sim, double threshold) {
         this.sim = sim;
         this.threshold = threshold;

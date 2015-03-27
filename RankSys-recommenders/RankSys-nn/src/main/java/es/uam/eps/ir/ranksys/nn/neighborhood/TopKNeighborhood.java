@@ -23,6 +23,7 @@ import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.stream.Stream;
 
 /**
+ * Top-K neighborhood. It keeps the k most similar users/items as neighbors.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
@@ -31,6 +32,12 @@ public class TopKNeighborhood implements Neighborhood {
     private final Similarity sim;
     private final int k;
 
+    /**
+     * Constructor.
+     *
+     * @param sim similarity
+     * @param k maximum size of neighborhood
+     */
     public TopKNeighborhood(Similarity sim, int k) {
         this.sim = sim;
         this.k = k;

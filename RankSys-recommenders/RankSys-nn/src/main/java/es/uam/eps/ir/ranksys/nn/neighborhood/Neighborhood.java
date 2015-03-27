@@ -21,10 +21,18 @@ import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import java.util.stream.Stream;
 
 /**
+ * Generic fast neighborhood. Implementing classes of this interface are under the
+ * hood of user and item neighborhoods.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public interface Neighborhood {
     
+    /**
+     * Returns the neighborhood of a user/index.
+     *
+     * @param idx user/index whose neighborhood is calculated
+     * @return stream of user/item-similarity pairs.
+     */
     public Stream<IdxDouble> getNeighbors(int idx);
 }

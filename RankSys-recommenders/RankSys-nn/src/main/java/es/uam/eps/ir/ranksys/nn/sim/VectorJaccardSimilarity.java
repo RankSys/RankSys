@@ -20,11 +20,19 @@ package es.uam.eps.ir.ranksys.nn.sim;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 
 /**
+ * Vector Jaccard similarity.
+ * 
+ * sim(v, w) = v * w / (v * v + w * w - v * w)
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class VectorJaccardSimilarity extends VectorSimilarity {
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     */
     public VectorJaccardSimilarity(FastPreferenceData<?, ?, ?> data) {
         super(data);
     }

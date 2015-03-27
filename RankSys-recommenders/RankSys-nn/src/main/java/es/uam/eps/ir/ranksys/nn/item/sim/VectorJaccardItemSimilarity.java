@@ -22,11 +22,19 @@ import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.VectorJaccardSimilarity;
 
 /**
+ * Vector Jaccard item similarity. See {@link VectorJaccardSimilarity}.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
  */
 public class VectorJaccardItemSimilarity<I> extends ItemSimilarity<I> {
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     */
     public VectorJaccardItemSimilarity(FastPreferenceData<?, I, ?> data) {
         super(data, new VectorJaccardSimilarity(new TransposedPreferenceData<>(data)));
     }

@@ -26,47 +26,88 @@ import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 
 /**
+ * Item similarity. It wraps a generic fast similarity and a fast item index.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
  */
 public abstract class ItemSimilarity<I> implements Similarity, FastItemIndex<I> {
 
-    protected final FastItemIndex<I> IndexedItem;
+    /**
+     * Fast item index.
+     */
+    protected final FastItemIndex<I> iIndex;
+
+    /**
+     * Generic fast similarity.
+     */
     protected final Similarity sim;
 
-    protected ItemSimilarity(FastItemIndex<I> indexedItem, Similarity sim) {
-        this.IndexedItem = indexedItem;
+    /**
+     * Constructor.
+     *
+     * @param iIndex fast item index
+     * @param sim generic fast similarity
+     */
+    protected ItemSimilarity(FastItemIndex<I> iIndex, Similarity sim) {
+        this.iIndex = iIndex;
         this.sim = sim;
     }
 
     @Override
     public int numItems() {
-        return IndexedItem.numItems();
+        return iIndex.numItems();
     }
 
     @Override
     public int item2iidx(I i) {
-        return IndexedItem.item2iidx(i);
+        return iIndex.item2iidx(i);
     }
 
     @Override
     public I iidx2item(int iidx) {
-        return IndexedItem.iidx2item(iidx);
+        return iIndex.iidx2item(iidx);
     }
     
+    /**
+     * Returns a function returning similarities with the item
+     *
+     * @param i1 item
+     * @return a function returning similarities with the item
+     */
     public ToDoubleFunction<I> similarity(I i1) {
         return i2 -> sim.similarity(item2iidx(i1)).applyAsDouble(item2iidx(i2));
     }
 
+    /**
+     * Returns the similarity between a pair of items.
+     *
+     * @param i1 first item
+     * @param i2 second item
+     * @return similarity value between the items
+     */
     public double similarity(I i1, I i2) {
         return sim.similarity(item2iidx(i1), item2iidx(i2));
     }
 
+    /**
+     * Returns all the items that are similar to the item.
+     *
+     * @param i item
+     * @return a stream of item-similarity pairs
+     */
     public Stream<IdDouble<I>> similarItems(I i) {
         return similarItems(item2iidx(i))
                 .map(us -> new IdDouble<I>(iidx2item(us.idx), us.v));
     }
 
+    /**
+     * Returns all the items that are similar to the item - fast version.
+     *
+     * @param iidx item
+     * @return a stream of item-similarity pairs
+     */
     public Stream<IdxDouble> similarItems(int iidx) {
         return sim.similarElems(iidx);
     }

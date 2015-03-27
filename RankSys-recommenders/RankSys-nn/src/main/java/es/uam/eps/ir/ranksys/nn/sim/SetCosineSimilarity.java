@@ -21,13 +21,26 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import static java.lang.Math.pow;
 
 /**
+ * Set cosine similarity. As in Aiolli's paper. Can be asymmetric if 
+ * alpha != 0.5.
+ * 
+ * sim(A, B) = |A n B| / (|A|^alpha |B|^(1 - alpha))
  *
+ * F. Aiolli. Efficient Top-N Recommendation for Very Large Scale Binary Rated
+ * Datasets. RecSys 2013.
+ * 
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class SetCosineSimilarity extends SetSimilarity {
 
     private final double alpha;
 
+    /**
+     * Constructor.
+     *
+     * @param data preference data
+     * @param alpha asymmetry of the similarity, set to 0.5 for standard cosine
+     */
     public SetCosineSimilarity(FastPreferenceData<?, ?, ?> data, double alpha) {
         super(data);
         this.alpha = alpha;
