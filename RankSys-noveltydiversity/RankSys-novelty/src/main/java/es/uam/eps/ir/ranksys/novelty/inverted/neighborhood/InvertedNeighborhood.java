@@ -27,6 +27,10 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
+ * Inverted neighborhood.
+ * 
+ * S. Vargas and P. Castells. Improving sales diversity by recommending
+ * users to items.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
@@ -35,6 +39,14 @@ public class InvertedNeighborhood implements Neighborhood {
     private final IntArrayList[] idxla;
     private final DoubleArrayList[] simla;
 
+    /**
+     * Constructor.
+     *
+     * @param n number of users/items
+     * @param neighborhood original neighborhood to be inverted
+     * @param filter filter to determine the users that require an inverted
+     * neighborhood
+     */
     public InvertedNeighborhood(int n, Neighborhood neighborhood, IntPredicate filter) {
         this.idxla = new IntArrayList[n];
         this.simla = new DoubleArrayList[n];

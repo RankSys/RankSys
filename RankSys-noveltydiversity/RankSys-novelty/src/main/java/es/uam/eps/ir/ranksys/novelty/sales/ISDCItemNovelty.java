@@ -24,8 +24,16 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
+ * Inter-System Discovery Complement item novelty model.
  *
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
+ * 
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class ISDCItemNovelty<U, I> extends ItemNovelty<U, I> {
 
@@ -33,6 +41,13 @@ public class ISDCItemNovelty<U, I> extends ItemNovelty<U, I> {
     private final Function<U, List<List<I>>> otherUserRecommendations;
     private final RankingDiscountModel disc;
 
+    /**
+     * Constructor
+     *
+     * @param nSystems number of compared systems
+     * @param otherUserRecommendations other systems recommendations
+     * @param disc ranking discount model
+     */
     public ISDCItemNovelty(int nSystems, Function<U, List<List<I>>> otherUserRecommendations, RankingDiscountModel disc) {
         super(false, null);
         this.nSystems = nSystems;

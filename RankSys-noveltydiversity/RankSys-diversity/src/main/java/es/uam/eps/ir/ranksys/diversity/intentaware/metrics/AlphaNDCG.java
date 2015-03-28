@@ -34,9 +34,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ * alpha-nDCG metric.
+ * 
+ * C.L. Clarke, M. Kolla, G.V. Cormack, O. Vechtomova, A. Ashkan, S. Büttcher
+ * and I. MacKinnon. Novelty and diversity in Information Retrieval evauation.
+ * SIGIR 2008.
+ * 
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <F> type of the features
  */
 public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
@@ -47,6 +56,14 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
     private final AlphaNDCGIdeal idcg;
     private final RankingDiscountModel disc = new LogarithmicDiscountModel();
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum length of the recommendations lists to evaluate
+     * @param alpha tolerance to redundancy parameter
+     * @param featureData feature data
+     * @param relModel relevance model
+     */
     public AlphaNDCG(int cutoff, double alpha, FeatureData<I, F, ?> featureData, BinaryRelevanceModel<U, I> relModel) {
         super();
         this.cutoff = cutoff;

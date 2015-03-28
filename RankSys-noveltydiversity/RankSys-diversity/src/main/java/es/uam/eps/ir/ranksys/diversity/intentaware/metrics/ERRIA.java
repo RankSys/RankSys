@@ -28,9 +28,20 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
 /**
+ * Intent-Aware Expected Reciprocal Rank metric.
+ * 
+ * R. Agrawal, S. Gollapudi, A. Halverson and S. Ieong, S. Diversifying search
+ * results. WSDM 2009.
+ * 
+ * O. Chapelle, D. Metlzer, Y. Zhang, and P. Grinspan. Expected reciprocal 
+ * rank for graded relevance. CIKM 2009.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <F> type of the features
  */
 public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
@@ -38,6 +49,13 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
     private final ERRRelevanceModel<U, I> relModel;
     private final IntentModel<U, I, F> intentModel;
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum length of the recommendations lists to evaluate
+     * @param intentModel intent-aware model
+     * @param relevanceModel relevance model
+     */
     public ERRIA(int cutoff, IntentModel<U, I, F> intentModel, ERRRelevanceModel<U, I> relevanceModel) {
         super();
         this.cutoff = cutoff;
@@ -77,12 +95,25 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
         return erria[0];
     }
 
+    /**
+     * Relevance model for {@link ERRIA}.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     */
     public static class ERRRelevanceModel<U, I> extends RelevanceModel<U, I> {
 
         private final PreferenceData<U, I, ?> testData;
         private final double threshold;
         private final double maxPreference;
 
+        /**
+         * Constructor
+         *
+         * @param caching are the user relevance models being cached?
+         * @param testData test preference data
+         * @param threshold relevance threshold
+         */
         public ERRRelevanceModel(boolean caching, PreferenceData<U, I, ?> testData, double threshold) {
             super(caching, testData.getUsersWithPreferences());
             this.testData = testData;
@@ -99,10 +130,18 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
             return new UserERRRelevanceModel(user);
         }
 
+        /**
+         * User relevance model for {@link ERRRelevanceModel}.
+         */
         public class UserERRRelevanceModel implements UserRelevanceModel<U, I> {
 
             private final Object2DoubleMap<I> gainMap;
 
+            /**
+             * Constructor.
+             *
+             * @param user user whose relevance model is created
+             */
             public UserERRRelevanceModel(U user) {
                 this.gainMap = new Object2DoubleOpenHashMap<>();
                 gainMap.defaultReturnValue(0.0);

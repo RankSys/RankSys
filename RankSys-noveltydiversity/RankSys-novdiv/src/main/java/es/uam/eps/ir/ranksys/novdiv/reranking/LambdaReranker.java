@@ -28,15 +28,31 @@ import static java.lang.Math.min;
 import java.util.List;
 
 /**
+ * Linear combination re-ranker that combines the original score of the input 
+ * recommendation and a novelty component.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
 
+    /**
+     * Trade-off parameter of the linear combination.
+     */
     protected final double lambda;
     private final boolean norm;
 
+    /**
+     * Constructor.
+     *
+     * @param lambda trade-off parameter of the linear combination
+     * @param cutoff how many items are re-ranked by the greedy selection.
+     * @param norm decides whether apply a normalization of the values of the
+     * component at each selection step
+     */
     public LambdaReranker(double lambda, int cutoff, boolean norm) {
         super(cutoff);
         this.lambda = lambda;
@@ -55,16 +71,44 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
     @Override
     protected abstract GreedyUserReranker<U, I> getUserReranker(Recommendation<U, I> recommendation, int maxLength);
 
+    /**
+     * User re-ranker for {@link LambdaReranker}.
+     */
     protected abstract class LambdaUserReranker extends GreedyUserReranker<U, I> {
 
+        /**
+         * Statistics about relevance scores.
+         */
         protected Stats relStats;
+
+        /**
+         * Statistics about novelty scores.
+         */
         protected Stats novStats;
+
+        /**
+         * Map of the novelty of each item.
+         */
         protected Object2DoubleMap<I> novMap;
 
+        /**
+         * Constructor.
+         *
+         * @param recommendation input recommendation
+         * @param maxLength maximum length of the re-ranked recommendation
+         */
         public LambdaUserReranker(Recommendation<U, I> recommendation, int maxLength) {
             super(recommendation, maxLength);
         }
 
+        /**
+         * Returns the normalized value of a relevance or novelty
+         * score.
+         *
+         * @param score the relevance or novelty score
+         * @param stats the relevance or novelty statistics
+         * @return the normalized score
+         */
         protected double norm(double score, Stats stats) {
             if (norm) {
                 return (score - stats.getMean()) / stats.getStandardDeviation();
@@ -93,6 +137,12 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
             return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.getDouble(iv.id), novStats);
         }
 
+        /**
+         * Returns the novelty score of an item.
+         *
+         * @param iv item-relevance pair
+         * @return the novelty of the item
+         */
         protected abstract double nov(IdDouble<I> iv);
 
     }

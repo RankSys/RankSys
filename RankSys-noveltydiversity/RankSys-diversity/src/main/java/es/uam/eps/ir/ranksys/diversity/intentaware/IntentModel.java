@@ -26,21 +26,39 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 /**
+ * Intent-Aware model.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <F> type of the features
  */
 public class IntentModel<U, I, F> extends UserModel<U> {
 
     private final PreferenceData<U, I, ?> totalData;
     private final FeatureData<I, F, ?> featureData;
 
+    /**
+     * Constructor that caches user intent-aware models.
+     *
+     * @param targetUsers user whose intent-aware models are cached
+     * @param totalData preference data
+     * @param featureData feature data
+     */
     public IntentModel(Stream<U> targetUsers, PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
         super(targetUsers);
         this.totalData = totalData;
         this.featureData = featureData;
     }
 
+    /**
+     * Constructor that does not cache user intent-aware models.
+     *
+     * @param totalData preference data
+     * @param featureData feature data
+     */
     public IntentModel(PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
         super();
         this.totalData = totalData;
@@ -58,10 +76,18 @@ public class IntentModel<U, I, F> extends UserModel<U> {
         return (UserIntentModel) super.getModel(user);
     }
 
+    /**
+     * User intent-aware model for {@link IntentModel}.
+     */
     public class UserIntentModel implements Model<U> {
 
         private final Object2DoubleOpenHashMap<F> prob;
 
+        /**
+         * Constructor.
+         *
+         * @param user user whose model is created.
+         */
         public UserIntentModel(U user) {
             Object2DoubleOpenHashMap<F> auxProb = new Object2DoubleOpenHashMap<>();
             auxProb.defaultReturnValue(0.0);
@@ -78,23 +104,39 @@ public class IntentModel<U, I, F> extends UserModel<U> {
                 norm[0] = featureData.numFeatures();
                 featureData.getAllFeatures().sequential().forEach(f -> auxProb.put(f, 1.0));
             }
-            
-            auxProb.keySet().forEach(f -> {
-                auxProb.put(f, auxProb.getDouble(f) / norm[0]);
+
+            auxProb.object2DoubleEntrySet().forEach(e -> {
+                e.setValue(e.getDoubleValue() / norm[0]);
             });
-//            auxProb.transformValues(v -> v / norm[0]);
 
             this.prob = auxProb;
         }
 
+        /**
+         * Returns the features considered in the intent model.
+         *
+         * @return the features considered in the intent model
+         */
         public Set<F> getIntents() {
             return prob.keySet();
         }
 
+        /**
+         * Returns the features associated with an item.
+         *
+         * @param i item
+         * @return the features associated with the item
+         */
         public Stream<F> getItemIntents(I i) {
             return featureData.getItemFeatures(i).map(fv -> fv.id).filter(getIntents()::contains);
         }
 
+        /**
+         * Returns the probability of a feature in the model.
+         *
+         * @param f feature
+         * @return probability of a feature in the model
+         */
         public double p(F f) {
             return prob.getDouble(f);
         }

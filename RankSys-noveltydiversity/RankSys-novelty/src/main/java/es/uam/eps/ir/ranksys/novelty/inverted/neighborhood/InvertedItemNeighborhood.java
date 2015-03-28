@@ -20,11 +20,22 @@ package es.uam.eps.ir.ranksys.novelty.inverted.neighborhood;
 import es.uam.eps.ir.ranksys.nn.item.neighborhood.ItemNeighborhood;
 
 /**
+ * Inverted item neighborhood. See {@link InvertedNeighborhood}
+ * 
+ * S. Vargas and P. Castells. Improving sales diversity by recommending
+ * users to items.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
  */
 public class InvertedItemNeighborhood<I> extends ItemNeighborhood<I> {
 
+    /**
+     * Constructor.
+     *
+     * @param neighborhood original neighborhood to be inverted
+     */
     public InvertedItemNeighborhood(ItemNeighborhood<I> neighborhood) {
         super(neighborhood, new InvertedNeighborhood(neighborhood.numItems(), neighborhood, iidx -> true));
     }

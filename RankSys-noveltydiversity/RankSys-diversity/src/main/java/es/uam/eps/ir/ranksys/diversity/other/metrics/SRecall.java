@@ -27,16 +27,35 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Subtopic recall metric.
+ * 
+ * C. X. Zhai, W. W. Cohen, and J. Lafferty. Beyond Independent relevance:
+ * methods and evaluation metrics for subtopic retrieval.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <F> type of the features
  */
 public class SRecall<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
     private final FeatureData<I, F, ?> featureData;
     private final int cutoff;
+
+    /**
+     * relevance model
+     */
     protected final RelevanceModel<U, I> relModel;
 
+    /**
+     * Constructor.
+     *
+     * @param featureData feature data
+     * @param cutoff maximum length of the recommendation lists to evaluate
+     * @param relModel relevance model
+     */
     public SRecall(FeatureData<I, F, ?> featureData, int cutoff, RelevanceModel<U, I> relModel) {
         this.featureData = featureData;
         this.cutoff = cutoff;

@@ -21,8 +21,12 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
 import static java.lang.Math.min;
 
 /**
+ * Null re-ranker that does not perform an actual re-ranking.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class NullReranker<U, I> extends PermutationReranker<U, I> {
 

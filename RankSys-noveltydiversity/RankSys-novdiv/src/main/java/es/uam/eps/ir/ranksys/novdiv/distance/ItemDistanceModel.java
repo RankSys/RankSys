@@ -20,14 +20,36 @@ package es.uam.eps.ir.ranksys.novdiv.distance;
 import java.util.function.ToDoubleFunction;
 
 /**
+ * Item distance model.
  *
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
+ * 
+ * S. Vargas and P. Castells. Rank and relevance in novelty and diversity for
+ * Recommender Systems. RecSys 2011.
+ * 
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <I> type of the items
  */
 public interface ItemDistanceModel<I> {
 
+    /**
+     * Returns a function that return the distance to the input item.
+     *
+     * @param i item
+     * @return function that return the distance to the input item
+     */
     public ToDoubleFunction<I> dist(I i);
     
+    /**
+     * Returns the distance between a pair of items.
+     *
+     * @param i first item
+     * @param j second item
+     * @return distance between the items
+     */
     public default double dist(I i, I j) {
         return dist(i).applyAsDouble(j);
     }

@@ -20,11 +20,23 @@ package es.uam.eps.ir.ranksys.novdiv.reranking;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 
 /**
+ * Re-ranker. Changes the position of items in a recommendation list to
+ * optimize criteria other than relevance.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public interface Reranker<U, I> {
 
+    /**
+     * Re-ranks a recommendation.
+     *
+     * @param recommendation recommendation to be re-ranked
+     * @param maxLength maximum length of the re-ranking
+     * @return a recommendation that is a re-rankin of the input one
+     */
     public Recommendation<U, I> rerankRecommendation(Recommendation<U, I> recommendation, int maxLength);
 }

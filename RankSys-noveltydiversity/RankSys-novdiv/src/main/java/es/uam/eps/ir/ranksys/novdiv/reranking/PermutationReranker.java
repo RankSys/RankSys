@@ -23,12 +23,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Abstract re-ranker whose output is a permutation of the input
+ * recommendation. Convenient for storing the minimum required information.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class PermutationReranker<U, I> implements Reranker<U, I> {
 
+    /**
+     * Returns the permutation that is applied to the input recommendation
+     * to generate the re-ranked recommendation.
+     *
+     * @param recommendation input recommendatoin
+     * @param maxLength maximum length of the permutation
+     * @return permutation that encodes the re-ranking
+     */
     public abstract int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength);
 
     @Override
@@ -38,6 +51,15 @@ public abstract class PermutationReranker<U, I> implements Reranker<U, I> {
         return permuteRecommendation(recommendation, perm);
     }
 
+    /**
+     * Applies a permutation to re-rank a recommendation.
+     *
+     * @param <U> type of the users
+     * @param <I> type of the items
+     * @param recommendation input recommendation
+     * @param perm permutation
+     * @return re-ranked recommendation according to the permutation
+     */
     public static <U, I> Recommendation<U, I> permuteRecommendation(Recommendation<U, I> recommendation, int[] perm) {
         List<IdDouble<I>> from = recommendation.getItems();
         List<IdDouble<I>> to = new ArrayList<>();
@@ -48,6 +70,12 @@ public abstract class PermutationReranker<U, I> implements Reranker<U, I> {
         return new Recommendation<>(recommendation.getUser(), to);
     }
 
+    /**
+     * Returns a null permutation, that is, an array with values 0..(N-1).
+     *
+     * @param n size of the permutation
+     * @return null permutation
+     */
     protected static int[] getBasePerm(int n) {
         int[] perm = new int[n];
         for (int i = 0; i < n; i++) {

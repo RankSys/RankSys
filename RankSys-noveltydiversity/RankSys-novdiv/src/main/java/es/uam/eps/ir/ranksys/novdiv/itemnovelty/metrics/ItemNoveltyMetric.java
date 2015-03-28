@@ -25,17 +25,39 @@ import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 
 /**
+ * Item novelty metric.
+ * 
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
+ * 
+ * S. Vargas and P. Castells. Rank and relevance in novelty and diversity for
+ * Recommender Systems. RecSys 2011.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetric<U, I> {
 
     private final int cutoff;
+
+    /**
+     * item novelty model
+     */
     protected final ItemNovelty<U, I> novelty;
     private final RelevanceModel<U, I> relModel;
     private final RankingDiscountModel disc;
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum size of the recommendation list that is evaluated
+     * @param novelty novelty model
+     * @param relevanceModel relevance model
+     * @param disc ranking discount model
+     */
     public ItemNoveltyMetric(int cutoff, ItemNovelty<U, I> novelty, RelevanceModel<U, I> relevanceModel, RankingDiscountModel disc) {
         super();
         this.cutoff = cutoff;

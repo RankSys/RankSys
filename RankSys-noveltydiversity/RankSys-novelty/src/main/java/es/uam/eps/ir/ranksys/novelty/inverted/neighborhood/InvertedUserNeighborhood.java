@@ -22,15 +22,33 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 /**
+ * Inverted user neighborhood. See {@link InvertedNeighborhood}
+ * 
+ * S. Vargas and P. Castells. Improving sales diversity by recommending
+ * users to items.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
  */
 public class InvertedUserNeighborhood<U> extends UserNeighborhood<U> {
 
+    /**
+     * Constructor.
+     *
+     * @param neighborhood original neighborhood to be inverted
+     * @param filter determines which users require inverted neighborhoods
+     */
     public InvertedUserNeighborhood(UserNeighborhood<U> neighborhood, Predicate<U> filter) {
         super(neighborhood, new InvertedNeighborhood(neighborhood.numUsers(), neighborhood, uidx -> filter.test(neighborhood.uidx2user(uidx))));
     }
     
+    /**
+     * Constructor - fast version.
+     *
+     * @param neighborhood original neighborhood to be inverted
+     * @param filter determines which users require inverted neighborhoods
+     */
     public InvertedUserNeighborhood(UserNeighborhood<U> neighborhood, IntPredicate filter) {
         super(neighborhood, new InvertedNeighborhood(neighborhood.numUsers(), neighborhood, filter));
     }

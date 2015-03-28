@@ -24,15 +24,34 @@ import es.uam.eps.ir.ranksys.metrics.SystemMetric;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 /**
+ * Abstract sales diversity metrics. It handles the counting of how many times
+ * an item is recommended.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class AbstractSalesDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
 
     private final int cutoff;
+
+    /**
+     * Item count.
+     */
     protected final Object2IntOpenHashMap<I> itemCount;
+
+    /**
+     * Total of recommended items, i.e., sum of the lengths of all
+     * recommendations.
+     */
     protected int m;
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum length of the recommendation lists to evaluate.
+     */
     public AbstractSalesDiversityMetric(int cutoff) {
         this.cutoff = cutoff;
         this.itemCount = new Object2IntOpenHashMap<>();

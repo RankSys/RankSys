@@ -31,14 +31,26 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
+ * Wrapper for re-ranker that re-ranks the output of another recommender.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class RerankingRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     private final FastRecommender<U, I> recommender;
     private final Reranker<U, I> reranker;
 
+    /**
+     * Constructor.
+     *
+     * @param uIndex user index
+     * @param iIndex item index
+     * @param recommender input recommender
+     * @param reranker re-ranker to apply to input recommender
+     */
     public RerankingRecommender(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, FastRecommender<U, I> recommender, Reranker<U, I> reranker) {
         super(uIndex, iIndex);
         this.recommender = recommender;

@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
  * de Madrid, http://ir.ii.uam.es
  *
@@ -15,18 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.novelty.temporal.reranking;
-
-import es.uam.eps.ir.ranksys.novdiv.itemnovelty.ItemNovelty;
-import es.uam.eps.ir.ranksys.novdiv.itemnovelty.reranking.ItemNoveltyReranker;
 
 /**
- *
- * @author Saúl Vargas (saul.vargas@uam.es)
+ * Distance-based rerankers.
  */
-public class TemporalItemNoveltyReranker<U, I> extends ItemNoveltyReranker<U, I> {
-
-    public TemporalItemNoveltyReranker(double lambda, ItemNovelty<U, I> novelty, boolean norm) {
-        super(lambda, novelty, norm);
-    }
-}
+package es.uam.eps.ir.ranksys.diversity.distance.reranking;

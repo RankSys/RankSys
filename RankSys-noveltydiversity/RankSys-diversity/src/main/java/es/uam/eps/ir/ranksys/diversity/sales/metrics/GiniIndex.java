@@ -20,14 +20,27 @@ package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 import static java.util.Arrays.sort;
 
 /**
+ * Gini index sales diversity metric.
+ * 
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class GiniIndex<U, I> extends AbstractSalesDiversityMetric<U, I> {
 
     private final int numItems;
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum length of the recommendation lists that is evaluated
+     * @param numItems total number of items in the catalog
+     */
     public GiniIndex(int cutoff, int numItems) {
         super(cutoff);
         this.numItems = numItems;

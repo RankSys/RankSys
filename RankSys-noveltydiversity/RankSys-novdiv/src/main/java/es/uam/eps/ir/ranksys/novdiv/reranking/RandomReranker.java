@@ -22,9 +22,13 @@ import static java.lang.Math.min;
 import java.util.Random;
 
 /**
+ * Re-ranker that applies a random permutation.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class RandomReranker<U, I> extends PermutationReranker<U, I> {
 

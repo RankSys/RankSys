@@ -24,14 +24,30 @@ import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.novdiv.reranking.LambdaReranker;
 
 /**
+ * Binomial diversity reranker.
+ * 
+ * S. Vargas, L. Baltrunas, A. Karatzoglou, P. Castells. Coverage, redundancy
+ * and size-awareness in genre diversity for Recommender Systems. RecSys 2014.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <F> type of the features
  */
 public class BinomialDiversityReranker<U, I, F> extends LambdaReranker<U, I> {
 
     private final BinomialCoverageReranker<U, I, F> coverageReranker;
     private final BinomialNonRedundancyReranker<U, I, F> nonRedundancyReranker;
     
+    /**
+     * Constructor.
+     *
+     * @param featureData feature data
+     * @param binomialModel binomial model
+     * @param lambda trade-off between relevance and novelty
+     * @param cutoff number of items to be greedily selected
+     */
     public BinomialDiversityReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
         super(lambda, cutoff, true);
         coverageReranker = new BinomialCoverageReranker<>(featureData, binomialModel, lambda, cutoff);
@@ -43,11 +59,20 @@ public class BinomialDiversityReranker<U, I, F> extends LambdaReranker<U, I> {
         return new BinomialDiversityUserReranker(recommendation, maxLength);
     }
 
+    /**
+     * User re-ranker for {@link BinomialDiversityReranker}.
+     */
     protected class BinomialDiversityUserReranker extends LambdaUserReranker {
 
         private final BinomialCoverageReranker<U, I, F>.BinomialCoverageUserReranker coverageUserReranker;
         private final BinomialNonRedundancyReranker<U, I, F>.BinomialNonRedundancyUserReranker nonRedundancyUserReranker;
         
+        /**
+         * Constructor.
+         *
+         * @param recommendation input recommendation to be re-ranked
+         * @param maxLength number of items to be greedily selected
+         */
         public BinomialDiversityUserReranker(Recommendation<U, I> recommendation, int maxLength) {
             super(recommendation, maxLength);
             this.coverageUserReranker = (BinomialCoverageReranker<U, I, F>.BinomialCoverageUserReranker) coverageReranker.getUserReranker(recommendation, maxLength);

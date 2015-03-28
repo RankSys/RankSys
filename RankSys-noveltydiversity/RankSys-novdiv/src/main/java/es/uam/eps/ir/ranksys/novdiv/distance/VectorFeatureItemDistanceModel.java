@@ -25,11 +25,21 @@ import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 
 /**
+ * Feature-based item distance model that considers the features of items as
+ * vectors.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
+ * @param <F> type of the features
  */
 public abstract class VectorFeatureItemDistanceModel<I, F> extends FeatureItemDistanceModel<I, F, Double> {
 
+    /**
+     * Constructor.
+     *
+     * @param featureData feature data
+     */
     public VectorFeatureItemDistanceModel(FeatureData<I, F, Double> featureData) {
         super(featureData);
     }
@@ -65,6 +75,15 @@ public abstract class VectorFeatureItemDistanceModel<I, F> extends FeatureItemDi
         };
     }
 
+    /**
+     * Distance as a function of the inner product between feature vectors
+     * and the square of the norms of these vectors.
+     *
+     * @param prod inner product of two vectors
+     * @param norm2A square norm of the first vector
+     * @param norm2B square norm of the second vector
+     * @return distance value
+     */
     protected abstract double dist(double prod, double norm2A, double norm2B);
 
 }

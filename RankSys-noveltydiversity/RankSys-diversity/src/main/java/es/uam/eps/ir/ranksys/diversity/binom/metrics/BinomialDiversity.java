@@ -23,11 +23,26 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 /**
+ * Binomial diversity metric.
+ *
+ * S. Vargas, L. Baltrunas, A. Karatzoglou, P. Castells. Coverage, redundancy and size-awareness in genre diversity for Recommender Systems. RecSys 2014.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ *
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <F> type of the features
  */
 public class BinomialDiversity<U, I, F> extends BinomialMetric<U, I, F> {
 
+    /**
+     * Constructor.
+     *
+     * @param binomialModel binomial diversity model
+     * @param featureData feature data
+     * @param cutoff maximum length of the recommendation list to be evaluated
+     * @param relModel relevance model
+     */
     public BinomialDiversity(BinomialModel<U, I, F> binomialModel, FeatureData<I, F, ?> featureData, int cutoff, RelevanceModel<U, I> relModel) {
         super(binomialModel, featureData, cutoff, relModel);
     }

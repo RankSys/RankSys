@@ -21,12 +21,29 @@ import es.uam.eps.ir.ranksys.novdiv.itemnovelty.reranking.ItemNoveltyReranker;
 import es.uam.eps.ir.ranksys.novelty.longtail.PCItemNovelty;
 
 /**
+ * Popularity complement item novelty re-ranker.
+ *
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
+ * 
+ * S. Vargas and P. Castells. Rank and relevance in novelty and diversity for
+ * Recommender Systems. RecSys 2011.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class PCItemNoveltyReranker<U, I> extends ItemNoveltyReranker<U, I> {
 
+    /**
+     * Constructor.
+     *
+     * @param lambda trade-off between relevance and novelty
+     * @param novelty item novelty model
+     * @param norm normalize the relevance and novelty scores
+     */
     public PCItemNoveltyReranker(double lambda, PCItemNovelty<U, I> novelty, boolean norm) {
         super(lambda, novelty, norm);
     }

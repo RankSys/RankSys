@@ -23,12 +23,30 @@ import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 
 /**
+ * Expected profile distance metric.
+ *
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
+ * 
+ * S. Vargas and P. Castells. Rank and relevance in novelty and diversity for
+ * Recommender Systems. RecSys 2011.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class EPD<U, I> extends ItemNoveltyMetric<U, I> {
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum size of the recommendation list that is evaluated
+     * @param novelty novelty model
+     * @param relModel relevance model
+     * @param disc ranking discount model
+     */
     public EPD(int cutoff, PDItemNovelty<U, I> novelty, RelevanceModel<U, I> relModel, RankingDiscountModel disc) {
         super(cutoff, novelty, relModel, disc);
     }

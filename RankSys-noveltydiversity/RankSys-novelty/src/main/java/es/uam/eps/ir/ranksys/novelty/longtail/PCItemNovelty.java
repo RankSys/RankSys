@@ -23,14 +23,29 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
 /**
+ * Popularity complement item novelty model.
+ *
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
+ * 
+ * S. Vargas and P. Castells. Rank and relevance in novelty and diversity for
+ * Recommender Systems. RecSys 2011.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class PCItemNovelty<U, I> extends ItemNovelty<U, I> {
 
     private final UserPCItemNoveltyModel nov;
 
+    /**
+     * Constructor
+     *
+     * @param recommenderData preference data
+     */
     public PCItemNovelty(PreferenceData<U, I, ?> recommenderData) {
         super();
         this.nov = new UserPCItemNoveltyModel(recommenderData);

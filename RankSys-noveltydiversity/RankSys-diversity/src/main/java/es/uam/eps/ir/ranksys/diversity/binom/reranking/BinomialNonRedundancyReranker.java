@@ -30,14 +30,30 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Binomial redundancy reranker.
+ * 
+ * S. Vargas, L. Baltrunas, A. Karatzoglou, P. Castells. Coverage, redundancy
+ * and size-awareness in genre diversity for Recommender Systems. RecSys 2014.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <F> type of the features
  */
 public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I> {
 
     private final FeatureData<I, F, ?> featureData;
     private final BinomialModel<U, I, F> binomialModel;
 
+    /**
+     * Constructor.
+     *
+     * @param featureData feature data
+     * @param binomialModel binomial model
+     * @param lambda trade-off between relevance and novelty
+     * @param cutoff number of items to be greedily selected
+     */
     public BinomialNonRedundancyReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
         super(lambda, cutoff, true);
         this.featureData = featureData;
@@ -49,6 +65,9 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         return new BinomialNonRedundancyUserReranker(recommendation, maxLength);
     }
 
+    /**
+     * User re-ranker for {@link BinomialNonRedundancyReranker}.
+     */
     protected class BinomialNonRedundancyUserReranker extends LambdaUserReranker {
 
         private final BinomialModel<U, I, F>.UserBinomialModel ubm;
@@ -56,6 +75,12 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         private final Object2DoubleMap<F> patienceNow;
         private final Object2DoubleMap<F> patienceLater;
 
+        /**
+         * Constructor.
+         *
+         * @param recommendation input recommendation to be re-ranked
+         * @param maxLength number of items to be greedily selected
+         */
         public BinomialNonRedundancyUserReranker(Recommendation<U, I> recommendation, int maxLength) {
             super(recommendation, maxLength);
 

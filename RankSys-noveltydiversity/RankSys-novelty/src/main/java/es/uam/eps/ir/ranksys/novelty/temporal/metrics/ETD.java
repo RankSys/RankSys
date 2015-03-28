@@ -22,15 +22,34 @@ import es.uam.eps.ir.ranksys.novdiv.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.novdiv.itemnovelty.metrics.ItemNoveltyMetric;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
-import es.uam.eps.ir.ranksys.novelty.temporal.TemporalItemNovelty;
+import es.uam.eps.ir.ranksys.novelty.temporal.TDItemNovelty;
 
 /**
+ * Expected Temporal Discovery metric.
  *
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
+ * 
+ * N. Lathia, S. Hailes, L. Capra, X. Amatriain. Temporal diversity in
+ * Recommender Systems. SIGIR 2010.
+ * 
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
-public class TemporalNovelty<U, I> extends ItemNoveltyMetric<U, I> {
+public class ETD<U, I> extends ItemNoveltyMetric<U, I> {
 
-    public TemporalNovelty(int cutoff, TemporalItemNovelty<U, I> novelty, RelevanceModel<U, I> relevanceModel, RankingDiscountModel disc) {
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum size of the recommendation list that is evaluated
+     * @param novelty novelty model
+     * @param relevanceModel relevance model
+     * @param disc ranking discount model
+     */
+    public ETD(int cutoff, TDItemNovelty<U, I> novelty, RelevanceModel<U, I> relevanceModel, RankingDiscountModel disc) {
         super(cutoff, novelty, relevanceModel, disc);
     }
 

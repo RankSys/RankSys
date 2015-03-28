@@ -24,13 +24,19 @@ import es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker;
 import java.util.List;
 
 /**
+ * Bayesian probabilistic reformulation re-ranker.
+ * 
+ * s(u, i) = likelihood(u | i) * prior(i)
+ *
+ * S. Vargas and P. Castells. Improving sales diversity by recommending
+ * users to items.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public abstract class BayesRuleReranker<U, I> extends PermutationReranker<U, I> {
-
-    public BayesRuleReranker() {
-    }
 
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
@@ -54,7 +60,19 @@ public abstract class BayesRuleReranker<U, I> extends PermutationReranker<U, I> 
         return perm;
     }
 
+    /**
+     * Returns the likelihood of an item: p(u | i).
+     *
+     * @param iv item-relevance pair
+     * @return likelihood
+     */
     protected abstract double likelihood(IdDouble<I> iv);
 
+    /**
+     * Returns the prior of an item: p(i).
+     *
+     * @param i item
+     * @return prior
+     */
     protected abstract double prior(I i);
 }

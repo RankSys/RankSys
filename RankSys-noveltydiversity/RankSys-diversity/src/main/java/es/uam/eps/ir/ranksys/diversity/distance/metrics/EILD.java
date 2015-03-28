@@ -27,9 +27,16 @@ import java.util.List;
 import java.util.function.ToDoubleFunction;
 
 /**
+ * Expected Intra-List Diversity metric.
+ * 
+ * S. Vargas and P. Castells. Rank and relevance in novelty and diversity for
+ * Recommender Systems. RecSys 2011.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class EILD<U, I> extends AbstractRecommendationMetric<U, I> {
 
@@ -39,10 +46,28 @@ public class EILD<U, I> extends AbstractRecommendationMetric<U, I> {
     private final RankingDiscountModel disc1;
     private final RankingDiscountModel disc2;
 
+    /**
+     * Constructor with a single ranking discount model.
+     *
+     * @param cutoff maximum length of recommendation lists to evaluate
+     * @param distModel item distance model
+     * @param relModel relevance model
+     * @param disc ranking discount model
+     */
     public EILD(int cutoff, ItemDistanceModel<I> distModel, RelevanceModel<U, I> relModel, RankingDiscountModel disc) {
         this(cutoff, distModel, relModel, disc, disc);
     }
 
+    /**
+     * Constructor with a two ranking discount models: for global ranking and
+     * ranking gap between items.
+     *
+     * @param cutoff maximum length of recommendation lists to evaluate
+     * @param distModel item distance model
+     * @param relModel relevance model
+     * @param disc1 ranking discount model for item ranking
+     * @param disc2 ranking discount model for ranking gap
+     */
     public EILD(int cutoff, ItemDistanceModel<I> distModel, RelevanceModel<U, I> relModel, RankingDiscountModel disc1, RankingDiscountModel disc2) {
         this.cutoff = cutoff;
         this.distModel = distModel;

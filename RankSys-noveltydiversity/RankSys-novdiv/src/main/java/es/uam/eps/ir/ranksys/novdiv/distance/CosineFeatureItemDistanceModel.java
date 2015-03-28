@@ -20,11 +20,20 @@ package es.uam.eps.ir.ranksys.novdiv.distance;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 
 /**
+ * Vector cosine item distance model.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <I> type of the items
+ * @param <F> type of the features
  */
 public class CosineFeatureItemDistanceModel<I, F> extends VectorFeatureItemDistanceModel<I, F> {
 
+    /**
+     * Constructor.
+     *
+     * @param featureData feature data
+     */
     public CosineFeatureItemDistanceModel(FeatureData<I, F, Double> featureData) {
         super(featureData);
     }

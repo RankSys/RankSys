@@ -27,8 +27,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Aggregate diversity.
+ * 
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
+ *
+ * G. Adomavicius and Y. Kwon. Improving aggregate recommendation diversity
+ * using rank-based techniques. TKDE vol. 24 no. 5, 2012.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class AggregateDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
 
@@ -36,6 +46,12 @@ public class AggregateDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
     private final Set<I> recommendedItems;
     private final int cutoff;
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum length of the recommendation lists that is evaluated
+     * @param relModel relevance model
+     */
     public AggregateDiversityMetric(int cutoff, RelevanceModel<U, I> relModel) {
         this.relModel = relModel;
         this.recommendedItems = new HashSet<>();

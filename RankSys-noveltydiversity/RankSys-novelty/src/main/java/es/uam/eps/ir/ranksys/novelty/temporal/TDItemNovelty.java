@@ -23,15 +23,32 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
+ * Temporal discovery item novelty model.
+ *
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
+ * 
+ * S. Vargas and P. Castells. Rank and relevance in novelty and diversity for
+ * Recommender Systems. RecSys 2011.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
-public class TemporalItemNovelty<U, I> extends ItemNovelty<U, I> {
+public class TDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
     private final Function<U, List<I>> pastRecommendations;
     private final RankingDiscountModel disc;
 
-    public TemporalItemNovelty(Function<U, List<I>> pastRecommendations, RankingDiscountModel disc) {
+    /**
+     * Constructor.
+     *
+     * @param pastRecommendations previous recommendations
+     * @param disc ranking discount model
+     */
+    public TDItemNovelty(Function<U, List<I>> pastRecommendations, RankingDiscountModel disc) {
         super();
         this.pastRecommendations = pastRecommendations;
         this.disc = disc;

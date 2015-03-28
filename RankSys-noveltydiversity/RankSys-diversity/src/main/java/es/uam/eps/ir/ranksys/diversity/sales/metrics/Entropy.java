@@ -20,21 +20,32 @@ package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 import static java.lang.Math.log;
 
 /**
+ * Entropy sales diversity metric.
+ * 
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Systems. PhD Thesis.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
 public class Entropy<U, I> extends AbstractSalesDiversityMetric<U, I> {
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum length of the recommendation lists that is evaluated
+     */
     public Entropy(int cutoff) {
         super(cutoff);
     }
 
     @Override
     public double evaluate() {
-        double entropy = 0;
-        for (int c : itemCount.values()) {
-            entropy += c * log(c);
-        }
+        double entropy = itemCount.values().stream()
+                .mapToDouble(c -> c * log(c))
+                .sum();
         entropy = (log(m) - entropy / (double) m) / log(2);
 
         return entropy;

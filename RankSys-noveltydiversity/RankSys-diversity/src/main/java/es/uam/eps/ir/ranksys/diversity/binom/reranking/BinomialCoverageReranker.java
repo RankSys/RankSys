@@ -26,14 +26,30 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Binomial coverage reranker.
+ * 
+ * S. Vargas, L. Baltrunas, A. Karatzoglou, P. Castells. Coverage, redundancy
+ * and size-awareness in genre diversity for Recommender Systems. RecSys 2014.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
+ * @param <F> type of the features
  */
 public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
 
     private final FeatureData<I, F, ?> featureData;
     private final BinomialModel<U, I, F> binomialModel;
 
+    /**
+     * Constructor.
+     *
+     * @param featureData feature data
+     * @param binomialModel binomial model
+     * @param lambda trade-off between relevance and novelty
+     * @param cutoff number of items to be greedily selected
+     */
     public BinomialCoverageReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
         super(lambda, cutoff, true);
         this.featureData = featureData;
@@ -45,12 +61,21 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
         return new BinomialCoverageUserReranker(recommendation, maxLength);
     }
 
+    /**
+     * User re-ranker for {@link BinomialCoverageReranker}.
+     */
     public class BinomialCoverageUserReranker extends LambdaUserReranker {
 
         private final BinomialModel<U, I, F>.UserBinomialModel ubm;
         private final Set<F> uncoveredFeatures;
         private double coverage;
 
+        /**
+         * Constructor.
+         *
+         * @param recommendation input recommendation to be re-ranked
+         * @param maxLength number of items to be greedily selected
+         */
         public BinomialCoverageUserReranker(Recommendation<U, I> recommendation, int maxLength) {
             super(recommendation, maxLength);
 
