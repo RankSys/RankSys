@@ -17,34 +17,25 @@
  */
 package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
-import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
-import es.uam.eps.ir.ranksys.metrics.SystemMetric;
+import es.uam.eps.ir.ranksys.metrics.rank.NoDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * Aggregate diversity.
- * 
- * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
+ * Aggregate diversity. It is actually a rank-unaware version of {@link EIURD}
+ * multiplied by the cut-off.
+ *
+ * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender 
  * Systems. PhD Thesis.
  *
- * G. Adomavicius and Y. Kwon. Improving aggregate recommendation diversity
+ * G. Adomavicius and Y. Kwon. Improving aggregate recommendation diversity 
  * using rank-based techniques. TKDE vol. 24 no. 5, 2012.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public class AggregateDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
-
-    private final RelevanceModel<U, I> relModel;
-    private final Set<I> recommendedItems;
-    private final int cutoff;
+public class AggregateDiversityMetric<U, I> extends EIURD<U, I> {
 
     /**
      * Constructor.
@@ -53,41 +44,12 @@ public class AggregateDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
      * @param relModel relevance model
      */
     public AggregateDiversityMetric(int cutoff, RelevanceModel<U, I> relModel) {
-        this.relModel = relModel;
-        this.recommendedItems = new HashSet<>();
-        this.cutoff = cutoff;
-    }
-
-    @Override
-    public void add(Recommendation<U, I> recommendation) {
-        U u = recommendation.getUser();
-        UserRelevanceModel<U, I> urm = relModel.getModel(u);
-
-        int rank = 0;
-        for (IdDouble<I> ivp : recommendation.getItems()) {
-            if (urm.isRelevant(ivp.id)) {
-                recommendedItems.add(ivp.id);
-            }
-            rank++;
-            if (rank >= cutoff) {
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void combine(SystemMetric<U, I> other) {
-        recommendedItems.addAll(((AggregateDiversityMetric<U, I>) other).recommendedItems);
+        super(cutoff, new NoDiscountModel(), relModel);
     }
 
     @Override
     public double evaluate() {
-        return recommendedItems.size();
-    }
-
-    @Override
-    public void reset() {
-        this.recommendedItems.clear();
+        return cutoff * super.evaluate();
     }
 
 }

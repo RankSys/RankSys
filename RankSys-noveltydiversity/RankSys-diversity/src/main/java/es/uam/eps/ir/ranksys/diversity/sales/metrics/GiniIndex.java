@@ -17,6 +17,8 @@
  */
 package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
+import es.uam.eps.ir.ranksys.metrics.rank.NoDiscountModel;
+import es.uam.eps.ir.ranksys.metrics.rel.NoRelevanceModel;
 import static java.util.Arrays.sort;
 
 /**
@@ -42,22 +44,26 @@ public class GiniIndex<U, I> extends AbstractSalesDiversityMetric<U, I> {
      * @param numItems total number of items in the catalog
      */
     public GiniIndex(int cutoff, int numItems) {
-        super(cutoff);
+        super(cutoff, new NoDiscountModel(), new NoRelevanceModel<>());
         this.numItems = numItems;
     }
 
     @Override
     public double evaluate() {
         double gi = 0;
-        int[] cs = itemCount.values().toIntArray();
-        itemCount.clear();
+        double[] cs = itemCount.values().toDoubleArray();
         sort(cs);
         for (int j = 0; j < cs.length; j++) {
-            gi += (2 * (j + (numItems - cs.length) + 1) - numItems - 1) * (cs[j] / (double) m);
+            gi += (2 * (j + (numItems - cs.length) + 1) - numItems - 1) * (cs[j] / freeNorm);
         }
         gi /= (numItems - 1);
         gi = 1 - gi;
 
         return gi;
+    }
+
+    @Override
+    protected double nov(I i) {
+        throw new UnsupportedOperationException("Using an alternative item novelty aggregation model");
     }
 }

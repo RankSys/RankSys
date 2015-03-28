@@ -21,7 +21,11 @@ import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
 import es.uam.eps.ir.ranksys.metrics.SystemMetric;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
+import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Abstract sales diversity metrics. It handles the counting of how many times
@@ -34,58 +38,109 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
  */
 public abstract class AbstractSalesDiversityMetric<U, I> extends AbstractSystemMetric<U, I> {
 
-    private final int cutoff;
-
     /**
-     * Item count.
+     * maximum length of the recommendation lists that is evaluated
      */
-    protected final Object2IntOpenHashMap<I> itemCount;
+    protected final int cutoff;
+    private final RankingDiscountModel disc;
+    private final RelevanceModel<U, I> rel;
 
     /**
-     * Total of recommended items, i.e., sum of the lengths of all
-     * recommendations.
+     * Map of item-count.
      */
-    protected int m;
+    protected final Object2DoubleOpenHashMap<I> itemCount;
 
     /**
-     * Constructor.
+     * Map of item-weight.
+     */
+    protected final Object2DoubleOpenHashMap<I> itemWeight;
+
+    /**
+     * Norm for free discovery item novelty models.
+     */
+    protected double freeNorm;
+
+    /**
+     * Number of users.
+     */
+    protected int numUsers;
+
+    /**
+     * Constructor
      *
-     * @param cutoff maximum length of the recommendation lists to evaluate.
+     * @param cutoff maximum length of the recommendation lists that is evaluated
+     * @param disc ranking discount model
+     * @param rel relevance model
      */
-    public AbstractSalesDiversityMetric(int cutoff) {
+    public AbstractSalesDiversityMetric(int cutoff, RankingDiscountModel disc, RelevanceModel<U, I> rel) {
         this.cutoff = cutoff;
-        this.itemCount = new Object2IntOpenHashMap<>();
-        itemCount.defaultReturnValue(0);
-        this.m = 0;
+        this.disc = disc;
+        this.rel = rel;
+
+        this.itemCount = new Object2DoubleOpenHashMap<>();
+        this.itemCount.defaultReturnValue(0.0);
+        this.itemWeight = new Object2DoubleOpenHashMap<>();
+        this.itemWeight.defaultReturnValue(0.0);
+        this.freeNorm = 0;
+        this.numUsers = 0;
     }
 
     @Override
     public void add(Recommendation<U, I> recommendation) {
-        int rank = 0;
-        for (IdDouble<I> ivp : recommendation.getItems()) {
-            itemCount.addTo(ivp.id, 1);
+        RelevanceModel.UserRelevanceModel<U, I> urm = rel.getModel(recommendation.getUser());
+        List<IdDouble<I>> list = recommendation.getItems();
 
-            rank++;
-            if (rank >= cutoff) {
-                break;
-            }
-        }
-        m += rank;
+        int rank = Math.min(cutoff, list.size());
+        double userNorm = IntStream.range(0, rank).mapToDouble(disc::disc).sum();
+
+        IntStream.range(0, rank).forEach(k -> {
+            I i = list.get(k).id;
+            double d = disc.disc(k);
+            double w = d * urm.gain(i) / userNorm;
+            itemCount.addTo(i, d);
+            itemWeight.addTo(i, w);
+        });
+
+        freeNorm += userNorm;
+        numUsers++;
     }
 
     @Override
     public void combine(SystemMetric<U, I> other) {
-        ((AbstractSalesDiversityMetric<U, I>) other).itemCount.object2IntEntrySet().forEach(e -> {
-            itemCount.addTo(e.getKey(), e.getIntValue());
+        AbstractSalesDiversityMetric<U, I> otherM = (AbstractSalesDiversityMetric<U, I>) other;
+
+        otherM.itemCount.object2DoubleEntrySet().forEach(e -> {
+            itemCount.addTo(e.getKey(), e.getDoubleValue());
+        });
+        otherM.itemWeight.object2DoubleEntrySet().forEach(e -> {
+            itemWeight.addTo(e.getKey(), e.getDoubleValue());
         });
 
-        m += ((AbstractSalesDiversityMetric<U, I>) other).m;
+        freeNorm += otherM.freeNorm;
+        numUsers += otherM.numUsers;
+    }
+
+    /**
+     * Returns the sales novelty of an item.
+     *
+     * @param i item
+     * @return the sales novelty of the item
+     */
+    protected abstract double nov(I i);
+
+    @Override
+    public double evaluate() {
+        return itemCount.keySet().stream()
+                .mapToDouble((i) -> itemWeight.getDouble(i) * nov(i))
+                .sum() / numUsers;
     }
 
     @Override
     public void reset() {
-        this.m = 0;
-        itemCount.clear();
+        this.itemCount.clear();
+        this.itemWeight.clear();
+        this.freeNorm = 0;
+        this.numUsers = 0;
     }
 
 }

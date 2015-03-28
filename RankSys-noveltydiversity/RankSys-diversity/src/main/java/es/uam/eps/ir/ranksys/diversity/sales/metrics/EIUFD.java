@@ -17,12 +17,11 @@
  */
 package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
-import es.uam.eps.ir.ranksys.metrics.rank.NoDiscountModel;
-import es.uam.eps.ir.ranksys.metrics.rel.NoRelevanceModel;
+import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
+import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 
 /**
- * Entropy sales diversity metric. It is actually a relevance and rank-unaware 
- * version of {@link EIUFD}.
+ * Expected inter-user free discovery.
  *
  * S. Vargas. Novelty and diversity evaluation and enhancement in Recommender
  * Systems. PhD Thesis.
@@ -32,14 +31,24 @@ import es.uam.eps.ir.ranksys.metrics.rel.NoRelevanceModel;
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public class Entropy<U, I> extends EIUFD<U, I> {
+public class EIUFD<U, I> extends AbstractSalesDiversityMetric<U, I> {
 
+    private final double ln2 = Math.log(2.0);
+    
     /**
-     * Constructor.
+     * Constructor
      *
      * @param cutoff maximum length of the recommendation lists that is evaluated
+     * @param disc ranking discount model
+     * @param rel relevance model
      */
-    public Entropy(int cutoff) {
-        super(cutoff, new NoDiscountModel(), new NoRelevanceModel<>());
+    public EIUFD(int cutoff, RankingDiscountModel disc, RelevanceModel<U, I> rel) {
+        super(cutoff, disc, rel);
     }
+
+    @Override
+    protected double nov(I i) {
+        return - Math.log(itemCount.getDouble(i) / freeNorm) / ln2;
+    }
+    
 }
