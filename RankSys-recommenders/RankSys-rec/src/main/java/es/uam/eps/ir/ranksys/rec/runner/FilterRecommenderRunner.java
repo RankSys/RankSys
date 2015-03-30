@@ -21,39 +21,41 @@ import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.rec.Recommender;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
- * Recommender runner that generates recommendations using the candidate
- * recommender method.
+ * Filter runner. It creates recommendations by using the filter method in the
+ * recommenders.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * 
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public class CandidatesRecommendationRunner<U, I> extends AbstractRecommendationRunner<U, I> {
+public class FilterRecommenderRunner<U, I> extends AbstractRecommenderRunner<U, I> {
 
-    private final Function<U, List<I>> candidatesSupplier;
+    private final Function<U, Predicate<I>> userFilter;
+    private final int maxLength;
 
     /**
      * Constructor.
      *
-     * @param users target users for which recommendations are generated
+     * @param users target users, those for which recommendations are generated.
      * @param format output recommendation format
-     * @param candidatesSupplier function that provide the candidate items for
-     * each user
+     * @param userFilter item filter provider for each user
+     * @param maxLength maximum length of the recommendation lists, 0 for no limit
      */
-    public CandidatesRecommendationRunner(Set<U> users, RecommendationFormat<U, I> format, Function<U, List<I>> candidatesSupplier) {
+    public FilterRecommenderRunner(Set<U> users, RecommendationFormat<U, I> format, Function<U, Predicate<I>> userFilter, int maxLength) {
         super(users.stream(), format);
-        this.candidatesSupplier = candidatesSupplier;
+        
+        this.userFilter = userFilter;
+        this.maxLength = maxLength;
     }
 
     @Override
-    public void run(Recommender<U, I> recommender, OutputStream out) throws IOException {
-        run(user -> recommender.getRecommendation(user, candidatesSupplier.apply(user).stream()), out);
+    public void run(final Recommender<U, I> recommender, OutputStream out) throws IOException {
+        run(user -> recommender.getRecommendation(user, maxLength, userFilter.apply(user)), out);
     }
-
 }

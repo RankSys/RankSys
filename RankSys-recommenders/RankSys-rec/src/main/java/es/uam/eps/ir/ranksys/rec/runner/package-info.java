@@ -17,6 +17,6 @@
  */
 
 /**
- * Recommendation runners.
+ * Recommender runners.
  */
 package es.uam.eps.ir.ranksys.rec.runner;

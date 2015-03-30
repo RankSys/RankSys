@@ -25,7 +25,7 @@ import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.rec.Recommender;
 import es.uam.eps.ir.ranksys.rec.fast.FastRecommender;
-import es.uam.eps.ir.ranksys.rec.runner.AbstractRecommendationRunner;
+import es.uam.eps.ir.ranksys.rec.runner.AbstractRecommenderRunner;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Set;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public class FastFilterRecommendationRunner<U, I> extends AbstractRecommendationRunner<U, I> {
+public class FastFilterRecommenderRunner<U, I> extends AbstractRecommenderRunner<U, I> {
 
     private final FastUserIndex<U> userIndex;
     private final FastItemIndex<I> itemIndex;
@@ -59,7 +59,7 @@ public class FastFilterRecommendationRunner<U, I> extends AbstractRecommendation
      * @param userFilter item filter provider for each user
      * @param maxLength maximum length of the recommendation lists, 0 for no limit
      */
-    public FastFilterRecommendationRunner(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex, Set<U> users, RecommendationFormat<U, I> format, Function<U, IntPredicate> userFilter, int maxLength) {
+    public FastFilterRecommenderRunner(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex, Set<U> users, RecommendationFormat<U, I> format, Function<U, IntPredicate> userFilter, int maxLength) {
         super(users.stream(), format);
         this.userIndex = userIndex;
         this.itemIndex = itemIndex;

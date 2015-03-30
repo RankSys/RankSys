@@ -32,14 +32,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Generic recommendation runner. This class handles the print of the output.
+ * Generic recommender runner. This class handles the print of the output.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * 
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public abstract class AbstractRecommendationRunner<U, I> implements RecommendationRunner<U, I> {
+public abstract class AbstractRecommenderRunner<U, I> implements RecommenderRunner<U, I> {
 
     private final List<U> users;
     private final RecommendationFormat<U, I> format;
@@ -50,7 +50,7 @@ public abstract class AbstractRecommendationRunner<U, I> implements Recommendati
      * @param users target users for which recommendations are generated
      * @param format output recommendation format
      */
-    public AbstractRecommendationRunner(Stream<U> users, RecommendationFormat<U, I> format) {
+    public AbstractRecommenderRunner(Stream<U> users, RecommendationFormat<U, I> format) {
         this.users = users.sorted().collect(Collectors.toList());
         this.format = format;
     }
@@ -93,7 +93,7 @@ public abstract class AbstractRecommendationRunner<U, I> implements Recommendati
         try {
             writer.write(recommendation);
         } catch (IOException ex) {
-            getLogger(FilterRecommendationRunner.class.getName()).log(Level.SEVERE, null, ex);
+            getLogger(FilterRecommenderRunner.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -47,8 +47,8 @@ import es.uam.eps.ir.ranksys.nn.user.sim.VectorCosineUserSimilarity;
 import es.uam.eps.ir.ranksys.rec.Recommender;
 import es.uam.eps.ir.ranksys.rec.fast.basic.PopularityRecommender;
 import es.uam.eps.ir.ranksys.rec.fast.basic.RandomRecommender;
-import es.uam.eps.ir.ranksys.rec.runner.RecommendationRunner;
-import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilterRecommendationRunner;
+import es.uam.eps.ir.ranksys.rec.runner.RecommenderRunner;
+import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilterRecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilters;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -79,7 +79,7 @@ public class RecommenderExample {
         FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(itemPath, lp);
         FastPreferenceData<Long, Long, Void> trainData = SimpleFastPreferenceData.load(trainDataPath, lp, lp, ddp, vp, userIndex, itemIndex);
         FastPreferenceData<Long, Long, Void> testData = SimpleFastPreferenceData.load(testDataPath, lp, lp, ddp, vp, userIndex, itemIndex);
-
+        
         //////////////////
         // RECOMMENDERS //
         //////////////////
@@ -163,7 +163,7 @@ public class RecommenderExample {
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
         Function<Long, IntPredicate> filter = FastFilters.notInTrain(trainData);
         int maxLength = 100;
-        RecommendationRunner<Long, Long> runner = new FastFilterRecommendationRunner<>(userIndex, itemIndex, targetUsers, format, filter, maxLength);
+        RecommenderRunner<Long, Long> runner = new FastFilterRecommenderRunner<>(userIndex, itemIndex, targetUsers, format, filter, maxLength);
         
         recMap.forEach((name, recommender) -> {
             try {

@@ -43,6 +43,15 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
     }
 
     /**
+     * Gets all the indices of the features.
+     *
+     * @return a stream of indexes of features
+     */
+    public default IntStream getAllFidx() {
+        return IntStream.range(0, numFeatures());
+    }
+    
+    /**
      * Returns the index assigned to the feature.
      *
      * @param f feature
@@ -57,5 +66,4 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
      * @return the feature whose index is fidx
      */
     public F fidx2feature(int fidx);
-
 }

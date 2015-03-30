@@ -22,7 +22,6 @@ import es.uam.eps.ir.ranksys.fast.feature.FastFeatureData;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.Function;
-import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 
 /**
@@ -37,7 +36,7 @@ public class FastFilters {
      *
      * @return item filters that return true always
      */
-    public static IntFunction<IntPredicate> all() {
+    public static  <U, I> Function<U, IntPredicate> all() {
         return uidx -> iidx -> true;
     }
 
