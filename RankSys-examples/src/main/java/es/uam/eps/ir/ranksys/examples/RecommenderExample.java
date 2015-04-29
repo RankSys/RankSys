@@ -79,7 +79,7 @@ public class RecommenderExample {
         FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(itemPath, lp);
         FastPreferenceData<Long, Long, Void> trainData = SimpleFastPreferenceData.load(trainDataPath, lp, lp, ddp, vp, userIndex, itemIndex);
         FastPreferenceData<Long, Long, Void> testData = SimpleFastPreferenceData.load(testDataPath, lp, lp, ddp, vp, userIndex, itemIndex);
-        
+
         //////////////////
         // RECOMMENDERS //
         //////////////////
@@ -100,10 +100,10 @@ public class RecommenderExample {
             double alpha = 0.5;
             int k = 100;
             int q = 1;
-            
+
             UserSimilarity<Long> sim = new VectorCosineUserSimilarity<>(trainData, alpha);
             UserNeighborhood<Long> neighborhood = new TopKUserNeighborhood<>(sim, k);
-            
+
             return new UserNeighborhoodRecommender<>(trainData, neighborhood, q);
         });
 
@@ -112,11 +112,11 @@ public class RecommenderExample {
             double alpha = 0.5;
             int k = 10;
             int q = 1;
-            
+
             ItemSimilarity<Long> sim = new VectorCosineItemSimilarity<>(trainData, alpha);
             ItemNeighborhood<Long> neighborhood = new TopKItemNeighborhood<>(sim, k);
             neighborhood = new CachedItemNeighborhood<>(neighborhood);
-            
+
             return new ItemNeighborhoodRecommender<>(trainData, neighborhood, q);
         });
 
@@ -127,9 +127,9 @@ public class RecommenderExample {
             double alpha = 1.0;
             DoubleUnaryOperator confidence = x -> 1 + alpha * x;
             int numIter = 20;
-            
+
             Factorization<Long, Long> factorization = new HKVFactorizer<Long, Long>(lambda, confidence, numIter).factorize(k, trainData);
-            
+
             return new MFRecommender<>(userIndex, itemIndex, factorization);
         });
 
@@ -140,9 +140,9 @@ public class RecommenderExample {
             double alpha = 1.0;
             DoubleUnaryOperator confidence = x -> 1 + alpha * x;
             int numIter = 20;
-            
+
             Factorization<Long, Long> factorization = new PZTFactorizer<Long, Long>(lambda, confidence, numIter).factorize(k, trainData);
-            
+
             return new MFRecommender<>(userIndex, itemIndex, factorization);
         });
 
@@ -150,9 +150,9 @@ public class RecommenderExample {
         recMap.put("plsa", () -> {
             int k = 50;
             int numIter = 100;
-            
+
             Factorization<Long, Long> factorization = new PLSAFactorizer<Long, Long>(numIter).factorize(k, trainData);
-            
+
             return new MFRecommender<>(userIndex, itemIndex, factorization);
         });
 
@@ -164,7 +164,7 @@ public class RecommenderExample {
         Function<Long, IntPredicate> filter = FastFilters.notInTrain(trainData);
         int maxLength = 100;
         RecommenderRunner<Long, Long> runner = new FastFilterRecommenderRunner<>(userIndex, itemIndex, targetUsers, format, filter, maxLength);
-        
+
         recMap.forEach((name, recommender) -> {
             try {
                 System.out.println("Running " + name);
