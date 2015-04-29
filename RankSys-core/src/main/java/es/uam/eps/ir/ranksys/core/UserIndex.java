@@ -20,15 +20,32 @@ package es.uam.eps.ir.ranksys.core;
 import java.util.stream.Stream;
 
 /**
+ * Index for a set of users.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public interface UserIndex<U> {
 
+    /**
+     * Checks whether the index contains a user.
+     *
+     * @param u user
+     * @return true if the index contains the user, false otherwise
+     */
     public boolean containsUser(U u);
 
+    /**
+     * Counts the number of indexed users.
+     *
+     * @return the total number of users
+     */
     public int numUsers();
 
+    /**
+     * Retrieves a stream of the indexed users.
+     *
+     * @return a stream of all the users
+     */
     public Stream<U> getAllUsers();
 
 }

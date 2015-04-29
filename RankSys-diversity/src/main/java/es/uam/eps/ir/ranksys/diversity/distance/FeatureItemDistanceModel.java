@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.distance;
 
-import es.uam.eps.ir.ranksys.core.IdValuePair;
+import es.uam.eps.ir.ranksys.core.IdObjectPair;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import java.util.stream.Stream;
 
@@ -38,5 +38,5 @@ public abstract  class FeatureItemDistanceModel<I, F, V> implements ItemDistance
         return dist(featureData.getItemFeatures(i), featureData.getItemFeatures(j));
     }
 
-    public abstract double dist(Stream<IdValuePair<F, V>> features1, Stream<IdValuePair<F, V>> features2);
+    public abstract double dist(Stream<IdObjectPair<F, V>> features1, Stream<IdObjectPair<F, V>> features2);
 }

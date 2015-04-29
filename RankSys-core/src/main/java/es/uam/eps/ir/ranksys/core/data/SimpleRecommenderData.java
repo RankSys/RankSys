@@ -17,7 +17,7 @@
  */
 package es.uam.eps.ir.ranksys.core.data;
 
-import es.uam.eps.ir.ranksys.core.IdValuePair;
+import es.uam.eps.ir.ranksys.core.IdObjectPair;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -37,11 +37,11 @@ import java.util.stream.Stream;
  */
 public class SimpleRecommenderData<U, I, V> implements RecommenderData<U, I, V> {
 
-    private final Map<U, List<IdValuePair<I, V>>> userMap;
-    private final Map<I, List<IdValuePair<U, V>>> itemMap;
+    private final Map<U, List<IdObjectPair<I, V>>> userMap;
+    private final Map<I, List<IdObjectPair<U, V>>> itemMap;
     private final int numPreferences;
 
-    protected SimpleRecommenderData(Map<U, List<IdValuePair<I, V>>> userMap, Map<I, List<IdValuePair<U, V>>> itemMap, int numPreferences) {
+    protected SimpleRecommenderData(Map<U, List<IdObjectPair<I, V>>> userMap, Map<I, List<IdObjectPair<U, V>>> itemMap, int numPreferences) {
         this.userMap = userMap;
         this.itemMap = itemMap;
         this.numPreferences = numPreferences;
@@ -93,12 +93,12 @@ public class SimpleRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
     }
 
     @Override
-    public Stream<IdValuePair<I, V>> getUserPreferences(U u) {
+    public Stream<IdObjectPair<I, V>> getUserPreferences(U u) {
         return userMap.getOrDefault(u, Collections.EMPTY_LIST).stream();
     }
 
     @Override
-    public Stream<IdValuePair<U, V>> getItemPreferences(I i) {
+    public Stream<IdObjectPair<U, V>> getItemPreferences(I i) {
         return itemMap.getOrDefault(i, Collections.EMPTY_LIST).stream();
     }
 
@@ -107,8 +107,8 @@ public class SimpleRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
     }
 
     public static <U, I, V> SimpleRecommenderData<U, I, V> load(InputStream in, Parser<U> uParser, Parser<I> iParser, Parser<V> vParser) throws IOException {
-        Map<U, List<IdValuePair<I, V>>> userMap = new HashMap<>();
-        Map<I, List<IdValuePair<U, V>>> itemMap = new HashMap<>();
+        Map<U, List<IdObjectPair<I, V>>> userMap = new HashMap<>();
+        Map<I, List<IdObjectPair<U, V>>> itemMap = new HashMap<>();
         int[] numPreferences = new int[]{0};
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
@@ -120,19 +120,19 @@ public class SimpleRecommenderData<U, I, V> implements RecommenderData<U, I, V> 
 
                 numPreferences[0]++;
 
-                List<IdValuePair<I, V>> uList = userMap.get(user);
+                List<IdObjectPair<I, V>> uList = userMap.get(user);
                 if (uList == null) {
                     uList = new ArrayList<>();
                     userMap.put(user, uList);
                 }
-                uList.add(new IdValuePair<>(item, value));
+                uList.add(new IdObjectPair<>(item, value));
 
-                List<IdValuePair<U, V>> iList = itemMap.get(item);
+                List<IdObjectPair<U, V>> iList = itemMap.get(item);
                 if (iList == null) {
                     iList = new ArrayList<>();
                     itemMap.put(item, iList);
                 }
-                iList.add(new IdValuePair<>(user, value));
+                iList.add(new IdObjectPair<>(user, value));
             });
         }
 
