@@ -23,19 +23,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <parent>
         <groupId>com.github.ir-uam</groupId>
         <artifactId>RankSys</artifactId>
-        <version>0.3-alpha</version>
+        <version>0.3</version>
     </parent>
 
     <artifactId>RankSys-diversity</artifactId>
     <groupId>com.github.ir-uam.RankSys</groupId>
-    <version>0.3-alpha</version>
+    <version>0.3</version>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-novdiv</artifactId>
-            <version>0.3-alpha</version>
+            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -46,12 +46,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-metrics</artifactId>
-            <version>0.3-alpha</version>
+            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-core</artifactId>
-            <version>0.3-alpha</version>
+            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>it.unimi.dsi</groupId>
