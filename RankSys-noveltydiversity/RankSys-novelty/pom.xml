@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <parent>
         <groupId>es.uam.eps.ir</groupId>
         <artifactId>RankSys-noveltydiversity</artifactId>
-        <version>v0.2</version>
+        <version>0.2</version>
     </parent>
     <artifactId>RankSys-novelty</artifactId>
     <packaging>jar</packaging>
