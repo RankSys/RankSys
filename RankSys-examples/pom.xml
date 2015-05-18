@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <artifactId>RankSys-examples</artifactId>
     <groupId>com.github.ir-uam.RankSys</groupId>
-    <version>0.2</version>
+    <version>0.2.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -35,47 +35,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-core</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-metrics</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys.RankSys-noveltydiversity</groupId>
             <artifactId>RankSys-novelty</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys.RankSys-noveltydiversity</groupId>
             <artifactId>RankSys-diversity</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys.RankSys-noveltydiversity</groupId>
             <artifactId>RankSys-novdiv</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys.RankSys-recommenders</groupId>
             <artifactId>RankSys-nn</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys.RankSys-recommenders</groupId>
             <artifactId>RankSys-mf</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys.RankSys-recommenders</groupId>
             <artifactId>RankSys-rec</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-fast</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
     </dependencies>
 </project>

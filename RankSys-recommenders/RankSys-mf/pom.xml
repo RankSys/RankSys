@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <artifactId>RankSys-mf</artifactId>
     <groupId>com.github.ir-uam.RankSys.RankSys-recommenders</groupId>
-    <version>0.2</version>
+    <version>0.2.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependency>
             <groupId>com.github.ir-uam.RankSys.RankSys-recommenders</groupId>
             <artifactId>RankSys-rec</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>colt</groupId>
@@ -45,12 +45,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-core</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-fast</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>it.unimi.dsi</groupId>

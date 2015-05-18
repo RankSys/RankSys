@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <artifactId>RankSys-fast</artifactId>
     <groupId>com.github.ir-uam.RankSys</groupId>
-    <version>0.2</version>
+    <version>0.2.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-core</artifactId>
-            <version>0.2</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>it.unimi.dsi</groupId>
