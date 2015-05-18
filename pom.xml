@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <artifactId>RankSys</artifactId>
     <groupId>com.github.ir-uam</groupId>
-    <version>0.2.2</version>
+    <version>0.3-alpha</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -35,8 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>RankSys-core</module>
         <module>RankSys-fast</module>
         <module>RankSys-metrics</module>
-        <module>RankSys-recommenders</module>
-        <module>RankSys-noveltydiversity</module>
+        <module>RankSys-rec</module>
+        <module>RankSys-nn</module>
+        <module>RankSys-mf</module>
+        <module>RankSys-novdiv</module>
+        <module>RankSys-novelty</module>
+        <module>RankSys-diversity</module>
         <module>RankSys-examples</module>
     </modules>
 

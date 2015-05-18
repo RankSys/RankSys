@@ -20,22 +20,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>RankSys-novdiv</artifactId>
-    <groupId>com.github.ir-uam.RankSys.RankSys-noveltydiversity</groupId>
-    <version>0.2.2</version>
-    <packaging>jar</packaging>
+    <parent>
+        <groupId>com.github.ir-uam</groupId>
+        <artifactId>RankSys</artifactId>
+        <version>0.3-alpha</version>
+    </parent>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+    <artifactId>RankSys-novdiv</artifactId>
+    <groupId>com.github.ir-uam.RankSys</groupId>
+    <version>0.3-alpha</version>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-core</artifactId>
-            <version>0.2.2</version>
+            <version>0.3-alpha</version>
         </dependency>
         <dependency>
             <groupId>it.unimi.dsi</groupId>
@@ -43,19 +43,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>6.6.3</version>
         </dependency>
         <dependency>
-            <groupId>com.github.ir-uam.RankSys.RankSys-recommenders</groupId>
+            <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-rec</artifactId>
-            <version>0.2.2</version>
+            <version>0.3-alpha</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-metrics</artifactId>
-            <version>0.2.2</version>
+            <version>0.3-alpha</version>
         </dependency>
         <dependency>
             <groupId>com.github.ir-uam.RankSys</groupId>
             <artifactId>RankSys-fast</artifactId>
-            <version>0.2.2</version>
+            <version>0.3-alpha</version>
         </dependency>
     </dependencies>
 </project>
