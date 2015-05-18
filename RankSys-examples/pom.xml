@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <parent>
         <groupId>es.uam.eps.ir</groupId>
         <artifactId>RankSys</artifactId>
-        <version>0.1</version>
+        <version>v0.2</version>
     </parent>
     <artifactId>RankSys-examples</artifactId>
     <packaging>jar</packaging>
@@ -49,9 +49,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>es.uam.eps.ir</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-novdiv</artifactId>
-            <version>0.1</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -69,9 +69,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>es.uam.eps.ir</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-fast</artifactId>
-            <version>0.1</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

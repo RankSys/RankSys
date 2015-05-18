@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <parent>
         <groupId>es.uam.eps.ir</groupId>
         <artifactId>RankSys</artifactId>
-        <version>0.1</version>
+        <version>v0.2</version>
     </parent>
     <artifactId>RankSys-core</artifactId>
     <packaging>jar</packaging>

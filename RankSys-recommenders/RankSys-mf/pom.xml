@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <parent>
         <groupId>es.uam.eps.ir</groupId>
         <artifactId>RankSys-recommenders</artifactId>
-        <version>0.1</version>
+        <version>v0.2</version>
     </parent>
     <artifactId>RankSys-mf</artifactId>
     <packaging>jar</packaging>
@@ -38,14 +38,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>1.2.0</version>
         </dependency>
         <dependency>
-            <groupId>es.uam.eps.ir</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-core</artifactId>
-            <version>0.1</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>es.uam.eps.ir</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-fast</artifactId>
-            <version>0.1</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.unimi.dsi</groupId>
