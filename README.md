@@ -2,8 +2,8 @@
 ## Java 8 Recommender Systems framework for novelty, diversity and much more
 
 ## Authors
- * [Saúl Vargas](http://www.saulvargas.es)
- * [Pablo Castells](http://ir.ii.uam.es/castells/)
+ * [Saúl Vargas](http://www.saulvargas.es), [University of Glasgow](http://www.gla.ac.uk/)
+ * [Pablo Castells](http://ir.ii.uam.es/castells/), [UAM](http://www.uam.es/)
 
 ## References
 
@@ -15,10 +15,74 @@ RankSys is a new framework for the implementation and evaluation of recommendati
 
 The framework has been programmed with Java 8, which is the most recent version of the popular programming language. We take advantage of many of the new features of the language, such as the use of lambda functions, `Stream`'s and facilities for automatic parallelization of the code. The code licensed under the GPL V3, which allows the free use, study, distribution and modification of the software as long as derived works are distributed under the same license.
 
-To date, the publicly available version of this framework includes the modules that implement novelty and diversity metrics and re-ranking techniques and the required core components of the framework:
+To date, the publicly available version of this framework (v0.3) includes the modules that implement novelty and diversity metrics and re-ranking techniques and the required core components of the framework:
  * RankSys-core, which contains the common and auxiliary classes of the framework.
+ * RankSys-fast, which provides support for fast and efficient implementation of data structures and algorithms.
  * RankSys-metrics, which contains the interfaces and common components for defining metrics.
- * RankSys-diversity, which contains the novelty and diversity metrics and re-ranking strategies.
+ * RankSys-rec, which provides support for generating recommendation lists.
+ * RankSys-nn, which implements nearest neighbors recommendation algorithms.
+ * RankSys-mf, which implements matrix factorization recommendation algorithms.
+ * RankSys-novdiv, which provides common resources for novelty and diversity metrics and enhancement techniques.
+ * RankSys-novelty, which contains novelty metrics and enhancement techniques
+ * RankSys-diversity, which contains diversity metrics and enhancement techniques.
  * RankSys-examples, which provides examples of usage of the previous modules.
  
 If you want to know more, the [wiki](https://github.com/ir-uam/RankSys/wiki) provides a high-level description of the different components of the current release of the software.
+
+## Maven
+
+If you want to include RankSys in an existing maven project, first include the following repository:
+~~~
+<repository>
+ <id>jitpack.io</id>
+ <url>https://jitpack.io</url>
+</repository>
+~~~
+and add the required dependencies:
+~~~
+<dependency>
+    <groupId>com.github.ir-uam.RankSys</groupId>
+    <artifactId>RankSys-core</artifactId>
+    <version>0.3</version>
+</dependency>
+<dependency>
+    <groupId>com.github.ir-uam.RankSys</groupId>
+    <artifactId>RankSys-fast</artifactId>
+    <version>0.3</version>
+</dependency>
+<dependency>
+    <groupId>com.github.ir-uam.RankSys</groupId>
+    <artifactId>RankSys-metrics</artifactId>
+    <version>0.3</version>
+</dependency>
+<dependency>
+    <groupId>com.github.ir-uam.RankSys</groupId>
+    <artifactId>RankSys-rec</artifactId>
+    <version>0.3</version>
+</dependency>
+<dependency>
+    <groupId>com.github.ir-uam.RankSys</groupId>
+    <artifactId>RankSys-nn</artifactId>
+    <version>0.3</version>
+</dependency>
+<dependency>
+    <groupId>com.github.ir-uam.RankSys</groupId>
+    <artifactId>RankSys-mf</artifactId>
+    <version>0.3</version>
+</dependency>
+<dependency>
+    <groupId>com.github.ir-uam.RankSys</groupId>
+    <artifactId>RankSys-novdiv</artifactId>
+    <version>0.3</version>
+</dependency>
+<dependency>
+    <groupId>com.github.ir-uam.RankSys</groupId>
+    <artifactId>RankSys-novelty</artifactId>
+    <version>0.3</version>
+</dependency>
+<dependency>
+    <groupId>com.github.ir-uam.RankSys</groupId>
+    <artifactId>RankSys-diversity</artifactId>
+    <version>0.3</version>
+</dependency>
+~~~
