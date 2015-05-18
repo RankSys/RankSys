@@ -15,7 +15,7 @@ RankSys is a new framework for the implementation and evaluation of recommendati
 
 The framework has been programmed with Java 8, which is the most recent version of the popular programming language. We take advantage of many of the new features of the language, such as the use of lambda functions, `Stream`'s and facilities for automatic parallelization of the code. The code licensed under the GPL V3, which allows the free use, study, distribution and modification of the software as long as derived works are distributed under the same license.
 
-To date, the publicly available version of this framework (v0.3) includes the modules that implement novelty and diversity metrics and re-ranking techniques and the required core components of the framework:
+The publicly available version of this framework (v0.3) includes implementations of several collaborative filtering recommendation algorithms as well as wide variety of novelty and diversity metrics and re-ranking techniques. The modules published to date are the following:
  * RankSys-core, which contains the common and auxiliary classes of the framework.
  * RankSys-fast, which provides support for fast and efficient implementation of data structures and algorithms.
  * RankSys-metrics, which contains the interfaces and common components for defining metrics.
@@ -31,14 +31,14 @@ If you want to know more, the [wiki](https://github.com/ir-uam/RankSys/wiki) pro
 
 ## Maven
 
-If you want to include RankSys in an existing maven project, first include the following repository:
+If you want to include RankSys in an existing Maven project, first include the following repository:
 ~~~
 <repository>
  <id>jitpack.io</id>
  <url>https://jitpack.io</url>
 </repository>
 ~~~
-and add the required dependencies:
+and, from the following dependencies, those you require:
 ~~~
 <dependency>
     <groupId>com.github.ir-uam.RankSys</groupId>
