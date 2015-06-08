@@ -17,43 +17,43 @@
  */
 package es.uam.eps.ir.ranksys.examples;
 
-import es.uam.eps.ir.ranksys.core.preference.ConcatPreferenceData;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
-import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
 import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
-import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.vp;
-import es.uam.eps.ir.ranksys.diversity.sales.metrics.AggregateDiversityMetric;
-import es.uam.eps.ir.ranksys.diversity.sales.metrics.GiniIndex;
+import es.uam.eps.ir.ranksys.core.preference.ConcatPreferenceData;
+import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
+import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
+import es.uam.eps.ir.ranksys.diversity.distance.metrics.EILD;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.metrics.AlphaNDCG;
 import es.uam.eps.ir.ranksys.diversity.intentaware.metrics.ERRIA;
-import es.uam.eps.ir.ranksys.metrics.basic.Recall;
-import es.uam.eps.ir.ranksys.novdiv.distance.CosineFeatureItemDistanceModel;
-import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
-import es.uam.eps.ir.ranksys.diversity.distance.metrics.EILD;
-import es.uam.eps.ir.ranksys.novelty.unexp.PDItemNovelty;
-import es.uam.eps.ir.ranksys.novelty.unexp.metrics.EPD;
+import es.uam.eps.ir.ranksys.diversity.sales.metrics.AggregateDiversityMetric;
+import es.uam.eps.ir.ranksys.diversity.sales.metrics.GiniIndex;
+import es.uam.eps.ir.ranksys.metrics.RecommendationMetric;
+import es.uam.eps.ir.ranksys.metrics.SystemMetric;
 import es.uam.eps.ir.ranksys.metrics.basic.AverageRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.basic.NDCG;
 import es.uam.eps.ir.ranksys.metrics.basic.Precision;
-import es.uam.eps.ir.ranksys.metrics.RecommendationMetric;
-import es.uam.eps.ir.ranksys.metrics.SystemMetric;
+import es.uam.eps.ir.ranksys.metrics.basic.Recall;
 import es.uam.eps.ir.ranksys.metrics.rank.NoDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.NoRelevanceModel;
+import es.uam.eps.ir.ranksys.novdiv.distance.CosineFeatureItemDistanceModel;
+import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.novelty.longtail.FDItemNovelty;
 import es.uam.eps.ir.ranksys.novelty.longtail.PCItemNovelty;
 import es.uam.eps.ir.ranksys.novelty.longtail.metrics.EFD;
 import es.uam.eps.ir.ranksys.novelty.longtail.metrics.EPC;
+import es.uam.eps.ir.ranksys.novelty.unexp.PDItemNovelty;
+import es.uam.eps.ir.ranksys.novelty.unexp.metrics.EPD;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
+import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.*;
 
 /**
  * Example main of metrics.

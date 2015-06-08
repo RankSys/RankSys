@@ -24,10 +24,9 @@ import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
 /**
  * Recall metric: proportion of relevant items in a recommendation list to all relevant items.
  *
- * @author Jacek Wasilewski (jacek.wasilewski@insightcentre.org)
- * 
  * @param <U> type of the users
  * @param <I> type of the items
+ * @author Jacek Wasilewski (jacek.wasilewski@insightcentre.org)
  */
 public class Recall<U, I> extends AbstractRecommendationMetric<U, I> {
 
@@ -44,7 +43,7 @@ public class Recall<U, I> extends AbstractRecommendationMetric<U, I> {
     /**
      * Constructor.
      *
-     * @param cutoff maximum length of recommended lists
+     * @param cutoff   maximum length of recommended lists
      * @param relModel relevance model
      */
     public Recall(int cutoff, IdealRelevanceModel<U, I> relModel) {
