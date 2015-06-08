@@ -21,6 +21,7 @@ import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import java.util.concurrent.atomic.DoubleAdder;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 
@@ -48,30 +49,30 @@ public abstract class VectorFeatureItemDistanceModel<I, F> extends FeatureItemDi
     public ToDoubleFunction<Stream<IdObject<F, Double>>> dist(Stream<IdObject<F, Double>> features1) {
         Object2DoubleMap<F> auxMap = new Object2DoubleOpenHashMap<>();
         auxMap.defaultReturnValue(0.0);
-        double[] norm1 = {0.0};
+        DoubleAdder norm1 = new DoubleAdder();
 
         features1.forEach(fv -> {
             auxMap.put(fv.id, fv.v);
-            norm1[0] += fv.v * fv.v;
+            norm1.add(fv.v * fv.v);
         });
 
-        if (norm1[0] == 0) {
+        if (norm1.doubleValue() == 0) {
             return features2 -> Double.NaN;
         }
 
         return features2 -> {
-            double[] prod = {0.0};
-            double[] norm2 = {0.0};
+            DoubleAdder prod = new DoubleAdder();
+            DoubleAdder norm2 = new DoubleAdder();
             features2.forEach(fv -> {
-                prod[0] += fv.v * auxMap.getDouble(fv.id);
-                norm2[0] += fv.v * fv.v;
+                prod.add(fv.v * auxMap.getDouble(fv.id));
+                norm2.add(fv.v * fv.v);
             });
 
-            if (norm2[0] == 0) {
+            if (norm2.doubleValue() == 0) {
                 return Double.NaN;
             }
 
-            return dist(prod[0], norm1[0], norm2[0]);
+            return dist(prod.doubleValue(), norm1.doubleValue(), norm2.doubleValue());
         };
     }
 

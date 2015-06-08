@@ -36,7 +36,7 @@ public interface Reranker<U, I> {
      *
      * @param recommendation recommendation to be re-ranked
      * @param maxLength maximum length of the re-ranking
-     * @return a recommendation that is a re-rankin of the input one
+     * @return a recommendation that is a re-ranking of the input one
      */
     public Recommendation<U, I> rerankRecommendation(Recommendation<U, I> recommendation, int maxLength);
 }

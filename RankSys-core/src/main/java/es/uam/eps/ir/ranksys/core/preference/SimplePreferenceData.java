@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 /**
@@ -174,8 +175,8 @@ public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
     public static <U, I, O> SimplePreferenceData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
         Map<U, List<IdPref<I, O>>> userMap = new HashMap<>();
         Map<I, List<IdPref<U, O>>> itemMap = new HashMap<>();
-        int[] numPreferences = new int[]{0};
-
+        AtomicInteger numPreferences = new AtomicInteger(0);
+        
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             reader.lines().forEach(l -> {
                 String[] tokens = l.split("\t", 4);
@@ -194,7 +195,7 @@ public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
                     other = vParser.parse(null);
                 }
 
-                numPreferences[0]++;
+                numPreferences.incrementAndGet();
 
                 List<IdPref<I, O>> uList = userMap.get(user);
                 if (uList == null) {
@@ -212,7 +213,7 @@ public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
             });
         }
 
-        return new SimplePreferenceData<>(userMap, itemMap, numPreferences[0]);
+        return new SimplePreferenceData<>(userMap, itemMap, numPreferences.intValue());
     }
 
 }

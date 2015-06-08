@@ -26,6 +26,8 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.DoubleAdder;
 
 /**
  * Intent-Aware Expected Reciprocal Rank metric.
@@ -68,31 +70,26 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
         IntentModel<U, I, F>.UserIntentModel uim = intentModel.getModel(recommendation.getUser());
 
-        double[] erria = {0.0};
+        DoubleAdder erria = new DoubleAdder();
 
         Object2DoubleMap<F> pNoPrevRel = new Object2DoubleOpenHashMap<>();
         pNoPrevRel.defaultReturnValue(0.0);
-        uim.getIntents().forEach((f) -> {
-            pNoPrevRel.put(f, 1.0);
-        });
+        uim.getIntents().forEach(f -> pNoPrevRel.put(f, 1.0));
 
-        int[] rank = {0};
-        for (IdDouble<I> iv : recommendation.getItems()) {
+        AtomicInteger rank = new AtomicInteger();
+        recommendation.getItems().stream().limit(cutoff).forEach(iv -> {
             if (userRelModel.isRelevant(iv.id)) {
                 double gain = userRelModel.gain(iv.id);
                 uim.getItemIntents(iv.id).forEach(f -> {
                     double red = pNoPrevRel.getDouble(f);
-                    erria[0] += uim.p(f) * gain * red / (1.0 + rank[0]);
+                    erria.add(uim.p(f) * gain * red / (1.0 + rank.intValue()));
                     pNoPrevRel.put(f, red * (1 - gain));
                 });
             }
-            rank[0]++;
-            if (rank[0] >= cutoff) {
-                break;
-            }
-        }
+            rank.incrementAndGet();
+        });
 
-        return erria[0];
+        return erria.doubleValue();
     }
 
     /**

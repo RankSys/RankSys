@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -65,11 +66,17 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
 
     @Override
     public int numUsers(int iidx) {
+        if (iidxList.get(iidx) == null) {
+            return 0;
+        }
         return iidxList.get(iidx).size();
     }
 
     @Override
     public int numItems(int uidx) {
+        if (uidxList.get(uidx) == null) {
+            return 0;
+        }
         return uidxList.get(uidx).size();
     }
 
@@ -161,7 +168,7 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
      * @throws IOException when path does not exists of IO error
      */
     public static <U, I, O> SimpleFastPreferenceData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
-        int[] numPreferences = new int[]{0};
+        AtomicInteger numPreferences = new AtomicInteger();
 
         List<List<IdxPref<O>>> uidxList = new ArrayList<>();
         for (int uidx = 0; uidx < uIndex.numUsers(); uidx++) {
@@ -194,7 +201,7 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
                 int uidx = uIndex.user2uidx(user);
                 int iidx = iIndex.item2iidx(item);
 
-                numPreferences[0]++;
+                numPreferences.incrementAndGet();
 
                 List<IdxPref<O>> uList = uidxList.get(uidx);
                 if (uList == null) {
@@ -212,7 +219,7 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
             });
         }
 
-        return new SimpleFastPreferenceData<>(numPreferences[0], uidxList, iidxList, uIndex, iIndex);
+        return new SimpleFastPreferenceData<>(numPreferences.intValue(), uidxList, iidxList, uIndex, iIndex);
     }
 
 }

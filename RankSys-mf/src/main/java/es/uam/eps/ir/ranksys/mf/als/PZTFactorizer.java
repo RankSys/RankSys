@@ -25,6 +25,7 @@ import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import static java.lang.Math.sqrt;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.DoubleUnaryOperator;
 import java.util.stream.Stream;
 
@@ -76,6 +77,8 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
 
     @Override
     public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data) {
+        // TODO: add regularization, unify with HKVFactorizer's error
+        
         double error = data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
             DoubleMatrix1D pu = p.viewRow(uidx);
             DoubleMatrix1D su = q.zMult(pu, null);
@@ -139,19 +142,18 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
         double[][] x = new double[K + N][K];
         double[] y = new double[K + N];
         double[] c = new double[K + N];
-        int[] j = new int[1];
         for (int k = 0; k < K; k++) {
-            gt.viewColumn(k).toArray(x[j[0]]);
-            y[j[0]] = 0.0;
-            c[j[0]] = 1.0;
-            j[0]++;
+            gt.viewColumn(k).toArray(x[k]);
+            y[k] = 0.0;
+            c[k] = 1.0;
         }
+        AtomicInteger j = new AtomicInteger(K);
         prefs.forEach(iv -> {
-            q.viewRow(iv.idx).toArray(x[j[0]]);
+            q.viewRow(iv.idx).toArray(x[j.intValue()]);
             double Cui = confidence.applyAsDouble(iv.v);
-            y[j[0]] = (Cui * iv.v) / (Cui - 1);
-            c[j[0]] = Cui - 1;
-            j[0]++;
+            y[j.intValue()] = (Cui * iv.v) / (Cui - 1);
+            c[j.intValue()] = Cui - 1;
+            j.incrementAndGet();
         });
         
         doRR1(L, w, x, y, c, lambda);

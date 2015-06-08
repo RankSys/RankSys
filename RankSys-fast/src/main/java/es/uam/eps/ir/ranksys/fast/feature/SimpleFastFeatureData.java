@@ -78,11 +78,17 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
 
     @Override
     public int numItems(int fidx) {
+        if (fidxList.get(fidx) == null) {
+            return 0;
+        }
         return fidxList.get(fidx).size();
     }
 
     @Override
     public int numFeatures(int iidx) {
+        if (iidxList.get(iidx) == null) {
+            return 0;
+        }
         return iidxList.get(iidx).size();
     }
 

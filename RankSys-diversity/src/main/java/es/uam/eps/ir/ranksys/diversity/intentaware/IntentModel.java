@@ -23,6 +23,7 @@ import es.uam.eps.ir.ranksys.core.model.UserModel;
 import es.uam.eps.ir.ranksys.core.model.UserModel.Model;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 /**
@@ -92,21 +93,21 @@ public class IntentModel<U, I, F> extends UserModel<U> {
             Object2DoubleOpenHashMap<F> auxProb = new Object2DoubleOpenHashMap<>();
             auxProb.defaultReturnValue(0.0);
 
-            int[] norm = {0};
+            AtomicInteger norm = new AtomicInteger(0);
             totalData.getUserPreferences(user).forEach(iv -> {
                 featureData.getItemFeatures(iv.id).forEach(fv -> {
                     auxProb.addTo(fv.id, 1.0);
-                    norm[0]++;
+                    norm.incrementAndGet();
                 });
             });
 
-            if (norm[0] == 0) {
-                norm[0] = featureData.numFeatures();
+            if (norm.intValue() == 0) {
+                norm.set(featureData.numFeatures());
                 featureData.getAllFeatures().sequential().forEach(f -> auxProb.put(f, 1.0));
             }
 
             auxProb.object2DoubleEntrySet().forEach(e -> {
-                e.setValue(e.getDoubleValue() / norm[0]);
+                e.setValue(e.getDoubleValue() / norm.intValue());
             });
 
             this.prob = auxProb;
