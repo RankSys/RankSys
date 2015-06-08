@@ -33,6 +33,7 @@ import es.uam.eps.ir.ranksys.diversity.sales.metrics.GiniIndex;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.metrics.AlphaNDCG;
 import es.uam.eps.ir.ranksys.diversity.intentaware.metrics.ERRIA;
+import es.uam.eps.ir.ranksys.metrics.basic.Recall;
 import es.uam.eps.ir.ranksys.novdiv.distance.CosineFeatureItemDistanceModel;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.diversity.distance.metrics.EILD;
@@ -97,6 +98,8 @@ public class MetricExample {
 
         // PRECISION
         recMetrics.put("prec", new Precision<>(cutoff, binRel));
+        // RECALL
+        recMetrics.put("recall", new Recall<>(cutoff, binRel));
         // nDCG
         recMetrics.put("ndcg", new NDCG<>(cutoff, new NDCG.NDCGRelevanceModel<>(false, testData, threshold)));
         // EILD
