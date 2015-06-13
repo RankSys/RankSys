@@ -34,12 +34,12 @@ import java.util.stream.Stream;
  */
 public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, U, O> {
 
-    private final FastPreferenceData<U, I, O> d;
+    protected final FastPreferenceData<U, I, O> d;
 
     /**
      * Constructor.
      *
-     * @param recommenderData preference data to be tranposed
+     * @param recommenderData preference data to be transposed
      */
     public TransposedPreferenceData(FastPreferenceData<U, I, O> recommenderData) {
         this.d = recommenderData;

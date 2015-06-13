@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  */
 public abstract class SetSimilarity implements Similarity {
 
-    private final FastPreferenceData<?, ?, ?> data;
+    protected final FastPreferenceData<?, ?, ?> data;
 
     /**
      * Constructor.
@@ -59,17 +59,17 @@ public abstract class SetSimilarity implements Similarity {
         };
     }
 
-    private Int2IntMap getIntersectionMap(int aidx) {
+    protected Int2IntMap getIntersectionMap(int idx1) {
         Int2IntOpenHashMap intersectionMap = new Int2IntOpenHashMap();
         intersectionMap.defaultReturnValue(0);
 
-        data.getUidxPreferences(aidx).forEach(ip -> {
+        data.getUidxPreferences(idx1).forEach(ip -> {
             data.getIidxPreferences(ip.idx).forEach(up -> {
                 intersectionMap.addTo(up.idx, 1);
             });
         });
 
-        intersectionMap.remove(aidx);
+        intersectionMap.remove(idx1);
 
         return intersectionMap;
     }
@@ -77,7 +77,7 @@ public abstract class SetSimilarity implements Similarity {
     @Override
     public Stream<IdxDouble> similarElems(int idx1) {
         int na = data.numItems(idx1);
-        
+
         return getIntersectionMap(idx1).int2IntEntrySet().stream()
                 .map(e -> {
                     int idx2 = e.getIntKey();

@@ -31,8 +31,8 @@ import java.util.stream.Stream;
  */
 public abstract class VectorSimilarity implements Similarity {
 
-    private final FastPreferenceData<?, ?, ?> data;
-    private final Int2DoubleMap norm2Map;
+    protected final FastPreferenceData<?, ?, ?> data;
+    protected final Int2DoubleMap norm2Map;
 
     /**
      * Constructor.
@@ -62,22 +62,22 @@ public abstract class VectorSimilarity implements Similarity {
         };
     }
 
-    private Int2DoubleMap getProductMap(int idx) {
+    protected Int2DoubleMap getProductMap(int idx1) {
         Int2DoubleOpenHashMap productMap = new Int2DoubleOpenHashMap();
         productMap.defaultReturnValue(0.0);
 
-        data.getUidxPreferences(idx).forEach(ip -> {
+        data.getUidxPreferences(idx1).forEach(ip -> {
             data.getIidxPreferences(ip.idx).forEach(up -> {
                 productMap.addTo(up.idx, ip.v * up.v);
             });
         });
 
-        productMap.remove(idx);
+        productMap.remove(idx1);
 
         return productMap;
     }
 
-    private double getNorm2(int idx) {
+    protected double getNorm2(int idx) {
         return data.getUidxPreferences(idx).mapToDouble(ip -> ip.v * ip.v).sum();
     }
 
