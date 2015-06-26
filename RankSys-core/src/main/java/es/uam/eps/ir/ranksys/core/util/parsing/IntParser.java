@@ -17,23 +17,29 @@
  */
 package es.uam.eps.ir.ranksys.core.util.parsing;
 
+import static java.util.stream.IntStream.range;
+
 /**
- * Parses a CharSequence to a double
+ * Parses a CharSequence to an int
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public interface DoubleParser {
+public interface IntParser {
 
     /**
-     * Parses a CharSequence into a double.
+     * Parses a CharSequence into an int.
      *
      * @param from string to be parsed
-     * @return parsed double
+     * @return parsed int
      */
-    public double parse(CharSequence from);
-    
+    public int parse(CharSequence from);
+
     /**
-     * Default double parser
+     * Default int parser
      */
-    public static final DoubleParser ddp = (token) -> Double.parseDouble(token.toString());
+    public static final IntParser dip = from -> {
+        boolean neg = from.charAt(0) == '-';
+        int x = range(neg ? 1 : 0, from.length()).map(i -> from.charAt(i) - '0').reduce(0, (a, b) -> a * 10 + b);
+        return neg ? -x : x;
+    };
 }

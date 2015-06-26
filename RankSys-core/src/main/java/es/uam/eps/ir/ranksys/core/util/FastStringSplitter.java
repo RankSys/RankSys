@@ -19,7 +19,7 @@ package es.uam.eps.ir.ranksys.core.util;
 
 /**
  * Efficient and fast CharSequence splitter.
- * 
+ *
  * It is a much faster alternative to the String.split method.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
@@ -27,7 +27,7 @@ package es.uam.eps.ir.ranksys.core.util;
 public class FastStringSplitter {
 
     private static final int N = 100;
-    
+
     /**
      * Splits a CharSequence according to the delimiter character.
      *
@@ -37,7 +37,7 @@ public class FastStringSplitter {
      */
     public static CharSequence[] split(CharSequence line, int delimiter) {
         CharSequence[] tokens0 = split(line, delimiter, N);
-        
+
         if (tokens0.length < N) {
             return tokens0;
         } else {
@@ -45,11 +45,11 @@ public class FastStringSplitter {
             CharSequence[] tokens2 = new CharSequence[tokens0.length + tokens1.length - 1];
             System.arraycopy(tokens0, 0, tokens2, 0, tokens0.length - 1);
             System.arraycopy(tokens1, 0, tokens2, tokens0.length - 1, tokens1.length);
-            
+
             return tokens2;
         }
     }
-    
+
     /**
      * Splits a CharSequence according to the delimiter character in a limited number of tokens.
      *
@@ -91,7 +91,7 @@ public class FastStringSplitter {
         if (line instanceof String) {
             return ((String) line).indexOf(ch, fromIndex);
         }
-        
+
         final int max = line.length();
         if (fromIndex < 0) {
             fromIndex = 0;
