@@ -30,17 +30,17 @@ public class IdPref<I, O> {
     /**
      * The ID of a user or an item.
      */
-    public final I id;
+    public I id;
 
     /**
      * The weight (rating, play count, etc.) of the preference.
      */
-    public final double v;
+    public double v;
 
     /**
      * Other information (such as an access log, context) of the preference.
      */
-    public final O o;
+    public O o;
 
     /**
      * Constructs a preference.

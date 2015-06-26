@@ -29,17 +29,17 @@ public class IdxPref<O> {
     /**
      * The index of a user or an item.
      */
-    public final int idx;
+    public int idx;
 
     /**
      * The weight (rating, play count, etc.) of the preference.
      */
-    public final double v;
+    public double v;
 
     /**
      * Other information (such as an access log, context) of the preference.
      */
-    public final O o;
+    public O o;
 
     /**
      * Constructor.
