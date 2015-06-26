@@ -34,8 +34,8 @@ public class SetJaccardUserSimilarity<U> extends UserSimilarity<U> {
      *
      * @param data preference data
      */
-    public SetJaccardUserSimilarity(FastPreferenceData<U, ?, ?> data) {
-        super(data, new SetJaccardSimilarity(data));
+    public SetJaccardUserSimilarity(FastPreferenceData<U, ?, ?> data, boolean fast) {
+        super(data, new SetJaccardSimilarity(data, fast));
     }
 
 }

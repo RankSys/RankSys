@@ -22,6 +22,7 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import java.util.function.IntToDoubleFunction;
+import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 
 /**
@@ -32,18 +33,29 @@ import java.util.stream.Stream;
 public abstract class VectorSimilarity implements Similarity {
 
     protected final FastPreferenceData<?, ?, ?> data;
+    protected final boolean fast;
     protected final Int2DoubleMap norm2Map;
+    protected final double[] norm2Array;
 
     /**
-     * Constructor.
+     * Constructor. Uses maps for internal calculation.
      *
      * @param data preference data
+     * @param fast true for array-based calculations, false to map-based
      */
-    public VectorSimilarity(FastPreferenceData<?, ?, ?> data) {
+    public VectorSimilarity(FastPreferenceData<?, ?, ?> data, boolean fast) {
         this.data = data;
-        this.norm2Map = new Int2DoubleOpenHashMap();
-        norm2Map.defaultReturnValue(0.0);
-        data.getUidxWithPreferences().forEach(idx -> norm2Map.put(idx, getNorm2(idx)));
+        this.fast = fast;
+        if (fast) {
+            this.norm2Map = null;
+            this.norm2Array = new double[data.numUsers()];
+            data.getUidxWithPreferences().forEach(idx -> norm2Array[idx] = getNorm2(idx));
+        } else {
+            this.norm2Map = new Int2DoubleOpenHashMap();
+            this.norm2Array = null;
+            norm2Map.defaultReturnValue(0.0);
+            data.getUidxWithPreferences().forEach(idx -> norm2Map.put(idx, getNorm2(idx)));
+        }
     }
 
     @Override
@@ -52,7 +64,7 @@ public abstract class VectorSimilarity implements Similarity {
         data.getUidxPreferences(idx1).forEach(iv -> map.put(iv.idx, iv.v));
 
         double n2a = norm2Map.get(idx1);
-
+        
         return idx2 -> {
             double prod = data.getUidxPreferences(idx2)
                     .mapToDouble(iv -> iv.v * map.get(iv.idx))
@@ -77,21 +89,44 @@ public abstract class VectorSimilarity implements Similarity {
         return productMap;
     }
 
+    protected double[] getProductArray(int idx1) {
+        double[] productMap = new double[data.numUsers()];
+
+        data.getUidxPreferences(idx1).forEach(ip -> {
+            data.getIidxPreferences(ip.idx).forEach(up -> {
+                productMap[up.idx] += ip.v * up.v;
+            });
+        });
+
+        productMap[idx1] = 0.0;
+
+        return productMap;
+    }
+
     protected double getNorm2(int idx) {
         return data.getUidxPreferences(idx).mapToDouble(ip -> ip.v * ip.v).sum();
     }
 
     @Override
     public Stream<IdxDouble> similarElems(int idx1) {
-        double n2a = norm2Map.get(idx1);
+        if (fast) {
+            double n2a = norm2Array[idx1];
 
-        return getProductMap(idx1).int2DoubleEntrySet().stream()
-                .map(e -> {
-                    int idx2 = e.getIntKey();
-                    double coo = e.getDoubleValue();
-                    double n2b = norm2Map.get(idx2);
-                    return new IdxDouble(idx2, sim(coo, n2a, n2b));
-                });
+            double[] productMap = getProductArray(idx1);
+            return range(0, productMap.length)
+                    .filter(i -> productMap[i] != 0.0)
+                    .mapToObj(i -> new IdxDouble(i, sim(productMap[i], n2a, norm2Array[i])));
+        } else {
+            double n2a = norm2Map.get(idx1);
+
+            return getProductMap(idx1).int2DoubleEntrySet().stream()
+                    .map(e -> {
+                        int idx2 = e.getIntKey();
+                        double coo = e.getDoubleValue();
+                        double n2b = norm2Map.get(idx2);
+                        return new IdxDouble(idx2, sim(coo, n2a, n2b));
+                    });
+        }
     }
 
     /**

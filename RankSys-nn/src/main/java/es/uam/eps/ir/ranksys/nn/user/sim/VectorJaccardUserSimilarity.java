@@ -34,8 +34,8 @@ public class VectorJaccardUserSimilarity<U> extends UserSimilarity<U> {
      *
      * @param data preference data
      */
-    public VectorJaccardUserSimilarity(FastPreferenceData<U, ?, ?> data) {
-        super(data, new VectorJaccardSimilarity(data));
+    public VectorJaccardUserSimilarity(FastPreferenceData<U, ?, ?> data, boolean fast) {
+        super(data, new VectorJaccardSimilarity(data, fast));
     }
     
 }

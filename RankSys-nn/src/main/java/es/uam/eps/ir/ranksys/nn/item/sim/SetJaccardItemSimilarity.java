@@ -35,7 +35,7 @@ public class SetJaccardItemSimilarity<I> extends ItemSimilarity<I> {
      *
      * @param data preference data
      */
-    public SetJaccardItemSimilarity(FastPreferenceData<?, I, ?> data) {
-        super(data, new SetJaccardSimilarity(new TransposedPreferenceData<>(data)));
+    public SetJaccardItemSimilarity(FastPreferenceData<?, I, ?> data, boolean fast) {
+        super(data, new SetJaccardSimilarity(new TransposedPreferenceData<>(data), fast));
     }
 }

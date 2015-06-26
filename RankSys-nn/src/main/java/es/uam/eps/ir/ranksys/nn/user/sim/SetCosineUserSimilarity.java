@@ -35,8 +35,8 @@ public class SetCosineUserSimilarity<U> extends UserSimilarity<U> {
      * @param recommenderData preference data
      * @param alpha asymmetry of the similarity, set to 0.5 for standard cosine
      */
-    public SetCosineUserSimilarity(FastPreferenceData<U, ?, ?> recommenderData, double alpha) {
-        super(recommenderData, new SetCosineSimilarity(recommenderData, alpha));
+    public SetCosineUserSimilarity(FastPreferenceData<U, ?, ?> recommenderData, double alpha, boolean fast) {
+        super(recommenderData, new SetCosineSimilarity(recommenderData, alpha, fast));
     }
 
 }

@@ -33,8 +33,8 @@ public class VectorJaccardSimilarity extends VectorSimilarity {
      *
      * @param data preference data
      */
-    public VectorJaccardSimilarity(FastPreferenceData<?, ?, ?> data) {
-        super(data);
+    public VectorJaccardSimilarity(FastPreferenceData<?, ?, ?> data, boolean fast) {
+        super(data, fast);
     }
 
     @Override

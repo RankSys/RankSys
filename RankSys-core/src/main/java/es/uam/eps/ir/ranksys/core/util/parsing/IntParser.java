@@ -15,28 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.nn.item.sim;
-
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
-import es.uam.eps.ir.ranksys.nn.sim.VectorJaccardSimilarity;
+package es.uam.eps.ir.ranksys.core.util.parsing;
 
 /**
- * Vector Jaccard item similarity. See {@link VectorJaccardSimilarity}.
+ * Parses a CharSequence to a double
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
- * @param <I> type of the items
  */
-public class VectorJaccardItemSimilarity<I> extends ItemSimilarity<I> {
+public interface DoubleParser {
 
     /**
-     * Constructor.
+     * Parses a CharSequence into a double.
      *
-     * @param data preference data
+     * @param from string to be parsed
+     * @return parsed double
      */
-    public VectorJaccardItemSimilarity(FastPreferenceData<?, I, ?> data, boolean fast) {
-        super(data, new VectorJaccardSimilarity(new TransposedPreferenceData<>(data), fast));
-    }
+    public double parse(CharSequence from);
     
+    /**
+     * Default double parser
+     */
+    public static final DoubleParser ddp = (token) -> Double.parseDouble(token.toString());
 }

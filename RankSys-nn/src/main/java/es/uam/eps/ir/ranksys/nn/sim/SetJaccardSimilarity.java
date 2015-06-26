@@ -33,8 +33,8 @@ public class SetJaccardSimilarity extends SetSimilarity {
      *
      * @param data preference data
      */
-    public SetJaccardSimilarity(FastPreferenceData<?, ?, ?> data) {
-        super(data);
+    public SetJaccardSimilarity(FastPreferenceData<?, ?, ?> data, boolean fast) {
+        super(data, fast);
     }
 
     @Override
