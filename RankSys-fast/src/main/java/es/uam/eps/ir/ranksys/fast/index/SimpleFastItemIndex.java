@@ -91,7 +91,11 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I> {
      * @throws IOException when file does not exist or when IO error
      */
     public static <I> SimpleFastItemIndex<I> load(String path, Parser<I> iParser) throws IOException {
-        return load(new FileInputStream(path), iParser);
+        return load(path, iParser, true);
+    }
+
+    public static <I> SimpleFastItemIndex<I> load(String path, Parser<I> iParser, boolean sort) throws IOException {
+        return load(new FileInputStream(path), iParser, sort);
     }
 
     /**
@@ -104,12 +108,15 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I> {
      * @throws IOException when IO error
      */
     public static <I> SimpleFastItemIndex<I> load(InputStream in, Parser<I> iParser) throws IOException {
+        return load(in, iParser, true);
+    }
+
+    public static <I> SimpleFastItemIndex<I> load(InputStream in, Parser<I> iParser, boolean sort) throws IOException {
         SimpleFastItemIndex<I> itemIndex = new SimpleFastItemIndex<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            reader.lines()
-                    .map(line -> iParser.parse(split(line, '\t')[0]))
-                    .sorted()
-                    .forEach(i -> itemIndex.add(i));
+            Stream<I> items = reader.lines()
+                    .map(line -> iParser.parse(split(line, '\t')[0]));
+            (sort ? items.sorted() : items).forEach(i -> itemIndex.add(i));
         }
         return itemIndex;
     }
