@@ -101,12 +101,18 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         IntStream.range(0, piz.rows()).filter(iidx -> !iidxs.contains(iidx)).forEach(iidx -> piz.viewRow(iidx).assign(0.0));
 
         PLSAPreferenceData<U, I> plsaData = new PLSAPreferenceData<>(data, pu_z.columns());
-
-        for (int z = 0; z < pu_z.columns(); z++) {
-            final DoubleMatrix1D pu_Z = pu_z.viewColumn(z);
-            pu_Z.assign(mult(1 / pu_Z.aggregate(plus, identity)));
+        
+        // normalize p(z|u)
+        plsaData.getUidxWithPreferences().parallel().forEach(uidx -> {
+        	final DoubleMatrix1D pU_z = pu_z.viewRow(uidx);
+        	pU_z.assign(mult(1 / pU_z.aggregate(plus, identity)));
+        });
+        
+        // normalize p(i|z)
+        for (int z = 0; z < piz.columns(); z++) {
+        	final DoubleMatrix1D pZ_i = piz.viewColumn(z);
+        	pZ_i.assign(mult(1 / pZ_i.aggregate(plus, identity)));
         }
-        piz.assign(mult(1 / piz.aggregate(plus, identity)));
 
         for (int t = 1; t <= numIter; t++) {
             long time0 = System.nanoTime();
@@ -165,12 +171,18 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
                 }
             });
         });
-
-        for (int z = 0; z < pu_z.columns(); z++) {
-            final DoubleMatrix1D pZ_u = pu_z.viewColumn(z);
-            pZ_u.assign(mult(1 / pZ_u.aggregate(plus, identity)));
+        
+        // normalize p(z|u)
+        qzData.getUidxWithPreferences().parallel().forEach(uidx -> {
+        	final DoubleMatrix1D pU_z = pu_z.viewRow(uidx);
+        	pU_z.assign(mult(1 / pU_z.aggregate(plus, identity)));
+        });
+        
+        // normalize p(i|z)
+        for (int z = 0; z < piz.columns(); z++) {
+        	final DoubleMatrix1D pZ_i = piz.viewColumn(z);
+        	pZ_i.assign(mult(1 / pZ_i.aggregate(plus, identity)));
         }
-        piz.assign(mult(1 / piz.aggregate(plus, identity)));
     }
 
     private void normalizeQz(double[] qz) {
