@@ -25,7 +25,6 @@ import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import static java.lang.Math.sqrt;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.DoubleUnaryOperator;
 import java.util.stream.Stream;
 
@@ -76,7 +75,7 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
     }
 
     @Override
-    public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data) {
+    public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I> data) {
         // TODO: add regularization, unify with HKVFactorizer's error
         
         double error = data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
@@ -99,16 +98,16 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
     }
 
     @Override
-    public void set_minP(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data) {
+    public void set_minP(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, FastPreferenceData<U, I> data) {
         set_min(p, q, confidence, lambdaP, data);
     }
 
     @Override
-    public void set_minQ(final DenseDoubleMatrix2D q, final DenseDoubleMatrix2D p, FastPreferenceData<U, I, ?> data) {
+    public void set_minQ(final DenseDoubleMatrix2D q, final DenseDoubleMatrix2D p, FastPreferenceData<U, I> data) {
         set_min(q, p, confidence, lambdaQ, new TransposedPreferenceData<>(data));
     }
 
-    private static <U, I, O> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleUnaryOperator confidence, double lambda, FastPreferenceData<U, I, O> data) {
+    private static <U, I> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleUnaryOperator confidence, double lambda, FastPreferenceData<U, I> data) {
         DoubleMatrix2D gt = getGt(p, q, lambda);
 
         data.getUidxWithPreferences().parallel().forEach(uidx -> {
@@ -136,7 +135,7 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
         return gt;
     }
 
-    private static <O> void prepareRR1(int L, DoubleMatrix1D w, DoubleMatrix2D gt, DoubleMatrix2D q, int N, Stream<IdxPref<O>> prefs, DoubleUnaryOperator confidence, double lambda) {
+    private static <O> void prepareRR1(int L, DoubleMatrix1D w, DoubleMatrix2D gt, DoubleMatrix2D q, int N, Stream<IdxPref> prefs, DoubleUnaryOperator confidence, double lambda) {
         int K = (int) w.size();
 
         double[][] x = new double[K + N][K];
@@ -147,13 +146,13 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
             y[k] = 0.0;
             c[k] = 1.0;
         }
-        AtomicInteger j = new AtomicInteger(K);
+        int[] j = {K};
         prefs.forEach(iv -> {
-            q.viewRow(iv.idx).toArray(x[j.intValue()]);
+            q.viewRow(iv.idx).toArray(x[j[0]]);
             double Cui = confidence.applyAsDouble(iv.v);
-            y[j.intValue()] = (Cui * iv.v) / (Cui - 1);
-            c[j.intValue()] = Cui - 1;
-            j.incrementAndGet();
+            y[j[0]] = (Cui * iv.v) / (Cui - 1);
+            c[j[0]] = Cui - 1;
+            j[0]++;
         });
         
         doRR1(L, w, x, y, c, lambda);

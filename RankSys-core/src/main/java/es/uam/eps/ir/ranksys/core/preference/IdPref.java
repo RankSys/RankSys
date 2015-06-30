@@ -17,42 +17,34 @@
  */
 package es.uam.eps.ir.ranksys.core.preference;
 
+import es.uam.eps.ir.ranksys.core.IdDouble;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+
 /**
  * A user or item preference.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <I> type of the user or item
- * @param <O> type of other information
  */
-public class IdPref<I, O> {
+public class IdPref<I> extends IdDouble<I> {
 
-    /**
-     * The ID of a user or an item.
-     */
-    public I id;
+    public IdPref() {
+    }
 
-    /**
-     * The weight (rating, play count, etc.) of the preference.
-     */
-    public double v;
+    public IdPref(I id, double v) {
+        super(id, v);
+    }
 
-    /**
-     * Other information (such as an access log, context) of the preference.
-     */
-    public O o;
+    public IdPref(Object2DoubleMap.Entry<I> e) {
+        super(e);
+    }
 
-    /**
-     * Constructs a preference.
-     *
-     * @param id ID of user or item for which the preference is expressed
-     * @param value weight of the preference
-     * @param other other information of the preference
-     */
-    public IdPref(I id, double value, O other) {
+    @Override
+    public IdDouble refill(I id, double v) {
         this.id = id;
-        this.v = value;
-        this.o = other;
+        this.v = v;
+        return this;
     }
 
 }

@@ -36,7 +36,7 @@ public abstract class Factorizer<U, I> {
      * @param data preference data
      * @return the global loss
      */
-    public abstract double error(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data);
+    public abstract double error(Factorization<U, I> factorization, FastPreferenceData<U, I> data);
 
     /**
      * Creates and calculates a factorization.
@@ -45,7 +45,7 @@ public abstract class Factorizer<U, I> {
      * @param data preference data
      * @return a matrix factorization
      */
-    public abstract Factorization<U, I> factorize(int K, FastPreferenceData<U, I, ?> data);
+    public abstract Factorization<U, I> factorize(int K, FastPreferenceData<U, I> data);
 
     /**
      * Calculates the factorization by using a previously generate matrix 
@@ -54,5 +54,5 @@ public abstract class Factorizer<U, I> {
      * @param factorization matrix factorization
      * @param data preference data
      */
-    public abstract void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data);
+    public abstract void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I> data);
 }

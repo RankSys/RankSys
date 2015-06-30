@@ -36,8 +36,8 @@ public class SetCosineItemSimilarity<I> extends ItemSimilarity<I> {
      * @param data preference
      * @param alpha asymmetry of the similarity, set to 0.5 to standard cosine.
      */
-    public SetCosineItemSimilarity(FastPreferenceData<?, I, ?> data, double alpha, boolean fast) {
-        super(data, new SetCosineSimilarity(new TransposedPreferenceData<>(data), alpha, fast));
+    public SetCosineItemSimilarity(FastPreferenceData<?, I> data, double alpha, boolean dense) {
+        super(data, new SetCosineSimilarity(new TransposedPreferenceData<>(data), alpha, dense));
     }
 
 }

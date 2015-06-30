@@ -44,8 +44,8 @@ public class VectorCosineSimilarity extends VectorSimilarity {
      * @param data preference data
      * @param alpha asymmetry of the similarity, set to 0.5 for symmetry
      */
-    public VectorCosineSimilarity(FastPreferenceData<?, ?, ?> data, double alpha, boolean fast) {
-        super(data, fast);
+    public VectorCosineSimilarity(FastPreferenceData<?, ?> data, double alpha, boolean dense) {
+        super(data, dense);
         this.alpha = alpha;
     }
 

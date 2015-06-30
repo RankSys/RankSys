@@ -19,7 +19,7 @@ package es.uam.eps.ir.ranksys.nn.sim;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
+import es.uam.eps.ir.ranksys.fast.preference.FasterPreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -35,18 +35,18 @@ import java.util.stream.Stream;
  */
 public abstract class SetSimilarity implements Similarity {
 
-    protected final FastPreferenceData<?, ?, ?> data;
-    protected final boolean fast;
+    protected final FastPreferenceData<?, ?> data;
+    protected final boolean dense;
 
     /**
      * Constructor.
      *
      * @param data preference data
-     * @param fast true for array-based calculations, false to map-based
+     * @param dense true for array-based calculations, false to map-based
      */
-    public SetSimilarity(FastPreferenceData<?, ?, ?> data, boolean fast) {
+    public SetSimilarity(FastPreferenceData<?, ?> data, boolean dense) {
         this.data = data;
-        this.fast = fast;
+        this.dense = dense;
     }
 
     @Override
@@ -93,23 +93,73 @@ public abstract class SetSimilarity implements Similarity {
         return intersectionMap;
     }
 
+    protected Int2IntMap getFasterIntersectionMap(int uidx) {
+        Int2IntOpenHashMap intersectionMap = new Int2IntOpenHashMap();
+        intersectionMap.defaultReturnValue(0);
+
+        int[] iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        for (int i = 0; i < iidxs.length; i++) {
+            int[] vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs[i]);
+            for (int j = 0; j < vidxs.length; j++) {
+                intersectionMap.addTo(vidxs[j], 1);
+            }
+        }
+
+        intersectionMap.remove(uidx);
+
+        return intersectionMap;
+    }
+
+    protected int[] getFasterIntersectionArray(int uidx) {
+        int[] intersectionMap = new int[data.numUsers()];
+
+        int[] iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        for (int i = 0; i < iidxs.length; i++) {
+            int[] vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs[i]);
+            for (int j = 0; j < vidxs.length; j++) {
+                intersectionMap[vidxs[j]]++;
+            }
+        }
+
+        intersectionMap[uidx] = 0;
+
+        return intersectionMap;
+    }
+
     @Override
     public Stream<IdxDouble> similarElems(int idx1) {
         int na = data.numItems(idx1);
 
-        if (fast) {
-            int[] intersectionMap = getIntersectionArray(idx1);
-            return range(0, intersectionMap.length)
-                    .filter(i -> intersectionMap[i] != 0)
-                    .mapToObj(i -> new IdxDouble(i, sim(intersectionMap[i], na, data.numItems(i))));
+        if (data instanceof FasterPreferenceData) {
+            if (dense) {
+                int[] intersectionMap = getFasterIntersectionArray(idx1);
+                return range(0, intersectionMap.length)
+                        .filter(i -> intersectionMap[i] != 0)
+                        .mapToObj(i -> new IdxDouble(i, sim(intersectionMap[i], na, data.numItems(i))));
+            } else {
+                return getFasterIntersectionMap(idx1).int2IntEntrySet().stream()
+                        .map(e -> {
+                            int idx2 = e.getIntKey();
+                            int coo = e.getIntValue();
+                            int nb = data.numItems(idx2);
+                            return new IdxDouble(idx2, sim(coo, na, nb));
+                        });
+            }
         } else {
-            return getIntersectionMap(idx1).int2IntEntrySet().stream()
-                    .map(e -> {
-                        int idx2 = e.getIntKey();
-                        int coo = e.getIntValue();
-                        int nb = data.numItems(idx2);
-                        return new IdxDouble(idx2, sim(coo, na, nb));
-                    });
+            if (dense) {
+                int[] intersectionMap = getIntersectionArray(idx1);
+                return range(0, intersectionMap.length)
+                        .filter(i -> intersectionMap[i] != 0)
+                        .mapToObj(i -> new IdxDouble(i, sim(intersectionMap[i], na, data.numItems(i))));
+            } else {
+                return getIntersectionMap(idx1).int2IntEntrySet().stream()
+                        .map(e -> {
+                            int idx2 = e.getIntKey();
+                            int coo = e.getIntValue();
+                            int nb = data.numItems(idx2);
+                            return new IdxDouble(idx2, sim(coo, na, nb));
+                        });
+            }
         }
     }
 

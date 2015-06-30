@@ -38,7 +38,7 @@ import java.util.stream.Stream;
  */
 public class IntentModel<U, I, F> extends UserModel<U> {
 
-    private final PreferenceData<U, I, ?> totalData;
+    private final PreferenceData<U, I> totalData;
     private final FeatureData<I, F, ?> featureData;
 
     /**
@@ -48,7 +48,7 @@ public class IntentModel<U, I, F> extends UserModel<U> {
      * @param totalData preference data
      * @param featureData feature data
      */
-    public IntentModel(Stream<U> targetUsers, PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
+    public IntentModel(Stream<U> targetUsers, PreferenceData<U, I> totalData, FeatureData<I, F, ?> featureData) {
         super(targetUsers);
         this.totalData = totalData;
         this.featureData = featureData;
@@ -60,7 +60,7 @@ public class IntentModel<U, I, F> extends UserModel<U> {
      * @param totalData preference data
      * @param featureData feature data
      */
-    public IntentModel(PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
+    public IntentModel(PreferenceData<U, I> totalData, FeatureData<I, F, ?> featureData) {
         super();
         this.totalData = totalData;
         this.featureData = featureData;

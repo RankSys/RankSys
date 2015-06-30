@@ -19,6 +19,7 @@ package es.uam.eps.ir.ranksys.nn.sim;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.FasterPreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import java.util.function.IntToDoubleFunction;
@@ -32,8 +33,8 @@ import java.util.stream.Stream;
  */
 public abstract class VectorSimilarity implements Similarity {
 
-    protected final FastPreferenceData<?, ?, ?> data;
-    protected final boolean fast;
+    protected final FastPreferenceData<?, ?> data;
+    protected final boolean dense;
     protected final Int2DoubleMap norm2Map;
     protected final double[] norm2Array;
 
@@ -41,20 +42,33 @@ public abstract class VectorSimilarity implements Similarity {
      * Constructor. Uses maps for internal calculation.
      *
      * @param data preference data
-     * @param fast true for array-based calculations, false to map-based
+     * @param dense true for array-based calculations, false to map-based
      */
-    public VectorSimilarity(FastPreferenceData<?, ?, ?> data, boolean fast) {
+    public VectorSimilarity(FastPreferenceData<?, ?> data, boolean dense) {
         this.data = data;
-        this.fast = fast;
-        if (fast) {
-            this.norm2Map = null;
-            this.norm2Array = new double[data.numUsers()];
-            data.getUidxWithPreferences().forEach(idx -> norm2Array[idx] = getNorm2(idx));
+        this.dense = dense;
+        if (data instanceof FasterPreferenceData) {
+            if (dense) {
+                this.norm2Map = null;
+                this.norm2Array = new double[data.numUsers()];
+                data.getUidxWithPreferences().forEach(idx -> norm2Array[idx] = getFasterNorm2(idx));
+            } else {
+                this.norm2Map = new Int2DoubleOpenHashMap();
+                this.norm2Array = null;
+                norm2Map.defaultReturnValue(0.0);
+                data.getUidxWithPreferences().forEach(idx -> norm2Map.put(idx, getFasterNorm2(idx)));
+            }
         } else {
-            this.norm2Map = new Int2DoubleOpenHashMap();
-            this.norm2Array = null;
-            norm2Map.defaultReturnValue(0.0);
-            data.getUidxWithPreferences().forEach(idx -> norm2Map.put(idx, getNorm2(idx)));
+            if (dense) {
+                this.norm2Map = null;
+                this.norm2Array = new double[data.numUsers()];
+                data.getUidxWithPreferences().forEach(idx -> norm2Array[idx] = getNorm2(idx));
+            } else {
+                this.norm2Map = new Int2DoubleOpenHashMap();
+                this.norm2Array = null;
+                norm2Map.defaultReturnValue(0.0);
+                data.getUidxWithPreferences().forEach(idx -> norm2Map.put(idx, getNorm2(idx)));
+            }
         }
     }
 
@@ -64,7 +78,7 @@ public abstract class VectorSimilarity implements Similarity {
         data.getUidxPreferences(idx1).forEach(iv -> map.put(iv.idx, iv.v));
 
         double n2a = norm2Map.get(idx1);
-        
+
         return idx2 -> {
             double prod = data.getUidxPreferences(idx2)
                     .mapToDouble(iv -> iv.v * map.get(iv.idx))
@@ -107,25 +121,92 @@ public abstract class VectorSimilarity implements Similarity {
         return data.getUidxPreferences(idx).mapToDouble(ip -> ip.v * ip.v).sum();
     }
 
+    protected Int2DoubleMap getFasterProductMap(int uidx) {
+        Int2DoubleOpenHashMap productMap = new Int2DoubleOpenHashMap();
+        productMap.defaultReturnValue(0.0);
+
+        int[] iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        double[] ivs = ((FasterPreferenceData<?, ?>) data).getUidxVs(uidx);
+        for (int i = 0; i < iidxs.length; i++) {
+            int[] vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs[i]);
+            double[] vvs = ((FasterPreferenceData<?, ?>) data).getIidxVs(iidxs[i]);
+            for (int j = 0; j < vidxs.length; j++) {
+                productMap.addTo(vidxs[j], ivs[i] * vvs[j]);
+            }
+        }
+
+        productMap.remove(uidx);
+
+        return productMap;
+    }
+
+    protected double[] getFasterProductArray(int uidx) {
+        double[] productMap = new double[data.numUsers()];
+
+        int[] iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        double[] ivs = ((FasterPreferenceData<?, ?>) data).getUidxVs(uidx);
+        for (int i = 0; i < iidxs.length; i++) {
+            int[] vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs[i]);
+            double[] vvs = ((FasterPreferenceData<?, ?>) data).getIidxVs(iidxs[i]);
+            for (int j = 0; j < vidxs.length; j++) {
+                productMap[vidxs[j]] += ivs[i] * vvs[j];
+            }
+        }
+
+        productMap[uidx] = 0.0;
+
+        return productMap;
+    }
+
+    protected double getFasterNorm2(int uidx) {
+        double[] ivs = ((FasterPreferenceData<?, ?>) data).getUidxVs(uidx);
+        double sum = 0;
+        for (int i = 0; i < ivs.length; i++) {
+            sum += ivs[i] * ivs[i];
+        }
+        return sum;
+    }
+
     @Override
     public Stream<IdxDouble> similarElems(int idx1) {
-        if (fast) {
-            double n2a = norm2Array[idx1];
+        if (data instanceof FasterPreferenceData) {
+            if (dense) {
+                double n2a = norm2Array[idx1];
 
-            double[] productMap = getProductArray(idx1);
-            return range(0, productMap.length)
-                    .filter(i -> productMap[i] != 0.0)
-                    .mapToObj(i -> new IdxDouble(i, sim(productMap[i], n2a, norm2Array[i])));
+                double[] productMap = getFasterProductArray(idx1);
+                return range(0, productMap.length)
+                        .filter(i -> productMap[i] != 0.0)
+                        .mapToObj(i -> new IdxDouble(i, sim(productMap[i], n2a, norm2Array[i])));
+            } else {
+                double n2a = norm2Map.get(idx1);
+
+                return getFasterProductMap(idx1).int2DoubleEntrySet().stream()
+                        .map(e -> {
+                            int idx2 = e.getIntKey();
+                            double coo = e.getDoubleValue();
+                            double n2b = norm2Map.get(idx2);
+                            return new IdxDouble(idx2, sim(coo, n2a, n2b));
+                        });
+            }
         } else {
-            double n2a = norm2Map.get(idx1);
+            if (dense) {
+                double n2a = norm2Array[idx1];
 
-            return getProductMap(idx1).int2DoubleEntrySet().stream()
-                    .map(e -> {
-                        int idx2 = e.getIntKey();
-                        double coo = e.getDoubleValue();
-                        double n2b = norm2Map.get(idx2);
-                        return new IdxDouble(idx2, sim(coo, n2a, n2b));
-                    });
+                double[] productMap = getProductArray(idx1);
+                return range(0, productMap.length)
+                        .filter(i -> productMap[i] != 0.0)
+                        .mapToObj(i -> new IdxDouble(i, sim(productMap[i], n2a, norm2Array[i])));
+            } else {
+                double n2a = norm2Map.get(idx1);
+
+                return getProductMap(idx1).int2DoubleEntrySet().stream()
+                        .map(e -> {
+                            int idx2 = e.getIntKey();
+                            double coo = e.getDoubleValue();
+                            double n2b = norm2Map.get(idx2);
+                            return new IdxDouble(idx2, sim(coo, n2a, n2b));
+                        });
+            }
         }
     }
 

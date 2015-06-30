@@ -26,12 +26,11 @@ import java.util.stream.Stream;
  * 
  * @param <U> type of the users
  * @param <I> type of the items
- * @param <O> type of other information for users and items
  */
-public class ConcatPreferenceData<U, I, O> implements PreferenceData<U, I, O> {
+public class ConcatPreferenceData<U, I> implements PreferenceData<U, I> {
 
-    private final PreferenceData<U, I, O> d1;
-    private final PreferenceData<U, I, O> d2;
+    private final PreferenceData<U, I> d1;
+    private final PreferenceData<U, I> d2;
 
     /**
      * Constructor.
@@ -39,7 +38,7 @@ public class ConcatPreferenceData<U, I, O> implements PreferenceData<U, I, O> {
      * @param d1 recommender data
      * @param d2 recommender data
      */
-    public ConcatPreferenceData(PreferenceData<U, I, O> d1, PreferenceData<U, I, O> d2) {
+    public ConcatPreferenceData(PreferenceData<U, I> d1, PreferenceData<U, I> d2) {
         this.d1 = d1;
         this.d2 = d2;
     }
@@ -90,12 +89,12 @@ public class ConcatPreferenceData<U, I, O> implements PreferenceData<U, I, O> {
     }
 
     @Override
-    public Stream<IdPref<I, O>> getUserPreferences(U u) {
+    public Stream<IdPref<I>> getUserPreferences(U u) {
         return Stream.concat(d1.getUserPreferences(u), d2.getUserPreferences(u));
     }
 
     @Override
-    public Stream<IdPref<U, O>> getItemPreferences(I i) {
+    public Stream<IdPref<U>> getItemPreferences(I i) {
         return Stream.concat(d1.getItemPreferences(i), d2.getItemPreferences(i));
     }
 

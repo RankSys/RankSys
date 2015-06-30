@@ -40,13 +40,12 @@ import java.util.stream.Stream;
  *
  * @param <U> type of the users
  * @param <I> type of the items
- * @param <O> type of other information for preferences
  */
-public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceData<U, I, O> {
+public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> {
 
     private final int numPreferences;
-    private final List<List<IdxPref<O>>> uidxList;
-    private final List<List<IdxPref<O>>> iidxList;
+    private final List<List<IdxPref>> uidxList;
+    private final List<List<IdxPref>> iidxList;
 
     /**
      * Constructor.
@@ -57,7 +56,7 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
      * @param uIndex user index
      * @param iIndex item index
      */
-    protected SimpleFastPreferenceData(int numPreferences, List<List<IdxPref<O>>> uidxList, List<List<IdxPref<O>>> iidxList, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
+    protected SimpleFastPreferenceData(int numPreferences, List<List<IdxPref>> uidxList, List<List<IdxPref>> iidxList, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
         super(uIndex, iIndex);
         this.numPreferences = numPreferences;
         this.uidxList = uidxList;
@@ -81,7 +80,7 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
     }
 
     @Override
-    public Stream<IdxPref<O>> getUidxPreferences(int uidx) {
+    public Stream<IdxPref> getUidxPreferences(int uidx) {
         if (uidxList.get(uidx) == null) {
             return Stream.empty();
         } else {
@@ -90,7 +89,7 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
     }
 
     @Override
-    public Stream<IdxPref<O>> getIidxPreferences(int iidx) {
+    public Stream<IdxPref> getIidxPreferences(int iidx) {
         if (iidxList.get(iidx) == null) {
             return Stream.empty();
         } else {
@@ -134,19 +133,17 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
      *
      * @param <U> type of the users
      * @param <I> type of the items
-     * @param <O> type of other information
      * @param path path of the input file
      * @param uParser user type parser
      * @param iParser item type parser
      * @param dp double parse
-     * @param vParser other info parser
      * @param uIndex user index
      * @param iIndex item index
      * @return a simple list-of-lists FastPreferenceData with the information read
      * @throws IOException when path does not exists of IO error
      */
-    public static <U, I, O> SimpleFastPreferenceData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
-        return load(new FileInputStream(path), uParser, iParser, dp, vParser, uIndex, iIndex);
+    public static <U, I> SimpleFastPreferenceData<U, I> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
+        return load(new FileInputStream(path), uParser, iParser, dp, uIndex, iIndex);
     }
 
     /**
@@ -156,26 +153,24 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
      *
      * @param <U> type of the users
      * @param <I> type of the items
-     * @param <O> type of other information
      * @param in input stream to read from
      * @param uParser user type parser
      * @param iParser item type parser
      * @param dp double parse
-     * @param vParser other info parser
      * @param uIndex user index
      * @param iIndex item index
      * @return a simple list-of-lists FastPreferenceData with the information read
      * @throws IOException when path does not exists of IO error
      */
-    public static <U, I, O> SimpleFastPreferenceData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
+    public static <U, I> SimpleFastPreferenceData<U, I> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
         AtomicInteger numPreferences = new AtomicInteger();
 
-        List<List<IdxPref<O>>> uidxList = new ArrayList<>();
+        List<List<IdxPref>> uidxList = new ArrayList<>();
         for (int uidx = 0; uidx < uIndex.numUsers(); uidx++) {
             uidxList.add(null);
         }
 
-        List<List<IdxPref<O>>> iidxList = new ArrayList<>();
+        List<List<IdxPref>> iidxList = new ArrayList<>();
         for (int iidx = 0; iidx < iIndex.numItems(); iidx++) {
             iidxList.add(null);
         }
@@ -191,31 +186,25 @@ public class SimpleFastPreferenceData<U, I, O> extends AbstractFastPreferenceDat
                 } else {
                     value = dp.parse(null);
                 }
-                O other;
-                if (tokens.length == 4) {
-                    other = vParser.parse(tokens[3]);
-                } else {
-                    other = vParser.parse(null);
-                }
 
                 int uidx = uIndex.user2uidx(user);
                 int iidx = iIndex.item2iidx(item);
 
                 numPreferences.incrementAndGet();
 
-                List<IdxPref<O>> uList = uidxList.get(uidx);
+                List<IdxPref> uList = uidxList.get(uidx);
                 if (uList == null) {
                     uList = new ArrayList<>();
                     uidxList.set(uidx, uList);
                 }
-                uList.add(new IdxPref<>(iidx, value, other));
+                uList.add(new IdxPref(iidx, value));
 
-                List<IdxPref<O>> iList = iidxList.get(iidx);
+                List<IdxPref> iList = iidxList.get(iidx);
                 if (iList == null) {
                     iList = new ArrayList<>();
                     iidxList.set(iidx, iList);
                 }
-                iList.add(new IdxPref<>(uidx, value, other));
+                iList.add(new IdxPref(uidx, value));
             });
         }
 

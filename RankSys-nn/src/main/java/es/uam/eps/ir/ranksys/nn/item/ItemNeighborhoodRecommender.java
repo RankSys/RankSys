@@ -46,7 +46,7 @@ public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
     /**
      * Preference data.
      */
-    protected final FastPreferenceData<U, I, ?> data;
+    protected final FastPreferenceData<U, I> data;
 
     /**
      * Item neighborhoods.
@@ -65,7 +65,7 @@ public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
      * @param neighborhood item neighborhood
      * @param q exponent of the similarity
      */
-    public ItemNeighborhoodRecommender(FastPreferenceData<U, I, ?> data, ItemNeighborhood<I> neighborhood, int q) {
+    public ItemNeighborhoodRecommender(FastPreferenceData<U, I> data, ItemNeighborhood<I> neighborhood, int q) {
         super(data, data);
         this.data = data;
         this.neighborhood = neighborhood;

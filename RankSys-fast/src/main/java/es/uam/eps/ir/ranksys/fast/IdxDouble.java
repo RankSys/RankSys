@@ -24,17 +24,20 @@ import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class IdxDouble implements Int2DoubleMap.Entry{
+public class IdxDouble implements Int2DoubleMap.Entry {
 
     /**
      * User/item/feature index.
      */
-    public final int idx;
+    public int idx;
 
     /**
      * The double.
      */
-    public final double v;
+    public double v;
+
+    public IdxDouble() {
+    }
 
     /**
      * Constructor.
@@ -47,6 +50,12 @@ public class IdxDouble implements Int2DoubleMap.Entry{
         this.v = v;
     }
     
+    public IdxDouble refill(int idx, double v) {
+        this.idx = idx;
+        this.v = v;
+        return this;
+    }
+
     /**
      * Constructor that copies an index-double entry.
      *

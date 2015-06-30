@@ -35,8 +35,8 @@ public class VectorCosineUserSimilarity<U> extends UserSimilarity<U> {
      * @param data preference data
      * @param alpha asymmetry factor, set to 0.5 to standard cosine.
      */
-    public VectorCosineUserSimilarity(FastPreferenceData<U, ?, ?> data, double alpha, boolean fast) {
-        super(data, new VectorCosineSimilarity(data, alpha, fast));
+    public VectorCosineUserSimilarity(FastPreferenceData<U, ?> data, double alpha, boolean dense) {
+        super(data, new VectorCosineSimilarity(data, alpha, dense));
     }
     
 }

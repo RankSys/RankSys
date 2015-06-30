@@ -32,16 +32,16 @@ import java.util.stream.Stream;
  * @param <U> type of the users
  * @param <O> type of other information about preferences
  */
-public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, U, O> {
+public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U> {
 
-    protected final FastPreferenceData<U, I, O> d;
+    protected final FastPreferenceData<U, I> d;
 
     /**
      * Constructor.
      *
      * @param recommenderData preference data to be transposed
      */
-    public TransposedPreferenceData(FastPreferenceData<U, I, O> recommenderData) {
+    public TransposedPreferenceData(FastPreferenceData<U, I> recommenderData) {
         this.d = recommenderData;
     }
 
@@ -76,12 +76,12 @@ public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, 
     }
 
     @Override
-    public Stream<IdxPref<O>> getUidxPreferences(int uidx) {
+    public Stream<IdxPref> getUidxPreferences(int uidx) {
         return d.getIidxPreferences(uidx);
     }
 
     @Override
-    public Stream<IdxPref<O>> getIidxPreferences(int iidx) {
+    public Stream<IdxPref> getIidxPreferences(int iidx) {
         return d.getUidxPreferences(iidx);
     }
 
@@ -121,12 +121,12 @@ public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, 
     }
 
     @Override
-    public Stream<IdPref<U, O>> getUserPreferences(I u) {
+    public Stream<IdPref<U>> getUserPreferences(I u) {
         return d.getItemPreferences(u);
     }
 
     @Override
-    public Stream<IdPref<I, O>> getItemPreferences(U i) {
+    public Stream<IdPref<I>> getItemPreferences(U i) {
         return d.getUserPreferences(i);
     }
 
@@ -168,5 +168,25 @@ public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, 
     @Override
     public Stream<U> getItemsWithPreferences() {
         return d.getUsersWithPreferences();
+    }
+
+    @Override
+    public int[] getUidxIidxs(int uidx) {
+        return getIidxUidxs(uidx);
+    }
+
+    @Override
+    public double[] getUidxVs(int uidx) {
+        return getIidxVs(uidx);
+    }
+
+    @Override
+    public int[] getIidxUidxs(int iidx) {
+        return getUidxIidxs(iidx);
+    }
+
+    @Override
+    public double[] getIidxVs(int iidx) {
+        return getUidxVs(iidx);
     }
 }

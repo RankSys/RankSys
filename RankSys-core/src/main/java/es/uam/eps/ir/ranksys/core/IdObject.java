@@ -32,12 +32,15 @@ public class IdObject<I, V> implements Object2ObjectMap.Entry<I, V> {
     /**
      * The ID.
      */
-    public final I id;
+    public I id;
 
     /**
      * The typed object.
      */
-    public final V v;
+    public V v;
+
+    public IdObject() {
+    }
 
     /**
      * Constructs an ID-object pair.
@@ -48,6 +51,12 @@ public class IdObject<I, V> implements Object2ObjectMap.Entry<I, V> {
     public IdObject(I id, V v) {
         this.id = id;
         this.v = v;
+    }
+    
+    public IdObject refill(I id, V v) {
+        this.id = id;
+        this.v = v;
+        return this;
     }
 
     /**

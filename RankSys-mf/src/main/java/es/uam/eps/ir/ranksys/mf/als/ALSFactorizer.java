@@ -53,7 +53,7 @@ public abstract class ALSFactorizer<U, I> extends Factorizer<U, I> {
     }
 
     @Override
-    public double error(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data) {
+    public double error(Factorization<U, I> factorization, FastPreferenceData<U, I> data) {
 
         DenseDoubleMatrix2D p = factorization.getUserMatrix();
         DenseDoubleMatrix2D q = factorization.getItemMatrix();
@@ -62,7 +62,7 @@ public abstract class ALSFactorizer<U, I> extends Factorizer<U, I> {
     }
 
     @Override
-    public Factorization<U, I> factorize(int K, FastPreferenceData<U, I, ?> data) {
+    public Factorization<U, I> factorize(int K, FastPreferenceData<U, I> data) {
         DoubleFunction init = x -> sqrt(1.0 / K) * Math.random();
         Factorization<U, I> factorization = new Factorization<>(data, data, K, init);
         factorize(factorization, data);
@@ -70,7 +70,7 @@ public abstract class ALSFactorizer<U, I> extends Factorizer<U, I> {
     }
 
     @Override
-    public void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data) {
+    public void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I> data) {
 
         DenseDoubleMatrix2D p = factorization.getUserMatrix();
         DenseDoubleMatrix2D q = factorization.getItemMatrix();
@@ -102,7 +102,7 @@ public abstract class ALSFactorizer<U, I> extends Factorizer<U, I> {
      * @param data preference data
      * @return squared loss
      */
-    protected abstract double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data);
+    protected abstract double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I> data);
 
     /**
      * User matrix least-squares step.
@@ -111,7 +111,7 @@ public abstract class ALSFactorizer<U, I> extends Factorizer<U, I> {
      * @param q item matrix
      * @param data preference data
      */
-    protected abstract void set_minP(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data);
+    protected abstract void set_minP(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I> data);
 
     /**
      * Item matrix least-squares step.
@@ -120,5 +120,5 @@ public abstract class ALSFactorizer<U, I> extends Factorizer<U, I> {
      * @param p user matrix
      * @param data preference data
      */
-    protected abstract void set_minQ(DenseDoubleMatrix2D q, DenseDoubleMatrix2D p, FastPreferenceData<U, I, ?> data);
+    protected abstract void set_minQ(DenseDoubleMatrix2D q, DenseDoubleMatrix2D p, FastPreferenceData<U, I> data);
 }

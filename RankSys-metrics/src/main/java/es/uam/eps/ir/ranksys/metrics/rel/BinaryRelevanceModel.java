@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 public class BinaryRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
 
-    private final PreferenceData<U, I, ?> testData;
+    private final PreferenceData<U, I> testData;
     private final double threshold;
 
     /**
@@ -43,7 +43,7 @@ public class BinaryRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
      * @param testData test subset of the preferences
      * @param threshold relevance threshold
      */
-    public BinaryRelevanceModel(boolean caching, PreferenceData<U, I, ?> testData, double threshold) {
+    public BinaryRelevanceModel(boolean caching, PreferenceData<U, I> testData, double threshold) {
         super(caching, testData.getUsersWithPreferences());
         this.testData = testData;
         this.threshold = threshold;

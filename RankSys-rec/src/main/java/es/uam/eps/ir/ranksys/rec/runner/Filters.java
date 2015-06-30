@@ -51,7 +51,7 @@ public class Filters {
      * @return item filters for each using returning true if the
      * user-item pair was not observed in the preference data
      */
-    public static <U, I> Function<U, Predicate<I>> notInTrain(PreferenceData<U, I, ?> trainData) {
+    public static <U, I> Function<U, Predicate<I>> notInTrain(PreferenceData<U, I> trainData) {
         return user -> {
             Set<I> set = trainData.getUserPreferences(user).map(iv -> iv.id).collect(Collectors.toSet());
 

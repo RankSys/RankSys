@@ -77,8 +77,8 @@ public class RecommenderExample {
 
         FastUserIndex<Long> userIndex = SimpleFastUserIndex.load(userPath, lp);
         FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(itemPath, lp);
-        FastPreferenceData<Long, Long, Void> trainData = SimpleFastPreferenceData.load(trainDataPath, lp, lp, ddp, vp, userIndex, itemIndex);
-        FastPreferenceData<Long, Long, Void> testData = SimpleFastPreferenceData.load(testDataPath, lp, lp, ddp, vp, userIndex, itemIndex);
+        FastPreferenceData<Long, Long> trainData = SimpleFastPreferenceData.load(trainDataPath, lp, lp, ddp, userIndex, itemIndex);
+        FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(testDataPath, lp, lp, ddp, userIndex, itemIndex);
 
         //////////////////
         // RECOMMENDERS //

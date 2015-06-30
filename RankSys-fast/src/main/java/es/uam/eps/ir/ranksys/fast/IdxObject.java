@@ -31,12 +31,15 @@ public class IdxObject<V> implements Int2ObjectMap.Entry<V> {
     /**
      * User/item/feature index.
      */
-    public final int idx;
+    public int idx;
 
     /**
      * Typed object.
      */
-    public final V v;
+    public V v;
+
+    public IdxObject() {
+    }
 
     /**
      * Constructor.
@@ -47,6 +50,12 @@ public class IdxObject<V> implements Int2ObjectMap.Entry<V> {
     public IdxObject(int idx, V v) {
         this.idx = idx;
         this.v = v;
+    }
+    
+    public IdxObject refill(int idx, V v) {
+        this.idx = idx;
+        this.v = v;
+        return this;
     }
 
     /**

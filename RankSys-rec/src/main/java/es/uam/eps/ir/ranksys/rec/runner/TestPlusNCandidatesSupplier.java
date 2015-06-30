@@ -41,7 +41,7 @@ import java.util.stream.Stream;
  */
 public class TestPlusNCandidatesSupplier<U, I> implements Supplier<Stream<IdObject<U, List<I>>>> {
 
-    private final PreferenceData<U, I, ?> testData;
+    private final PreferenceData<U, I> testData;
     private final Parser<U> uParser;
     private final Parser<I> iParser;
     private final String candidatesPath;
@@ -55,7 +55,7 @@ public class TestPlusNCandidatesSupplier<U, I> implements Supplier<Stream<IdObje
      * @param candidatesPath path to the file of random items to add to the
      * candidates
      */
-    public TestPlusNCandidatesSupplier(PreferenceData<U, I, ?> testData, Parser<U> uParser, Parser<I> iParser, String candidatesPath) {
+    public TestPlusNCandidatesSupplier(PreferenceData<U, I> testData, Parser<U> uParser, Parser<I> iParser, String candidatesPath) {
         this.testData = testData;
         this.uParser = uParser;
         this.iParser = iParser;

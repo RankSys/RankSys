@@ -40,10 +40,10 @@ import java.util.stream.Stream;
  * @param <I> type of the items
  * @param <O> type of other information for users and items
  */
-public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
+public class SimplePreferenceData<U, I> implements PreferenceData<U, I> {
 
-    private final Map<U, List<IdPref<I, O>>> userMap;
-    private final Map<I, List<IdPref<U, O>>> itemMap;
+    private final Map<U, List<IdPref<I>>> userMap;
+    private final Map<I, List<IdPref<U>>> itemMap;
     private final int numPreferences;
 
     /**
@@ -53,7 +53,7 @@ public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
      * @param itemMap item to preferences map
      * @param numPreferences total number of preferences
      */
-    protected SimplePreferenceData(Map<U, List<IdPref<I, O>>> userMap, Map<I, List<IdPref<U, O>>> itemMap, int numPreferences) {
+    protected SimplePreferenceData(Map<U, List<IdPref<I>>> userMap, Map<I, List<IdPref<U>>> itemMap, int numPreferences) {
         this.userMap = userMap;
         this.itemMap = itemMap;
         this.numPreferences = numPreferences;
@@ -105,12 +105,12 @@ public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
     }
 
     @Override
-    public Stream<IdPref<I, O>> getUserPreferences(U u) {
+    public Stream<IdPref<I>> getUserPreferences(U u) {
         return userMap.getOrDefault(u, new ArrayList<>()).stream();
     }
 
     @Override
-    public Stream<IdPref<U, O>> getItemPreferences(I i) {
+    public Stream<IdPref<U>> getItemPreferences(I i) {
         return itemMap.getOrDefault(i, new ArrayList<>()).stream();
     }
 
@@ -142,17 +142,15 @@ public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
      *
      * @param <U> type of the users
      * @param <I> type of the items
-     * @param <O> type of other information
      * @param path path of the input file
      * @param uParser user type parser
      * @param iParser item type parser
      * @param dp double parse
-     * @param vParser other info parser
      * @return a simple map-based PreferenceData with the information read
      * @throws IOException when path does not exists of IO error
      */
-    public static <U, I, O> SimplePreferenceData<U, I, O> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
-        return load(new FileInputStream(path), uParser, iParser, dp, vParser);
+    public static <U, I> SimplePreferenceData<U, I> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp) throws IOException {
+        return load(new FileInputStream(path), uParser, iParser, dp);
     }
 
     /**
@@ -163,18 +161,16 @@ public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
      *
      * @param <U> type of the users
      * @param <I> type of the items
-     * @param <O> type of other information
      * @param in input stream to read from
      * @param uParser user type parser
      * @param iParser item type parser
      * @param dp double parse
-     * @param vParser other info parser
      * @return a simple map-based PreferenceData with the information read
      * @throws IOException when path does not exists of IO error
      */
-    public static <U, I, O> SimplePreferenceData<U, I, O> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, Parser<O> vParser) throws IOException {
-        Map<U, List<IdPref<I, O>>> userMap = new HashMap<>();
-        Map<I, List<IdPref<U, O>>> itemMap = new HashMap<>();
+    public static <U, I> SimplePreferenceData<U, I> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp) throws IOException {
+        Map<U, List<IdPref<I>>> userMap = new HashMap<>();
+        Map<I, List<IdPref<U>>> itemMap = new HashMap<>();
         AtomicInteger numPreferences = new AtomicInteger(0);
         
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
@@ -188,28 +184,22 @@ public class SimplePreferenceData<U, I, O> implements PreferenceData<U, I, O> {
                 } else {
                     value = dp.parse(null);
                 }
-                O other;
-                if (tokens.length == 4) {
-                    other = vParser.parse(tokens[3]);
-                } else {
-                    other = vParser.parse(null);
-                }
 
                 numPreferences.incrementAndGet();
 
-                List<IdPref<I, O>> uList = userMap.get(user);
+                List<IdPref<I>> uList = userMap.get(user);
                 if (uList == null) {
                     uList = new ArrayList<>();
                     userMap.put(user, uList);
                 }
-                uList.add(new IdPref<>(item, value, other));
+                uList.add(new IdPref<>(item, value));
 
-                List<IdPref<U, O>> iList = itemMap.get(item);
+                List<IdPref<U>> iList = itemMap.get(item);
                 if (iList == null) {
                     iList = new ArrayList<>();
                     itemMap.put(item, iList);
                 }
-                iList.add(new IdPref<>(user, value, other));
+                iList.add(new IdPref<>(user, value));
             });
         }
 

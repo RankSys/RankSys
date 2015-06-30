@@ -35,8 +35,8 @@ public class VectorJaccardItemSimilarity<I> extends ItemSimilarity<I> {
      *
      * @param data preference data
      */
-    public VectorJaccardItemSimilarity(FastPreferenceData<?, I, ?> data, boolean fast) {
-        super(data, new VectorJaccardSimilarity(new TransposedPreferenceData<>(data), fast));
+    public VectorJaccardItemSimilarity(FastPreferenceData<?, I> data, boolean dense) {
+        super(data, new VectorJaccardSimilarity(new TransposedPreferenceData<>(data), dense));
     }
     
 }

@@ -48,7 +48,7 @@ public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
      *
      * @param recommenderData preference data
      */
-    public FDItemNovelty(PreferenceData<U, I, ?> recommenderData) {
+    public FDItemNovelty(PreferenceData<U, I> recommenderData) {
         super();
         this.nov = new UserFDItemNoveltyModel(recommenderData);
     }
@@ -67,7 +67,7 @@ public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
         private final Object2DoubleMap<I> itemNovelty;
 
-        public UserFDItemNoveltyModel(PreferenceData<U, I, ?> recommenderData) {
+        public UserFDItemNoveltyModel(PreferenceData<U, I> recommenderData) {
             IntSummaryStatistics stats = recommenderData.getItemsWithPreferences().mapToInt(i -> recommenderData.numUsers(i)).summaryStatistics();
             long norm = stats.getSum();
             double maxNov = -log(stats.getMin() / norm) / log(2);

@@ -31,9 +31,8 @@ import java.util.stream.Stream;
  * 
  * @param <U> type of the users
  * @param <I> type of the items
- * @param <V> type of other information about preferences
  */
-public interface FastPreferenceData<U, I, V> extends PreferenceData<U, I, V>, FastUserIndex<U>, FastItemIndex<I> {
+public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUserIndex<U>, FastItemIndex<I> {
 
     /**
      * Returns the number of users who have a preference for the item.
@@ -71,13 +70,13 @@ public interface FastPreferenceData<U, I, V> extends PreferenceData<U, I, V>, Fa
      * @param uidx user index
      * @return preferences of the user
      */
-    public Stream<IdxPref<V>> getUidxPreferences(int uidx);
-
+    public Stream<IdxPref> getUidxPreferences(int uidx);
+    
     /**
      * Gets the preferences of an item.
      *
      * @param iidx item index
      * @return preferences of the item
      */
-    public Stream<IdxPref<V>> getIidxPreferences(int iidx);
+    public Stream<IdxPref> getIidxPreferences(int iidx);
 }

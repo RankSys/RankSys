@@ -36,8 +36,8 @@ public class VectorCosineItemSimilarity<I> extends ItemSimilarity<I> {
      * @param data preference
      * @param alpha asymmetry of the similarity, set to 0.5 to standard cosine.
      */
-    public VectorCosineItemSimilarity(FastPreferenceData<?, I, ?> data, double alpha, boolean fast) {
-        super(data, new VectorCosineSimilarity(new TransposedPreferenceData<>(data), alpha, fast));
+    public VectorCosineItemSimilarity(FastPreferenceData<?, I> data, double alpha, boolean dense) {
+        super(data, new VectorCosineSimilarity(new TransposedPreferenceData<>(data), alpha, dense));
     }
     
 }
