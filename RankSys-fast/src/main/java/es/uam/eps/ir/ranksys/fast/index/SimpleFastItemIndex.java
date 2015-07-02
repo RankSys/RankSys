@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.stream.Stream;
 
 /**
@@ -34,7 +35,7 @@ import java.util.stream.Stream;
  *
  * @param <I> type of the items
  */
-public class SimpleFastItemIndex<I> implements FastItemIndex<I> {
+public class SimpleFastItemIndex<I> implements FastItemIndex<I>, Serializable {
 
     private final IdxIndex<I> iMap;
 

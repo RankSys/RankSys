@@ -34,8 +34,8 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I> {
 
-    private final FastUserIndex<U> ui;
-    private final FastItemIndex<I> ii;
+    protected final FastUserIndex<U> ui;
+    protected final FastItemIndex<I> ii;
 
     /**
      * Constructor.

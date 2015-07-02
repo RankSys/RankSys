@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.stream.Stream;
 
 /**
@@ -34,7 +35,7 @@ import java.util.stream.Stream;
  *
  * @param <U> type of the users
  */
-public class SimpleFastUserIndex<U> implements FastUserIndex<U> {
+public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
 
     private final IdxIndex<U> uMap;
 
