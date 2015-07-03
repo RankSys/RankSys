@@ -37,7 +37,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.*;
+import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
+import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp;
+import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.vp;
 
 /**
  * Example main of re-rankers.
@@ -85,8 +87,9 @@ public class RerankerExample {
                                 throw new UncheckedIOException(ex);
                             }
                         });
+                writer.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new UncheckedIOException(e);
             }
         });
     }
