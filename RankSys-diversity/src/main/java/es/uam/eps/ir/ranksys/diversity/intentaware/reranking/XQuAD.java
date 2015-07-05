@@ -67,7 +67,7 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
      */
     protected class UserXQuAD extends LambdaUserReranker {
 
-        private final IntentModel<U, I, F>.UserIntentModel uim;
+        private final IntentModel<U, I, F>.AbstractUserIntentModel uim;
         private final Object2DoubleOpenHashMap<F> redundancy;
         private final Object2DoubleOpenHashMap<F> probNorm;
 

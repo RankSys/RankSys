@@ -37,8 +37,8 @@ import java.util.stream.Stream;
  */
 public class IntentModel<U, I, F> extends UserModel<U> {
 
-    private final PreferenceData<U, I, ?> totalData;
-    private final FeatureData<I, F, ?> featureData;
+    protected final PreferenceData<U, I, ?> totalData;
+    protected final FeatureData<I, F, ?> featureData;
 
     /**
      * Constructor that caches user intent-aware models.
@@ -66,20 +66,49 @@ public class IntentModel<U, I, F> extends UserModel<U> {
     }
 
     @Override
-    protected UserIntentModel get(U user) {
+    protected AbstractUserIntentModel get(U user) {
         return new UserIntentModel(user);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public UserIntentModel getModel(U user) {
+    public AbstractUserIntentModel getModel(U user) {
         return (UserIntentModel) super.getModel(user);
+    }
+
+    /**
+     * Abstract user intent-aware model.
+     */
+    public abstract class AbstractUserIntentModel implements Model<U> {
+
+        /**
+         * Returns the features considered in the intent model.
+         *
+         * @return the features considered in the intent model
+         */
+        public abstract Set<F> getIntents();
+
+        /**
+         * Returns the features associated with an item.
+         *
+         * @param i item
+         * @return the features associated with the item
+         */
+        public abstract Stream<F> getItemIntents(I i);
+
+        /**
+         * Returns the probability of a feature in the model.
+         *
+         * @param f feature
+         * @return probability of a feature in the model
+         */
+        public abstract double p(F f);
     }
 
     /**
      * User intent-aware model for {@link IntentModel}.
      */
-    public class UserIntentModel implements Model<U> {
+    public class UserIntentModel extends AbstractUserIntentModel {
 
         private final Object2DoubleOpenHashMap<F> prob;
 
@@ -112,31 +141,14 @@ public class IntentModel<U, I, F> extends UserModel<U> {
             this.prob = auxProb;
         }
 
-        /**
-         * Returns the features considered in the intent model.
-         *
-         * @return the features considered in the intent model
-         */
         public Set<F> getIntents() {
             return prob.keySet();
         }
 
-        /**
-         * Returns the features associated with an item.
-         *
-         * @param i item
-         * @return the features associated with the item
-         */
         public Stream<F> getItemIntents(I i) {
             return featureData.getItemFeatures(i).map(fv -> fv.id).filter(getIntents()::contains);
         }
 
-        /**
-         * Returns the probability of a feature in the model.
-         *
-         * @param f feature
-         * @return probability of a feature in the model
-         */
         public double p(F f) {
             return prob.getDouble(f);
         }
