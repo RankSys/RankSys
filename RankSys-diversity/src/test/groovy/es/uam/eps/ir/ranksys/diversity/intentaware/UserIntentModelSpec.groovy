@@ -28,12 +28,12 @@ class UserIntentModelSpec extends Specification {
 
         PreferenceData trainData = SimplePreferenceData.load(ratings, lp, lp, ddp, vp);
         FeatureData featureData = SimpleFeatureData.load(features, lp, sp, { v -> 1.0 });
-        intentModel = new IntentModel(trainData.getUsersWithPreferences(), trainData, featureData);
+        intentModel = new DefaultIntentModel(trainData.getUsersWithPreferences(), trainData, featureData);
     }
 
     def "check number of user's intents"() {
         when:
-        IntentModel.AbstractUserIntentModel uim = intentModel.getModel(userId);
+        IntentModel.UserIntentModel uim = intentModel.getModel(userId);
         Set intents = uim.getIntents();
 
         then:
@@ -47,7 +47,7 @@ class UserIntentModelSpec extends Specification {
 
     def "check user's intents"() {
         when:
-        IntentModel.AbstractUserIntentModel uim = intentModel.getModel(userId);
+        IntentModel.UserIntentModel uim = intentModel.getModel(userId);
         Set intents = uim.getIntents();
 
         then:
@@ -69,7 +69,7 @@ class UserIntentModelSpec extends Specification {
 
     def "check user's item intents"() {
         when:
-        IntentModel.AbstractUserIntentModel uim = intentModel.getModel(userId);
+        IntentModel.UserIntentModel uim = intentModel.getModel(userId);
         Set itemIntents = uim.getItemIntents(itemId).collect(Collectors.toSet());
 
         then:
@@ -89,7 +89,7 @@ class UserIntentModelSpec extends Specification {
 
     def "check user's intent probabilities"() {
         when:
-        IntentModel.AbstractUserIntentModel uim = intentModel.getModel(userId);
+        IntentModel.UserIntentModel uim = intentModel.getModel(userId);
 
         then:
         that uim.p(intent), closeTo(p, DELTA)

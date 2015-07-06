@@ -24,6 +24,7 @@ import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
 import es.uam.eps.ir.ranksys.diversity.distance.reranking.MMR;
+import es.uam.eps.ir.ranksys.diversity.intentaware.DefaultIntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.reranking.XQuAD;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
@@ -67,7 +68,7 @@ public class RerankerExample {
         });
 
         rerankersMap.put("XQuAD", () -> {
-            IntentModel<Long, Long, String> intentModel = new IntentModel<>(trainData.getUsersWithPreferences(), trainData, featureData);
+            IntentModel<Long, Long, String> intentModel = new DefaultIntentModel<>(trainData.getUsersWithPreferences(), trainData, featureData);
             return new XQuAD<>(intentModel, lambda, cutoff, true);
         });
 

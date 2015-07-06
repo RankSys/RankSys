@@ -20,13 +20,11 @@ package es.uam.eps.ir.ranksys.diversity.intentaware;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.model.UserModel;
-import es.uam.eps.ir.ranksys.core.model.UserModel.Model;
-import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Set;
 import java.util.stream.Stream;
 
 /**
- * Intent-Aware model.
+ * Intent-aware model.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
@@ -35,7 +33,7 @@ import java.util.stream.Stream;
  * @param <I> type of the items
  * @param <F> type of the features
  */
-public class IntentModel<U, I, F> extends UserModel<U> {
+public abstract class IntentModel<U, I, F> extends UserModel<U> {
 
     protected final PreferenceData<U, I, ?> totalData;
     protected final FeatureData<I, F, ?> featureData;
@@ -66,20 +64,18 @@ public class IntentModel<U, I, F> extends UserModel<U> {
     }
 
     @Override
-    protected AbstractUserIntentModel get(U user) {
-        return new UserIntentModel(user);
-    }
+    protected abstract UserIntentModel get(U user);
 
     @SuppressWarnings("unchecked")
     @Override
-    public AbstractUserIntentModel getModel(U user) {
+    public UserIntentModel getModel(U user) {
         return (UserIntentModel) super.getModel(user);
     }
 
     /**
-     * Abstract user intent-aware model.
+     * User intent-aware model for {@link IntentModel}.
      */
-    public abstract class AbstractUserIntentModel implements Model<U> {
+    public abstract class UserIntentModel implements Model<U> {
 
         /**
          * Returns the features considered in the intent model.
@@ -103,55 +99,6 @@ public class IntentModel<U, I, F> extends UserModel<U> {
          * @return probability of a feature in the model
          */
         public abstract double p(F f);
-    }
-
-    /**
-     * User intent-aware model for {@link IntentModel}.
-     */
-    public class UserIntentModel extends AbstractUserIntentModel {
-
-        private final Object2DoubleOpenHashMap<F> prob;
-
-        /**
-         * Constructor.
-         *
-         * @param user user whose model is created.
-         */
-        public UserIntentModel(U user) {
-            Object2DoubleOpenHashMap<F> auxProb = new Object2DoubleOpenHashMap<>();
-            auxProb.defaultReturnValue(0.0);
-
-            int[] norm = {0};
-            totalData.getUserPreferences(user).forEach(iv -> {
-                featureData.getItemFeatures(iv.id).forEach(fv -> {
-                    auxProb.addTo(fv.id, 1.0);
-                    norm[0]++;
-                });
-            });
-
-            if (norm[0] == 0) {
-                norm[0] = featureData.numFeatures();
-                featureData.getAllFeatures().sequential().forEach(f -> auxProb.put(f, 1.0));
-            }
-
-            auxProb.object2DoubleEntrySet().forEach(e -> {
-                e.setValue(e.getDoubleValue() / norm[0]);
-            });
-
-            this.prob = auxProb;
-        }
-
-        public Set<F> getIntents() {
-            return prob.keySet();
-        }
-
-        public Stream<F> getItemIntents(I i) {
-            return featureData.getItemFeatures(i).map(fv -> fv.id).filter(getIntents()::contains);
-        }
-
-        public double p(F f) {
-            return prob.getDouble(f);
-        }
 
     }
 }
