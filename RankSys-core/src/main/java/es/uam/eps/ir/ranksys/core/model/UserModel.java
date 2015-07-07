@@ -100,7 +100,7 @@ public abstract class UserModel<U> {
      * @return a user model
      */
     public Model<U> getModel(U u) {
-        if (caching) {
+        if (caching && lazyUserMap.get().containsKey(u)) {
             return lazyUserMap.get().get(u);
         } else {
             return get(u);
