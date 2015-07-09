@@ -21,6 +21,7 @@ import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
+import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel.UserIntentModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
@@ -66,7 +67,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
-        IntentModel<U, I, F>.UserIntentModel uim = intentModel.getModel(recommendation.getUser());
+        UserIntentModel<U, I, F> uim = intentModel.getModel(recommendation.getUser());
 
         double[] erria = {0.0};
 

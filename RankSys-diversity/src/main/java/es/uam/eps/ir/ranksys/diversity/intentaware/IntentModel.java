@@ -17,8 +17,6 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware;
 
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.model.UserModel;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -31,72 +29,60 @@ import java.util.stream.Stream;
  * 
  * @param <U> type of the users
  * @param <I> type of the items
- * @param <F> type of the features
+ * @param <F> type of the intent
  */
 public abstract class IntentModel<U, I, F> extends UserModel<U> {
-
-    protected final PreferenceData<U, I, ?> totalData;
-    protected final FeatureData<I, F, ?> featureData;
 
     /**
      * Constructor that caches user intent-aware models.
      *
      * @param targetUsers user whose intent-aware models are cached
-     * @param totalData preference data
-     * @param featureData feature data
      */
-    public IntentModel(Stream<U> targetUsers, PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
+    public IntentModel(Stream<U> targetUsers) {
         super(targetUsers);
-        this.totalData = totalData;
-        this.featureData = featureData;
     }
 
     /**
      * Constructor that does not cache user intent-aware models.
-     *
-     * @param totalData preference data
-     * @param featureData feature data
      */
-    public IntentModel(PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
+    public IntentModel() {
         super();
-        this.totalData = totalData;
-        this.featureData = featureData;
     }
 
     @Override
-    protected abstract UserIntentModel get(U user);
+    protected abstract UserIntentModel<U, I, F> get(U user);
 
     @SuppressWarnings("unchecked")
     @Override
-    public UserIntentModel getModel(U user) {
-        return (UserIntentModel) super.getModel(user);
+    public UserIntentModel<U, I, F> getModel(U user) {
+        return (UserIntentModel<U, I, F>) super.getModel(user);
     }
 
     /**
      * User intent-aware model for {@link IntentModel}.
      */
-    public abstract class UserIntentModel implements Model<U> {
+    public interface UserIntentModel<U, I, F> extends Model<U> {
 
         /**
-         * Returns the features considered in the intent model.
+         * Returns the intents considered in the intent model.
          *
-         * @return the features considered in the intent model
+         * @return the intents considered in the intent model
          */
         public abstract Set<F> getIntents();
 
         /**
-         * Returns the features associated with an item.
+         * Returns the intents associated with an item.
          *
          * @param i item
-         * @return the features associated with the item
+         * @return the intents associated with the item
          */
         public abstract Stream<F> getItemIntents(I i);
 
         /**
-         * Returns the probability of a feature in the model.
+         * Returns the probability of an intent in the model.
          *
-         * @param f feature
-         * @return probability of a feature in the model
+         * @param f intent
+         * @return probability of an intent in the model
          */
         public abstract double p(F f);
 

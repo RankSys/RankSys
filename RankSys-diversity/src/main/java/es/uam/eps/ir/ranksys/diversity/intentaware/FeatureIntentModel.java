@@ -25,16 +25,21 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 /**
- * Default intent-aware model.
+ * Default feature-based intent-aware model. Features of the items in the user
+ * profiles are used as proxies for intents, and the probability of each is
+ * proportional to its occurrence in the profiles.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  * @param <F> type of the features
  */
-public class DefaultIntentModel<U, I, F> extends IntentModel<U, I, F> {
+public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
+
+    protected final PreferenceData<U, I, ?> totalData;
+    protected final FeatureData<I, F, ?> featureData;
 
     /**
      * Constructor that caches user intent-aware models.
@@ -43,8 +48,10 @@ public class DefaultIntentModel<U, I, F> extends IntentModel<U, I, F> {
      * @param totalData preference data
      * @param featureData feature data
      */
-    public DefaultIntentModel(Stream<U> targetUsers, PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
-        super(targetUsers, totalData, featureData);
+    public FeatureIntentModel(Stream<U> targetUsers, PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
+        super(targetUsers);
+        this.totalData = totalData;
+        this.featureData = featureData;
     }
 
     /**
@@ -53,19 +60,21 @@ public class DefaultIntentModel<U, I, F> extends IntentModel<U, I, F> {
      * @param totalData preference data
      * @param featureData feature data
      */
-    public DefaultIntentModel(PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
-        super(totalData, featureData);
+    public FeatureIntentModel(PreferenceData<U, I, ?> totalData, FeatureData<I, F, ?> featureData) {
+        super();
+        this.totalData = totalData;
+        this.featureData = featureData;
     }
 
     @Override
-    protected UserIntentModel get(U user) {
-        return new DefaultUserIntentModel(user);
+    protected UserIntentModel<U, I, F> get(U user) {
+        return new FeatureUserIntentModel(user);
     }
 
     /**
-     * Default user intent-aware model for {@link DefaultIntentModel}.
+     * Default user intent-aware model for {@link FeatureIntentModel}.
      */
-    public class DefaultUserIntentModel extends UserIntentModel {
+    public class FeatureUserIntentModel implements UserIntentModel<U, I, F> {
 
         private final Object2DoubleOpenHashMap<F> prob;
 
@@ -74,7 +83,7 @@ public class DefaultIntentModel<U, I, F> extends IntentModel<U, I, F> {
          *
          * @param user user whose model is created.
          */
-        public DefaultUserIntentModel(U user) {
+        public FeatureUserIntentModel(U user) {
             Object2DoubleOpenHashMap<F> auxProb = new Object2DoubleOpenHashMap<>();
             auxProb.defaultReturnValue(0.0);
 
