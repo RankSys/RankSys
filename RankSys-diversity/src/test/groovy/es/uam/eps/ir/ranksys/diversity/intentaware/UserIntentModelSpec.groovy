@@ -28,7 +28,7 @@ class UserIntentModelSpec extends Specification {
 
         PreferenceData trainData = SimplePreferenceData.load(ratings, lp, lp, ddp, vp);
         FeatureData featureData = SimpleFeatureData.load(features, lp, sp, { v -> 1.0 });
-        intentModel = new DefaultIntentModel(trainData.getUsersWithPreferences(), trainData, featureData);
+        intentModel = new FeatureIntentModel(trainData.getUsersWithPreferences(), trainData, featureData);
     }
 
     def "check number of user's intents"() {
