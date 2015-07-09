@@ -20,6 +20,7 @@ package es.uam.eps.ir.ranksys.diversity.intentaware.reranking;
 import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
+import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel.UserIntentModel;
 import es.uam.eps.ir.ranksys.novdiv.reranking.LambdaReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
@@ -67,7 +68,7 @@ public class XQuAD<U, I, F> extends LambdaReranker<U, I> {
      */
     protected class UserXQuAD extends LambdaUserReranker {
 
-        private final IntentModel<U, I, F>.UserIntentModel uim;
+        private final UserIntentModel<U, I, F> uim;
         private final Object2DoubleOpenHashMap<F> redundancy;
         private final Object2DoubleOpenHashMap<F> probNorm;
 

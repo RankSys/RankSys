@@ -25,6 +25,7 @@ import es.uam.eps.ir.ranksys.core.preference.ConcatPreferenceData;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
 import es.uam.eps.ir.ranksys.diversity.distance.metrics.EILD;
+import es.uam.eps.ir.ranksys.diversity.intentaware.FeatureIntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.metrics.AlphaNDCG;
 import es.uam.eps.ir.ranksys.diversity.intentaware.metrics.ERRIA;
@@ -87,7 +88,7 @@ public class MetricExample {
         // NO RANKING DISCOUNT
         RankingDiscountModel disc = new NoDiscountModel();
         // INTENT MODEL
-        IntentModel<Long, Long, String> intentModel = new IntentModel<>(testData.getUsersWithPreferences(), totalData, featureData);
+        IntentModel<Long, Long, String> intentModel = new FeatureIntentModel<>(testData.getUsersWithPreferences(), totalData, featureData);
 
         Map<String, SystemMetric<Long, Long>> sysMetrics = new HashMap<>();
 
