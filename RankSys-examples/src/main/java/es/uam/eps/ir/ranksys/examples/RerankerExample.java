@@ -68,7 +68,7 @@ public class RerankerExample {
         });
 
         rerankersMap.put("XQuAD", () -> {
-            IntentModel<Long, Long, String> intentModel = new FeatureIntentModel<>(trainData.getUsersWithPreferences(), trainData, featureData);
+            IntentModel<Long, Long, String> intentModel = new FeatureIntentModel<>(trainData, featureData);
             return new XQuAD<>(intentModel, lambda, cutoff, true);
         });
 

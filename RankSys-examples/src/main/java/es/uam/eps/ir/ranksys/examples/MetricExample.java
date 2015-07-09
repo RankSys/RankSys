@@ -88,7 +88,7 @@ public class MetricExample {
         // NO RANKING DISCOUNT
         RankingDiscountModel disc = new NoDiscountModel();
         // INTENT MODEL
-        IntentModel<Long, Long, String> intentModel = new FeatureIntentModel<>(testData.getUsersWithPreferences(), totalData, featureData);
+        IntentModel<Long, Long, String> intentModel = new FeatureIntentModel<>(totalData, featureData);
 
         Map<String, SystemMetric<Long, Long>> sysMetrics = new HashMap<>();
 
