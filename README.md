@@ -4,6 +4,7 @@
 ## Authors
  * [Saúl Vargas](http://www.saulvargas.es), [University of Glasgow](http://www.gla.ac.uk/)
  * [Pablo Castells](http://ir.ii.uam.es/castells/), [UAM](http://www.uam.es/)
+ * [Contributors](https://github.com/ir-uam/RankSys/wiki/Contributors)
 
 ## References
 
