@@ -46,7 +46,7 @@ public class PCItemNovelty<U, I> extends ItemNovelty<U, I> {
      *
      * @param recommenderData preference data
      */
-    public PCItemNovelty(PreferenceData<U, I, ?> recommenderData) {
+    public PCItemNovelty(PreferenceData<U, I> recommenderData) {
         super();
         this.nov = new UserPCItemNoveltyModel(recommenderData);
     }
@@ -65,7 +65,7 @@ public class PCItemNovelty<U, I> extends ItemNovelty<U, I> {
 
         private final Object2DoubleMap<I> itemNovelty;
 
-        public UserPCItemNoveltyModel(PreferenceData<U, I, ?> recommenderData) {
+        public UserPCItemNoveltyModel(PreferenceData<U, I> recommenderData) {
             itemNovelty = new Object2DoubleOpenHashMap<>();
             itemNovelty.defaultReturnValue(1.0);
             int numUsers = recommenderData.numUsersWithPreferences();

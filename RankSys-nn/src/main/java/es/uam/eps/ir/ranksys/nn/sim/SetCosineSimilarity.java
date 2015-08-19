@@ -40,9 +40,10 @@ public class SetCosineSimilarity extends SetSimilarity {
      *
      * @param data preference data
      * @param alpha asymmetry of the similarity, set to 0.5 for standard cosine
+     * @param dense true for array-based calculations, false to map-based
      */
-    public SetCosineSimilarity(FastPreferenceData<?, ?, ?> data, double alpha) {
-        super(data);
+    public SetCosineSimilarity(FastPreferenceData<?, ?> data, double alpha, boolean dense) {
+        super(data, dense);
         this.alpha = alpha;
     }
 

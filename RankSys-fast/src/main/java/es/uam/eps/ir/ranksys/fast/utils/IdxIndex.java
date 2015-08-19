@@ -19,20 +19,19 @@ package es.uam.eps.ir.ranksys.fast.utils;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Bi-map-like structure to back fast version of user/item/feature indexes.
- * It keeps to maps: id-to-index and index-to-id. Value of indexes go from 0 
- * (included) to the number of elements (excluded).
+ * Bi-map-like structure to back fast version of user/item/feature indexes. It keeps to maps: id-to-index and index-to-id. Value of indexes go from 0 (included) to the number of elements (excluded).
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <T> type of the user/item/feature
  */
-public class IdxIndex<T> {
+public class IdxIndex<T> implements Serializable {
 
     private final Object2IntMap<T> t2imap;
     private final List<T> i2tmap;
@@ -63,7 +62,7 @@ public class IdxIndex<T> {
             return idx;
         }
     }
-    
+
     /**
      * Gets the index of the element.
      *

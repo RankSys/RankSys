@@ -17,7 +17,6 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
@@ -27,6 +26,8 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.DoubleAdder;
 
 /**
  * Intent-Aware Expected Reciprocal Rank metric.
@@ -64,36 +65,37 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
         this.intentModel = intentModel;
     }
 
+    /**
+     * Returns a score for the recommendation list.
+     *
+     * @param recommendation recommendation list
+     * @return score of the metric to the recommendation
+     */
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
         UserIntentModel<U, I, F> uim = intentModel.getModel(recommendation.getUser());
 
-        double[] erria = {0.0};
+        DoubleAdder erria = new DoubleAdder();
 
         Object2DoubleMap<F> pNoPrevRel = new Object2DoubleOpenHashMap<>();
         pNoPrevRel.defaultReturnValue(0.0);
-        uim.getIntents().forEach((f) -> {
-            pNoPrevRel.put(f, 1.0);
-        });
+        uim.getIntents().forEach(f -> pNoPrevRel.put(f, 1.0));
 
-        int[] rank = {0};
-        for (IdDouble<I> iv : recommendation.getItems()) {
+        AtomicInteger rank = new AtomicInteger();
+        recommendation.getItems().stream().limit(cutoff).forEach(iv -> {
             if (userRelModel.isRelevant(iv.id)) {
                 double gain = userRelModel.gain(iv.id);
                 uim.getItemIntents(iv.id).forEach(f -> {
                     double red = pNoPrevRel.getDouble(f);
-                    erria[0] += uim.p(f) * gain * red / (1.0 + rank[0]);
+                    erria.add(uim.p(f) * gain * red / (1.0 + rank.intValue()));
                     pNoPrevRel.put(f, red * (1 - gain));
                 });
             }
-            rank[0]++;
-            if (rank[0] >= cutoff) {
-                break;
-            }
-        }
+            rank.incrementAndGet();
+        });
 
-        return erria[0];
+        return erria.doubleValue();
     }
 
     /**
@@ -104,7 +106,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
      */
     public static class ERRRelevanceModel<U, I> extends RelevanceModel<U, I> {
 
-        private final PreferenceData<U, I, ?> testData;
+        private final PreferenceData<U, I> testData;
         private final double threshold;
         private final double maxPreference;
 
@@ -115,7 +117,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
          * @param testData test preference data
          * @param threshold relevance threshold
          */
-        public ERRRelevanceModel(boolean caching, PreferenceData<U, I, ?> testData, double threshold) {
+        public ERRRelevanceModel(boolean caching, PreferenceData<U, I> testData, double threshold) {
             super(caching, testData.getUsersWithPreferences());
             this.testData = testData;
             this.threshold = threshold;

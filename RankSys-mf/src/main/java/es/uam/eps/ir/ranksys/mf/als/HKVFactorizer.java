@@ -72,7 +72,9 @@ public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
     }
 
     @Override
-    public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data) {
+    public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I> data) {
+        // TODO: add regularization
+        
         double error = data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
             DoubleMatrix1D pu = p.viewRow(uidx);
             DoubleMatrix1D su = q.zMult(pu, null);
@@ -86,23 +88,23 @@ public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
             
             double err2 = confidence.applyAsDouble(0) * su.assign(x -> x * x).zSum();
             
-            return err1 + err2;
-        }).sum();
+            return (err1 + err2) / data.numItems();
+        }).sum() / data.numUsers();
 
         return error;
     }
 
     @Override
-    public void set_minP(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, FastPreferenceData<U, I, ?> data) {
+    public void set_minP(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, FastPreferenceData<U, I> data) {
         set_min(p, q, confidence, lambdaP, data);
     }
 
     @Override
-    public void set_minQ(final DenseDoubleMatrix2D q, final DenseDoubleMatrix2D p, FastPreferenceData<U, I, ?> data) {
+    public void set_minQ(final DenseDoubleMatrix2D q, final DenseDoubleMatrix2D p, FastPreferenceData<U, I> data) {
         set_min(q, p, confidence, lambdaQ, new TransposedPreferenceData<>(data));
     }
 
-    private static <U, I, O> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleUnaryOperator confidence, double lambda, FastPreferenceData<U, I, O> data) {
+    private static <U, I, O> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleUnaryOperator confidence, double lambda, FastPreferenceData<U, I> data) {
         final int K = p.columns();
 
         DenseDoubleMatrix2D A1P = new DenseDoubleMatrix2D(K, K);

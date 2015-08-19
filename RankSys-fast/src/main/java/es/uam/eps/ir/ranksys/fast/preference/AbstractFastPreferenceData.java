@@ -30,12 +30,11 @@ import java.util.stream.Stream;
  * 
  * @param <U> type of the users
  * @param <I> type of the items
- * @param <O> type of other information for users and items
  */
-public abstract class AbstractFastPreferenceData<U, I, O> implements FastPreferenceData<U, I, O> {
+public abstract class AbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I> {
 
-    private final FastUserIndex<U> ui;
-    private final FastItemIndex<I> ii;
+    protected final FastUserIndex<U> ui;
+    protected final FastItemIndex<I> ii;
 
     /**
      * Constructor.
@@ -109,13 +108,13 @@ public abstract class AbstractFastPreferenceData<U, I, O> implements FastPrefere
     }
 
     @Override
-    public Stream<IdPref<I, O>> getUserPreferences(final U u) {
-        return getUidxPreferences(user2uidx(u)).map(iv -> new IdPref<>(iidx2item(iv.idx), iv.v, iv.o));
+    public Stream<? extends IdPref<I>> getUserPreferences(final U u) {
+        return getUidxPreferences(user2uidx(u)).map(iv -> new IdPref<>(iidx2item(iv.idx), iv.v));
     }
 
     @Override
-    public Stream<IdPref<U, O>> getItemPreferences(final I i) {
-        return getIidxPreferences(item2iidx(i)).map(uv -> new IdPref<>(uidx2user(uv.idx), uv.v, uv.o));
+    public Stream<? extends IdPref<U>> getItemPreferences(final I i) {
+        return getIidxPreferences(item2iidx(i)).map(uv -> new IdPref<>(uidx2user(uv.idx), uv.v));
     }
 
     @Override

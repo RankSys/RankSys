@@ -136,5 +136,16 @@ public class Stats {
     public double getMin() {
         return min;
     }
+    
+    /**
+     * Resets the Stats object (as it had just been created).
+     */
+    public void reset() {
+        n = 0;
+        m = 0.0;
+        s = 0.0;
+        max = Double.NEGATIVE_INFINITY;
+        min = Double.POSITIVE_INFINITY;
+    }
 
 }

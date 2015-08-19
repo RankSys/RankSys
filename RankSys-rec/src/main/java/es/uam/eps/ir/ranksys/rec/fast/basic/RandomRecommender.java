@@ -17,24 +17,29 @@
  */
 package es.uam.eps.ir.ranksys.rec.fast.basic;
 
+import es.uam.eps.ir.ranksys.core.IdDouble;
+import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
+import static java.lang.Double.NaN;
 import java.util.ArrayList;
+import java.util.Collections;
 import static java.util.Collections.shuffle;
 import java.util.List;
 import java.util.Random;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
- * Random recommender. It provides non-personalized recommendations without
- * by extracting a sequence of a shuffled list of the items.
+ * Random recommender. It provides non-personalized recommendations without by extracting a sequence of a shuffled list of the items.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  */
@@ -64,9 +69,10 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
         if (maxLength == 0) {
             maxLength = randomList.size();
         }
-        
+
         List<IdxDouble> recommended = new ArrayList<>();
-        int j = random.nextInt(randomList.size());
+        int s = random.nextInt(randomList.size());
+        int j = s;
         for (int i = 0; i < maxLength; i++) {
             IdxDouble iv = randomList.get(j);
             while (!filter.test(iv.idx)) {
@@ -75,8 +81,28 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
             }
             recommended.add(iv);
             j = (j + 1) % randomList.size();
+            if (s == j) {
+                break;
+            }
         }
 
         return new FastRecommendation(uidx, recommended);
     }
+
+    @Override
+    public Recommendation<U, I> getRecommendation(U u, Stream<I> candidates) {
+        List<IdDouble<I>> items = candidates.map(i -> new IdDouble<>(i, NaN)).collect(toList());
+        Collections.shuffle(items, random);
+        
+        return new Recommendation<>(u, items);
+    }
+
+    @Override
+    public FastRecommendation getRecommendation(int uidx, IntStream candidates) {
+        List<IdxDouble> items = candidates.mapToObj(iidx -> new IdxDouble(iidx, NaN)).collect(toList());
+        Collections.shuffle(items, random);
+
+        return new FastRecommendation(uidx, items);
+    }
+
 }

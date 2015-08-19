@@ -77,8 +77,8 @@ public class RecommenderExample {
 
         FastUserIndex<Long> userIndex = SimpleFastUserIndex.load(userPath, lp);
         FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(itemPath, lp);
-        FastPreferenceData<Long, Long, Void> trainData = SimpleFastPreferenceData.load(trainDataPath, lp, lp, ddp, vp, userIndex, itemIndex);
-        FastPreferenceData<Long, Long, Void> testData = SimpleFastPreferenceData.load(testDataPath, lp, lp, ddp, vp, userIndex, itemIndex);
+        FastPreferenceData<Long, Long> trainData = SimpleFastPreferenceData.load(trainDataPath, lp, lp, ddp, userIndex, itemIndex);
+        FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(testDataPath, lp, lp, ddp, userIndex, itemIndex);
 
         //////////////////
         // RECOMMENDERS //
@@ -101,7 +101,7 @@ public class RecommenderExample {
             int k = 100;
             int q = 1;
 
-            UserSimilarity<Long> sim = new VectorCosineUserSimilarity<>(trainData, alpha);
+            UserSimilarity<Long> sim = new VectorCosineUserSimilarity<>(trainData, alpha, true);
             UserNeighborhood<Long> neighborhood = new TopKUserNeighborhood<>(sim, k);
 
             return new UserNeighborhoodRecommender<>(trainData, neighborhood, q);
@@ -113,7 +113,7 @@ public class RecommenderExample {
             int k = 10;
             int q = 1;
 
-            ItemSimilarity<Long> sim = new VectorCosineItemSimilarity<>(trainData, alpha);
+            ItemSimilarity<Long> sim = new VectorCosineItemSimilarity<>(trainData, alpha, true);
             ItemNeighborhood<Long> neighborhood = new TopKItemNeighborhood<>(sim, k);
             neighborhood = new CachedItemNeighborhood<>(neighborhood);
 

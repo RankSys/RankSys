@@ -48,11 +48,11 @@ import java.util.zip.ZipOutputStream;
  */
 public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
 
-    private final DenseDoubleMatrix2D userMatrix;
-    private final DenseDoubleMatrix2D itemMatrix;
-    private final int K;
-    private final FastUserIndex<U> uIndex;
-    private final FastItemIndex<I> iIndex;
+    protected final DenseDoubleMatrix2D userMatrix;
+    protected final DenseDoubleMatrix2D itemMatrix;
+    protected final int K;
+    protected final FastUserIndex<U> uIndex;
+    protected final FastItemIndex<I> iIndex;
 
     /**
      * Constructor.

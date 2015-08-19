@@ -21,14 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.ir-uam</groupId>
+        <groupId>com.github.ir-uam.RankSys</groupId>
         <artifactId>RankSys</artifactId>
-        <version>0.3</version>
+        <version>0.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>RankSys-core</artifactId>
-    <groupId>com.github.ir-uam.RankSys</groupId>
-    <version>0.3</version>
     <packaging>jar</packaging>
 
     <dependencies>

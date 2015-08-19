@@ -55,6 +55,14 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
         this.cutoff = cutoff;
     }
 
+    /**
+     * Returns the permutation that is applied to the input recommendation
+     * to generate the re-ranked recommendation.
+     *
+     * @param recommendation input recommendation
+     * @param maxLength maximum length of the permutation
+     * @return permutation that encodes the re-ranking
+     */
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
         return getUserReranker(recommendation, maxLength).rerankPermutation();

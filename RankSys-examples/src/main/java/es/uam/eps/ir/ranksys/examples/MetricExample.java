@@ -72,9 +72,9 @@ public class MetricExample {
         Double threshold = Double.parseDouble(args[4]);
 
         // USER - ITEM - RATING files for train and test
-        PreferenceData<Long, Long, Void> trainData = SimplePreferenceData.load(trainDataPath, lp, lp, ddp, vp);
-        PreferenceData<Long, Long, Void> testData = SimplePreferenceData.load(testDataPath, lp, lp, ddp, vp);
-        PreferenceData<Long, Long, Void> totalData = new ConcatPreferenceData<>(trainData, testData);
+        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(trainDataPath, lp, lp, ddp);
+        PreferenceData<Long, Long> testData = SimplePreferenceData.load(testDataPath, lp, lp, ddp);
+        PreferenceData<Long, Long> totalData = new ConcatPreferenceData<>(trainData, testData);
         // EVALUATED AT CUTOFF 10
         int cutoff = 10;
         // ITEM - FEATURE file

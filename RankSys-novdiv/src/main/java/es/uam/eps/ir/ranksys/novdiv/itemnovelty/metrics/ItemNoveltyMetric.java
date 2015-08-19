@@ -66,6 +66,12 @@ public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetr
         this.disc = disc;
     }
 
+    /**
+     * Returns a score for the recommendation list.
+     *
+     * @param recommendation recommendation list
+     * @return score of the metric to the recommendation
+     */
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         U u = recommendation.getUser();

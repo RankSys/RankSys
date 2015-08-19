@@ -67,7 +67,7 @@ public abstract class AbstractRecommenderRunner<U, I> implements RecommenderRunn
         try (RecommendationFormat.Writer<U, I> writer = format.getWriter(out)) {
             Map<U, Recommendation<U, I>> pendingRecommendations = new HashMap<>();
             List<U> usersAux = new ArrayList<>(users);
-
+            
             users.parallelStream()
                     .map(user -> recProvider.apply(user))
                     .forEachOrdered(recommendation -> {

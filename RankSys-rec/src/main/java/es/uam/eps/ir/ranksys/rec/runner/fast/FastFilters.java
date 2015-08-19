@@ -19,6 +19,7 @@ package es.uam.eps.ir.ranksys.rec.runner.fast;
 
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.feature.FastFeatureData;
+import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.Function;
@@ -34,6 +35,8 @@ public class FastFilters {
     /**
      * False item filter as it admits every item.
      *
+     * @param <U> type of the users
+     * @param <I> type of the items
      * @return item filters that return true always
      */
     public static  <U, I> Function<U, IntPredicate> all() {
@@ -49,7 +52,7 @@ public class FastFilters {
      * @return item filters for each using returning true if the
      * user-item pair was not observed in the preference data
      */
-    public static <U, I> Function<U, IntPredicate> notInTrain(FastPreferenceData<U, I, ?> trainData) {
+    public static <U, I> Function<U, IntPredicate> notInTrain(FastPreferenceData<U, I> trainData) {
         return user -> {
             IntSet set = new IntOpenHashSet();
             trainData.getUidxPreferences(trainData.user2uidx(user)).mapToInt(iv -> iv.idx).forEach(set::add);
@@ -72,6 +75,17 @@ public class FastFilters {
         IntSet itemsWithFeatures = new IntOpenHashSet();
         featureData.getIidxWithFeatures().forEach(iidx -> itemsWithFeatures.add(iidx));
         return user -> iidx -> itemsWithFeatures.contains(iidx);
+    }
+    
+    /**
+     * For social network recommendations, void a user being recommended to herself.
+     *
+     * @param <U> type of the user
+     * @param users  user index
+     * @return item-user filter that return true if the recommended item-user is not the target user.
+     */
+    public static <U> Function<U, IntPredicate> notSelf(FastUserIndex<U> users) {
+        return user1 -> uidx2 -> uidx2 != users.user2uidx(user1);
     }
 
     /**

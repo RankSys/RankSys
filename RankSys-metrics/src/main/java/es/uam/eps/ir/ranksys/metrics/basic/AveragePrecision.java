@@ -28,7 +28,7 @@ import static java.lang.Math.min;
  * Average Precision: average of the precision at each recall level.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  */
@@ -49,10 +49,16 @@ public class AveragePrecision<U, I> extends AbstractRecommendationMetric<U, I> {
         this.cutoff = cutoff;
     }
 
+    /**
+     * Returns a score for the recommendation list.
+     *
+     * @param recommendation recommendation list
+     * @return score of the metric to the recommendation
+     */
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         UserIdealRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
-        
+
         double ap = 0;
         int relCount = 0;
         int rank = 0;

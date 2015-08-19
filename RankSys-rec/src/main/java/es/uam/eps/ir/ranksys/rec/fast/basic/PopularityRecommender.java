@@ -44,7 +44,7 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
      *
      * @param data preference data
      */
-    public PopularityRecommender(FastPreferenceData<U, I, ?> data) {
+    public PopularityRecommender(FastPreferenceData<U, I> data) {
         super(data, data);
 
         popList = data.getIidxWithPreferences()

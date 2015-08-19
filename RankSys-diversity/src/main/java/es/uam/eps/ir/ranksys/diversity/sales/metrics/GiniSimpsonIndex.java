@@ -42,6 +42,11 @@ public class GiniSimpsonIndex<U, I> extends EIUDC<U, I> {
         super(cutoff, new NoDiscountModel(), new NoRelevanceModel<>());
     }
 
+    /**
+     * Evaluates the metric for the recommendations added so far.
+     *
+     * @return result of the metric for the recommendations previously added
+     */
     @Override
     public double evaluate() {
         return (super.evaluate() - 1) / cutoff + 1;

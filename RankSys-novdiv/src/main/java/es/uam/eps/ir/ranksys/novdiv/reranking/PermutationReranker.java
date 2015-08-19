@@ -38,7 +38,7 @@ public abstract class PermutationReranker<U, I> implements Reranker<U, I> {
      * Returns the permutation that is applied to the input recommendation
      * to generate the re-ranked recommendation.
      *
-     * @param recommendation input recommendatoin
+     * @param recommendation input recommendation
      * @param maxLength maximum length of the permutation
      * @return permutation that encodes the re-ranking
      */

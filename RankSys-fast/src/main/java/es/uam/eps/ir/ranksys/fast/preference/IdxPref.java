@@ -17,41 +17,59 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
+import es.uam.eps.ir.ranksys.fast.IdxDouble;
+import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+
 /**
  * A user or item preference by indexes.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
- * @param <O> type of other information
+ *
  */
-public class IdxPref<O> {
+public class IdxPref extends IdxDouble {
 
     /**
-     * The index of a user or an item.
+     * Empty constructor.
      */
-    public final int idx;
-
-    /**
-     * The weight (rating, play count, etc.) of the preference.
-     */
-    public final double v;
-
-    /**
-     * Other information (such as an access log, context) of the preference.
-     */
-    public final O o;
-
-    /**
-     * Constructor.
-     *
-     * @param idx index of user or item for which the preference is expressed
-     * @param value weight of the preference
-     * @param other other information of the preference
-     */
-    public IdxPref(int idx, double value, O other) {
-        this.idx = idx;
-        this.v = value;
-        this.o = other;
+    public IdxPref() {
     }
 
+    /**
+     * Constructor with both values.
+     *
+     * @param idx the index
+     * @param v the double
+     */
+    public IdxPref(int idx, double v) {
+        super(idx, v);
+    }
+
+    /**
+     * Constructor from a Int2Double entry.
+     *
+     * @param e int-double entry
+     */
+    public IdxPref(Int2DoubleMap.Entry e) {
+        super(e);
+    }
+
+    @Override
+    public IdxPref refill(int idx, double v) {
+        this.idx = idx;
+        this.v = v;
+        return this;
+    }
+
+    /**
+     * Re-fills the IdxPref object (only the idx) and returns itself.
+     * 
+     * This is meant for binary data.
+     *
+     * @param idx index
+     * @return this
+     */
+    public IdxPref refill(int idx) {
+        this.idx = idx;
+        return this;
+    }
 }

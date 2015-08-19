@@ -62,6 +62,12 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         this.disc = new LogarithmicDiscountModel();
     }
 
+    /**
+     * Returns a score for the recommendation list.
+     *
+     * @param recommendation recommendation list
+     * @return score of the metric to the recommendation
+     */
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         NDCGRelevanceModel<U, I>.UserNDCGRelevanceModel userRelModel = (NDCGRelevanceModel<U, I>.UserNDCGRelevanceModel) relModel.getModel(recommendation.getUser());
@@ -108,7 +114,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
      */
     public static class NDCGRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
 
-        private final PreferenceData<U, I, ?> testData;
+        private final PreferenceData<U, I> testData;
         private final double threshold;
 
         /**
@@ -118,7 +124,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
          * @param testData test subset of preferences
          * @param threshold relevance threshold
          */
-        public NDCGRelevanceModel(boolean caching, PreferenceData<U, I, ?> testData, double threshold) {
+        public NDCGRelevanceModel(boolean caching, PreferenceData<U, I> testData, double threshold) {
             super(caching, testData.getUsersWithPreferences());
             this.testData = testData;
             this.threshold = threshold;

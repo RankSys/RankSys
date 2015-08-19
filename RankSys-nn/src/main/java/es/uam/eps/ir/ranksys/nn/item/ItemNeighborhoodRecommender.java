@@ -46,7 +46,7 @@ public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
     /**
      * Preference data.
      */
-    protected final FastPreferenceData<U, I, ?> data;
+    protected final FastPreferenceData<U, I> data;
 
     /**
      * Item neighborhoods.
@@ -65,13 +65,19 @@ public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
      * @param neighborhood item neighborhood
      * @param q exponent of the similarity
      */
-    public ItemNeighborhoodRecommender(FastPreferenceData<U, I, ?> data, ItemNeighborhood<I> neighborhood, int q) {
+    public ItemNeighborhoodRecommender(FastPreferenceData<U, I> data, ItemNeighborhood<I> neighborhood, int q) {
         super(data, data);
         this.data = data;
         this.neighborhood = neighborhood;
         this.q = q;
     }
 
+    /**
+     * Returns a map of item-score pairs.
+     *
+     * @param uidx index of the user whose scores are predicted
+     * @return a map of item-score pairs
+     */
     @Override
     protected Int2DoubleMap getScoresMap(int uidx) {
         Int2DoubleOpenHashMap scoresMap = new Int2DoubleOpenHashMap();

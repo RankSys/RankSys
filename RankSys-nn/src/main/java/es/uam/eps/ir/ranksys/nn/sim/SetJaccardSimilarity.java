@@ -32,9 +32,10 @@ public class SetJaccardSimilarity extends SetSimilarity {
      * Constructor.
      *
      * @param data preference data
+     * @param dense true for array-based calculations, false to map-based
      */
-    public SetJaccardSimilarity(FastPreferenceData<?, ?, ?> data) {
-        super(data);
+    public SetJaccardSimilarity(FastPreferenceData<?, ?> data, boolean dense) {
+        super(data, dense);
     }
 
     @Override

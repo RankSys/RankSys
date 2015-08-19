@@ -25,16 +25,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.stream.Stream;
 
 /**
  * Simple implementation of FastUserIndex backed by a bi-map IdxIndex
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  */
-public class SimpleFastUserIndex<U> implements FastUserIndex<U> {
+public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
 
     private final IdxIndex<U> uMap;
 
@@ -76,7 +77,7 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U> {
     protected int add(U u) {
         return uMap.add(u);
     }
-    
+
     /**
      * Creates a user index from a file where the first column lists the users.
      *
@@ -87,7 +88,11 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U> {
      * @throws IOException when file does not exist or when IO error
      */
     public static <U> SimpleFastUserIndex<U> load(String path, Parser<U> uParser) throws IOException {
-        return load(new FileInputStream(path), uParser);
+        return load(path, uParser, true);
+    }
+
+    public static <U> SimpleFastUserIndex<U> load(String path, Parser<U> uParser, boolean sort) throws IOException {
+        return load(new FileInputStream(path), uParser, sort);
     }
 
     /**
@@ -100,12 +105,15 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U> {
      * @throws IOException when IO error
      */
     public static <U> SimpleFastUserIndex<U> load(InputStream in, Parser<U> uParser) throws IOException {
+        return load(in, uParser, true);
+    }
+
+    public static <U> SimpleFastUserIndex<U> load(InputStream in, Parser<U> uParser, boolean sort) throws IOException {
         SimpleFastUserIndex<U> userIndex = new SimpleFastUserIndex<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            reader.lines()
-                    .map(line -> uParser.parse(split(line, '\t')[0]))
-                    .sorted()
-                    .forEach(u -> userIndex.add(u));
+            Stream<U> users = reader.lines()
+                    .map(line -> uParser.parse(split(line, '\t')[0]));
+            (sort ? users.sorted() : users).forEach(u -> userIndex.add(u));
         }
         return userIndex;
     }

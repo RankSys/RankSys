@@ -15,29 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.nn.user.sim;
+package es.uam.eps.ir.ranksys.core.util.parsing;
 
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.nn.sim.VectorCosineSimilarity;
+import static java.util.stream.IntStream.range;
 
 /**
- * Vector cosine user similarity. See {@link VectorCosineSimilarity}.
+ * Parses a CharSequence to an int
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
- * @param <U> type of the users
  */
-public class VectorCosineUserSimilarity<U> extends UserSimilarity<U> {
+public interface IntParser {
 
     /**
-     * Constructor.
+     * Parses a CharSequence into an int.
      *
-     * @param data preference data
-     * @param alpha asymmetry factor, set to 0.5 to standard cosine.
-     * @param dense true for array-based calculations, false to map-based
+     * @param from string to be parsed
+     * @return parsed int
      */
-    public VectorCosineUserSimilarity(FastPreferenceData<U, ?> data, double alpha, boolean dense) {
-        super(data, new VectorCosineSimilarity(data, alpha, dense));
-    }
-    
+    public int parse(CharSequence from);
+
+    /**
+     * Default int parser
+     */
+    public static final IntParser dip = from -> {
+        boolean neg = from.charAt(0) == '-';
+        int x = range(neg ? 1 : 0, from.length()).map(i -> from.charAt(i) - '0').reduce(0, (a, b) -> a * 10 + b);
+        return neg ? -x : x;
+    };
 }

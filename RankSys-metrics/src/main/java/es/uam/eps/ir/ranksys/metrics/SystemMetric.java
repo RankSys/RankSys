@@ -40,9 +40,9 @@ public interface SystemMetric<U, I> {
     public abstract void add(Recommendation<U, I> recommendation);
 
     /**
-     * Evaluates the metrics added so far.
+     * Evaluates the metric for the recommendations added so far.
      *
-     * @return result of the metrics for the recommendations previously added
+     * @return result of the metric for the recommendations previously added
      */
     public abstract double evaluate();
     

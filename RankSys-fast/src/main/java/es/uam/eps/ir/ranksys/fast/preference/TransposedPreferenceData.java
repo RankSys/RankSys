@@ -18,6 +18,8 @@
 package es.uam.eps.ir.ranksys.fast.preference;
 
 import es.uam.eps.ir.ranksys.core.preference.IdPref;
+import it.unimi.dsi.fastutil.doubles.DoubleIterator;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -30,18 +32,17 @@ import java.util.stream.Stream;
  * 
  * @param <I> type of the items
  * @param <U> type of the users
- * @param <O> type of other information about preferences
  */
-public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, U, O> {
+public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U> {
 
-    private final FastPreferenceData<U, I, O> d;
+    protected final FastPreferenceData<U, I> d;
 
     /**
      * Constructor.
      *
-     * @param recommenderData preference data to be tranposed
+     * @param recommenderData preference data to be transposed
      */
-    public TransposedPreferenceData(FastPreferenceData<U, I, O> recommenderData) {
+    public TransposedPreferenceData(FastPreferenceData<U, I> recommenderData) {
         this.d = recommenderData;
     }
 
@@ -76,12 +77,12 @@ public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, 
     }
 
     @Override
-    public Stream<IdxPref<O>> getUidxPreferences(int uidx) {
+    public Stream<? extends IdxPref> getUidxPreferences(int uidx) {
         return d.getIidxPreferences(uidx);
     }
 
     @Override
-    public Stream<IdxPref<O>> getIidxPreferences(int iidx) {
+    public Stream<? extends IdxPref> getIidxPreferences(int iidx) {
         return d.getUidxPreferences(iidx);
     }
 
@@ -121,12 +122,12 @@ public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, 
     }
 
     @Override
-    public Stream<IdPref<U, O>> getUserPreferences(I u) {
+    public Stream<? extends IdPref<U>> getUserPreferences(I u) {
         return d.getItemPreferences(u);
     }
 
     @Override
-    public Stream<IdPref<I, O>> getItemPreferences(U i) {
+    public Stream<? extends IdPref<I>> getItemPreferences(U i) {
         return d.getUserPreferences(i);
     }
 
@@ -168,5 +169,25 @@ public class TransposedPreferenceData<I, U, O> implements FastPreferenceData<I, 
     @Override
     public Stream<U> getItemsWithPreferences() {
         return d.getUsersWithPreferences();
+    }
+
+    @Override
+    public IntIterator getUidxIidxs(int uidx) {
+        return ((FasterPreferenceData<U, I>) d).getIidxUidxs(uidx);
+    }
+
+    @Override
+    public DoubleIterator getUidxVs(int uidx) {
+        return ((FasterPreferenceData<U, I>) d).getIidxVs(uidx);
+    }
+
+    @Override
+    public IntIterator getIidxUidxs(int iidx) {
+        return ((FasterPreferenceData<U, I>) d).getUidxIidxs(iidx);
+    }
+
+    @Override
+    public DoubleIterator getIidxVs(int iidx) {
+        return ((FasterPreferenceData<U, I>) d).getUidxVs(iidx);
     }
 }

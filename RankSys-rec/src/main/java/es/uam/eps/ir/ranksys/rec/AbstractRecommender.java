@@ -17,7 +17,10 @@
  */
 package es.uam.eps.ir.ranksys.rec;
 
+import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -44,8 +47,11 @@ public abstract class AbstractRecommender<U, I> implements Recommender<U, I> {
 
     @Override
     public Recommendation<U, I> getRecommendation(U u, Stream<I> candidates) {
-        Set<I> set = candidates.collect(Collectors.toSet());
-
-        return getRecommendation(u, 0, item -> set.contains(item));
+        Set<I> set = candidates.collect(Collectors.toCollection(() -> new HashSet<>()));
+        List<IdDouble<I>> items = getRecommendation(u, 0, item -> set.contains(item)).getItems();
+        items.forEach(is -> set.remove(is.id));
+        set.stream().sorted().forEach(i -> items.add(new IdDouble<>(i, Double.NaN)));
+        
+        return new Recommendation<>(u, items);
     }
 }

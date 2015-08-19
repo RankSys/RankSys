@@ -39,7 +39,7 @@ import java.util.function.ToDoubleFunction;
  */
 public class PDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
-    private final PreferenceData<U, I, ?> recommenderData;
+    private final PreferenceData<U, I> recommenderData;
     private final ItemDistanceModel<I> dist;
 
     /**
@@ -49,7 +49,7 @@ public class PDItemNovelty<U, I> extends ItemNovelty<U, I> {
      * @param recommenderData preference data
      * @param dist item distance model
      */
-    public PDItemNovelty(boolean caching, PreferenceData<U, I, ?> recommenderData, ItemDistanceModel<I> dist) {
+    public PDItemNovelty(boolean caching, PreferenceData<U, I> recommenderData, ItemDistanceModel<I> dist) {
         super(caching, recommenderData.getUsersWithPreferences());
         this.recommenderData = recommenderData;
         this.dist = dist;

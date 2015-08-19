@@ -25,6 +25,12 @@ package es.uam.eps.ir.ranksys.metrics.rank;
  */
 public class ReciprocalDiscountModel implements RankingDiscountModel {
 
+    /**
+     * Discount to be applied at a given position.
+     *
+     * @param k position in the recommendation list starting from 0
+     * @return discount to be applied for the given rank position
+     */
     @Override
     public double disc(int k) {
         return 1 / (k + 1.0);

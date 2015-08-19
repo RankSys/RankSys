@@ -11,7 +11,6 @@ import java.util.stream.Collectors
 import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.vp
 
 import static spock.util.matcher.HamcrestSupport.that
 import static spock.util.matcher.HamcrestMatchers.closeTo
@@ -26,7 +25,7 @@ class UserIntentModelSpec extends Specification {
         InputStream ratings = UserIntentModelSpec.class.getResourceAsStream("/intent_ratings");
         InputStream features = UserIntentModelSpec.class.getResourceAsStream("/intent_features");
 
-        PreferenceData trainData = SimplePreferenceData.load(ratings, lp, lp, ddp, vp);
+        PreferenceData trainData = SimplePreferenceData.load(ratings, lp, lp, ddp);
         FeatureData featureData = SimpleFeatureData.load(features, lp, sp, { v -> 1.0 });
         intentModel = new FeatureIntentModel(trainData.getUsersWithPreferences(), trainData, featureData);
     }

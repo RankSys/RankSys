@@ -40,7 +40,6 @@ import java.util.function.Supplier;
 import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.vp;
 
 /**
  * Example main of re-rankers.
@@ -57,7 +56,7 @@ public class RerankerExample {
 
         double lambda = 0.5;
         int cutoff = 100;
-        PreferenceData<Long, Long, Void> trainData = SimplePreferenceData.load(trainDataPath, lp, lp, ddp, vp);
+        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(trainDataPath, lp, lp, ddp);
         FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(featurePath, lp, sp, v -> 1.0);
 
         Map<String, Supplier<Reranker<Long, Long>>> rerankersMap = new HashMap<>();

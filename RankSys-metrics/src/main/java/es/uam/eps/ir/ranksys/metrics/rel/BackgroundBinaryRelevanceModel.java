@@ -33,7 +33,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
  */
 public class BackgroundBinaryRelevanceModel<U, I> extends RelevanceModel<U, I> {
 
-    private final PreferenceData<U, I, ?> testData;
+    private final PreferenceData<U, I> testData;
     private final double threshold;
     private final double background;
 
@@ -45,7 +45,7 @@ public class BackgroundBinaryRelevanceModel<U, I> extends RelevanceModel<U, I> {
      * @param threshold relevance threshold
      * @param background gain of unseen items in the test subset
      */
-    public BackgroundBinaryRelevanceModel(boolean caching, PreferenceData<U, I, ?> testData, double threshold, double background) {
+    public BackgroundBinaryRelevanceModel(boolean caching, PreferenceData<U, I> testData, double threshold, double background) {
         super(caching, testData.getUsersWithPreferences());
         this.testData = testData;
         this.threshold = threshold;

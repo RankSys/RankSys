@@ -51,6 +51,12 @@ public class Recall<U, I> extends AbstractRecommendationMetric<U, I> {
         this.cutoff = cutoff;
     }
 
+    /**
+     * Returns a score for the recommendation list.
+     *
+     * @param recommendation recommendation list
+     * @return score of the metric to the recommendation
+     */
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         U user = recommendation.getUser();

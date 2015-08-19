@@ -28,7 +28,6 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.mf.Factorization;
 import es.uam.eps.ir.ranksys.mf.Factorizer;
-import es.uam.eps.ir.ranksys.mf.als.ALSFactorizer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -44,16 +43,17 @@ import java.util.stream.Stream;
 
 /**
  * Probabilistic Latent Semantic Analysis of Hofmann.
- * 
- * T. Hofmann. Latent Semantic Models for Collaborative Filtering. ToIS, Vol 22
- * No. 1, January 2004.
+ *
+ * T. Hofmann. Latent Semantic Models for Collaborative Filtering. ToIS, Vol 22 No. 1, January 2004.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  */
 public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
+
+    private static final Logger LOG = Logger.getLogger(PLSAFactorizer.class.getName());
 
     private final int numIter;
 
@@ -67,7 +67,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
     }
 
     @Override
-    public double error(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data) {
+    public double error(Factorization<U, I> factorization, FastPreferenceData<U, I> data) {
         DenseDoubleMatrix2D pu_z = factorization.getUserMatrix();
         DenseDoubleMatrix2D piz = factorization.getItemMatrix();
 
@@ -83,7 +83,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
     }
 
     @Override
-    public Factorization<U, I> factorize(int K, FastPreferenceData<U, I, ?> data) {
+    public Factorization<U, I> factorize(int K, FastPreferenceData<U, I> data) {
         DoubleFunction init = x -> sqrt(1.0 / K) * Math.random();
         Factorization<U, I> factorization = new Factorization<>(data, data, K, init);
         factorize(factorization, data);
@@ -91,7 +91,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
     }
 
     @Override
-    public void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I, ?> data) {
+    public void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I> data) {
         DenseDoubleMatrix2D pu_z = factorization.getUserMatrix();
         DenseDoubleMatrix2D piz = factorization.getItemMatrix();
 
@@ -117,15 +117,16 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             int iter = t;
             long time1 = System.nanoTime() - time0;
 
-            Logger.getLogger(ALSFactorizer.class.getName()).log(Level.INFO, () -> String.format("iteration %3d %.2fs %.6f", iter, time1 / 1_000_000_000.0, error(factorization, data)));
+            LOG.log(Level.INFO, String.format("iteration n = %3d t = %.2fs", iter, time1 / 1_000_000_000.0));
+            LOG.log(Level.FINE, () -> String.format("iteration n = %3d e = %.6f", iter, error(factorization, data)));
         }
     }
 
-    private void expectation(final DenseDoubleMatrix2D pz_u, final DenseDoubleMatrix2D piz, FastPreferenceData<U, I, double[]> qzData) {
+    private void expectation(final DenseDoubleMatrix2D pz_u, final DenseDoubleMatrix2D piz, PLSAPreferenceData<U, I> qzData) {
         qzData.getUidxWithPreferences().parallel().forEach(uidx -> {
             qzData.getUidxPreferences(uidx).forEach(iqz -> {
                 int iidx = iqz.idx;
-                double[] qz = iqz.o;
+                double[] qz = ((PLSAPreferenceData.PLSAIdxPref) iqz).qz;
                 for (int z = 0; z < qz.length; z++) {
                     qz[z] = piz.getQuick(iidx, z) * pz_u.getQuick(uidx, z);
                 }
@@ -134,7 +135,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         });
     }
 
-    private void maximization(DenseDoubleMatrix2D pu_z, final DenseDoubleMatrix2D piz, final FastPreferenceData<U, I, double[]> qzData) {
+    private void maximization(DenseDoubleMatrix2D pu_z, final DenseDoubleMatrix2D piz, final PLSAPreferenceData<U, I> qzData) {
         Int2ObjectMap<Lock> lockMap = new Int2ObjectOpenHashMap<>();
         qzData.getIidxWithPreferences().forEach(iidx -> lockMap.put(iidx, new ReentrantLock()));
 
@@ -147,7 +148,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             qzData.getUidxPreferences(uidx).forEach(iqz -> {
                 int iidx = iqz.idx;
                 double v = iqz.v;
-                double[] qz = iqz.o;
+                double[] qz = ((PLSAPreferenceData.PLSAIdxPref) iqz).qz;
                 Lock lock = lockMap.get(iidx);
 
                 for (int z = 0; z < qz.length; z++) {
@@ -183,12 +184,12 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         }
     }
 
-    private static class PLSAPreferenceData<U, I> extends AbstractFastPreferenceData<U, I, double[]> {
+    private static class PLSAPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> {
 
-        private final FastPreferenceData<U, I, ?> data;
+        private final FastPreferenceData<U, I> data;
         private final Long2ObjectOpenHashMap<double[]> qz;
 
-        public PLSAPreferenceData(FastPreferenceData<U, I, ?> data, int K) {
+        public PLSAPreferenceData(FastPreferenceData<U, I> data, int K) {
             super(data, data);
             this.data = data;
             this.qz = new Long2ObjectOpenHashMap<>();
@@ -229,15 +230,15 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         }
 
         @Override
-        public Stream<IdxPref<double[]>> getUidxPreferences(int uidx) {
+        public Stream<IdxPref> getUidxPreferences(int uidx) {
             return data.getUidxPreferences(uidx)
-                    .map(pref -> new IdxPref<>(pref.idx, pref.v, getQz(uidx, pref.idx)));
+                    .map(pref -> new PLSAIdxPref(pref.idx, pref.v, getQz(uidx, pref.idx)));
         }
 
         @Override
-        public Stream<IdxPref<double[]>> getIidxPreferences(int iidx) {
+        public Stream<IdxPref> getIidxPreferences(int iidx) {
             return data.getIidxPreferences(iidx)
-                    .map(pref -> new IdxPref<>(pref.idx, pref.v, getQz(pref.idx, iidx)));
+                    .map(pref -> new PLSAIdxPref(pref.idx, pref.v, getQz(pref.idx, iidx)));
         }
 
         @Override
@@ -245,5 +246,15 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             return data.numPreferences();
         }
 
+        public class PLSAIdxPref extends IdxPref {
+
+            public double[] qz;
+
+            public PLSAIdxPref(int idx, double value, double[] qz) {
+                super(idx, value);
+                this.qz = qz;
+            }
+
+        }
     }
 }

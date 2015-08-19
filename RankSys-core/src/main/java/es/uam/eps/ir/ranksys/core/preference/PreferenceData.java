@@ -28,9 +28,8 @@ import java.util.stream.Stream;
  * 
  * @param <U> type of the users
  * @param <I> type of the items
- * @param <O> type of other information for users and items
  */
-public interface PreferenceData<U, I, O> extends UserIndex<U>, ItemIndex<I> {
+public interface PreferenceData<U, I> extends UserIndex<U>, ItemIndex<I> {
 
     /**
      * Returns the number of users with preferences.
@@ -89,7 +88,7 @@ public interface PreferenceData<U, I, O> extends UserIndex<U>, ItemIndex<I> {
      * @param u user
      * @return stream of preferences
      */
-    public Stream<IdPref<I, O>> getUserPreferences(U u);
+    public Stream<? extends IdPref<I>> getUserPreferences(U u);
 
     /**
      * Returns a stream of the preferences of the item
@@ -97,5 +96,5 @@ public interface PreferenceData<U, I, O> extends UserIndex<U>, ItemIndex<I> {
      * @param i item
      * @return stream of preferences
      */
-    public Stream<IdPref<U, O>> getItemPreferences(I i);
+    public Stream<? extends IdPref<U>> getItemPreferences(I i);
 }

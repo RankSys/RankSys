@@ -53,6 +53,12 @@ public class ETD<U, I> extends ItemNoveltyMetric<U, I> {
         super(cutoff, novelty, relevanceModel, disc);
     }
 
+    /**
+     * Returns a score for the recommendation list.
+     *
+     * @param recommendation recommendation list
+     * @return score of the metric to the recommendation
+     */
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         U u = recommendation.getUser();
