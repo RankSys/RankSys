@@ -34,6 +34,7 @@ public class SetJaccardItemSimilarity<I> extends ItemSimilarity<I> {
      * Constructor.
      *
      * @param data preference data
+     * @param dense true for array-based calculations, false to map-based
      */
     public SetJaccardItemSimilarity(FastPreferenceData<?, I> data, boolean dense) {
         super(data, new SetJaccardSimilarity(new TransposedPreferenceData<>(data), dense));

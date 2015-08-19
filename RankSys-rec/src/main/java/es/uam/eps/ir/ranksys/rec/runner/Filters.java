@@ -48,8 +48,7 @@ public class Filters {
      * @param <U> type of the users
      * @param <I> type of the items
      * @param trainData preference data
-     * @return item filters for each using returning true if the
-     * user-item pair was not observed in the preference data
+     * @return item filters for each using returning true if the user-item pair was not observed in the preference data
      */
     public static <U, I> Function<U, Predicate<I>> notInTrain(PreferenceData<U, I> trainData) {
         return user -> {
@@ -66,12 +65,21 @@ public class Filters {
      * @param <I> type of the items
      * @param <F> type of the features
      * @param featureData feature data
-     * @return item filters that return true when there is any feature
-     * information for the item
+     * @return item filters that return true when there is any feature information for the item
      */
     public static <U, I, F> Function<U, Predicate<I>> withFeatures(FeatureData<I, F, ?> featureData) {
         Set<I> itemsWithFeatures = featureData.getItemsWithFeatures().collect(Collectors.toSet());
         return user -> item -> itemsWithFeatures.contains(item);
+    }
+
+    /**
+     * For social network recommendations, void a user being recommended to herself.
+     *
+     * @param <U> type of the user
+     * @return item-user filter that return true if the recommended item-user is not the target user.
+     */
+    public static <U> Function<U, Predicate<U>> notSelf() {
+        return user1 -> user2 -> !user1.equals(user2);
     }
 
     /**

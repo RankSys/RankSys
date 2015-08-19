@@ -29,13 +29,27 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
  */
 public class IdPref<I> extends IdDouble<I> {
 
+    /**
+     * Empty constructor.
+     */
     public IdPref() {
     }
 
+    /**
+     * Constructor with both values.
+     *
+     * @param id the ID
+     * @param v the double
+     */
     public IdPref(I id, double v) {
         super(id, v);
     }
 
+    /**
+     * Constructor from a Object2Double entry.
+     *
+     * @param e object-double entry
+     */
     public IdPref(Object2DoubleMap.Entry<I> e) {
         super(e);
     }

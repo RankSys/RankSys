@@ -18,6 +18,8 @@
 package es.uam.eps.ir.ranksys.fast.preference;
 
 import es.uam.eps.ir.ranksys.core.preference.IdPref;
+import it.unimi.dsi.fastutil.doubles.DoubleIterator;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -30,7 +32,6 @@ import java.util.stream.Stream;
  * 
  * @param <I> type of the items
  * @param <U> type of the users
- * @param <O> type of other information about preferences
  */
 public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U> {
 
@@ -76,12 +77,12 @@ public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U
     }
 
     @Override
-    public Stream<IdxPref> getUidxPreferences(int uidx) {
+    public Stream<? extends IdxPref> getUidxPreferences(int uidx) {
         return d.getIidxPreferences(uidx);
     }
 
     @Override
-    public Stream<IdxPref> getIidxPreferences(int iidx) {
+    public Stream<? extends IdxPref> getIidxPreferences(int iidx) {
         return d.getUidxPreferences(iidx);
     }
 
@@ -121,12 +122,12 @@ public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U
     }
 
     @Override
-    public Stream<IdPref<U>> getUserPreferences(I u) {
+    public Stream<? extends IdPref<U>> getUserPreferences(I u) {
         return d.getItemPreferences(u);
     }
 
     @Override
-    public Stream<IdPref<I>> getItemPreferences(U i) {
+    public Stream<? extends IdPref<I>> getItemPreferences(U i) {
         return d.getUserPreferences(i);
     }
 
@@ -171,22 +172,22 @@ public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U
     }
 
     @Override
-    public int[] getUidxIidxs(int uidx) {
-        return getIidxUidxs(uidx);
+    public IntIterator getUidxIidxs(int uidx) {
+        return ((FasterPreferenceData<U, I>) d).getIidxUidxs(uidx);
     }
 
     @Override
-    public double[] getUidxVs(int uidx) {
-        return getIidxVs(uidx);
+    public DoubleIterator getUidxVs(int uidx) {
+        return ((FasterPreferenceData<U, I>) d).getIidxVs(uidx);
     }
 
     @Override
-    public int[] getIidxUidxs(int iidx) {
-        return getUidxIidxs(iidx);
+    public IntIterator getIidxUidxs(int iidx) {
+        return ((FasterPreferenceData<U, I>) d).getUidxIidxs(iidx);
     }
 
     @Override
-    public double[] getIidxVs(int iidx) {
-        return getUidxVs(iidx);
+    public DoubleIterator getIidxVs(int iidx) {
+        return ((FasterPreferenceData<U, I>) d).getUidxVs(iidx);
     }
 }

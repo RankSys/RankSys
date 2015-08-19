@@ -38,6 +38,9 @@ public class IdxObject<V> implements Int2ObjectMap.Entry<V> {
      */
     public V v;
 
+    /**
+     * Empty constructor.
+     */
     public IdxObject() {
     }
 
@@ -52,6 +55,13 @@ public class IdxObject<V> implements Int2ObjectMap.Entry<V> {
         this.v = v;
     }
     
+    /**
+     * Re-fills the IdxObject object and returns itself.
+     *
+     * @param idx the index
+     * @param v the object
+     * @return this
+     */
     public IdxObject refill(int idx, V v) {
         this.idx = idx;
         this.v = v;

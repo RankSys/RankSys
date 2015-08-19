@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  * Simple implementation of FastFeatureData backed by nested lists.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <I> type of the items
  * @param <F> type of the features
  * @param <V> type of the information about item-feature pairs
@@ -115,12 +115,11 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
         return (int) fidxList.stream()
                 .filter(fv -> fv != null).count();
     }
-    
+
     /**
      * Load feature data from a file.
-     * 
-     * Each line is a different item-feature pair, with tab-separated fields indicating
-     * item, feature and other information.
+     *
+     * Each line is a different item-feature pair, with tab-separated fields indicating item, feature and other information.
      *
      * @param <I> type of the items
      * @param <F> type of the features
@@ -140,9 +139,8 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
 
     /**
      * Load feature data from a input stream.
-     * 
-     * Each line is a different item-feature pair, with tab-separated fields indicating
-     * item, feature and other information.
+     *
+     * Each line is a different item-feature pair, with tab-separated fields indicating item, feature and other information.
      *
      * @param <I> type of the items
      * @param <F> type of the features
@@ -159,10 +157,10 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
     public static <I, F, V> SimpleFastFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) throws IOException {
 
         List<List<IdxObject<V>>> iidxList = new ArrayList<>();
-        for (int iidx=  0; iidx < iIndex.numItems(); iidx++) {
+        for (int iidx = 0; iidx < iIndex.numItems(); iidx++) {
             iidxList.add(null);
         }
-        
+
         List<List<IdxObject<V>>> fidxList = new ArrayList<>();
         for (int fidx = 0; fidx < fIndex.numFeatures(); fidx++) {
             fidxList.add(null);
@@ -182,7 +180,7 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
 
                 int iidx = iIndex.item2iidx(item);
                 int fidx = fIndex.feature2fidx(feature);
-                
+
                 if (iidx == -1 || fidx == -1) {
                     return;
                 }

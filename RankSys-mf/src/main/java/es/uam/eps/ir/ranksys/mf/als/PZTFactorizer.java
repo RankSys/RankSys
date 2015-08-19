@@ -91,8 +91,8 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
             
             double err2 = confidence.applyAsDouble(0) * su.assign(x -> x * x).zSum();
             
-            return err1 + err2;
-        }).sum();
+            return (err1 + err2) / data.numItems();
+        }).sum() / data.numUsers();
 
         return error;
     }
@@ -135,7 +135,7 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
         return gt;
     }
 
-    private static <O> void prepareRR1(int L, DoubleMatrix1D w, DoubleMatrix2D gt, DoubleMatrix2D q, int N, Stream<IdxPref> prefs, DoubleUnaryOperator confidence, double lambda) {
+    private static <O> void prepareRR1(int L, DoubleMatrix1D w, DoubleMatrix2D gt, DoubleMatrix2D q, int N, Stream<? extends IdxPref> prefs, DoubleUnaryOperator confidence, double lambda) {
         int K = (int) w.size();
 
         double[][] x = new double[K + N][K];

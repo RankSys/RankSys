@@ -88,7 +88,7 @@ public interface PreferenceData<U, I> extends UserIndex<U>, ItemIndex<I> {
      * @param u user
      * @return stream of preferences
      */
-    public Stream<IdPref<I>> getUserPreferences(U u);
+    public Stream<? extends IdPref<I>> getUserPreferences(U u);
 
     /**
      * Returns a stream of the preferences of the item
@@ -96,5 +96,5 @@ public interface PreferenceData<U, I> extends UserIndex<U>, ItemIndex<I> {
      * @param i item
      * @return stream of preferences
      */
-    public Stream<IdPref<U>> getItemPreferences(I i);
+    public Stream<? extends IdPref<U>> getItemPreferences(I i);
 }

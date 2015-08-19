@@ -88,8 +88,8 @@ public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
             
             double err2 = confidence.applyAsDouble(0) * su.assign(x -> x * x).zSum();
             
-            return err1 + err2;
-        }).sum();
+            return (err1 + err2) / data.numItems();
+        }).sum() / data.numUsers();
 
         return error;
     }

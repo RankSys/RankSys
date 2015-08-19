@@ -46,6 +46,12 @@ public class EIUFD<U, I> extends AbstractSalesDiversityMetric<U, I> {
         super(cutoff, disc, rel);
     }
 
+    /**
+     * Returns the sales novelty of an item.
+     *
+     * @param i item
+     * @return the sales novelty of the item
+     */
     @Override
     protected double nov(I i) {
         return - Math.log(itemCount.getDouble(i) / freeNorm) / ln2;

@@ -69,6 +69,12 @@ public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex
         return iIndex.item2iidx(i);
     }
 
+    /**
+     * Returns the neighborhood of a user/index.
+     *
+     * @param idx user/index whose neighborhood is calculated
+     * @return stream of user/item-similarity pairs.
+     */
     @Override
     public Stream<IdxDouble> getNeighbors(int idx) {
         return neighborhood.getNeighbors(idx);

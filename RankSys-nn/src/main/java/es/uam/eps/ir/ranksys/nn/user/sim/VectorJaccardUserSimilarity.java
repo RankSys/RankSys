@@ -33,6 +33,7 @@ public class VectorJaccardUserSimilarity<U> extends UserSimilarity<U> {
      * Constructor.
      *
      * @param data preference data
+     * @param dense true for array-based calculations, false to map-based
      */
     public VectorJaccardUserSimilarity(FastPreferenceData<U, ?> data, boolean dense) {
         super(data, new VectorJaccardSimilarity(data, dense));

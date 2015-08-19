@@ -20,7 +20,6 @@ package es.uam.eps.ir.ranksys.metrics.basic;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
-import es.uam.eps.ir.ranksys.metrics.rel.BinaryRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 
 /**
@@ -43,11 +42,17 @@ public class Precision<U, I> extends AbstractRecommendationMetric<U, I> {
      * @param cutoff maximum length of recommended lists
      * @param relModel relevance model
      */
-    public Precision(int cutoff, BinaryRelevanceModel<U, I> relModel) {
+    public Precision(int cutoff, RelevanceModel<U, I> relModel) {
         this.relModel = relModel;
         this.cutoff = cutoff;
     }
 
+    /**
+     * Returns a score for the recommendation list.
+     *
+     * @param recommendation recommendation list
+     * @return score of the metric to the recommendation
+     */
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());

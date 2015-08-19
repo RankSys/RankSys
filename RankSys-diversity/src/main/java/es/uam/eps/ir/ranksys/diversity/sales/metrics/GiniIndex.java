@@ -48,6 +48,11 @@ public class GiniIndex<U, I> extends AbstractSalesDiversityMetric<U, I> {
         this.numItems = numItems;
     }
 
+    /**
+     * Evaluates the metric for the recommendations added so far.
+     *
+     * @return result of the metric for the recommendations previously added
+     */
     @Override
     public double evaluate() {
         double gi = 0;
@@ -62,6 +67,12 @@ public class GiniIndex<U, I> extends AbstractSalesDiversityMetric<U, I> {
         return gi;
     }
 
+    /**
+     * Returns the sales novelty of an item.
+     *
+     * @param i item
+     * @return the sales novelty of the item
+     */
     @Override
     protected double nov(I i) {
         throw new UnsupportedOperationException("Using an alternative item novelty aggregation model");

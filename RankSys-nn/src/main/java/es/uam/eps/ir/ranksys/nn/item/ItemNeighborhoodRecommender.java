@@ -72,6 +72,12 @@ public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
         this.q = q;
     }
 
+    /**
+     * Returns a map of item-score pairs.
+     *
+     * @param uidx index of the user whose scores are predicted
+     * @return a map of item-score pairs
+     */
     @Override
     protected Int2DoubleMap getScoresMap(int uidx) {
         Int2DoubleOpenHashMap scoresMap = new Int2DoubleOpenHashMap();

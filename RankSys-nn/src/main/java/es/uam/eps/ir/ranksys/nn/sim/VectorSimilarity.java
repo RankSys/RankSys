@@ -20,8 +20,10 @@ package es.uam.eps.ir.ranksys.nn.sim;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.FasterPreferenceData;
+import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.util.function.IntToDoubleFunction;
 import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
@@ -125,13 +127,15 @@ public abstract class VectorSimilarity implements Similarity {
         Int2DoubleOpenHashMap productMap = new Int2DoubleOpenHashMap();
         productMap.defaultReturnValue(0.0);
 
-        int[] iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
-        double[] ivs = ((FasterPreferenceData<?, ?>) data).getUidxVs(uidx);
-        for (int i = 0; i < iidxs.length; i++) {
-            int[] vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs[i]);
-            double[] vvs = ((FasterPreferenceData<?, ?>) data).getIidxVs(iidxs[i]);
-            for (int j = 0; j < vidxs.length; j++) {
-                productMap.addTo(vidxs[j], ivs[i] * vvs[j]);
+        IntIterator iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        DoubleIterator ivs = ((FasterPreferenceData<?, ?>) data).getUidxVs(uidx);
+        while (iidxs.hasNext()) {
+            int iidx = iidxs.nextInt();
+            double iv = ivs.nextDouble();
+            IntIterator vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidx);
+            DoubleIterator vvs = ((FasterPreferenceData<?, ?>) data).getIidxVs(iidx);
+            while (vidxs.hasNext()) {
+                productMap.addTo(vidxs.nextInt(), iv * vvs.nextDouble());
             }
         }
 
@@ -143,13 +147,15 @@ public abstract class VectorSimilarity implements Similarity {
     protected double[] getFasterProductArray(int uidx) {
         double[] productMap = new double[data.numUsers()];
 
-        int[] iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
-        double[] ivs = ((FasterPreferenceData<?, ?>) data).getUidxVs(uidx);
-        for (int i = 0; i < iidxs.length; i++) {
-            int[] vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs[i]);
-            double[] vvs = ((FasterPreferenceData<?, ?>) data).getIidxVs(iidxs[i]);
-            for (int j = 0; j < vidxs.length; j++) {
-                productMap[vidxs[j]] += ivs[i] * vvs[j];
+        IntIterator iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        DoubleIterator ivs = ((FasterPreferenceData<?, ?>) data).getUidxVs(uidx);
+        while (iidxs.hasNext()) {
+            int iidx = iidxs.nextInt();
+            double iv = ivs.nextDouble();
+            IntIterator vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidx);
+            DoubleIterator vvs = ((FasterPreferenceData<?, ?>) data).getIidxVs(iidx);
+            while (vidxs.hasNext()) {
+                productMap[vidxs.nextInt()] += iv * vvs.nextDouble();
             }
         }
 
@@ -159,10 +165,11 @@ public abstract class VectorSimilarity implements Similarity {
     }
 
     protected double getFasterNorm2(int uidx) {
-        double[] ivs = ((FasterPreferenceData<?, ?>) data).getUidxVs(uidx);
+        DoubleIterator ivs = ((FasterPreferenceData<?, ?>) data).getUidxVs(uidx);
         double sum = 0;
-        for (int i = 0; i < ivs.length; i++) {
-            sum += ivs[i] * ivs[i];
+        while (ivs.hasNext()) {
+            double iv = ivs.nextDouble();
+            sum += iv * iv;
         }
         return sum;
     }

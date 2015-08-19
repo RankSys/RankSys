@@ -62,6 +62,12 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         this.disc = new LogarithmicDiscountModel();
     }
 
+    /**
+     * Returns a score for the recommendation list.
+     *
+     * @param recommendation recommendation list
+     * @return score of the metric to the recommendation
+     */
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         NDCGRelevanceModel<U, I>.UserNDCGRelevanceModel userRelModel = (NDCGRelevanceModel<U, I>.UserNDCGRelevanceModel) relModel.getModel(recommendation.getUser());

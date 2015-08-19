@@ -28,13 +28,27 @@ import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
  */
 public class IdxPref extends IdxDouble {
 
+    /**
+     * Empty constructor.
+     */
     public IdxPref() {
     }
 
+    /**
+     * Constructor with both values.
+     *
+     * @param id the index
+     * @param v the double
+     */
     public IdxPref(int idx, double v) {
         super(idx, v);
     }
 
+    /**
+     * Constructor from a Int2Double entry.
+     *
+     * @param e int-double entry
+     */
     public IdxPref(Int2DoubleMap.Entry e) {
         super(e);
     }
@@ -46,6 +60,14 @@ public class IdxPref extends IdxDouble {
         return this;
     }
 
+    /**
+     * Re-fills the IdxPref object (only the idx) and returns itself.
+     * 
+     * This is meant for binary data.
+     *
+     * @param idx index
+     * @return this
+     */
     public IdxPref refill(int idx) {
         this.idx = idx;
         return this;

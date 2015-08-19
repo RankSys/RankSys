@@ -28,7 +28,6 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.mf.Factorization;
 import es.uam.eps.ir.ranksys.mf.Factorizer;
-import es.uam.eps.ir.ranksys.mf.als.ALSFactorizer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -53,6 +52,8 @@ import java.util.stream.Stream;
  * @param <I> type of the items
  */
 public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
+
+    private static final Logger LOG = Logger.getLogger(PLSAFactorizer.class.getName());
 
     private final int numIter;
 
@@ -116,7 +117,8 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             int iter = t;
             long time1 = System.nanoTime() - time0;
 
-            Logger.getLogger(ALSFactorizer.class.getName()).log(Level.INFO, () -> String.format("iteration %3d %.2fs %.6f", iter, time1 / 1_000_000_000.0, error(factorization, data)));
+            LOG.log(Level.INFO, String.format("iteration n = %3d t = %.2fs", iter, time1 / 1_000_000_000.0));
+            LOG.log(Level.FINE, () -> String.format("iteration n = %3d e = %.6f", iter, error(factorization, data)));
         }
     }
 

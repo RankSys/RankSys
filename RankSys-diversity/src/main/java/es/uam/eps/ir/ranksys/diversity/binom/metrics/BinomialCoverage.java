@@ -48,9 +48,19 @@ public class BinomialCoverage<U, I, F> extends BinomialMetric<U, I, F> {
         super(binomialModel, featureData, cutoff, relModel);
     }
 
+    /**
+     * Returns the value of the binomial coverage metric for a given count of 
+     * features from a recommendation list.
+     *
+     * @param ubm user binomial model
+     * @param count count map of each feature in the recommendation
+     * @param nrel number of relevant documents in the recommendation
+     * @param nret length of the recommendation
+     * @return value of the binomial coverage
+     */
     @Override
-    protected double getResultFromCount(BinomialModel<U, I, F>.UserBinomialModel prob, Object2IntMap<F> count, int nrel, int nret) {
-        return coverage(prob, count, nret);
+    protected double getResultFromCount(BinomialModel<U, I, F>.UserBinomialModel ubm, Object2IntMap<F> count, int nrel, int nret) {
+        return coverage(ubm, count, nret);
     }
 
     /**

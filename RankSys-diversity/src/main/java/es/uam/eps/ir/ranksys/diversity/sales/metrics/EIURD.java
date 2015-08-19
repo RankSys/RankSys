@@ -44,6 +44,12 @@ public class EIURD<U, I> extends AbstractSalesDiversityMetric<U, I> {
         super(cutoff, disc, rel);
     }
 
+    /**
+     * Returns the sales novelty of an item.
+     *
+     * @param i item
+     * @return the sales novelty of the item
+     */
     @Override
     protected double nov(I i) {
         return numUsers / itemCount.getDouble(i);

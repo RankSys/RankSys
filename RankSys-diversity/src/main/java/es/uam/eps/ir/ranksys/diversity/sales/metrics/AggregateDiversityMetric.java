@@ -47,6 +47,11 @@ public class AggregateDiversityMetric<U, I> extends EIURD<U, I> {
         super(cutoff, new NoDiscountModel(), relModel);
     }
 
+    /**
+     * Evaluates the metric for the recommendations added so far.
+     *
+     * @return result of the metric for the recommendations previously added
+     */
     @Override
     public double evaluate() {
         return cutoff * super.evaluate();

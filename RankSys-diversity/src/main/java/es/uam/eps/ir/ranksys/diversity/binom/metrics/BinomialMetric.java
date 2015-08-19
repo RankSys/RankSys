@@ -29,11 +29,10 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 /**
  * Abstract class for metrics using the binomial model.
  *
- * S. Vargas, L. Baltrunas, A. Karatzoglou, P. Castells. Coverage, redundancy
- * and size-awareness in genre diversity for Recommender Systems. RecSys 2014.
+ * S. Vargas, L. Baltrunas, A. Karatzoglou, P. Castells. Coverage, redundancy and size-awareness in genre diversity for Recommender Systems. RecSys 2014.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <F> type of the items
  * @param <I> type of the features
@@ -64,6 +63,12 @@ public abstract class BinomialMetric<U, I, F> extends AbstractRecommendationMetr
         this.relModel = relModel;
     }
 
+    /**
+     * Returns a score for the recommendation list.
+     *
+     * @param recommendation recommendation list
+     * @return score of the metric to the recommendation
+     */
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
@@ -92,8 +97,7 @@ public abstract class BinomialMetric<U, I, F> extends AbstractRecommendationMetr
     }
 
     /**
-     * Result of the metric based on the number of times each features appears
-     * in a recommendation list.
+     * Result of the metric based on the number of times each features appears in a recommendation list.
      *
      * @param prob user binomial model
      * @param count count map of each feature in a recommendation

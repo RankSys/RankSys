@@ -31,6 +31,12 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
  */
 public class NumRetrieved<U, I> extends AbstractRecommendationMetric<U, I> {
 
+    /**
+     * Returns a score for the recommendation list.
+     *
+     * @param recommendation recommendation list
+     * @return score of the metric to the recommendation
+     */
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         return recommendation.getItems().size();

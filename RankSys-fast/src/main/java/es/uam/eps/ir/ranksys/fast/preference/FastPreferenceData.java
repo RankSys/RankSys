@@ -70,7 +70,7 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @param uidx user index
      * @return preferences of the user
      */
-    public Stream<IdxPref> getUidxPreferences(int uidx);
+    public Stream<? extends IdxPref> getUidxPreferences(int uidx);
     
     /**
      * Gets the preferences of an item.
@@ -78,5 +78,5 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @param iidx item index
      * @return preferences of the item
      */
-    public Stream<IdxPref> getIidxPreferences(int iidx);
+    public Stream<? extends IdxPref> getIidxPreferences(int iidx);
 }

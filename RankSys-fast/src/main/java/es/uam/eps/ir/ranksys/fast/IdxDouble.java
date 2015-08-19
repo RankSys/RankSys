@@ -36,6 +36,9 @@ public class IdxDouble implements Int2DoubleMap.Entry {
      */
     public double v;
 
+    /**
+     * Empty constructor.
+     */
     public IdxDouble() {
     }
 
@@ -49,7 +52,14 @@ public class IdxDouble implements Int2DoubleMap.Entry {
         this.idx = idx;
         this.v = v;
     }
-    
+
+    /**
+     * Re-fills the IdxDouble object and returns itself.
+     *
+     * @param idx the index
+     * @param v the double
+     * @return this
+     */
     public IdxDouble refill(int idx, double v) {
         this.idx = idx;
         this.v = v;
@@ -94,4 +104,28 @@ public class IdxDouble implements Int2DoubleMap.Entry {
     public Double setValue(Double value) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 67 * hash + this.idx;
+        hash = 67 * hash + (int) (Double.doubleToLongBits(this.v) ^ (Double.doubleToLongBits(this.v) >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final IdxDouble other = (IdxDouble) obj;
+        if (this.idx != other.idx) {
+            return false;
+        }
+        return Double.doubleToLongBits(this.v) == Double.doubleToLongBits(other.v);
+    }
+
 }

@@ -38,6 +38,9 @@ public class IdDouble<I> implements Object2DoubleMap.Entry<I> {
      */
     public double v;
 
+    /**
+     * Empty constructor.
+     */
     public IdDouble() {
     }
 
@@ -52,6 +55,13 @@ public class IdDouble<I> implements Object2DoubleMap.Entry<I> {
         this.v = v;
     }
     
+    /**
+     * Re-fills the IdDouble object and returns itself.
+     *
+     * @param id the ID
+     * @param v the double
+     * @return this
+     */
     public IdDouble refill(I id, double v) {
         this.id = id;
         this.v = v;

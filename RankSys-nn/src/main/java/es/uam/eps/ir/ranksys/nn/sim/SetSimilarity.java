@@ -22,6 +22,7 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.FasterPreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.IntToDoubleFunction;
@@ -97,11 +98,11 @@ public abstract class SetSimilarity implements Similarity {
         Int2IntOpenHashMap intersectionMap = new Int2IntOpenHashMap();
         intersectionMap.defaultReturnValue(0);
 
-        int[] iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
-        for (int i = 0; i < iidxs.length; i++) {
-            int[] vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs[i]);
-            for (int j = 0; j < vidxs.length; j++) {
-                intersectionMap.addTo(vidxs[j], 1);
+        IntIterator iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        while (iidxs.hasNext()) {
+            IntIterator vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs.nextInt());
+            while (vidxs.hasNext()) {
+                intersectionMap.addTo(vidxs.nextInt(), 1);
             }
         }
 
@@ -113,11 +114,11 @@ public abstract class SetSimilarity implements Similarity {
     protected int[] getFasterIntersectionArray(int uidx) {
         int[] intersectionMap = new int[data.numUsers()];
 
-        int[] iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
-        for (int i = 0; i < iidxs.length; i++) {
-            int[] vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs[i]);
-            for (int j = 0; j < vidxs.length; j++) {
-                intersectionMap[vidxs[j]]++;
+        IntIterator iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        while (iidxs.hasNext()) {
+            IntIterator vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs.nextInt());
+            while (vidxs.hasNext()) {
+                intersectionMap[vidxs.nextInt()]++;
             }
         }
 

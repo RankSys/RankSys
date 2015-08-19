@@ -38,7 +38,6 @@ import java.util.stream.Stream;
  * 
  * @param <U> type of the users
  * @param <I> type of the items
- * @param <O> type of other information for users and items
  */
 public class SimplePreferenceData<U, I> implements PreferenceData<U, I> {
 

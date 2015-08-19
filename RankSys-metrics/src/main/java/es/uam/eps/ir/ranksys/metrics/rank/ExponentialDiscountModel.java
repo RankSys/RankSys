@@ -36,6 +36,12 @@ public class ExponentialDiscountModel implements RankingDiscountModel {
         this.base = base;
     }
 
+    /**
+     * Discount to be applied at a given position.
+     *
+     * @param k position in the recommendation list starting from 0
+     * @return discount to be applied for the given rank position
+     */
     @Override
     public double disc(int k) {
         return Math.pow(base, k);
