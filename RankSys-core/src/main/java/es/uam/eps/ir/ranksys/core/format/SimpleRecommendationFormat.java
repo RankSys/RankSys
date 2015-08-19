@@ -39,7 +39,9 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Simple format for recommendations: tab-separated user-item-score triplets.
+ * Simple format for recommendations: tab-separated user-item-score triplets, 
+ * grouping first by user (not necessarily in order) and then by decreasing
+ * order of score. 
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * 
