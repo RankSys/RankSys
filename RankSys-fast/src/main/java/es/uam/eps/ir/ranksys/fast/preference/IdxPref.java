@@ -37,7 +37,7 @@ public class IdxPref extends IdxDouble {
     /**
      * Constructor with both values.
      *
-     * @param id the index
+     * @param idx the index
      * @param v the double
      */
     public IdxPref(int idx, double v) {
