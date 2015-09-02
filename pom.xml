@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>RankSys-novelty</module>
         <module>RankSys-diversity</module>
         <module>RankSys-examples</module>
+        <module>RankSys-compression</module>
     </modules>
     
     <build>
