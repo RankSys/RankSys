@@ -57,9 +57,7 @@ import java.util.Arrays;
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
-public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPreferenceData<U, I> implements FasterPreferenceData<U, I>
-//, FastPointWisePreferenceData<U, I> {
-{
+public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPreferenceData<U, I> implements FasterPreferenceData<U, I> {
     
     private final CODEC<Cu> u_codec;
     private final CODEC<Ci> i_codec;
