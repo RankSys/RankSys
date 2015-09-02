@@ -30,7 +30,6 @@ import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.FasterPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
-//import es.uam.eps.ir.ranksys.fast.preference.FastPointWisePreferenceData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -245,25 +244,6 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractFastPre
     public IntStream getIidxWithPreferences() {
         return range(0, i_len.length).filter(iidx -> i_len[iidx] > 0);
     }
-
-//    @Override
-//    public IdxPref getPreference(int uidx, int iidx) {
-//        int len = u_len[uidx];
-//        int[] idxs = new int[len];
-//        u_codec.dec(u_idxs[uidx], idxs, 0, len);
-//        if (!u_codec.isIntegrated()) {
-//            atled(idxs, 0, len);
-//        }
-//
-//        int i = Arrays.binarySearch(idxs, iidx);
-//        if (i < 0) {
-//            return null;
-//        } else {
-//            int[] vs = new int[len];
-//            r_codec.dec(u_vs[uidx], vs, 0, len);
-//            return new IdxPref(iidx, vs[i]);
-//        }
-//    }
 
     public static <U, I, Cu, Ci, Cv> RatingCODECPreferenceData<U, I, Cu, Ci, Cv> load(String up, String ip, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec) throws FileNotFoundException {
         return load(new FileInputStream(up), new FileInputStream(ip), users, items, u_codec, i_codec, r_codec);
