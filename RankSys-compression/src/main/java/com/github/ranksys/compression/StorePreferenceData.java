@@ -43,9 +43,7 @@ import java.util.function.Function;
 public class StorePreferenceData {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        if (args.length == 0) {
-            args = new String[]{"/home/saul/recsys/ml20M/", "ml20M", "ifor", "fixed", "false"};
-        }
+
         String path = args[0];
         String dataset = args[1];
         String idxCodec = args[2];
@@ -84,21 +82,21 @@ public class StorePreferenceData {
         FastUserIndex<U> users;
         FastItemIndex<I> items;
         if (reassignIdxs) {
-            users = SimpleFastUserIndex.load(path + "users.txt.r", up, false);
-            items = SimpleFastItemIndex.load(path + "items.txt.r", ip, false);
+            users = SimpleFastUserIndex.load(path + "/users.txt.r", up, false);
+            items = SimpleFastItemIndex.load(path + "/items.txt.r", ip, false);
         } else {
-            users = SimpleFastUserIndex.load(path + "users.txt", up, true);
-            items = SimpleFastItemIndex.load(path + "items.txt", ip, true);
+            users = SimpleFastUserIndex.load(path + "/users.txt", up, true);
+            items = SimpleFastItemIndex.load(path + "/items.txt", ip, true);
         }
 
         String uDataPath;
         String iDataPath;
         if (reassignIdxs) {
-            uDataPath = path + "total.u.r";
-            iDataPath = path + "total.i.r";
+            uDataPath = path + "/total.u.r";
+            iDataPath = path + "/total.i.r";
         } else {
-            uDataPath = path + "total.u";
-            iDataPath = path + "total.i";
+            uDataPath = path + "/total.u";
+            iDataPath = path + "/total.i";
         }
 
         Function<CODEC<?>[], FastPreferenceData<U, I>> cdf = cds -> {

@@ -48,12 +48,12 @@ import com.github.ranksys.compression.preferences.RatingCODECPreferenceData;
 public class Conventions {
 
     public static String getPath(String path, String dataset, String idxCodec, String vCodec, boolean reassignIdxs) {
-        return path + "preference-data/" + idxCodec + "-" + vCodec + "-" + reassignIdxs + ".obj";
+        return path + "/preference-data/" + idxCodec + "-" + vCodec + "-" + reassignIdxs + ".obj";
     }
 
     public static int[] getFixedLength(String path, String dataset) throws IOException {
-        FastUserIndex<String> users = SimpleFastUserIndex.load(path + "users.txt", sp);
-        FastItemIndex<String> items = SimpleFastItemIndex.load(path + "items.txt", sp);
+        FastUserIndex<String> users = SimpleFastUserIndex.load(path + "/users.txt", sp);
+        FastItemIndex<String> items = SimpleFastItemIndex.load(path + "/items.txt", sp);
 
         int uFixedLength = 32 - Integer.numberOfLeadingZeros(users.numUsers() - 1);
         int iFixedLength = 32 - Integer.numberOfLeadingZeros(items.numItems() - 1);

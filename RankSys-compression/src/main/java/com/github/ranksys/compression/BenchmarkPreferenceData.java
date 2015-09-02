@@ -62,9 +62,7 @@ import static com.github.ranksys.compression.Conventions.load;
 public class BenchmarkPreferenceData {
 
     public static void main(String[] args) throws Exception {
-        if (args.length == 0) {
-            args = new String[]{"/home/saul/recsys/ml20M/", "ml20M", "fixed", "fixed", "4", "urv_1000", "10400", "false"};
-        }
+
         String path = args[0];
         String dataset = args[1];
         String idxCodec = args[2];
@@ -110,14 +108,14 @@ public class BenchmarkPreferenceData {
         FastUserIndex<U> users;
         FastItemIndex<I> items;
         if (reassignIdxs) {
-            users = SimpleFastUserIndex.load(path + "users.txt.r", up, false);
-            items = SimpleFastItemIndex.load(path + "items.txt.r", ip, false);
+            users = SimpleFastUserIndex.load(path + "/users.txt.r", up, false);
+            items = SimpleFastItemIndex.load(path + "/items.txt.r", ip, false);
         } else {
-            users = SimpleFastUserIndex.load(path + "users.txt", up, true);
-            items = SimpleFastItemIndex.load(path + "items.txt", ip, true);
+            users = SimpleFastUserIndex.load(path + "/users.txt", up, true);
+            items = SimpleFastItemIndex.load(path + "/items.txt", ip, true);
         }
 
-        String dataPath = path + "total.data";
+        String dataPath = path + "/total.data";
 
         long time0 = System.nanoTime();
         FastPreferenceData<U, I> preferences;
