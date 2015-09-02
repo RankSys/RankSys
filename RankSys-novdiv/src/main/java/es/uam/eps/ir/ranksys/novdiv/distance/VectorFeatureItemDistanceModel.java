@@ -45,6 +45,14 @@ public abstract class VectorFeatureItemDistanceModel<I, F> extends FeatureItemDi
         super(featureData);
     }
 
+    /**
+     * Returns a function that returns the feature-based similarity to the
+     * features of an item.
+     *
+     * @param features1 stream of features of an item
+     * @return function that returns the feature-based similarity to the
+     * features of an item
+     */
     @Override
     public ToDoubleFunction<Stream<IdObject<F, Double>>> dist(Stream<IdObject<F, Double>> features1) {
         Object2DoubleMap<F> auxMap = new Object2DoubleOpenHashMap<>();

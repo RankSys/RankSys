@@ -33,7 +33,14 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I> {
 
+    /**
+     * user index.
+     */
     protected final FastUserIndex<U> ui;
+
+    /**
+     * item index.
+     */
     protected final FastItemIndex<I> ii;
 
     /**

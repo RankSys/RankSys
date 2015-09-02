@@ -84,6 +84,7 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I>, Serializable {
 
     /**
      * Creates a item index from a file where the first column lists the items.
+     * This method sorts the item ids and then assigns integer ids in that order.
      *
      * @param <I> type of the items
      * @param path path of the file
@@ -95,12 +96,23 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I>, Serializable {
         return load(path, iParser, true);
     }
 
+    /**
+     * Creates a item index from a file where the first column lists the items.
+     *
+     * @param <I> type of the items
+     * @param path path of the file
+     * @param iParser item type parser
+     * @param sort if true, item ids in the file are sorted before assigning integer indices
+     * @return a fast item index
+     * @throws IOException when file does not exist or when IO error
+     */
     public static <I> SimpleFastItemIndex<I> load(String path, Parser<I> iParser, boolean sort) throws IOException {
         return load(new FileInputStream(path), iParser, sort);
     }
 
     /**
      * Creates a item index from an input stream where the first column lists the item.
+     * This method sorts the item ids and then assigns integer ids in that order.
      *
      * @param <I> type of the items
      * @param in input stream
@@ -112,6 +124,16 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I>, Serializable {
         return load(in, iParser, true);
     }
 
+    /**
+     * Creates a item index from an input stream where the first column lists the item.
+     *
+     * @param <I> type of the items
+     * @param in input stream
+     * @param iParser item type parser
+     * @param sort if true, item ids in the stream are sorted before assigning integer indices
+     * @return a fast item index
+     * @throws IOException when IO error
+     */
     public static <I> SimpleFastItemIndex<I> load(InputStream in, Parser<I> iParser, boolean sort) throws IOException {
         SimpleFastItemIndex<I> itemIndex = new SimpleFastItemIndex<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {

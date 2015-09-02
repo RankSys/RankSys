@@ -31,16 +31,12 @@ import java.util.Set;
 
 /**
  * Normalized Discounted Cumulative Gain metric.
- * 
- * See: Kalervo Järvelin and Jaana Kekäläinen. 2000. IR evaluation methods for
- * retrieving highly relevant documents. In Proceedings of the 23rd annual
- * international ACM SIGIR conference on Research and development in 
- * information retrieval (SIGIR '00). ACM, New York, NY, USA, 41-48. 
- * DOI=10.1145/345508.345545 http://doi.acm.org/10.1145/345508.345545 
+ *
+ * See: Kalervo Järvelin and Jaana Kekäläinen. 2000. IR evaluation methods for retrieving highly relevant documents. In Proceedings of the 23rd annual international ACM SIGIR conference on Research and development in information retrieval (SIGIR '00). ACM, New York, NY, USA, 41-48. DOI=10.1145/345508.345545 http://doi.acm.org/10.1145/345508.345545
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  */
@@ -106,8 +102,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
     }
 
     /**
-     * Relevance model for nDCG, in which the gains of all relevant documents
-     * need to be known for the normalization of the metric.
+     * Relevance model for nDCG, in which the gains of all relevant documents need to be known for the normalization of the metric.
      *
      * @param <U> type of the users
      * @param <I> type of the items
@@ -130,6 +125,12 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
             this.threshold = threshold;
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @param user input user
+         * @return ndcg relevance model for input user
+         */
         @Override
         protected UserNDCGRelevanceModel get(U user) {
             return new UserNDCGRelevanceModel(user);
@@ -157,16 +158,33 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
                         .forEach(iv -> gainMap.put(iv.id, Math.pow(2, iv.v - threshold + 1.0) - 1.0));
             }
 
+            /**
+             * {@inheritDoc}
+             *
+             * @return set of relevant items
+             */
             @Override
             public Set<I> getRelevantItems() {
                 return gainMap.keySet();
             }
 
+            /**
+             * {@inheritDoc}
+             *
+             * @param item input item
+             * @return true is item is relevant, false otherwise
+             */
             @Override
             public boolean isRelevant(I item) {
                 return gainMap.containsKey(item);
             }
 
+            /**
+             * {@inheritDoc}
+             *
+             * @param item input item
+             * @return relevance gain of the input item
+             */
             @Override
             public double gain(I item) {
                 return gainMap.getDouble(item);

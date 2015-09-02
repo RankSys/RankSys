@@ -25,9 +25,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 /**
- * Default feature-based intent-aware model. Features of the items in the user
- * profiles are used as proxies for intents, and the probability of each is
- * proportional to its occurrence in the profiles.
+ * Default feature-based intent-aware model. Features of the items in the user profiles are used as proxies for intents, and the probability of each is proportional to its occurrence in the profiles.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
@@ -38,7 +36,14 @@ import java.util.stream.Stream;
  */
 public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
 
+    /**
+     * user-item preference data
+     */
     protected final PreferenceData<U, I> totalData;
+
+    /**
+     * item features data
+     */
     protected final FeatureData<I, F, ?> featureData;
 
     /**
@@ -66,6 +71,12 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         this.featureData = featureData;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param user target user
+     * @return intent model for user
+     */
     @Override
     protected UserIntentModel<U, I, F> get(U user) {
         return new FeatureUserIntentModel(user);
@@ -107,16 +118,33 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
             this.prob = auxProb;
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return set of features as intents
+         */
         @Override
         public Set<F> getIntents() {
             return prob.keySet();
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @param i target item
+         * @return features as items covered by the item
+         */
         @Override
         public Stream<F> getItemIntents(I i) {
             return featureData.getItemFeatures(i).map(fv -> fv.id).filter(getIntents()::contains);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @param f feature as intent
+         * @return probability of the feature-intent
+         */
         @Override
         public double p(F f) {
             return prob.getDouble(f);

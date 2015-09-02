@@ -35,6 +35,9 @@ import java.util.stream.Stream;
  */
 public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U> {
 
+    /**
+     * The original preferences.
+     */
     protected final FastPreferenceData<U, I> d;
 
     /**

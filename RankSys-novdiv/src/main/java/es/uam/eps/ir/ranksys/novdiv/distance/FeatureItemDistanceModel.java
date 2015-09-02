@@ -44,6 +44,12 @@ public abstract class FeatureItemDistanceModel<I, F, V> implements ItemDistanceM
         this.featureData = featureData;
     }
 
+    /**
+     * Returns a function that return the distance to the input item.
+     *
+     * @param i item
+     * @return function that return the distance to the input item
+     */
     @Override
     public ToDoubleFunction<I> dist(I i) {
         Stream<IdObject<F, V>> features1 = featureData.getItemFeatures(i);

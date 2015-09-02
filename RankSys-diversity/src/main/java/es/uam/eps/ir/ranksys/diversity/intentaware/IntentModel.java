@@ -60,6 +60,9 @@ public abstract class IntentModel<U, I, F> extends UserModel<U> {
 
     /**
      * User intent-aware model for {@link IntentModel}.
+     * @param <U> user type
+     * @param <I> item type
+     * @param <F> feature type
      */
     public interface UserIntentModel<U, I, F> extends Model<U> {
 

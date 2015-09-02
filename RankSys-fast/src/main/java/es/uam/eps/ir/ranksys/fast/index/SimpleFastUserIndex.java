@@ -39,6 +39,9 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
 
     private final IdxIndex<U> uMap;
 
+    /**
+     * Empty constructor: no users.
+     */
     protected SimpleFastUserIndex() {
         this.uMap = new IdxIndex<>();
     }
@@ -80,6 +83,7 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
 
     /**
      * Creates a user index from a file where the first column lists the users.
+     * This method sorts the users ids and then assigns integer ids in that order.
      *
      * @param <U> type of the users
      * @param path path of the file
@@ -91,12 +95,23 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
         return load(path, uParser, true);
     }
 
+    /**
+     * Creates a user index from a file where the first column lists the users.
+     *
+     * @param <U> type of the users
+     * @param path path of the file
+     * @param uParser user type parser
+     * @param sort if true, user ids in the file are sorted before assigning integer indices
+     * @return a fast user index
+     * @throws IOException when file does not exist or when IO error
+     */
     public static <U> SimpleFastUserIndex<U> load(String path, Parser<U> uParser, boolean sort) throws IOException {
         return load(new FileInputStream(path), uParser, sort);
     }
 
     /**
      * Creates a user index from an input stream where the first column lists the users.
+     * This method sorts the users ids and then assigns integer ids in that order.
      *
      * @param <U> type of the users
      * @param in input stream
@@ -108,6 +123,17 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
         return load(in, uParser, true);
     }
 
+    /**
+     * Creates a user index from an input stream where the first column lists the users.
+     * This method sorts the users ids and then assigns integer ids in that order.
+     *
+     * @param <U> type of the users
+     * @param in input stream
+     * @param uParser user type parser
+     * @param sort if true, user ids in the stream are sorted before assigning integer indices
+     * @return a fast user index
+     * @throws IOException when IO error
+     */
     public static <U> SimpleFastUserIndex<U> load(InputStream in, Parser<U> uParser, boolean sort) throws IOException {
         SimpleFastUserIndex<U> userIndex = new SimpleFastUserIndex<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {

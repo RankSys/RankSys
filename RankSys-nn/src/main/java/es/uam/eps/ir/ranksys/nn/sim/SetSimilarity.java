@@ -36,7 +36,14 @@ import java.util.stream.Stream;
  */
 public abstract class SetSimilarity implements Similarity {
 
+    /**
+     * User-item preferences.
+     */
     protected final FastPreferenceData<?, ?> data;
+
+    /**
+     * If true dense vectors are used to calculate similarities.
+     */
     protected final boolean dense;
 
     /**

@@ -35,9 +35,24 @@ import java.util.stream.Stream;
  */
 public abstract class VectorSimilarity implements Similarity {
 
+    /**
+     * User-item preferences.
+     */
     protected final FastPreferenceData<?, ?> data;
+
+    /**
+     * If true, dense vectors are used to calculate similarities.
+     */
     protected final boolean dense;
+
+    /**
+     * Cached normalization for when dense is false.
+     */
     protected final Int2DoubleMap norm2Map;
+
+    /**
+     * Cached normalization for when dense is true.
+     */
     protected final double[] norm2Array;
 
     /**
