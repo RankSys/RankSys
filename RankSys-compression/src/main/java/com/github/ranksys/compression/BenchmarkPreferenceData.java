@@ -27,7 +27,6 @@ import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.SimpleFastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.SimpleFastPreferenceData;
-import es.uam.eps.ir.ranksys.mf.als.HKVFactorizer;
 import es.uam.eps.ir.ranksys.nn.item.ItemNeighborhoodRecommender;
 import es.uam.eps.ir.ranksys.nn.item.neighborhood.CachedItemNeighborhood;
 import es.uam.eps.ir.ranksys.nn.item.neighborhood.ItemNeighborhood;
@@ -42,18 +41,14 @@ import es.uam.eps.ir.ranksys.nn.user.sim.SetCosineUserSimilarity;
 import es.uam.eps.ir.ranksys.nn.user.sim.UserSimilarity;
 import es.uam.eps.ir.ranksys.nn.user.sim.VectorCosineUserSimilarity;
 import it.unimi.dsi.fastutil.ints.IntArrays;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 import java.util.Random;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import static java.util.stream.DoubleStream.of;
-import static com.github.ranksys.compression.Conventions.load;
+import static com.github.ranksys.compression.Conventions.deserialize;
 
 /**
  *
@@ -125,17 +120,7 @@ public class BenchmarkPreferenceData {
                 preferences = SimpleFastPreferenceData.load(dataPath, up, ip, dp, users, items);
                 break;
             default:
-                switch (dataset) {
-                    case "msd":
-                        throw new UnsupportedOperationException("TODO");
-                    case "ml1M":
-                    case "ml20M":
-                    case "netflix":
-                    case "ymusic":
-                    default:
-                        preferences = load(path, dataset, idxCodec, vCodec, reassignIdxs);
-                        break;
-                }
+                preferences = deserialize(path, dataset, idxCodec, vCodec, reassignIdxs);
         }
         double loadingTime = (System.nanoTime() - time0) / 1_000_000_000.0;
         System.err.println("loaded " + dataset + " with " + idxCodec + "+" + vCodec + ": " + loadingTime);
@@ -153,36 +138,6 @@ public class BenchmarkPreferenceData {
 
         Consumer<FastPreferenceData<U, I>> fun;
         switch (funName) {
-            case "check":
-                fun = prefs -> {
-                    UserSimilarity<U> us = new VectorCosineUserSimilarity<>(prefs, 0.5, true);
-                    UserNeighborhood<U> un = new TopKUserNeighborhood<>(us, 100);
-                    UserNeighborhoodRecommender<U, I> rec = new UserNeighborhoodRecommender<>(prefs, un, 1);
-                    try (PrintStream out = new PrintStream(dataset + "-" + idxCodec + "-" + vCodec + "-" + reassignIdxs)) {
-                        IntStream.of(targetUsers).parallel().sorted().mapToObj(uidx -> preferences.uidx2user(uidx)).forEach(user -> {
-                            rec.getRecommendation(user, 100).getItems().forEach(is -> {
-                                out.println(user + "\t" + is.id + "\t" + String.format("%.4f", is.v));
-                            });
-                        });
-                    } catch (FileNotFoundException ex) {
-                        Logger.getLogger(BenchmarkPreferenceData.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                };
-                break;
-            case "debug":
-                fun = prefs -> {
-                    preferences.getAllUidx()
-                            .forEach(uidx -> {
-                                System.out.println(uidx);
-                                prefs.getUidxPreferences(uidx);
-                            });
-                    preferences.getAllIidx()
-                            .forEach(iidx -> {
-                                System.out.println(iidx);
-                                prefs.getIidxPreferences(iidx);
-                            });
-                };
-                break;
             case "urv":
                 fun = prefs -> {
                     UserSimilarity<U> us = new VectorCosineUserSimilarity<>(prefs, 0.5, true);
@@ -213,11 +168,6 @@ public class BenchmarkPreferenceData {
                     ItemNeighborhood<I> in = new CachedItemNeighborhood<>(new TopKItemNeighborhood<>(is, 100));
                     ItemNeighborhoodRecommender<U, I> rec = new ItemNeighborhoodRecommender<>(prefs, in, 1);
                     IntStream.of(targetUsers).parallel().forEach(user -> rec.getRecommendation(user, 100));
-                };
-                break;
-            case "mf":
-                fun = prefs -> {
-                    new HKVFactorizer<U, I>(0, x -> 1 + x, 5).factorize(50, prefs);
                 };
                 break;
             default:

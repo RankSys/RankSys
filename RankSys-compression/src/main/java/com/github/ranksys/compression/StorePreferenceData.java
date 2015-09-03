@@ -134,7 +134,7 @@ public class StorePreferenceData {
         if (preferences instanceof RatingCODECPreferenceData) {
             ((RatingCODECPreferenceData) preferences).serialize(getPath(path, dataset, idxCodec, vCodec, reassignIdxs));
         } else {
-            throw new UnsupportedOperationException("TODO");
+            ((BinaryCODECPreferenceData) preferences).serialize(getPath(path, dataset, idxCodec, vCodec, reassignIdxs));
         }
     }
 

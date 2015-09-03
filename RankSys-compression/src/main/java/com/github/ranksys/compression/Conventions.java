@@ -39,6 +39,7 @@ import com.github.ranksys.compression.codecs.lemire.NewPFDVBCODEC;
 import com.github.ranksys.compression.codecs.lemire.OptPFDVBCODEC;
 import com.github.ranksys.compression.codecs.lemire.Simple16CODEC;
 import com.github.ranksys.compression.codecs.lemire.VByteCODEC;
+import com.github.ranksys.compression.preferences.BinaryCODECPreferenceData;
 import com.github.ranksys.compression.preferences.RatingCODECPreferenceData;
 
 /**
@@ -77,17 +78,21 @@ public class Conventions {
         return new int[]{uFixedLength, iFixedLength, vFixedLength};
     }
 
-    public static <U, I> FastPreferenceData<U, I> load(String path, String dataset, String idxCodec, String vCodec, boolean reassignIdxs) throws IOException, ClassNotFoundException {
+    public static <U, I> FastPreferenceData<U, I> deserialize(String path, String dataset, String idxCodec, String vCodec, boolean reassignIdxs) throws IOException, ClassNotFoundException {
+        int[] lens = getFixedLength(path, dataset);
+        String dataPath = getPath(path, dataset, idxCodec, vCodec, reassignIdxs);
+        CODEC<?> u_codec = getCodec(idxCodec, lens[0]);
+        CODEC<?> i_codec = getCodec(idxCodec, lens[1]);
+        CODEC<?> v_codec = getCodec(idxCodec, lens[2]);
         switch (dataset) {
             case "msd":
-                throw new UnsupportedOperationException("TODO");
+                return BinaryCODECPreferenceData.deserialize(dataPath, u_codec, i_codec);
             case "ml1M":
             case "ml20M":
             case "netflix":
             case "ymusic":
             default:
-                int[] lens = getFixedLength(path, dataset);
-                return RatingCODECPreferenceData.deserialize(getPath(path, dataset, idxCodec, vCodec, reassignIdxs), getCodec(idxCodec, lens[0]), getCodec(idxCodec, lens[1]), getCodec(vCodec, lens[2]));
+                return RatingCODECPreferenceData.deserialize(dataPath, u_codec, i_codec, v_codec);
         }
     }
 
