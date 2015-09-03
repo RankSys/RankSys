@@ -48,6 +48,6 @@ public class ArrayIntIterator implements IntIterator {
 
     @Override
     public Integer next() {
-        throw new UnsupportedOperationException("TO DO");
+        throw new UnsupportedOperationException("use nextInt() instead");
     }
 }

@@ -48,6 +48,6 @@ public class ArrayDoubleIterator implements DoubleIterator {
 
     @Override
     public Double next() {
-        throw new UnsupportedOperationException("TO DO");
+        throw new UnsupportedOperationException("use nextDouble() instead");
     }
 }
