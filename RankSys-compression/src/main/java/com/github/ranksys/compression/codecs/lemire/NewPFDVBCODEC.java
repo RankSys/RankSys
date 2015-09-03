@@ -21,11 +21,15 @@ import me.lemire.integercompression.NewPFD;
 import me.lemire.integercompression.VariableByte;
 
 /**
+ * NewPFD (with Variable Byte as fallback).
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class NewPFDVBCODEC extends LemireCODEC {
 
+    /**
+     * Constructor.
+     */
     public NewPFDVBCODEC() {
         super(() -> new Composition(new NewPFD(), new VariableByte()));
     }

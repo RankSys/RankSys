@@ -25,6 +25,9 @@ import java.util.logging.Logger;
 import com.github.ranksys.compression.codecs.AbstractCODEC;
 
 /**
+ * Wrapper of dsiutils' BitStreams.
+ * 
+ * Check http://dsiutils.di.unimi.it/
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
@@ -51,7 +54,16 @@ public abstract class BitStreamCODEC extends AbstractCODEC<byte[]> {
         return out;
     }
 
-    public abstract void write(OutputBitStream obs, int[] in, int offset, int len) throws IOException;
+    /**
+     * Write integer array to BitStream.
+     *
+     * @param obs output bit stream
+     * @param in input array
+     * @param offset offset of array
+     * @param len number of bytes to write
+     * @throws IOException when IO error
+     */
+    protected abstract void write(OutputBitStream obs, int[] in, int offset, int len) throws IOException;
 
     @Override
     public int dec(final byte[] in, final int[] out, final int outOffset, final int len) {
@@ -64,7 +76,16 @@ public abstract class BitStreamCODEC extends AbstractCODEC<byte[]> {
         return 0;
     }
 
-    public abstract void read(final InputBitStream ibs, final int[] out, final int offset, final int len) throws IOException;
+    /**
+     * Reads a BitStream to an array.
+     *
+     * @param ibs input bit stream
+     * @param out output array
+     * @param offset array offset
+     * @param len number of integers to read
+     * @throws IOException when IO error
+     */
+    protected abstract void read(final InputBitStream ibs, final int[] out, final int offset, final int len) throws IOException;
 
     @Override
     public boolean isIntegrated() {

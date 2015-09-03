@@ -21,13 +21,14 @@ import it.unimi.dsi.io.OutputBitStream;
 import java.io.IOException;
 
 /**
+ * Elias-Fano coding.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class IntegratedEliasFanoBitStreamCODEC extends BitStreamCODEC {
 
     @Override
-    public void write(OutputBitStream obs, int[] in, int offset, int len) throws IOException {
+    protected void write(OutputBitStream obs, int[] in, int offset, int len) throws IOException {
         int l = 31 - Integer.numberOfLeadingZeros(in[offset + len - 1] / len);
         int mask = (1 << l) - 1;
 
@@ -48,7 +49,7 @@ public class IntegratedEliasFanoBitStreamCODEC extends BitStreamCODEC {
     }
 
     @Override
-    public void read(InputBitStream ibs, int[] out, int offset, int len) throws IOException {
+    protected void read(InputBitStream ibs, int[] out, int offset, int len) throws IOException {
         int d = 0;
         final int l = ibs.readInt(32);
         for (int i = offset; i < offset + len; i++) {

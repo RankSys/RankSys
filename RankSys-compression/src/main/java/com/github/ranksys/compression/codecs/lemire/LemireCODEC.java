@@ -24,6 +24,9 @@ import me.lemire.integercompression.differential.IntegratedIntegerCODEC;
 import com.github.ranksys.compression.codecs.AbstractCODEC;
 
 /**
+ * Wrapper for Lemire's JavaFastPFOR integer compression library.
+ * 
+ * Check https://github.com/lemire/JavaFastPFOR
  *
  * @author Saúl Vargas (saul.vargas@glasgow.ac.uk)
  */
@@ -32,6 +35,11 @@ public class LemireCODEC extends AbstractCODEC<int[]> {
     private final Supplier<IntegerCODEC> supplier;
     private final boolean integrated;
 
+    /**
+     * Constructor.
+     *
+     * @param supplier supplier of an IntegerCODEC used internally
+     */
     public LemireCODEC(Supplier<IntegerCODEC> supplier) {
         this.supplier = supplier;
         this.integrated = supplier.get() instanceof IntegratedIntegerCODEC;

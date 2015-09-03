@@ -21,11 +21,15 @@ import me.lemire.integercompression.OptPFD;
 import me.lemire.integercompression.VariableByte;
 
 /**
+ * OptPFD coding (with Variable Byte as fallback).
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class OptPFDVBCODEC extends LemireCODEC{
 
+    /**
+     * Constructor.
+     */
     public OptPFDVBCODEC() {
         super(() -> new Composition(new OptPFD(), new VariableByte()));
     }

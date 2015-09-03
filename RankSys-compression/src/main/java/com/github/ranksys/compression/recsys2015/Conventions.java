@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.ranksys.compression;
+package com.github.ranksys.compression.recsys2015;
 
 import com.github.ranksys.compression.codecs.CODEC;
 import com.github.ranksys.compression.codecs.NullCODEC;
@@ -43,15 +43,35 @@ import com.github.ranksys.compression.preferences.BinaryCODECPreferenceData;
 import com.github.ranksys.compression.preferences.RatingCODECPreferenceData;
 
 /**
+ * Common conventions for the test programs.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class Conventions {
 
+    /**
+     * Get path to serialized PreferenceData instances.
+     *
+     * @param path base path
+     * @param dataset name of the dataset
+     * @param idxCodec codec of identifiers
+     * @param vCodec codec of ratings
+     * @param reassignIdxs are ids re-assigned?
+     * @return path of the preference data serialized file
+     */
     public static String getPath(String path, String dataset, String idxCodec, String vCodec, boolean reassignIdxs) {
         return path + "/preference-data/" + idxCodec + "-" + vCodec + "-" + reassignIdxs + ".obj";
     }
 
+    /**
+     * Get the bits required for identifiers and ratings for identifiers
+     * and ratings.
+     *
+     * @param path base path
+     * @param dataset name of dataset
+     * @return an array of number of bits for user identifiers, item identifiers and ratings
+     * @throws IOException when IO error
+     */
     public static int[] getFixedLength(String path, String dataset) throws IOException {
         FastUserIndex<String> users = SimpleFastUserIndex.load(path + "/users.txt", sp);
         FastItemIndex<String> items = SimpleFastItemIndex.load(path + "/items.txt", sp);
@@ -78,6 +98,20 @@ public class Conventions {
         return new int[]{uFixedLength, iFixedLength, vFixedLength};
     }
 
+    /**
+     * De-serialize preference data object.
+     *
+     * @param <U> type of user
+     * @param <I> type of item
+     * @param path path to file
+     * @param dataset name of dataset
+     * @param idxCodec codec of identifiers
+     * @param vCodec codec of ratings
+     * @param reassignIdxs are ids re-assigned?
+     * @return preference data from file
+     * @throws IOException when IO error
+     * @throws ClassNotFoundException when reading bad file
+     */
     public static <U, I> FastPreferenceData<U, I> deserialize(String path, String dataset, String idxCodec, String vCodec, boolean reassignIdxs) throws IOException, ClassNotFoundException {
         int[] lens = getFixedLength(path, dataset);
         String dataPath = getPath(path, dataset, idxCodec, vCodec, reassignIdxs);
@@ -96,6 +130,13 @@ public class Conventions {
         }
     }
 
+    /**
+     * Returns a codec by name.
+     *
+     * @param name name of the codec
+     * @param fixedLength number of bits for fixed-length coding
+     * @return codec
+     */
     public static CODEC<?> getCodec(String name, int fixedLength) {
         int k = 3;
         if (name.contains("_")) {

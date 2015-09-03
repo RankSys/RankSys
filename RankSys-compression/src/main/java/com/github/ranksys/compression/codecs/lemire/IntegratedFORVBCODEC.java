@@ -21,11 +21,15 @@ import me.lemire.integercompression.differential.IntegratedComposition;
 import me.lemire.integercompression.differential.IntegratedVariableByte;
 
 /**
+ * Integrated Frame of Reference coding (with Variable Byte as fallback).
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class IntegratedFORVBCODEC extends LemireCODEC {
 
+    /**
+     * Constructor.
+     */
     public IntegratedFORVBCODEC() {
         super(() -> new IntegratedComposition(new IntegratedBinaryPacking(), new IntegratedVariableByte()));
     }

@@ -19,11 +19,15 @@ package com.github.ranksys.compression.codecs.lemire;
 import me.lemire.integercompression.differential.IntegratedVariableByte;
 
 /**
+ * Integrated Variable Byte coding.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class IntegratedVByteCODEC extends LemireCODEC {
 
+    /**
+     * Constructor.
+     */
     public IntegratedVByteCODEC() {
         super(() -> new IntegratedVariableByte());
     }

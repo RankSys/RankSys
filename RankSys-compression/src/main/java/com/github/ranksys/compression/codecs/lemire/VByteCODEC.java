@@ -19,11 +19,15 @@ package com.github.ranksys.compression.codecs.lemire;
 import me.lemire.integercompression.VariableByte;
 
 /**
+ * Variable byte coding.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class VByteCODEC extends LemireCODEC {
 
+    /**
+     * Constructor.
+     */
     public VByteCODEC() {
         super(() -> new VariableByte());
     }

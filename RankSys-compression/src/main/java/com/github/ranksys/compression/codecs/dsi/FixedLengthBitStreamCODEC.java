@@ -21,6 +21,7 @@ import it.unimi.dsi.io.OutputBitStream;
 import java.io.IOException;
 
 /**
+ * Fixed-length coding.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
@@ -28,19 +29,24 @@ public class FixedLengthBitStreamCODEC extends BitStreamCODEC {
 
     private final int b;
 
+    /**
+     * Constructor.
+     *
+     * @param b fixed number of bytes to use for each integer
+     */
     public FixedLengthBitStreamCODEC(int b) {
         this.b = b;
     }
 
     @Override
-    public void write(OutputBitStream obs, int[] in, int offset, int len) throws IOException {
+    protected void write(OutputBitStream obs, int[] in, int offset, int len) throws IOException {
         for (int i = offset; i < offset + len; i++) {
             obs.writeInt(in[i], b);
         }
     }
 
     @Override
-    public void read(InputBitStream ibs, int[] out, int offset, int len) throws IOException {
+    protected void read(InputBitStream ibs, int[] out, int offset, int len) throws IOException {
         for (int i = offset; i < offset + len; i++) {
             out[i] = ibs.readInt(b);
         }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.ranksys.compression;
+package com.github.ranksys.compression.recsys2015;
 
 import com.github.ranksys.compression.codecs.CODEC;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
@@ -29,14 +29,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import static java.lang.Boolean.parseBoolean;
-import static com.github.ranksys.compression.Conventions.getCodec;
-import static com.github.ranksys.compression.Conventions.getFixedLength;
-import static com.github.ranksys.compression.Conventions.getPath;
+import static com.github.ranksys.compression.recsys2015.Conventions.getCodec;
+import static com.github.ranksys.compression.recsys2015.Conventions.getFixedLength;
+import static com.github.ranksys.compression.recsys2015.Conventions.getPath;
 import com.github.ranksys.compression.preferences.BinaryCODECPreferenceData;
 import com.github.ranksys.compression.preferences.RatingCODECPreferenceData;
 import java.util.function.Function;
 
 /**
+ * Program to create compressed preference data and save to compressed binary file.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */

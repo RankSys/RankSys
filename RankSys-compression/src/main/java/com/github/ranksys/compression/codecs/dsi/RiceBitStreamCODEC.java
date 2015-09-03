@@ -21,13 +21,14 @@ import it.unimi.dsi.io.OutputBitStream;
 import java.io.IOException;
 
 /**
+ * Rice coding.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class RiceBitStreamCODEC extends BitStreamCODEC {
 
     @Override
-    public void write(OutputBitStream obs, int[] in, int offset, int len) throws IOException {
+    protected void write(OutputBitStream obs, int[] in, int offset, int len) throws IOException {
         long sum = 0;
         for (int i = offset; i < offset + len; i++) {
             sum += in[i];
@@ -46,7 +47,7 @@ public class RiceBitStreamCODEC extends BitStreamCODEC {
     }
 
     @Override
-    public void read(InputBitStream ibs, int[] out, int offset, int len) throws IOException {
+    protected void read(InputBitStream ibs, int[] out, int offset, int len) throws IOException {
         final int log2b = ibs.readInt(32);
         for (int i = offset; i < offset + len; i++) {
             final int q = ibs.readUnary();

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.ranksys.compression;
+package com.github.ranksys.compression.recsys2015;
 
 import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
 import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
@@ -48,9 +48,11 @@ import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 import static java.util.stream.DoubleStream.of;
-import static com.github.ranksys.compression.Conventions.deserialize;
+import static com.github.ranksys.compression.recsys2015.Conventions.deserialize;
 
 /**
+ * Program that loads a compressed preference data and evaluates by
+ * running a user or item-based knn algorithm.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */

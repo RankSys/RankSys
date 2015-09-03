@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Generic abstract CODEC for statistics collection.
  *
- * @param T type of the output of the compression
+ * @param <T> type of the output of the compression
  * 
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */

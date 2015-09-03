@@ -58,6 +58,12 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
+ * PreferenceData for binary data using compression.
+ * 
+ * @param <U> type of users
+ * @param <I> type of items
+ * @param <Cu> coding for user identifiers
+ * @param <Ci> coding for item identifiers
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
@@ -74,6 +80,15 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPrefere
 
     private final int numPreferences;
 
+    /**
+     * Constructor that utilizes other PreferenceData object.
+     *
+     * @param preferences input preference data to be copied
+     * @param users user index
+     * @param items item index
+     * @param u_codec user preferences list CODEC
+     * @param i_codec item preferences list CODEC
+     */
     public BinaryCODECPreferenceData(FastPreferenceData<U, I> preferences, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
         this(ul(preferences), il(preferences), users, items, u_codec, i_codec);
     }
@@ -95,6 +110,16 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPrefere
         return ul(new TransposedPreferenceData<>(preferences));
     }
 
+    /**
+     * Constructor using streams of user and items preferences lists.
+     *
+     * @param ul stream of user preferences lists
+     * @param il stream of item preferences lists
+     * @param users user index
+     * @param items item index
+     * @param u_codec user preferences list CODEC
+     * @param i_codec item preferences list CODEC
+     */
     @SuppressWarnings("unchecked")
     public BinaryCODECPreferenceData(Stream<IdxObject<int[]>> ul, Stream<IdxObject<int[]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
         super(users, items);
@@ -113,6 +138,19 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPrefere
         this.numPreferences = of(u_len).sum();
     }
 
+    /**
+     * Internal constructor for de-serialization.
+     *
+     * @param u_codec user preferences list CODEC
+     * @param i_codec item preferences list CODEC
+     * @param u_idxs user preferences identifiers
+     * @param u_len user preferences lengths
+     * @param i_idxs item preferences identifiers
+     * @param i_len item preferences lengths
+     * @param numPreferences number of preferences
+     * @param users user index
+     * @param items item index
+     */
     protected BinaryCODECPreferenceData(CODEC<Cu> u_codec, CODEC<Ci> i_codec, Cu[] u_idxs, int[] u_len, Ci[] i_idxs, int[] i_len, int numPreferences, FastUserIndex<U> users, FastItemIndex<I> items) {
         super(users, items);
         this.u_codec = u_codec;
@@ -221,10 +259,49 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPrefere
         return range(0, i_len.length).filter(iidx -> i_len[iidx] > 0);
     }
 
+    /**
+     * Reads two files for user and item preferences and builds a compressed
+     * PreferenceData. The format of the user preferences stream consists on one
+     * list per line, starting with the identifier of the user followed by the
+     * identifiers of the items related to that. The item preferences stream
+     * follows the same format by swapping the roles of users and items.
+     *
+     * @param <U> type of users
+     * @param <I> type of items
+     * @param <Cu> coding for user identifiers
+     * @param <Ci> coding for item identifiers
+     * @param up path to user preferences file
+     * @param ip path to item preferences file
+     * @param users user index
+     * @param items item index
+     * @param u_codec user preferences list CODEC
+     * @param i_codec item preferences list CODEC
+     * @return compressed preference data
+     * @throws FileNotFoundException when one of the files does not exist
+     */
     public static <U, I, Cu, Ci> BinaryCODECPreferenceData<U, I, Cu, Ci> load(String up, String ip, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) throws FileNotFoundException {
         return load(new FileInputStream(up), new FileInputStream(ip), users, items, u_codec, i_codec);
     }
 
+    /**
+     * Reads two streams for user and item preferences and builds a compressed
+     * PreferenceData. The format of the user preferences stream consists on one
+     * list per line, starting with the identifier of the user followed by the
+     * identifiers of the items related to that. The item preferences stream
+     * follows the same format by swapping the roles of users and items.
+     *
+     * @param <U> type of users
+     * @param <I> type of items
+     * @param <Cu> coding for user identifiers
+     * @param <Ci> coding for item identifiers
+     * @param uo stream user preferences
+     * @param io stream item preferences
+     * @param users user index
+     * @param items item index
+     * @param u_codec user preferences list CODEC
+     * @param i_codec item preferences list CODEC
+     * @return compressed preference data
+     */
     public static <U, I, Cu, Ci> BinaryCODECPreferenceData<U, I, Cu, Ci> load(InputStream uo, InputStream io, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
         Function<InputStream, Stream<IdxObject<int[]>>> reader = is -> {
             return new BufferedReader(new InputStreamReader(is)).lines().map(line -> {
@@ -245,10 +322,37 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPrefere
         return new BinaryCODECPreferenceData<>(ul, il, users, items, u_codec, i_codec);
     }
 
+    /**
+     * Saves a PreferenceData instance in two files for user and item
+     * preferences, respectively. The format of the user preferences file
+     * consists on one list per line, starting with the identifier of the user
+     * followed by the identifiers of the items related to that. The item 
+     * preferences file follows the same format by swapping the roles of 
+     * users and items.
+     *
+     * @param prefData preferences
+     * @param up path to user preferences file
+     * @param ip path to item preferences file
+     * @throws FileNotFoundException one of the files could not be created
+     * @throws IOException other IO error
+     */
     public static void save(FastPreferenceData<?, ?> prefData, String up, String ip) throws FileNotFoundException, IOException {
         save(prefData, new FileOutputStream(up), new FileOutputStream(ip));
     }
 
+    /**
+     * Saves a PreferenceData instance in two files for user and item
+     * preferences, respectively. The format of the user preferences stream
+     * consists on one list per line, starting with the identifier of the user
+     * followed by the identifiers of the items related to that. The item 
+     * preferences stream follows the same format by swapping the roles of 
+     * users and items.
+     *
+     * @param prefData preferences
+     * @param uo stream of user preferences
+     * @param io stream of user preferences
+     * @throws IOException when IO error
+     */
     public static void save(FastPreferenceData<?, ?> prefData, OutputStream uo, OutputStream io) throws IOException {
         BiConsumer<FastPreferenceData<?, ?>, OutputStream> saver = (prefs, os) -> {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
@@ -273,6 +377,12 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPrefere
         saver.accept(new TransposedPreferenceData<>(prefData), io);
     }
 
+    /**
+     * Serializes this instance by writing it into a compressed binary file.
+     *
+     * @param path path to compressed binary file
+     * @throws IOException when IO error
+     */
     public void serialize(String path) throws IOException {
         try (GZIPOutputStream os = new GZIPOutputStream(new FileOutputStream(path));
                 ObjectOutputStream out = new ObjectOutputStream(os)) {
@@ -286,6 +396,20 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPrefere
         }
     }
 
+    /**
+     * De-serializes a compressed binary file to a PrefereceData instance.
+     *
+     * @param <U> type of user
+     * @param <I> type of item
+     * @param <Cu> coding for user preferences
+     * @param <Ci> coding for item preferences
+     * @param path path to compressed binary file
+     * @param u_codec user preferences list CODEC
+     * @param i_codec item preferences list CODEC
+     * @return de-serialized PreferenceData instance
+     * @throws IOException when IO error
+     * @throws ClassNotFoundException when reading a bad binary file
+     */
     @SuppressWarnings("unchecked")
     public static <U, I, Cu, Ci> BinaryCODECPreferenceData<U, I, Cu, Ci> deserialize(String path, CODEC<Cu> u_codec, CODEC<Ci> i_codec) throws IOException, ClassNotFoundException {
         Cu[] u_idxs;

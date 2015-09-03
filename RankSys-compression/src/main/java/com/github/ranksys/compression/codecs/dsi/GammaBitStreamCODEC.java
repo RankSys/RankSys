@@ -21,20 +21,21 @@ import it.unimi.dsi.io.OutputBitStream;
 import java.io.IOException;
 
 /**
+ * Gamma coding.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class GammaBitStreamCODEC extends BitStreamCODEC {
 
     @Override
-    public void write(OutputBitStream obs, int[] in, int offset, int len) throws IOException {
+    protected void write(OutputBitStream obs, int[] in, int offset, int len) throws IOException {
         for (int i = offset; i < offset + len; i++) {
             obs.writeGamma(in[i]);
         }
     }
 
     @Override
-    public void read(InputBitStream ibs, int[] out, int offset, int len) throws IOException {
+    protected void read(InputBitStream ibs, int[] out, int offset, int len) throws IOException {
         ibs.readGammas(out, len);
     }
 

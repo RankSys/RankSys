@@ -19,11 +19,15 @@ package com.github.ranksys.compression.codecs.lemire;
 import me.lemire.integercompression.Simple16;
 
 /**
+ * Simple16 coding.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class Simple16CODEC extends LemireCODEC {
 
+    /**
+     * Constructor.
+     */
     public Simple16CODEC() {
         super(() -> new Simple16());
     }

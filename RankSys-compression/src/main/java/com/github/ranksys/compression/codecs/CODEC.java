@@ -22,7 +22,7 @@ package com.github.ranksys.compression.codecs;
  * Compression of arrays of integers into more compact
  * representations of them.
  *
- * @param T type of the output of the compression
+ * @param <T> type of the output of the compression
  * 
  * @author Saúl Vargas (saul.vargas@glasgow.ac.uk)
  */

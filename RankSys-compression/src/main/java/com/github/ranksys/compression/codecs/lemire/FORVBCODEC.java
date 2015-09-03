@@ -21,11 +21,15 @@ import me.lemire.integercompression.Composition;
 import me.lemire.integercompression.VariableByte;
 
 /**
+ * Frame of Reference coding (with Variable Byte as fallback).
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class FORVBCODEC extends LemireCODEC {
 
+    /**
+     * Constructor.
+     */
     public FORVBCODEC() {
         super(() -> new Composition(new BinaryPacking(), new VariableByte()));
     }

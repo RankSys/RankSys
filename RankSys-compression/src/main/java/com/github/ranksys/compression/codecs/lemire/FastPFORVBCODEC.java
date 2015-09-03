@@ -34,6 +34,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import com.github.ranksys.compression.codecs.AbstractCODEC;
 
 /**
+ * FastPFOR coding (with Variable Byte as fallback).
  *
  * @author Saúl Vargas (saul.vargas@glasgow.ac.uk)
  */
@@ -44,6 +45,9 @@ public class FastPFORVBCODEC extends AbstractCODEC<int[]> {
     private final IntegerCODECPool pool;
     private final boolean integrated;
 
+    /**
+     * Constructor.
+     */
     public FastPFORVBCODEC() {
         this.pool = new IntegerCODECPool(() -> new Composition(new FastPFOR(), new VariableByte()));
         this.integrated = false;
@@ -93,7 +97,7 @@ public class FastPFORVBCODEC extends AbstractCODEC<int[]> {
         return integrated;
     }
 
-    public static class IntegerCODECPool extends GenericObjectPool<IntegerCODEC> {
+    private static class IntegerCODECPool extends GenericObjectPool<IntegerCODEC> {
 
         public IntegerCODECPool(Supplier<IntegerCODEC> supplier) {
             super(new IntegerCODECFactory(supplier));

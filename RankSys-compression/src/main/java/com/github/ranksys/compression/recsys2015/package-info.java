@@ -18,4 +18,4 @@
 /**
  * Test programs uses for the RecSys 2015 poster.
  */
-package com.github.ranksys.compression;
+package com.github.ranksys.compression.recsys2015;
