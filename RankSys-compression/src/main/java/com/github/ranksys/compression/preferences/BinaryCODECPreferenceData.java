@@ -51,14 +51,18 @@ import static java.util.stream.IntStream.of;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntIterators;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPreferenceData<U, I> implements FasterPreferenceData<U, I> {
-    
+
     private final CODEC<Cu> u_codec;
     private final CODEC<Ci> i_codec;
 
@@ -107,6 +111,17 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPrefere
         index(il, i_idxs, i_len, i_codec);
 
         this.numPreferences = of(u_len).sum();
+    }
+
+    protected BinaryCODECPreferenceData(CODEC<Cu> u_codec, CODEC<Ci> i_codec, Cu[] u_idxs, int[] u_len, Ci[] i_idxs, int[] i_len, int numPreferences, FastUserIndex<U> users, FastItemIndex<I> items) {
+        super(users, items);
+        this.u_codec = u_codec;
+        this.i_codec = i_codec;
+        this.u_idxs = u_idxs;
+        this.u_len = u_len;
+        this.i_idxs = i_idxs;
+        this.i_len = i_len;
+        this.numPreferences = numPreferences;
     }
 
     private static <Cx> void index(Stream<IdxObject<int[]>> lists, Cx[] idxs, int[] lens, CODEC<Cx> x_codec) {
@@ -257,4 +272,42 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPrefere
         saver.accept(prefData, uo);
         saver.accept(new TransposedPreferenceData<>(prefData), io);
     }
+
+    public void serialize(String path) throws IOException {
+        try (GZIPOutputStream os = new GZIPOutputStream(new FileOutputStream(path));
+                ObjectOutputStream out = new ObjectOutputStream(os)) {
+            out.writeObject(u_idxs);
+            out.writeObject(u_len);
+            out.writeObject(i_idxs);
+            out.writeObject(i_len);
+            out.writeInt(numPreferences);
+            out.writeObject(ui);
+            out.writeObject(ii);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <U, I, Cu, Ci> BinaryCODECPreferenceData<U, I, Cu, Ci> deserialize(String path, CODEC<Cu> u_codec, CODEC<Ci> i_codec) throws IOException, ClassNotFoundException {
+        Cu[] u_idxs;
+        int[] u_len;
+        Ci[] i_idxs;
+        int[] i_len;
+        int numPreferences;
+        FastUserIndex<U> users;
+        FastItemIndex<I> items;
+
+        try (GZIPInputStream is = new GZIPInputStream(new FileInputStream(path));
+                ObjectInputStream in = new ObjectInputStream(is)) {
+            u_idxs = (Cu[]) in.readObject();
+            u_len = (int[]) in.readObject();
+            i_idxs = (Ci[]) in.readObject();
+            i_len = (int[]) in.readObject();
+            numPreferences = in.readInt();
+            users = (FastUserIndex<U>) in.readObject();
+            items = (FastItemIndex<I>) in.readObject();
+        }
+
+        return new BinaryCODECPreferenceData<>(u_codec, i_codec, u_idxs, u_len, i_idxs, i_len, numPreferences, users, items);
+    }
+
 }
