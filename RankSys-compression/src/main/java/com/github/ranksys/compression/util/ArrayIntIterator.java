@@ -19,6 +19,7 @@ package com.github.ranksys.compression.util;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 
 /**
+ * Array-backed iterator over primitive integers.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
@@ -27,6 +28,11 @@ public class ArrayIntIterator implements IntIterator {
     private final int[] a;
     private int i = 0;
 
+    /**
+     * Constructor.
+     *
+     * @param a array to iterate over
+     */
     public ArrayIntIterator(int[] a) {
         this.a = a;
     }

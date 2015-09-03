@@ -19,6 +19,7 @@ package com.github.ranksys.compression.util;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 
 /**
+ * Array-backed iterator over primitive doubles.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
@@ -27,6 +28,11 @@ public class ArrayDoubleIterator implements DoubleIterator {
     private final double[] a;
     private int i = 0;
 
+    /**
+     * Constructor.
+     *
+     * @param a array to iterate over
+     */
     public ArrayDoubleIterator(double[] a) {
         this.a = a;
     }

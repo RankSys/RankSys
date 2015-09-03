@@ -17,6 +17,7 @@
 package com.github.ranksys.compression.codecs;
 
 /**
+ * Empty CODEC that does not do anything but copying the array.
  *
  * @author Saúl Vargas (saul.vargas@glasgow.ac.uk)
  */

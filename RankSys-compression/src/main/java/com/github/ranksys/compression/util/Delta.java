@@ -16,30 +16,38 @@
  */
 package com.github.ranksys.compression.util;
 
-import java.util.function.IntUnaryOperator;
-
 /**
+ * Delta gaps support.
+ * 
+ * Sorted integer arrays are rewritten so that:
+ * b[0] = a[0] + 1
+ * b[n] = a[n] - a[n - 1] for i &ge; 0
  *
  * @author Saúl Vargas (saul.vargas@glasgow.ac.uk)
  */
 public class Delta {
 
+    /**
+     * Converts sorted array into d-gaps.
+     *
+     * @param a array of sorted integers
+     * @param offset offset from where to start converting
+     * @param len number of integers to convert
+     */
     public static void delta(int[] a, int offset, int len) {
         for (int i = len + offset - 1; i > offset; --i) {
             a[i] -= a[i - 1];
         }
         a[offset]++;
     }
-    
-    public static IntUnaryOperator delta() {
-        int[] d = {-1};
-        return i -> {
-            int v = i - d[0];
-            d[0] = i;
-            return v;
-        };
-    }
 
+    /**
+     * Restores a d-gap array into the original integers.
+     *
+     * @param a array of d-gaps
+     * @param offset offset from where to start converting
+     * @param len number of integers to convert
+     */
     public static void atled(int[] a, int offset, int len) {
         a[offset]--;
         for (int i = offset + 1; i < offset + len; ++i) {
@@ -47,9 +55,4 @@ public class Delta {
         }
     }
     
-    public static IntUnaryOperator atled() {
-        int[] d = {-1};
-        return i -> d[0] += i;
-    }
-
 }

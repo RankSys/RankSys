@@ -19,7 +19,10 @@ package com.github.ranksys.compression.codecs;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * Generic abstract CODEC for statistics collection.
  *
+ * @param T type of the output of the compression
+ * 
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public abstract class AbstractCODEC<T> implements CODEC<T> {
@@ -27,11 +30,20 @@ public abstract class AbstractCODEC<T> implements CODEC<T> {
     private final AtomicLong totalBytesIn;
     private final AtomicLong totalBytesOut;
 
+    /**
+     * Constructor.
+     */
     public AbstractCODEC() {
         this.totalBytesIn = new AtomicLong(0L);
         this.totalBytesOut = new AtomicLong(0L);
     }
 
+    /**
+     * Adds the input/output byes of a compression.
+     *
+     * @param bytesIn bytes read
+     * @param bytesOut bytes of the compression
+     */
     protected void add(long bytesIn, long bytesOut) {
         totalBytesIn.addAndGet(bytesIn);
         totalBytesOut.addAndGet(bytesOut);
