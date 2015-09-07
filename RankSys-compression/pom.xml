@@ -24,6 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <version>0.4-SNAPSHOT</version>
     </parent>
     
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    
     <artifactId>RankSys-compression</artifactId>
     <packaging>jar</packaging>
     <dependencies>
@@ -61,6 +68,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>it.unimi.dsi</groupId>
             <artifactId>fastutil</artifactId>
             <version>6.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.catenamatteo</groupId>
+            <artifactId>groupvarint</artifactId>
+            <version>ae3e80dc0b</version>        
         </dependency>
     </dependencies>
 </project>

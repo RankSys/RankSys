@@ -18,6 +18,7 @@ package com.github.ranksys.compression.recsys2015;
 
 import com.github.ranksys.compression.codecs.CODEC;
 import com.github.ranksys.compression.codecs.NullCODEC;
+import com.github.ranksys.compression.codecs.catena.GroupVByteCODEC;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
@@ -117,7 +118,7 @@ public class Conventions {
         String dataPath = getPath(path, dataset, idxCodec, vCodec, reassignIdxs);
         CODEC<?> u_codec = getCodec(idxCodec, lens[0]);
         CODEC<?> i_codec = getCodec(idxCodec, lens[1]);
-        CODEC<?> v_codec = getCodec(idxCodec, lens[2]);
+        CODEC<?> v_codec = getCodec(vCodec, lens[2]);
         switch (dataset) {
             case "msd":
                 return BinaryCODECPreferenceData.deserialize(dataPath, u_codec, i_codec);
@@ -174,6 +175,8 @@ public class Conventions {
                 return new IntegratedEliasFanoBitStreamCODEC();
             case "fixed":
                 return new FixedLengthBitStreamCODEC(fixedLength);
+            case "gvbyte":
+                return new GroupVByteCODEC();
             default:
                 System.err.println("I don't know what " + name + " is :-(");
                 System.exit(-1);
