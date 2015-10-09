@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>RankSys</artifactId>
-    <groupId>com.github.ir-uam.RankSys</groupId>
+    <groupId>org.ranksys</groupId>
     <version>0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 

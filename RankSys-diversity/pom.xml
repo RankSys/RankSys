@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.ir-uam.RankSys</groupId>
+        <groupId>org.ranksys</groupId>
         <artifactId>RankSys</artifactId>
         <version>0.4-SNAPSHOT</version>
     </parent>
@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <dependencies>
         <dependency>
-            <groupId>com.github.ir-uam.RankSys</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-novdiv</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -42,12 +42,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>com.github.ir-uam.RankSys</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-metrics</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.ir-uam.RankSys</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-core</artifactId>
             <version>${project.version}</version>
         </dependency>
