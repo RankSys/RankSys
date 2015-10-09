@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ranksys.compression.util;
+package es.uam.eps.ir.ranksys.core.util.iterators;
 
 import it.unimi.dsi.fastutil.ints.IntIterator;
 
@@ -44,7 +44,13 @@ public class ArrayIntIterator implements IntIterator {
 
     @Override
     public int skip(int n) {
-        throw new UnsupportedOperationException("TO DO");
+        int j = 0;
+        while (i < a.length && j < n) {
+            i++;
+            j++;
+        }
+        
+        return j;
     }
 
     @Override
@@ -54,6 +60,6 @@ public class ArrayIntIterator implements IntIterator {
 
     @Override
     public Integer next() {
-        throw new UnsupportedOperationException("use nextInt() instead");
+        return nextInt();
     }
 }

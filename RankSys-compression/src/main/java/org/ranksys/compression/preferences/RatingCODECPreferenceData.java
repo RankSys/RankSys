@@ -17,8 +17,8 @@
 package org.ranksys.compression.preferences;
 
 import org.ranksys.compression.codecs.CODEC;
-import org.ranksys.compression.util.ArrayDoubleIterator;
-import org.ranksys.compression.util.ArrayIntIterator;
+import es.uam.eps.ir.ranksys.core.util.iterators.ArrayDoubleIterator;
+import es.uam.eps.ir.ranksys.core.util.iterators.ArrayIntIterator;
 import static org.ranksys.compression.util.Delta.atled;
 import static org.ranksys.compression.util.Delta.delta;
 import static es.uam.eps.ir.ranksys.core.util.parsing.IntParser.dip;

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ranksys.compression.util;
+package es.uam.eps.ir.ranksys.core.util.iterators;
 
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 
@@ -44,7 +44,13 @@ public class ArrayDoubleIterator implements DoubleIterator {
 
     @Override
     public int skip(int n) {
-        throw new UnsupportedOperationException("TO DO");
+        int j = 0;
+        while (i < a.length && j < n) {
+            i++;
+            j++;
+        }
+        
+        return j;
     }
 
     @Override
@@ -54,6 +60,6 @@ public class ArrayDoubleIterator implements DoubleIterator {
 
     @Override
     public Double next() {
-        throw new UnsupportedOperationException("use nextDouble() instead");
+        return nextDouble();
     }
 }
