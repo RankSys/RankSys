@@ -356,61 +356,6 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractFastPre
     }
 
     /**
-     * Saves a PreferenceData instance in two files for user and item
-     * preferences, respectively. The format of the user preferences file
-     * consists on one list per line, starting with the identifier of the user
-     * followed by the identifier-rating pairs of the items related to that. The
-     * item preferences file follows the same format by swapping the roles of 
-     * users and items.
-     *
-     * @param prefData preferences
-     * @param up path to user preferences file
-     * @param ip path to item preferences file
-     * @throws FileNotFoundException one of the files could not be created
-     * @throws IOException other IO error
-     */
-    public static void save(FastPreferenceData<?, ?> prefData, String up, String ip) throws FileNotFoundException, IOException {
-        save(prefData, new FileOutputStream(up), new FileOutputStream(ip));
-    }
-
-    /**
-     * Saves a PreferenceData instance in two files for user and item
-     * preferences, respectively. The format of the user preferences stream
-     * consists on one list per line, starting with the identifier of the user
-     * followed by the identifier-rating pairs of the items related to that. The
-     * item preferences stream follows the same format by swapping the roles of 
-     * users and items.
-     *
-     * @param prefData preferences
-     * @param uo stream of user preferences
-     * @param io stream of user preferences
-     * @throws IOException when IO error
-     */
-    public static void save(FastPreferenceData<?, ?> prefData, OutputStream uo, OutputStream io) throws IOException {
-        BiConsumer<FastPreferenceData<?, ?>, OutputStream> saver = (prefs, os) -> {
-            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
-                prefs.getUidxWithPreferences().forEach(uidx -> {
-                    String a = prefs.getUidxPreferences(uidx)
-                            .sorted((p1, p2) -> Integer.compare(p1.idx, p2.idx))
-                            .map(p -> p.idx + "\t" + (int) p.v)
-                            .collect(joining("\t"));
-                    try {
-                        writer.write(uidx + "\t" + a);
-                        writer.newLine();
-                    } catch (IOException ex) {
-                        throw new UncheckedIOException(ex);
-                    }
-                });
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
-        };
-
-        saver.accept(prefData, uo);
-        saver.accept(new TransposedPreferenceData<>(prefData), io);
-    }
-
-    /**
      * Serializes this instance by writing it into a compressed binary file.
      *
      * @param path path to compressed binary file
