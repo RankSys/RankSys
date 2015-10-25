@@ -14,7 +14,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <parent>
         <groupId>org.ranksys</groupId>
         <artifactId>RankSys</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
     </parent>
 
     <artifactId>RankSys-metrics</artifactId>
@@ -29,7 +29,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         <dependency>
             <groupId>it.unimi.dsi</groupId>
             <artifactId>fastutil</artifactId>
-            <version>6.6.3</version>
+            <version>7.0.6</version>
         </dependency>
     </dependencies>
 </project>

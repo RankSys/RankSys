@@ -14,7 +14,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <parent>
         <groupId>org.ranksys</groupId>
         <artifactId>RankSys</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
     </parent>
 
     <artifactId>RankSys-examples</artifactId>
@@ -33,6 +33,16 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>RankSys-rec</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>RankSys-novdiv</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-novelty</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -43,22 +53,12 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-novdiv</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-nn</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-mf</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-rec</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

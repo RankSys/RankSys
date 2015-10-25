@@ -14,7 +14,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <parent>
         <groupId>org.ranksys</groupId>
         <artifactId>RankSys</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4</version>
     </parent>
 
     <artifactId>RankSys-diversity</artifactId>
@@ -23,14 +23,8 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-novdiv</artifactId>
+            <artifactId>RankSys-core</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math3</artifactId>
-            <version>3.2</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -39,23 +33,31 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-core</artifactId>
+            <artifactId>RankSys-novdiv</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.5</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>it.unimi.dsi</groupId>
             <artifactId>fastutil</artifactId>
-            <version>6.6.3</version>
+            <version>7.0.6</version>
         </dependency>
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
             <version>1.0-groovy-2.4</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>2.4.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
