@@ -79,7 +79,7 @@ public class UserNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
      * @return a map of item-score pairs
      */
     @Override
-    protected Int2DoubleMap getScoresMap(int uidx) {
+    public Int2DoubleMap getScoresMap(int uidx) {
         Int2DoubleOpenHashMap scoresMap = new Int2DoubleOpenHashMap();
         scoresMap.defaultReturnValue(0.0);
         neighborhood.getNeighbors(uidx).forEach(vs -> {

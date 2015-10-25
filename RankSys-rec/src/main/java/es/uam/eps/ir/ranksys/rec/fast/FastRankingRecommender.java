@@ -85,5 +85,5 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
      * @param uidx index of the user whose scores are predicted
      * @return a map of item-score pairs
      */
-    protected abstract Int2DoubleMap getScoresMap(int uidx);
+    public abstract Int2DoubleMap getScoresMap(int uidx);
 }

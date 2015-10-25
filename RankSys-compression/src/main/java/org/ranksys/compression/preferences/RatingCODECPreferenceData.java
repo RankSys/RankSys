@@ -8,8 +8,6 @@
 package org.ranksys.compression.preferences;
 
 import org.ranksys.compression.codecs.CODEC;
-import es.uam.eps.ir.ranksys.core.util.iterators.ArrayDoubleIterator;
-import es.uam.eps.ir.ranksys.core.util.iterators.ArrayIntIterator;
 import static org.ranksys.compression.util.Delta.atled;
 import static org.ranksys.compression.util.Delta.delta;
 import static es.uam.eps.ir.ranksys.core.util.parsing.IntParser.dip;
@@ -41,6 +39,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import org.ranksys.core.util.iterators.ArrayDoubleIterator;
+import org.ranksys.core.util.iterators.ArrayIntIterator;
 
 /**
  * PreferenceData for rating data using compression.

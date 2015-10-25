@@ -8,8 +8,6 @@
 package org.ranksys.compression.preferences;
 
 import org.ranksys.compression.codecs.CODEC;
-import es.uam.eps.ir.ranksys.core.util.iterators.ArrayDoubleIterator;
-import es.uam.eps.ir.ranksys.core.util.iterators.ArrayIntIterator;
 import static org.ranksys.compression.util.Delta.atled;
 import static org.ranksys.compression.util.Delta.delta;
 import static es.uam.eps.ir.ranksys.core.util.parsing.IntParser.dip;
@@ -22,19 +20,13 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.FasterPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UncheckedIOException;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
-import static java.util.stream.Collectors.joining;
 import java.util.stream.IntStream;
 import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
@@ -47,6 +39,8 @@ import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import org.ranksys.core.util.iterators.ArrayDoubleIterator;
+import org.ranksys.core.util.iterators.ArrayIntIterator;
 
 /**
  * PreferenceData for binary data using compression.

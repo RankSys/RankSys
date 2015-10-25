@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.uam.eps.ir.ranksys.rec.fast;
+package org.ranksys.rec.fast;
 
+import es.uam.eps.ir.ranksys.rec.fast.FastRankingRecommender;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import java.util.Map.Entry;
@@ -42,7 +43,7 @@ public class FastEnsembleRecommender<U, I> extends FastRankingRecommender<U, I> 
     }
     
     @Override
-    protected Int2DoubleMap getScoresMap(int uidx) {
+    public Int2DoubleMap getScoresMap(int uidx) {
         Int2DoubleOpenHashMap scoresMap = new Int2DoubleOpenHashMap();
         for (Entry<FastRankingRecommender<U, I>, Double> rw : recommenders) {
             double w = rw.getValue();
