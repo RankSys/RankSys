@@ -8,6 +8,6 @@
  */
 
 /**
- * Distance-based rerankers.
+ * Primitive iterators.
  */
-package es.uam.eps.ir.ranksys.diversity.distance.reranking;
+package org.ranksys.core.util.iterators;

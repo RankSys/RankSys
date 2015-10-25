@@ -8,6 +8,6 @@
  */
 
 /**
- * Distance-based rerankers.
+ * Fast version of base classes and interfaces for recommendation algorithms.
  */
-package es.uam.eps.ir.ranksys.diversity.distance.reranking;
+package org.ranksys.rec.fast;

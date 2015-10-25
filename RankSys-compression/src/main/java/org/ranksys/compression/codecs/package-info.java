@@ -5,4 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
+/**
+ * Core interfaces and classes for codecs.
+ */
 package org.ranksys.compression.codecs;
