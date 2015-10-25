@@ -5,3 +5,5 @@
 /RankSys-fast/target/
 target/
 tmp/
+nb-configuration.xml
+*/nb-configuration.xml
