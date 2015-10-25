@@ -19,11 +19,18 @@ import java.util.Map.Entry;
  * TO DO: add normalization of scores prior to aggregation.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
+ * @param <U> user type
+ * @param <I> item type
  */
 public class FastEnsembleRecommender<U, I> extends FastRankingRecommender<U, I> {
 
     private final Iterable<Entry<FastRankingRecommender<U, I>, Double>> recommenders;
 
+    /**
+     * Constructor.
+     *
+     * @param recommenders a sequence of recommender-weight pairs
+     */
     public FastEnsembleRecommender(Iterable<Entry<FastRankingRecommender<U, I>, Double>> recommenders) {
         super(getFirst(recommenders), getFirst(recommenders));
         this.recommenders = recommenders;
@@ -33,6 +40,12 @@ public class FastEnsembleRecommender<U, I> extends FastRankingRecommender<U, I> 
         return recommenders.iterator().next().getKey();
     }
     
+    /**
+     * Returns a map of item-score pairs.
+     *
+     * @param uidx index of the user whose scores are predicted
+     * @return a map of item-score pairs
+     */
     @Override
     public Int2DoubleMap getScoresMap(int uidx) {
         Int2DoubleOpenHashMap scoresMap = new Int2DoubleOpenHashMap();

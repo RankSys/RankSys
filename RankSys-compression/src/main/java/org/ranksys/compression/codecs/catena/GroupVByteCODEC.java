@@ -22,6 +22,9 @@ public class GroupVByteCODEC extends AbstractCODEC<byte[]> {
 
     private final GroupVarint groupVarint;
 
+    /**
+     * Constructor.
+     */
     public GroupVByteCODEC() {
         this.groupVarint = new GroupVarint();
     }
