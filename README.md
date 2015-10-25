@@ -24,7 +24,7 @@ The publicly available version of this framework (v0.4) includes implementations
  * RankSys-nn: nearest neighbors recommendation algorithms.
  * RankSys-mf: matrix factorization recommendation algorithms.
  * RankSys-novdiv: common resources for novelty and diversity metrics and enhancement techniques.
- * RankSys-novelty: novelty metrics and enhancement techniques
+ * RankSys-novelty: novelty metrics and enhancement techniques.
  * RankSys-diversity: diversity metrics and enhancement techniques.
  * RankSys-compression: state-of-art compression techniques for in-memory collaborative filtering.
  * RankSys-examples: examples of usage of the previous modules.
