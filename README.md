@@ -30,10 +30,18 @@ If you want to include RankSys in an existing Maven project, first include the f
  <url>https://jitpack.io</url>
 </repository>
 ~~~
-then, include in your project dependencies the modules of RankSys that you require:
+If you want to include the whole framework, include the following dependency:
 ~~~
 <dependency>
     <groupId>org.ranksys</groupId>
+    <artifactId>RankSys</artifactId>
+    <version>0.4</version>
+</dependency>
+~~~
+Alternatively, include in your project dependencies only the modules of RankSys that you require:
+~~~
+<dependency>
+    <groupId>org.ranksys.RankSys</groupId>
     <artifactId>RankSys-MODULENAME</artifactId>
     <version>0.4</version>
 </dependency>
