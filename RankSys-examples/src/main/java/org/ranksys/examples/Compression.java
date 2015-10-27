@@ -22,7 +22,7 @@ import org.ranksys.compression.codecs.lemire.IntegratedFORVBCODEC;
 import org.ranksys.compression.preferences.RatingCODECPreferenceData;
 
 /**
- * Example of usage of the module RankSys-compression.
+ * Example of usage of the RankSys-compression module.
  * 
  * For results of the RecSys 2015 poster please refer to
  * http://github.com/saulvargas/recsys2015
