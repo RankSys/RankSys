@@ -12,7 +12,6 @@ import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
 import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.vp;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
