@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.stream.Stream;
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public class SimplePreferenceData<U, I> implements PreferenceData<U, I> {
+public class SimplePreferenceData<U, I> implements PreferenceData<U, I>, Serializable {
 
     private final Map<U, List<IdPref<I>>> userMap;
     private final Map<I, List<IdPref<U>>> itemMap;

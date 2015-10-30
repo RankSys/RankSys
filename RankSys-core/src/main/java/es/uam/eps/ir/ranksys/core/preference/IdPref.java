@@ -10,6 +10,7 @@ package es.uam.eps.ir.ranksys.core.preference;
 
 import es.uam.eps.ir.ranksys.core.IdDouble;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import java.io.Serializable;
 
 /**
  * A user or item preference.
@@ -18,7 +19,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
  *
  * @param <I> type of the user or item
  */
-public class IdPref<I> extends IdDouble<I> {
+public class IdPref<I> extends IdDouble<I> implements Serializable {
 
     /**
      * Empty constructor.

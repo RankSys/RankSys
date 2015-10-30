@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,7 +33,7 @@ import java.util.stream.Stream;
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> {
+public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> implements Serializable {
 
     private final int numPreferences;
     private final List<List<IdxPref>> uidxList;

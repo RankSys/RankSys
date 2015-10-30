@@ -10,6 +10,7 @@ package es.uam.eps.ir.ranksys.fast.preference;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+import java.io.Serializable;
 
 /**
  * A user or item preference by indexes.
@@ -17,7 +18,7 @@ import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
  * @author Saúl Vargas (saul.vargas@uam.es)
  *
  */
-public class IdxPref extends IdxDouble {
+public class IdxPref extends IdxDouble implements Serializable {
 
     /**
      * Empty constructor.

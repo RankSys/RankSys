@@ -11,6 +11,7 @@ package es.uam.eps.ir.ranksys.fast.preference;
 import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
+import java.io.Serializable;
 import java.util.stream.Stream;
 
 /**
@@ -22,7 +23,7 @@ import java.util.stream.Stream;
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public abstract class AbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I> {
+public abstract class AbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I>, Serializable {
 
     /**
      * user index.

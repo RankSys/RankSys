@@ -9,13 +9,14 @@
 package es.uam.eps.ir.ranksys.fast;
 
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+import java.io.Serializable;
 
 /**
  * A pair of a user/item/feature index and a double.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class IdxDouble implements Int2DoubleMap.Entry {
+public class IdxDouble implements Int2DoubleMap.Entry, Serializable {
 
     /**
      * User/item/feature index.

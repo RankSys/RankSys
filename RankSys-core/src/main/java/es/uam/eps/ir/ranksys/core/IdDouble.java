@@ -9,6 +9,7 @@
 package es.uam.eps.ir.ranksys.core;
 
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import java.io.Serializable;
 
 /**
  * A pair of a user/item/feature ID and a double.
@@ -17,7 +18,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
  *
  * @param <I> type of the user/item/feature
  */
-public class IdDouble<I> implements Object2DoubleMap.Entry<I> {
+public class IdDouble<I> implements Object2DoubleMap.Entry<I>, Serializable {
 
     /**
      * The ID.
