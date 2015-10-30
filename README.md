@@ -1,5 +1,9 @@
 # RankSys: Java 8 Recommender Systems framework for novelty, diversity and much more
 
+[![Release](https://img.shields.io/github/release/ranksys/RankSys.svg?label=maven)](https://jitpack.io/#org.ranksys/RankSys/0.3)
+[![Build Status](https://travis-ci.org/RankSys/RankSys.svg?branch=master)](https://travis-ci.org/RankSys/RankSys)
+[![GitHub license](https://img.shields.io/github/license/ranksys/RankSys.svg)]()
+
 ## [Authors](https://github.com/RankSys/RankSys/wiki/Contributors) || [References](https://github.com/RankSys/RankSys/wiki/References) || [Javadoc](http://ranksys.github.io/javadoc/) || [Wiki](https://github.com/RankSys/RankSys/wiki/) || [Twitter](https://twitter.com/ranksys)
 
 ## Introduction
