@@ -7,8 +7,8 @@
  */
 package org.ranksys.compression.codecs.lemire;
 
+import java.io.Serializable;
 import java.util.Arrays;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.lemire.integercompression.Composition;
@@ -18,10 +18,8 @@ import me.lemire.integercompression.IntegerCODEC;
 import me.lemire.integercompression.VariableByte;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.impl.AbandonedConfig;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.ranksys.compression.codecs.AbstractCODEC;
 
 /**
@@ -33,14 +31,14 @@ public class FastPFORVBCODEC extends AbstractCODEC<int[]> {
 
     private static final Logger LOG = Logger.getLogger(FastPFORVBCODEC.class.getName());
 
-    private final IntegerCODECPool pool;
+    private transient volatile GenericObjectPool<IntegerCODEC> pool;
     private final boolean integrated;
 
     /**
      * Constructor.
      */
     public FastPFORVBCODEC() {
-        this.pool = new IntegerCODECPool(() -> new Composition(new FastPFOR(), new VariableByte()));
+        this.pool = null;
         this.integrated = false;
     }
 
@@ -48,6 +46,13 @@ public class FastPFORVBCODEC extends AbstractCODEC<int[]> {
     public int[] co(int[] in, int offset, int len) {
         IntegerCODEC pfor;
         try {
+            if (pool == null) {
+                synchronized (this) {
+                    if (pool == null) {
+                        pool = new GenericObjectPool<>(new FastPFORFactory());
+                    }
+                }
+            }
             pfor = pool.borrowObject();
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
@@ -69,6 +74,13 @@ public class FastPFORVBCODEC extends AbstractCODEC<int[]> {
     public int dec(int[] in, int[] out, int outOffset, int len) {
         IntegerCODEC pfor;
         try {
+            if (pool == null) {
+                synchronized (this) {
+                    if (pool == null) {
+                        pool = new GenericObjectPool<>(new FastPFORFactory());
+                    }
+                }
+            }
             pfor = pool.borrowObject();
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
@@ -88,33 +100,11 @@ public class FastPFORVBCODEC extends AbstractCODEC<int[]> {
         return integrated;
     }
 
-    private static class IntegerCODECPool extends GenericObjectPool<IntegerCODEC> {
-
-        public IntegerCODECPool(Supplier<IntegerCODEC> supplier) {
-            super(new IntegerCODECFactory(supplier));
-        }
-
-        public IntegerCODECPool(Supplier<IntegerCODEC> supplier, GenericObjectPoolConfig config) {
-            super(new IntegerCODECFactory(supplier), config);
-        }
-
-        public IntegerCODECPool(Supplier<IntegerCODEC> supplier, GenericObjectPoolConfig config, AbandonedConfig abandonedConfig) {
-            super(new IntegerCODECFactory(supplier), config, abandonedConfig);
-        }
-
-    }
-
-    private static class IntegerCODECFactory extends BasePooledObjectFactory<IntegerCODEC> {
-
-        private final Supplier<IntegerCODEC> supplier;
-
-        public IntegerCODECFactory(Supplier<IntegerCODEC> supplier) {
-            this.supplier = supplier;
-        }
+    private static class FastPFORFactory extends BasePooledObjectFactory<IntegerCODEC> implements Serializable {
 
         @Override
         public IntegerCODEC create() throws Exception {
-            return supplier.get();
+            return new Composition(new FastPFOR(), new VariableByte());
         }
 
         @Override

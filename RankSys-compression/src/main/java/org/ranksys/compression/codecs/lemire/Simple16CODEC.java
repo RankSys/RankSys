@@ -7,6 +7,9 @@
  */
 package org.ranksys.compression.codecs.lemire;
 
+import java.io.Serializable;
+import java.util.function.Supplier;
+import me.lemire.integercompression.IntegerCODEC;
 import me.lemire.integercompression.Simple16;
 
 /**
@@ -20,7 +23,7 @@ public class Simple16CODEC extends LemireCODEC {
      * Constructor.
      */
     public Simple16CODEC() {
-        super(() -> new Simple16());
+        super((Supplier<IntegerCODEC> & Serializable) () -> new Simple16());
     }
     
 }

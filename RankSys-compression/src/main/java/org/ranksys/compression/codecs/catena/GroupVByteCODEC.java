@@ -13,24 +13,17 @@ import java.util.Arrays;
 
 /**
  * Matteo Catena's implementation of Group Varint.
- * 
+ *
  * https://github.com/catenamatteo/groupvarint
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class GroupVByteCODEC extends AbstractCODEC<byte[]> {
 
-    private final GroupVarint groupVarint;
-
-    /**
-     * Constructor.
-     */
-    public GroupVByteCODEC() {
-        this.groupVarint = new GroupVarint();
-    }
-
     @Override
     public byte[] co(int[] in, int offset, int len) {
+        GroupVarint groupVarint = new GroupVarint();
+        
         byte[] out = new byte[GroupVarint.getSafeCompressedLength(in.length)];
 
         int writtenBytes = groupVarint.compress(in, offset, len, out, 0);
@@ -43,6 +36,8 @@ public class GroupVByteCODEC extends AbstractCODEC<byte[]> {
 
     @Override
     public int dec(byte[] t, int[] out, int outOffset, int len) {
+        GroupVarint groupVarint = new GroupVarint();
+        
         groupVarint.uncompress(t, 0, out, outOffset, len);
 
         return 0;

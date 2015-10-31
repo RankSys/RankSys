@@ -7,7 +7,10 @@
  */
 package org.ranksys.compression.codecs.lemire;
 
+import java.io.Serializable;
+import java.util.function.Supplier;
 import me.lemire.integercompression.Composition;
+import me.lemire.integercompression.IntegerCODEC;
 import me.lemire.integercompression.OptPFD;
 import me.lemire.integercompression.VariableByte;
 
@@ -22,7 +25,7 @@ public class OptPFDVBCODEC extends LemireCODEC{
      * Constructor.
      */
     public OptPFDVBCODEC() {
-        super(() -> new Composition(new OptPFD(), new VariableByte()));
+        super((Supplier<IntegerCODEC> & Serializable) () -> new Composition(new OptPFD(), new VariableByte()));
     }
     
 }

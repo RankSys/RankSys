@@ -7,6 +7,9 @@
  */
 package org.ranksys.compression.codecs.lemire;
 
+import java.io.Serializable;
+import java.util.function.Supplier;
+import me.lemire.integercompression.IntegerCODEC;
 import me.lemire.integercompression.VariableByte;
 
 /**
@@ -20,7 +23,7 @@ public class VByteCODEC extends LemireCODEC {
      * Constructor.
      */
     public VByteCODEC() {
-        super(() -> new VariableByte());
+        super((Supplier<IntegerCODEC> & Serializable) () -> new VariableByte());
     }
 
 }

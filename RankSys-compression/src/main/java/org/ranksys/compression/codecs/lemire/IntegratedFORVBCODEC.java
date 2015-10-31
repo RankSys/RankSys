@@ -7,6 +7,9 @@
  */
 package org.ranksys.compression.codecs.lemire;
 
+import java.io.Serializable;
+import java.util.function.Supplier;
+import me.lemire.integercompression.IntegerCODEC;
 import me.lemire.integercompression.differential.IntegratedBinaryPacking;
 import me.lemire.integercompression.differential.IntegratedComposition;
 import me.lemire.integercompression.differential.IntegratedVariableByte;
@@ -22,7 +25,7 @@ public class IntegratedFORVBCODEC extends LemireCODEC {
      * Constructor.
      */
     public IntegratedFORVBCODEC() {
-        super(() -> new IntegratedComposition(new IntegratedBinaryPacking(), new IntegratedVariableByte()));
+        super((Supplier<IntegerCODEC> & Serializable) () -> new IntegratedComposition(new IntegratedBinaryPacking(), new IntegratedVariableByte()));
     }
     
 }

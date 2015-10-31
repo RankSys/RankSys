@@ -7,8 +7,11 @@
  */
 package org.ranksys.compression.codecs.lemire;
 
+import java.io.Serializable;
+import java.util.function.Supplier;
 import me.lemire.integercompression.BinaryPacking;
 import me.lemire.integercompression.Composition;
+import me.lemire.integercompression.IntegerCODEC;
 import me.lemire.integercompression.VariableByte;
 
 /**
@@ -22,7 +25,7 @@ public class FORVBCODEC extends LemireCODEC {
      * Constructor.
      */
     public FORVBCODEC() {
-        super(() -> new Composition(new BinaryPacking(), new VariableByte()));
+        super((Supplier<IntegerCODEC> & Serializable) () -> new Composition(new BinaryPacking(), new VariableByte()));
     }
 
 }

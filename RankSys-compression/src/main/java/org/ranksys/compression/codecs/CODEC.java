@@ -7,6 +7,8 @@
  */
 package org.ranksys.compression.codecs;
 
+import java.io.Serializable;
+
 /**
  * Integer compression technique.
  * 
@@ -17,7 +19,7 @@ package org.ranksys.compression.codecs;
  * 
  * @author Saúl Vargas (saul.vargas@glasgow.ac.uk)
  */
-public interface CODEC<T> {
+public interface CODEC<T> extends Serializable {
 
     /**
      * Compress.
