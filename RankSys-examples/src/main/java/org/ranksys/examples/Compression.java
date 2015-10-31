@@ -35,7 +35,6 @@ public class Compression {
         String userPath = args[0];
         String itemPath = args[1];
         String dataPath = args[2];
-        String serializedPath = args[3];
 
         // READING USER, ITEM AND RATINGS FILES
         FastUserIndex<Long> users = SimpleFastUserIndex.load(userPath, lp);
@@ -47,17 +46,13 @@ public class Compression {
         CODEC<int[]> iCodec = new IntegratedFORVBCODEC();
         // We assume here that the ratings are 1-5 stars
         CODEC<byte[]> vCodec = new FixedLengthBitStreamCODEC(3);
-        RatingCODECPreferenceData<Long, Long, int[], int[], byte[]> codecData = new RatingCODECPreferenceData<>(simpleData, users, items, uCodec, iCodec, vCodec);
+        FastPreferenceData<Long, Long> codecData = new RatingCODECPreferenceData<>(simpleData, users, items, uCodec, iCodec, vCodec);
         
         // PRINTING COMPRESSION STATISTICS
         System.out.println(uCodec.stats()[0] + "\t" + uCodec.stats()[1]);
         System.out.println(iCodec.stats()[0] + "\t" + iCodec.stats()[1]);
         System.out.println(vCodec.stats()[0] + "\t" + vCodec.stats()[1]);
-        
-        // SERIALIZATION-DESERIALIZATOIN OF THE DATA
-        codecData.serialize(serializedPath);        
-        codecData = RatingCODECPreferenceData.deserialize(serializedPath, uCodec, iCodec, vCodec);
-        codecData.numPreferences();
+        System.out.println(codecData.numPreferences());
     }
 
 }
