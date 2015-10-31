@@ -81,9 +81,8 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
      * @param u_codec user preferences list CODEC
      * @param i_codec item preferences list CODEC
      */
-    @SuppressWarnings("unchecked")
     public BinaryCODECPreferenceData(Stream<IdxObject<int[]>> ul, Stream<IdxObject<int[]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
-        super((Cu[]) new Object[users.numUsers()], new int[users.numUsers()], (Ci[]) new Object[items.numItems()], new int[items.numItems()], users, items, u_codec, i_codec);
+        super(users, items, u_codec, i_codec);
 
         index(ul, u_idxs, u_len, u_codec);
         index(il, i_idxs, i_len, i_codec);

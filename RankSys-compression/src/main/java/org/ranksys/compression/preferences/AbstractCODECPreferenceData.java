@@ -14,28 +14,64 @@ import static org.ranksys.compression.util.Delta.atled;
 import org.ranksys.core.util.iterators.ArrayIntIterator;
 
 /**
+ * Abstract PreferenceData using compression.
+ *
+ * @param <U> type of users
+ * @param <I> type of items
+ * @param <Cu> coding for user identifiers
+ * @param <Ci> coding for item identifiers
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPreferenceData<U, I> implements FasterPreferenceData<U, I> {
 
+    /**
+     * CODEC for user preferences.
+     */
     protected final CODEC<Cu> u_codec;
-    protected final CODEC<Ci> i_codec;
-    protected final Cu[] u_idxs;
-    protected final int[] u_len;
-    protected final Ci[] i_idxs;
-    protected final int[] i_len;
-    protected final int numPreferences;
 
-    public AbstractCODECPreferenceData(Cu[] u_idxs, int[] u_len, Ci[] i_idxs, int[] i_len, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
+    /**
+     * CODEC for item preferences.
+     */
+    protected final CODEC<Ci> i_codec;
+
+    /**
+     * lists of items for users.
+     */
+    protected final Cu[] u_idxs;
+
+    /**
+     * lengths of user preferences lists.
+     */
+    protected final int[] u_len;
+
+    /**
+     * list of users for items.
+     */
+    protected final Ci[] i_idxs;
+
+    /**
+     * lengths of item preferences lists.
+     */
+    protected final int[] i_len;
+
+    /**
+     * Constructor.
+     *
+     * @param users user index
+     * @param items item index
+     * @param u_codec user preferences CODEC
+     * @param i_codec item preferences CODEC
+     */
+    @SuppressWarnings("unchecked")
+    public AbstractCODECPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
         super(users, items);
         this.u_codec = u_codec;
         this.i_codec = i_codec;
-        this.u_idxs = u_idxs;
-        this.u_len = u_len;
-        this.i_idxs = i_idxs;
-        this.i_len = i_len;
-        this.numPreferences = of(u_len).sum();
+        this.u_idxs = (Cu[]) new Object[users.numUsers()];
+        this.u_len = new int[users.numUsers()];
+        this.i_idxs = (Ci[]) new Object[items.numItems()];
+        this.i_len = new int[items.numItems()];
     }
 
     @Override
@@ -50,7 +86,7 @@ public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends Abstract
 
     @Override
     public int numPreferences() {
-        return numPreferences;
+        return of(u_len).sum();
     }
 
     @Override

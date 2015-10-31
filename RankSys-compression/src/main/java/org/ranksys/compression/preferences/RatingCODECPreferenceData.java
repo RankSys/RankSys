@@ -95,14 +95,13 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
      */
     @SuppressWarnings("unchecked")
     public RatingCODECPreferenceData(Stream<IdxObject<int[][]>> ul, Stream<IdxObject<int[][]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec) {
-        super((Cu[]) new Object[users.numUsers()], new int[users.numUsers()], (Ci[]) new Object[items.numItems()], new int[items.numItems()], users, items, u_codec, i_codec);
+        super(users, items, u_codec, i_codec);
 
         this.r_codec = r_codec;
+        this.u_vs = (Cv[]) new Object[users.numUsers()];
+        this.i_vs = (Cv[]) new Object[items.numItems()];
 
-        u_vs = (Cv[]) new Object[users.numUsers()];
         index(ul, u_idxs, u_vs, u_len, u_codec, r_codec);
-
-        i_vs = (Cv[]) new Object[items.numItems()];
         index(il, i_idxs, i_vs, i_len, i_codec, r_codec);
     }
 
