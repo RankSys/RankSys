@@ -23,7 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.function.Function;
-import java.util.stream.IntStream;
 import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
@@ -163,16 +162,6 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
             vsd[i] = vsi[i];
         }
         return new ArrayDoubleIterator(vsd);
-    }
-
-    @Override
-    public IntStream getUidxWithPreferences() {
-        return range(0, u_len.length).filter(uidx -> u_len[uidx] > 0);
-    }
-
-    @Override
-    public IntStream getIidxWithPreferences() {
-        return range(0, i_len.length).filter(iidx -> i_len[iidx] > 0);
     }
 
     /**
