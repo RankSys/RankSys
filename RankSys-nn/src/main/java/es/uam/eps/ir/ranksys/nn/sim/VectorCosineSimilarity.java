@@ -12,17 +12,14 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import static java.lang.Math.pow;
 
 /**
- * Vector cosine similarity. As in Cremonesi's paper. Can be asymmetric if 
- * alpha != 0.5.
- * 
- * sim(v, w) = v * w / ((v * v)^alpha (w * w)^(1 - alpha))
+ * Vector cosine similarity. As in Cremonesi's paper. Can be asymmetric if alpha != 0.5.
  *
- * F. Aiolli. Efficient Top-N Recommendation for Very Large Scale Binary Rated
- * Datasets. RecSys 2013.
- * 
- * P. Cremonesi, Y. Koren, and R. Turrin. Performance of 
- * recommender algorithms on top-N recommendation tasks. RecSys 2010.
- * 
+ * sim(v, w) = v * w / ((v * v)^alpha (w * w)^(1 - alpha))
+ * <br>
+ * F. Aiolli. Efficient Top-N Recommendation for Very Large Scale Binary Rated Datasets. RecSys 2013.
+ * <br>
+ * P. Cremonesi, Y. Koren, and R. Turrin. Performance of recommender algorithms on top-N recommendation tasks. RecSys 2010.
+ *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class VectorCosineSimilarity extends VectorSimilarity {
