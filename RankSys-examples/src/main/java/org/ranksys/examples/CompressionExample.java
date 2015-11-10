@@ -23,13 +23,18 @@ import org.ranksys.compression.preferences.RatingCODECPreferenceData;
 
 /**
  * Example of usage of the RankSys-compression module.
- * 
- * For results of the RecSys 2015 poster please refer to
- * http://github.com/saulvargas/recsys2015
+ *
+ * If you use this code, please cite the following papers:
+ * <ul>
+ * <li>Vargas, S., Macdonald, C., Ounis, I. (2015). Analysing Compression Techniques for In-Memory Collaborative Filtering. In Poster Proceedings of the 9th ACM Conference on Recommender Systems. <a href="http://ceur-ws.org/Vol-1441/recsys2015_poster2.pdf">http://ceur-ws.org/Vol-1441/recsys2015_poster2.pdf</a></li>
+ * <li>Catena, M., Macdonald, C., Ounis, I. (2014). On Inverted Index Compression for Search Engine Efficiency. In ECIR (pp. 359–371). doi:10.1007/978-3-319-06028-6_30</li>
+ * </ul>
+ *
+ * The code that reproduces the results of the RecSys 2015 poster is hosted here <a href="http://github.com/saulvargas/recsys2015">http://github.com/saulvargas/recsys2015</a>
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
-public class Compression {
+public class CompressionExample {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         String userPath = args[0];
@@ -40,14 +45,14 @@ public class Compression {
         FastUserIndex<Long> users = SimpleFastUserIndex.load(userPath, lp);
         FastItemIndex<Long> items = SimpleFastItemIndex.load(itemPath, lp);
         FastPreferenceData<Long, Long> simpleData = SimpleFastPreferenceData.load(dataPath, lp, lp, DoubleParser.ddp, users, items);
-        
+
         // CREATING A COMPRESSED PREFERENCE DATA
         CODEC<int[]> uCodec = new IntegratedFORVBCODEC();
         CODEC<int[]> iCodec = new IntegratedFORVBCODEC();
         // We assume here that the ratings are 1-5 stars
         CODEC<byte[]> vCodec = new FixedLengthBitStreamCODEC(3);
         FastPreferenceData<Long, Long> codecData = new RatingCODECPreferenceData<>(simpleData, users, items, uCodec, iCodec, vCodec);
-        
+
         // PRINTING COMPRESSION STATISTICS
         System.out.println(uCodec.stats()[0] + "\t" + uCodec.stats()[1]);
         System.out.println(iCodec.stats()[0] + "\t" + iCodec.stats()[1]);
