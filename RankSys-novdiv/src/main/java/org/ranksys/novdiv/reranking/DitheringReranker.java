@@ -29,14 +29,14 @@ import org.apache.commons.math3.distribution.NormalDistribution;
  */
 public class DitheringReranker<U, I> extends PermutationReranker<U, I> {
 
-    private final double epsilon;
+    private final double variance;
 
     /**
      * Constructor.
      *
      */
-    public DitheringReranker(double epsilon) {
-        this.epsilon = epsilon;
+    public DitheringReranker(double variance) {
+        this.variance = variance;
     }
 
     @Override
@@ -46,11 +46,11 @@ public class DitheringReranker<U, I> extends PermutationReranker<U, I> {
             N = recommendation.getItems().size();
         }
 
-        if (epsilon == 1.0) {
+        if (variance == 0.0) {
             return getBasePerm(Math.min(N, recommendation.getItems().size()));
         }
         
-        NormalDistribution dist = new NormalDistribution(0.0, sqrt(log(epsilon)));
+        NormalDistribution dist = new NormalDistribution(0.0, sqrt(variance));
 
         IntDoubleTopN topN = new IntDoubleTopN(N);
         List<IdDouble<I>> list = recommendation.getItems();
