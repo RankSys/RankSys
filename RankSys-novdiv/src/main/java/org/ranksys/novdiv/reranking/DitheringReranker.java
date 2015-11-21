@@ -33,7 +33,9 @@ public class DitheringReranker<U, I> extends PermutationReranker<U, I> {
 
     /**
      * Constructor.
-     *
+     * 
+     * @param variance variance of the gaussian noise to be added to the original
+     * recommendation scores.
      */
     public DitheringReranker(double variance) {
         this.variance = variance;
