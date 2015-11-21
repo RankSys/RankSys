@@ -10,7 +10,6 @@ package es.uam.eps.ir.ranksys.nn.sim;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.fast.preference.FasterPreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntIterator;
@@ -96,9 +95,9 @@ public abstract class SetSimilarity implements Similarity {
         Int2IntOpenHashMap intersectionMap = new Int2IntOpenHashMap();
         intersectionMap.defaultReturnValue(0);
 
-        IntIterator iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        IntIterator iidxs = data.getUidxIidxs(uidx);
         while (iidxs.hasNext()) {
-            IntIterator vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs.nextInt());
+            IntIterator vidxs = data.getIidxUidxs(iidxs.nextInt());
             while (vidxs.hasNext()) {
                 intersectionMap.addTo(vidxs.nextInt(), 1);
             }
@@ -112,9 +111,9 @@ public abstract class SetSimilarity implements Similarity {
     protected int[] getFasterIntersectionArray(int uidx) {
         int[] intersectionMap = new int[data.numUsers()];
 
-        IntIterator iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        IntIterator iidxs = data.getUidxIidxs(uidx);
         while (iidxs.hasNext()) {
-            IntIterator vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs.nextInt());
+            IntIterator vidxs = data.getIidxUidxs(iidxs.nextInt());
             while (vidxs.hasNext()) {
                 intersectionMap[vidxs.nextInt()]++;
             }
@@ -129,7 +128,7 @@ public abstract class SetSimilarity implements Similarity {
     public Stream<IdxDouble> similarElems(int idx1) {
         int na = data.numItems(idx1);
 
-        if (data instanceof FasterPreferenceData) {
+        if (data.useIteratorsPreferentially()) {
             if (dense) {
                 int[] intersectionMap = getFasterIntersectionArray(idx1);
                 return range(0, intersectionMap.length)
