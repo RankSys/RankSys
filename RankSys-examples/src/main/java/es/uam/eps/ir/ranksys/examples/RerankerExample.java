@@ -64,12 +64,13 @@ public class RerankerExample {
 
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
 
-        rerankersMap.forEach((name, reranker) -> {
+        rerankersMap.forEach((name, rerankerSupplier) -> {
             System.out.println("Running " + name);
             String recOut = String.format("%s_%s", recIn, name);
+            Reranker<Long, Long> reranker = rerankerSupplier.get();
             try (RecommendationFormat.Writer<Long, Long> writer = format.getWriter(recOut)) {
                 format.getReader(recIn).readAll()
-                        .map(rec -> reranker.get().rerankRecommendation(rec, cutoff))
+                        .map(rec -> reranker.rerankRecommendation(rec, cutoff))
                         .forEach(rerankedRecommendation -> {
                             try {
                                 writer.write(rerankedRecommendation);
