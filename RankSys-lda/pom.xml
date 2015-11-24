@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.ranksys</groupId>
         <artifactId>RankSys</artifactId>
-        <version>0.4</version>
+        <version>0.4.1</version>
     </parent>
     <artifactId>RankSys-lda</artifactId>
     <packaging>jar</packaging>
@@ -19,6 +19,16 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-rec</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ranksys</groupId>
+            <artifactId>RankSys-fast</artifactId>
+            <version>0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>7.0.6</version>
         </dependency>
     </dependencies>
 </project>
