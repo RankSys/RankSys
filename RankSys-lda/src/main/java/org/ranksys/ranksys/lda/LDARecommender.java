@@ -12,7 +12,7 @@ import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 
 /**
- * LDA recommender.
+ * LDA recommender.  See ParallelTopicModel in Mallet (http://mallet.cs.umass.edu/) for more details.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  * 

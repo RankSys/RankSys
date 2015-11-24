@@ -12,7 +12,7 @@ import java.util.Iterator;
 import static java.util.stream.IntStream.range;
 
 /**
- * LDA model estimator.
+ * LDA model estimator. See ParallelTopicModel in Mallet (http://mallet.cs.umass.edu/) for more details.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
