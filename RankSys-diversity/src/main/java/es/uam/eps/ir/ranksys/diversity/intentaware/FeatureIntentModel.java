@@ -38,6 +38,16 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
     protected final FeatureData<I, F, ?> featureData;
 
     /**
+     * features norms
+     */
+    protected Object2DoubleOpenHashMap<F> featureNorms;
+
+    /**
+     * user-item-aspect norm
+     */
+    protected int numTriples;
+
+    /**
      * Constructor that caches user intent-aware models.
      *
      * @param targetUsers user whose intent-aware models are cached
@@ -48,6 +58,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         super(targetUsers);
         this.totalData = totalData;
         this.featureData = featureData;
+        init();
     }
 
     /**
@@ -60,6 +71,19 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         super();
         this.totalData = totalData;
         this.featureData = featureData;
+        init();
+    }
+
+    private void init() {
+        Object2DoubleOpenHashMap<F> featureNorms = new Object2DoubleOpenHashMap<>();
+        int[] numTriples = new int[] {0};
+        featureData.getAllFeatures().forEach(f -> {
+            int count = featureData.getFeatureItems(f).mapToInt(i -> totalData.numUsers(i.id)).sum();
+            featureNorms.put(f, count);
+            numTriples[0] += count;
+        });
+        this.featureNorms = featureNorms;
+        this.numTriples = numTriples[0];
     }
 
     /**
@@ -78,7 +102,9 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
      */
     public class FeatureUserIntentModel implements UserIntentModel<U, I, F> {
 
-        private final Object2DoubleOpenHashMap<F> prob;
+        protected final Object2DoubleOpenHashMap<F> pfu;
+        protected final Object2DoubleOpenHashMap<F> puf;
+        protected final double pu;
 
         /**
          * Constructor.
@@ -86,27 +112,35 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
          * @param user user whose model is created.
          */
         public FeatureUserIntentModel(U user) {
-            Object2DoubleOpenHashMap<F> auxProb = new Object2DoubleOpenHashMap<>();
-            auxProb.defaultReturnValue(0.0);
+            Object2DoubleOpenHashMap<F> tmpCounts = new Object2DoubleOpenHashMap<>();
+            tmpCounts.defaultReturnValue(0.0);
 
             int[] norm = {0};
+            int[] userTriples = new int[]{0};
             totalData.getUserPreferences(user).forEach(iv -> {
+                userTriples[0] += featureData.numFeatures(iv.id);
                 featureData.getItemFeatures(iv.id).forEach(fv -> {
-                    auxProb.addTo(fv.id, 1.0);
+                    tmpCounts.addTo(fv.id, 1.0);
                     norm[0]++;
                 });
             });
 
             if (norm[0] == 0) {
                 norm[0] = featureData.numFeatures();
-                featureData.getAllFeatures().sequential().forEach(f -> auxProb.put(f, 1.0));
+                featureData.getAllFeatures().sequential().forEach(f -> tmpCounts.put(f, 1.0));
             }
 
-            auxProb.object2DoubleEntrySet().forEach(e -> {
-                e.setValue(e.getDoubleValue() / norm[0]);
+            Object2DoubleOpenHashMap<F> puf = new Object2DoubleOpenHashMap<>();
+            Object2DoubleOpenHashMap<F> pfu = new Object2DoubleOpenHashMap<>();
+            tmpCounts.object2DoubleEntrySet().forEach(e -> {
+                F f = e.getKey();
+                puf.put(f, e.getDoubleValue() / featureNorms.getDouble(f));
+                pfu.put(f, e.getDoubleValue() / norm[0]);
             });
 
-            this.prob = auxProb;
+            this.pu = userTriples[0] / numTriples;
+            this.puf = puf;
+            this.pfu = pfu;
         }
 
         /**
@@ -116,7 +150,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
          */
         @Override
         public Set<F> getIntents() {
-            return prob.keySet();
+            return pfu.keySet();
         }
 
         /**
@@ -137,9 +171,29 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
          * @return probability of the feature-intent
          */
         @Override
-        public double p(F f) {
-            return prob.getDouble(f);
+        public double pfu(F f) {
+            return pfu.getDouble(f);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @param f features as intent
+         * @return probability of user given an intent
+         */
+        @Override
+        public double puf(F f) {
+            return puf.getDouble(f);
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @return probability of user
+         */
+        @Override
+        public double pu() {
+            return pu;
+        }
     }
 }

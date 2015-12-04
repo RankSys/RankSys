@@ -14,7 +14,6 @@ import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel.UserIntentModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -79,7 +78,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
                 double gain = userRelModel.gain(iv.id);
                 uim.getItemIntents(iv.id).forEach(f -> {
                     double red = pNoPrevRel.getDouble(f);
-                    erria.add(uim.p(f) * gain * red / (1.0 + rank.intValue()));
+                    erria.add(uim.pfu(f) * gain * red / (1.0 + rank.intValue()));
                     pNoPrevRel.put(f, red * (1 - gain));
                 });
             }
