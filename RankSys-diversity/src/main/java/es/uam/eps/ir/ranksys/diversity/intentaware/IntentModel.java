@@ -62,7 +62,7 @@ public abstract class IntentModel<U, I, F> extends UserModel<U> {
          *
          * @return the intents considered in the intent model
          */
-        Set<F> getIntents();
+        public abstract Set<F> getIntents();
 
         /**
          * Returns the intents associated with an item.
@@ -70,7 +70,7 @@ public abstract class IntentModel<U, I, F> extends UserModel<U> {
          * @param i item
          * @return the intents associated with the item
          */
-        Stream<F> getItemIntents(I i);
+        public abstract Stream<F> getItemIntents(I i);
 
         /**
          * Returns the probability of an intent in the model.
@@ -78,7 +78,7 @@ public abstract class IntentModel<U, I, F> extends UserModel<U> {
          * @param f intent
          * @return probability of an intent in the model
          */
-        double pf_u(F f);
+        public abstract double pf_u(F f);
 
         /**
          * Returns the probability of user given an intent.
@@ -86,6 +86,6 @@ public abstract class IntentModel<U, I, F> extends UserModel<U> {
          * @param f intent
          * @return probability of user given an intent
          */
-        double pu_f(F f);
+        public abstract double pu_f(F f);
     }
 }
