@@ -93,7 +93,7 @@ public class RXQuAD<U, I, F> extends LambdaReranker<U, I> {
         protected double nov(IdDouble<I> iv) {
             return uim.getItemIntents(iv.id)
                     .mapToDouble(f -> {
-                        return uim.pfu(f) * pif(iv, f) * redundancy.getDouble(f);
+                        return uim.pf_u(f) * pif(iv, f) * redundancy.getDouble(f);
                     }).sum();
         }
 

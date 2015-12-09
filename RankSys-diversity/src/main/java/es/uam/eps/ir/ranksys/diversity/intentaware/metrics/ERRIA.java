@@ -78,7 +78,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
                 double gain = userRelModel.gain(iv.id);
                 uim.getItemIntents(iv.id).forEach(f -> {
                     double red = pNoPrevRel.getDouble(f);
-                    erria.add(uim.pfu(f) * gain * red / (1.0 + rank.intValue()));
+                    erria.add(uim.pf_u(f) * gain * red / (1.0 + rank.intValue()));
                     pNoPrevRel.put(f, red * (1 - gain));
                 });
             }

@@ -43,11 +43,6 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
     protected Object2DoubleOpenHashMap<F> featureNorms;
 
     /**
-     * user-item-aspect norm
-     */
-    protected int numTriples;
-
-    /**
      * Constructor that caches user intent-aware models.
      *
      * @param targetUsers user whose intent-aware models are cached
@@ -76,14 +71,11 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
 
     private void init() {
         Object2DoubleOpenHashMap<F> featureNorms = new Object2DoubleOpenHashMap<>();
-        int[] numTriples = new int[] {0};
         featureData.getAllFeatures().forEach(f -> {
             int count = featureData.getFeatureItems(f).mapToInt(i -> totalData.numUsers(i.id)).sum();
             featureNorms.put(f, count);
-            numTriples[0] += count;
         });
         this.featureNorms = featureNorms;
-        this.numTriples = numTriples[0];
     }
 
     /**
@@ -104,7 +96,6 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
 
         protected final Object2DoubleOpenHashMap<F> pfu;
         protected final Object2DoubleOpenHashMap<F> puf;
-        protected final double pu;
 
         /**
          * Constructor.
@@ -116,9 +107,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
             tmpCounts.defaultReturnValue(0.0);
 
             int[] norm = {0};
-            int[] userTriples = new int[]{0};
             totalData.getUserPreferences(user).forEach(iv -> {
-                userTriples[0] += featureData.numFeatures(iv.id);
                 featureData.getItemFeatures(iv.id).forEach(fv -> {
                     tmpCounts.addTo(fv.id, 1.0);
                     norm[0]++;
@@ -138,7 +127,6 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
                 pfu.put(f, e.getDoubleValue() / norm[0]);
             });
 
-            this.pu = userTriples[0] / numTriples;
             this.puf = puf;
             this.pfu = pfu;
         }
@@ -171,7 +159,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
          * @return probability of the feature-intent
          */
         @Override
-        public double pfu(F f) {
+        public double pf_u(F f) {
             return pfu.getDouble(f);
         }
 
@@ -182,18 +170,8 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
          * @return probability of user given an intent
          */
         @Override
-        public double puf(F f) {
+        public double pu_f(F f) {
             return puf.getDouble(f);
-        }
-
-        /**
-         * {@inheritDoc}
-         *
-         * @return probability of user
-         */
-        @Override
-        public double pu() {
-            return pu;
         }
     }
 }
