@@ -99,7 +99,7 @@ class UserIntentModelSpec extends Specification {
         IntentModel.UserIntentModel uim = intentModel.getModel(userId);
 
         then:
-        that uim.p(intent), closeTo(p, DELTA)
+        that uim.pf_u(intent), closeTo(p, DELTA)
 
         where:
         userId | intent || p
