@@ -27,6 +27,7 @@ import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.doubles.DoubleIterators;
+import static java.util.stream.Stream.empty;
 import org.ranksys.core.util.iterators.ArrayDoubleIterator;
 
 /**
@@ -139,6 +140,9 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
     }
 
     private static <Cx, Cv> Stream<IdxPref> getPreferences(Cx cidxs, Cv cvs, int len, CODEC<Cx> x_codec, CODEC<Cv> r_codec) {
+        if (len == 0) {
+            return empty();
+        }
         IdxPref pref = new IdxPref();
         int[] idxs = new int[len];
         int[] vs = new int[len];
