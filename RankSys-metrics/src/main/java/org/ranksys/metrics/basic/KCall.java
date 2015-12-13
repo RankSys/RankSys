@@ -18,7 +18,7 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
  * 
  * Chen, H., Karger, D. R. (2006). Less is More: Probabilistic Models for Retrieving Fewer Relevant Documents. SIGIR'06. doi:10.1145/1148170.1148245
  *
- * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
+ * @author Saúl Vargas (Saul.Vargas@mendeley.com)
  */
 public class KCall<U, I> extends AbstractRecommendationMetric<U, I> {
 
