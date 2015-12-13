@@ -13,6 +13,8 @@ import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
+import it.unimi.dsi.fastutil.doubles.DoubleIterator;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,6 +26,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.ranksys.core.util.iterators.StreamDoubleIterator;
+import org.ranksys.core.util.iterators.StreamIntIterator;
 
 /**
  * Simple implementation of FastPreferenceData backed by nested lists.
@@ -116,6 +120,31 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
     public int numItemsWithPreferences() {
         return (int) iidxList.stream()
                 .filter(iv -> iv != null).count();
+    }
+
+    @Override
+    public IntIterator getUidxIidxs(final int uidx) {
+        return new StreamIntIterator(getUidxPreferences(uidx).mapToInt(pref -> pref.idx));
+    }
+
+    @Override
+    public DoubleIterator getUidxVs(final int uidx) {
+        return new StreamDoubleIterator(getUidxPreferences(uidx).mapToDouble(pref -> pref.v));
+    }
+
+    @Override
+    public IntIterator getIidxUidxs(final int iidx) {
+        return new StreamIntIterator(getIidxPreferences(iidx).mapToInt(pref -> pref.idx));
+    }
+
+    @Override
+    public DoubleIterator getIidxVs(final int iidx) {
+        return new StreamDoubleIterator(getIidxPreferences(iidx).mapToDouble(pref -> pref.v));
+    }
+
+    @Override
+    public boolean useIteratorsPreferentially() {
+        return false;
     }
 
     /**

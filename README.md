@@ -1,10 +1,10 @@
 # RankSys: Java 8 Recommender Systems framework for novelty, diversity and much more
 
-[![Release](https://img.shields.io/github/release/ranksys/RankSys.svg?label=maven)](https://jitpack.io/#org.ranksys/RankSys/0.4)
+## [Team](https://github.com/RankSys/RankSys/wiki/Team) || [References](https://github.com/RankSys/RankSys/wiki/References) || [Javadoc](http://ranksys.github.io/javadoc/) || [Wiki](https://github.com/RankSys/RankSys/wiki/) || [Twitter](https://twitter.com/ranksys)
+
+[![Release](https://img.shields.io/github/release/ranksys/RankSys.svg?label=maven)](https://jitpack.io/#org.ranksys/RankSys/0.4.1)
 [![Build Status](https://travis-ci.org/RankSys/RankSys.svg?branch=master)](https://travis-ci.org/RankSys/RankSys)
 [![GitHub license](https://img.shields.io/github/license/ranksys/RankSys.svg)]()
-
-## [Team](https://github.com/RankSys/RankSys/wiki/Team) || [References](https://github.com/RankSys/RankSys/wiki/References) || [Javadoc](http://ranksys.github.io/javadoc/) || [Wiki](https://github.com/RankSys/RankSys/wiki/) || [Twitter](https://twitter.com/ranksys)
 
 ## Introduction
 
@@ -12,7 +12,7 @@ RankSys is a new framework for the implementation and evaluation of recommendati
 
 The framework has been programmed with Java 8, which is the most recent version of the popular programming language. We take advantage of many of the new features of the language, such as the use of lambda functions, `Stream`'s and facilities for automatic parallelization of the code. The code licensed under the [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/).
 
-The publicly available version of this framework (v0.4) includes implementations of several collaborative filtering recommendation algorithms as well as a wide variety of novelty and diversity metrics and re-ranking techniques. The modules published to date are the following:
+The publicly available version of this framework (0.4.1) includes implementations of several collaborative filtering recommendation algorithms as well as a wide variety of novelty and diversity metrics and re-ranking techniques. The modules published to date are the following:
  * RankSys-core: common and auxiliary classes of the framework.
  * RankSys-fast: support for fast and efficient implementation of data structures and algorithms.
  * RankSys-metrics: interfaces and common components for defining metrics.
@@ -39,7 +39,7 @@ If you want to include the whole framework, include the following dependency:
 <dependency>
     <groupId>org.ranksys</groupId>
     <artifactId>RankSys</artifactId>
-    <version>0.4</version>
+    <version>0.4.1</version>
 </dependency>
 ~~~
 Alternatively, include in your project dependencies only the modules of RankSys that you require:
@@ -47,7 +47,7 @@ Alternatively, include in your project dependencies only the modules of RankSys 
 <dependency>
     <groupId>org.ranksys.RankSys</groupId>
     <artifactId>RankSys-MODULENAME</artifactId>
-    <version>0.4</version>
+    <version>0.4.1</version>
 </dependency>
 ~~~
 where MODULENAME is replaced by core, fast, metrics, rec, etc.

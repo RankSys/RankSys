@@ -15,16 +15,14 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * Transposed preferences, where users and items change roles. This class is
- * useful to simplify the implementation of many algorithms that work user or
- * item-wise, such as similarities or matrix factorization.
+ * Transposed preferences, where users and items change roles. This class is useful to simplify the implementation of many algorithms that work user or item-wise, such as similarities or matrix factorization.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <I> type of the items
  * @param <U> type of the users
  */
-public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U> {
+public class TransposedPreferenceData<I, U> implements FastPreferenceData<I, U> {
 
     /**
      * The original preferences.
@@ -167,21 +165,27 @@ public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U
 
     @Override
     public IntIterator getUidxIidxs(int uidx) {
-        return ((FasterPreferenceData<U, I>) d).getIidxUidxs(uidx);
+        return d.getIidxUidxs(uidx);
     }
 
     @Override
     public DoubleIterator getUidxVs(int uidx) {
-        return ((FasterPreferenceData<U, I>) d).getIidxVs(uidx);
+        return d.getIidxVs(uidx);
     }
 
     @Override
     public IntIterator getIidxUidxs(int iidx) {
-        return ((FasterPreferenceData<U, I>) d).getUidxIidxs(iidx);
+        return d.getUidxIidxs(iidx);
     }
 
     @Override
     public DoubleIterator getIidxVs(int iidx) {
-        return ((FasterPreferenceData<U, I>) d).getUidxVs(iidx);
+        return d.getUidxVs(iidx);
     }
+
+    @Override
+    public boolean useIteratorsPreferentially() {
+        return d.useIteratorsPreferentially();
+    }
+
 }
