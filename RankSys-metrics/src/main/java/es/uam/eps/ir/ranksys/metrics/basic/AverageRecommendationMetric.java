@@ -14,12 +14,11 @@ import es.uam.eps.ir.ranksys.metrics.RecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.SystemMetric;
 
 /**
- * Average of a recommendation metric: system metric based on the arithmetic
- * mean of a recommendation metric for a set of users' recommendations.
+ * Average of a recommendation metric: system metric based on the arithmetic mean of a recommendation metric for a set of users' recommendations.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  */
@@ -32,9 +31,7 @@ public class AverageRecommendationMetric<U, I> extends AbstractSystemMetric<U, I
     private final boolean ignoreNaN;
 
     /**
-     * Constructor in which the number of users of the recommendation metric to
-     * be averaged is specified. Recommendations returning NaN or missing 
-     * recommendations are treated as zeros to the average.
+     * Constructor in which the number of users of the recommendation metric to be averaged is specified. Recommendations returning NaN or missing recommendations are treated as zeros to the average.
      *
      * @param metric recommendation metric to be averaged
      * @param numUsers number of expected users' recommendations
@@ -48,8 +45,7 @@ public class AverageRecommendationMetric<U, I> extends AbstractSystemMetric<U, I
     }
 
     /**
-     * Constructor in which the average is calculated for all the recommendations
-     * added during the calculation.
+     * Constructor in which the average is calculated for all the recommendations added during the calculation.
      *
      * @param metric recommendation metric to be averaged
      * @param ignoreNaN ignore NaNs from the calculation of the average?
@@ -104,7 +100,9 @@ public class AverageRecommendationMetric<U, I> extends AbstractSystemMetric<U, I
     @Override
     public void reset() {
         this.sum = 0;
-        this.numUsers = 0;
+        if (!allUsers) {
+            this.numUsers = 0;
+        }
     }
 
 }
