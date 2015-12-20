@@ -20,6 +20,11 @@ public class StreamDoubleIterator implements DoubleIterator {
 
     private final OfDouble it;
 
+    /**
+     * Constructor.
+     *
+     * @param stream wrapped stream
+     */
     public StreamDoubleIterator(DoubleStream stream) {
         this.it = stream.iterator();
     }
