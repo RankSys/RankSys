@@ -1,19 +1,10 @@
 /* 
- * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autónoma
  * de Madrid, http://ir.ii.uam.es
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware.metrics;
 
@@ -23,7 +14,6 @@ import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel.UserIntentModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -88,7 +78,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
                 double gain = userRelModel.gain(iv.id);
                 uim.getItemIntents(iv.id).forEach(f -> {
                     double red = pNoPrevRel.getDouble(f);
-                    erria.add(uim.p(f) * gain * red / (1.0 + rank.intValue()));
+                    erria.add(uim.pf_u(f) * gain * red / (1.0 + rank.intValue()));
                     pNoPrevRel.put(f, red * (1 - gain));
                 });
             }

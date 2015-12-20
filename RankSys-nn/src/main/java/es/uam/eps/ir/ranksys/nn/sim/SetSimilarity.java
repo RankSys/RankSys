@@ -1,25 +1,15 @@
 /* 
- * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autónoma
  * de Madrid, http://ir.ii.uam.es
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package es.uam.eps.ir.ranksys.nn.sim;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.fast.preference.FasterPreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntIterator;
@@ -105,9 +95,9 @@ public abstract class SetSimilarity implements Similarity {
         Int2IntOpenHashMap intersectionMap = new Int2IntOpenHashMap();
         intersectionMap.defaultReturnValue(0);
 
-        IntIterator iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        IntIterator iidxs = data.getUidxIidxs(uidx);
         while (iidxs.hasNext()) {
-            IntIterator vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs.nextInt());
+            IntIterator vidxs = data.getIidxUidxs(iidxs.nextInt());
             while (vidxs.hasNext()) {
                 intersectionMap.addTo(vidxs.nextInt(), 1);
             }
@@ -121,9 +111,9 @@ public abstract class SetSimilarity implements Similarity {
     protected int[] getFasterIntersectionArray(int uidx) {
         int[] intersectionMap = new int[data.numUsers()];
 
-        IntIterator iidxs = ((FasterPreferenceData<?, ?>) data).getUidxIidxs(uidx);
+        IntIterator iidxs = data.getUidxIidxs(uidx);
         while (iidxs.hasNext()) {
-            IntIterator vidxs = ((FasterPreferenceData<?, ?>) data).getIidxUidxs(iidxs.nextInt());
+            IntIterator vidxs = data.getIidxUidxs(iidxs.nextInt());
             while (vidxs.hasNext()) {
                 intersectionMap[vidxs.nextInt()]++;
             }
@@ -138,7 +128,7 @@ public abstract class SetSimilarity implements Similarity {
     public Stream<IdxDouble> similarElems(int idx1) {
         int na = data.numItems(idx1);
 
-        if (data instanceof FasterPreferenceData) {
+        if (data.useIteratorsPreferentially()) {
             if (dense) {
                 int[] intersectionMap = getFasterIntersectionArray(idx1);
                 return range(0, intersectionMap.length)

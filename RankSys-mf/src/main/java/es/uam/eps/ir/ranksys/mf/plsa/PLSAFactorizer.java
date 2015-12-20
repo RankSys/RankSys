@@ -1,19 +1,10 @@
 /* 
- * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autónoma
  * de Madrid, http://ir.ii.uam.es
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package es.uam.eps.ir.ranksys.mf.plsa;
 
@@ -28,8 +19,10 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.mf.Factorization;
 import es.uam.eps.ir.ranksys.mf.Factorizer;
+import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -239,6 +232,31 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         public Stream<IdxPref> getIidxPreferences(int iidx) {
             return data.getIidxPreferences(iidx)
                     .map(pref -> new PLSAIdxPref(pref.idx, pref.v, getQz(pref.idx, iidx)));
+        }
+
+        @Override
+        public IntIterator getUidxIidxs(int uidx) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public DoubleIterator getUidxVs(int uidx) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public IntIterator getIidxUidxs(int iidx) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public DoubleIterator getIidxVs(int iidx) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean useIteratorsPreferentially() {
+            return false;
         }
 
         @Override

@@ -1,19 +1,10 @@
 /* 
- * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autónoma
  * de Madrid, http://ir.ii.uam.es
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
@@ -22,16 +13,21 @@ import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
+import it.unimi.dsi.fastutil.doubles.DoubleIterator;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.ranksys.core.util.iterators.StreamDoubleIterator;
+import org.ranksys.core.util.iterators.StreamIntIterator;
 
 /**
  * Simple implementation of FastPreferenceData backed by nested lists.
@@ -41,7 +37,7 @@ import java.util.stream.Stream;
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> {
+public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> implements Serializable {
 
     private final int numPreferences;
     private final List<List<IdxPref>> uidxList;
@@ -124,6 +120,31 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
     public int numItemsWithPreferences() {
         return (int) iidxList.stream()
                 .filter(iv -> iv != null).count();
+    }
+
+    @Override
+    public IntIterator getUidxIidxs(final int uidx) {
+        return new StreamIntIterator(getUidxPreferences(uidx).mapToInt(pref -> pref.idx));
+    }
+
+    @Override
+    public DoubleIterator getUidxVs(final int uidx) {
+        return new StreamDoubleIterator(getUidxPreferences(uidx).mapToDouble(pref -> pref.v));
+    }
+
+    @Override
+    public IntIterator getIidxUidxs(final int iidx) {
+        return new StreamIntIterator(getIidxPreferences(iidx).mapToInt(pref -> pref.idx));
+    }
+
+    @Override
+    public DoubleIterator getIidxVs(final int iidx) {
+        return new StreamDoubleIterator(getIidxPreferences(iidx).mapToDouble(pref -> pref.v));
+    }
+
+    @Override
+    public boolean useIteratorsPreferentially() {
+        return false;
     }
 
     /**

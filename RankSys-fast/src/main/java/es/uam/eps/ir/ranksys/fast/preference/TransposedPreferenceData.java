@@ -1,19 +1,10 @@
 /* 
- * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autónoma
  * de Madrid, http://ir.ii.uam.es
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
@@ -24,16 +15,14 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * Transposed preferences, where users and items change roles. This class is
- * useful to simplify the implementation of many algorithms that work user or
- * item-wise, such as similarities or matrix factorization.
+ * Transposed preferences, where users and items change roles. This class is useful to simplify the implementation of many algorithms that work user or item-wise, such as similarities or matrix factorization.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <I> type of the items
  * @param <U> type of the users
  */
-public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U> {
+public class TransposedPreferenceData<I, U> implements FastPreferenceData<I, U> {
 
     /**
      * The original preferences.
@@ -176,21 +165,27 @@ public class TransposedPreferenceData<I, U> implements FasterPreferenceData<I, U
 
     @Override
     public IntIterator getUidxIidxs(int uidx) {
-        return ((FasterPreferenceData<U, I>) d).getIidxUidxs(uidx);
+        return d.getIidxUidxs(uidx);
     }
 
     @Override
     public DoubleIterator getUidxVs(int uidx) {
-        return ((FasterPreferenceData<U, I>) d).getIidxVs(uidx);
+        return d.getIidxVs(uidx);
     }
 
     @Override
     public IntIterator getIidxUidxs(int iidx) {
-        return ((FasterPreferenceData<U, I>) d).getUidxIidxs(iidx);
+        return d.getUidxIidxs(iidx);
     }
 
     @Override
     public DoubleIterator getIidxVs(int iidx) {
-        return ((FasterPreferenceData<U, I>) d).getUidxVs(iidx);
+        return d.getUidxVs(iidx);
     }
+
+    @Override
+    public boolean useIteratorsPreferentially() {
+        return d.useIteratorsPreferentially();
+    }
+
 }

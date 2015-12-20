@@ -1,19 +1,10 @@
 /* 
- * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autónoma
  * de Madrid, http://ir.ii.uam.es
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware;
 
@@ -47,6 +38,11 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
     protected final FeatureData<I, F, ?> featureData;
 
     /**
+     * features norms
+     */
+    protected Object2DoubleOpenHashMap<F> featureNorms;
+
+    /**
      * Constructor that caches user intent-aware models.
      *
      * @param targetUsers user whose intent-aware models are cached
@@ -57,6 +53,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         super(targetUsers);
         this.totalData = totalData;
         this.featureData = featureData;
+        init();
     }
 
     /**
@@ -69,6 +66,16 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         super();
         this.totalData = totalData;
         this.featureData = featureData;
+        init();
+    }
+
+    private void init() {
+        Object2DoubleOpenHashMap<F> featureNorms = new Object2DoubleOpenHashMap<>();
+        featureData.getAllFeatures().forEach(f -> {
+            int count = featureData.getFeatureItems(f).mapToInt(i -> totalData.numUsers(i.id)).sum();
+            featureNorms.put(f, count);
+        });
+        this.featureNorms = featureNorms;
     }
 
     /**
@@ -87,7 +94,8 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
      */
     public class FeatureUserIntentModel implements UserIntentModel<U, I, F> {
 
-        private final Object2DoubleOpenHashMap<F> prob;
+        protected final Object2DoubleOpenHashMap<F> pfu;
+        protected final Object2DoubleOpenHashMap<F> puf;
 
         /**
          * Constructor.
@@ -95,27 +103,32 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
          * @param user user whose model is created.
          */
         public FeatureUserIntentModel(U user) {
-            Object2DoubleOpenHashMap<F> auxProb = new Object2DoubleOpenHashMap<>();
-            auxProb.defaultReturnValue(0.0);
+            Object2DoubleOpenHashMap<F> tmpCounts = new Object2DoubleOpenHashMap<>();
+            tmpCounts.defaultReturnValue(0.0);
 
             int[] norm = {0};
             totalData.getUserPreferences(user).forEach(iv -> {
                 featureData.getItemFeatures(iv.id).forEach(fv -> {
-                    auxProb.addTo(fv.id, 1.0);
+                    tmpCounts.addTo(fv.id, 1.0);
                     norm[0]++;
                 });
             });
 
             if (norm[0] == 0) {
                 norm[0] = featureData.numFeatures();
-                featureData.getAllFeatures().sequential().forEach(f -> auxProb.put(f, 1.0));
+                featureData.getAllFeatures().sequential().forEach(f -> tmpCounts.put(f, 1.0));
             }
 
-            auxProb.object2DoubleEntrySet().forEach(e -> {
-                e.setValue(e.getDoubleValue() / norm[0]);
+            Object2DoubleOpenHashMap<F> puf = new Object2DoubleOpenHashMap<>();
+            Object2DoubleOpenHashMap<F> pfu = new Object2DoubleOpenHashMap<>();
+            tmpCounts.object2DoubleEntrySet().forEach(e -> {
+                F f = e.getKey();
+                puf.put(f, e.getDoubleValue() / featureNorms.getDouble(f));
+                pfu.put(f, e.getDoubleValue() / norm[0]);
             });
 
-            this.prob = auxProb;
+            this.puf = puf;
+            this.pfu = pfu;
         }
 
         /**
@@ -125,7 +138,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
          */
         @Override
         public Set<F> getIntents() {
-            return prob.keySet();
+            return pfu.keySet();
         }
 
         /**
@@ -146,9 +159,19 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
          * @return probability of the feature-intent
          */
         @Override
-        public double p(F f) {
-            return prob.getDouble(f);
+        public double pf_u(F f) {
+            return pfu.getDouble(f);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @param f features as intent
+         * @return probability of user given an intent
+         */
+        @Override
+        public double pu_f(F f) {
+            return puf.getDouble(f);
+        }
     }
 }

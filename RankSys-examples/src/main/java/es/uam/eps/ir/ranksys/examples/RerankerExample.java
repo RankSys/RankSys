@@ -1,19 +1,10 @@
 /* 
- * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autónoma
  * de Madrid, http://ir.ii.uam.es
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package es.uam.eps.ir.ranksys.examples;
 
@@ -73,12 +64,13 @@ public class RerankerExample {
 
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
 
-        rerankersMap.forEach((name, reranker) -> {
+        rerankersMap.forEach((name, rerankerSupplier) -> {
             System.out.println("Running " + name);
             String recOut = String.format("%s_%s", recIn, name);
+            Reranker<Long, Long> reranker = rerankerSupplier.get();
             try (RecommendationFormat.Writer<Long, Long> writer = format.getWriter(recOut)) {
                 format.getReader(recIn).readAll()
-                        .map(rec -> reranker.get().rerankRecommendation(rec, cutoff))
+                        .map(rec -> reranker.rerankRecommendation(rec, cutoff))
                         .forEach(rerankedRecommendation -> {
                             try {
                                 writer.write(rerankedRecommendation);

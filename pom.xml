@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
+Copyright (C) 2015 Information Retrieval Group at Universidad Autónoma
 de Madrid, http://ir.ii.uam.es
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>RankSys</artifactId>
-    <groupId>com.github.ir-uam.RankSys</groupId>
-    <version>0.4-SNAPSHOT</version>
+    <groupId>org.ranksys</groupId>
+    <version>0.4.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -41,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>RankSys-novdiv</module>
         <module>RankSys-novelty</module>
         <module>RankSys-diversity</module>
+        <module>RankSys-compression</module>
         <module>RankSys-examples</module>
     </modules>
     
@@ -49,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
+                <version>3.3</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>

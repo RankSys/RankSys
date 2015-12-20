@@ -1,25 +1,18 @@
 /* 
- * Copyright (C) 2015 Information Retrieval Group at Universidad Autonoma
+ * Copyright (C) 2015 Information Retrieval Group at Universidad Autónoma
  * de Madrid, http://ir.ii.uam.es
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
+import it.unimi.dsi.fastutil.doubles.DoubleIterator;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -79,4 +72,45 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @return preferences of the item
      */
     public Stream<? extends IdxPref> getIidxPreferences(int iidx);
+    
+    
+    /**
+     * Returns the item idxs of the preferences of a user.
+     *
+     * @param uidx user index
+     * @return iterator of the idxs of the items
+     */
+    public IntIterator getUidxIidxs(final int uidx);
+
+    /**
+     * Returns the item values of the preferences of a user.
+     *
+     * @param uidx user index
+     * @return iterator of the values of the items
+     */
+    public DoubleIterator getUidxVs(final int uidx);
+
+    /**
+     * Returns the user idxs of the preferences for an item.
+     *
+     * @param iidx item index
+     * @return iterator of the idxs of the users.
+     */
+    public IntIterator getIidxUidxs(final int iidx);
+
+    /**
+     * Returns the user values of the preferences for an item.
+     *
+     * @param iidx item index
+     * @return iterator of the values of the users
+     */
+    public DoubleIterator getIidxVs(final int iidx);
+
+    /**
+     * Use methods returning IntIterator or DoubleIterator over streams of
+     * IdxPref?
+     * 
+     * @return yes/no
+     */
+    public boolean useIteratorsPreferentially();
 }
