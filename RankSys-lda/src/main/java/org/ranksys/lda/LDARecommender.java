@@ -1,4 +1,4 @@
-package org.ranksys.ranksys.lda;
+package org.ranksys.lda;
 
 import cc.mallet.topics.ParallelTopicModel;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;

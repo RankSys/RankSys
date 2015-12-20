@@ -1,4 +1,4 @@
-package org.ranksys.ranksys.lda;
+package org.ranksys.lda;
 
 import cc.mallet.pipe.Noop;
 import cc.mallet.topics.ParallelTopicModel;

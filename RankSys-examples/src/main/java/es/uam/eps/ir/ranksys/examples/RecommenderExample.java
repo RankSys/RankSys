@@ -51,8 +51,8 @@ import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import org.ranksys.ranksys.lda.LDAModelEstimator;
-import org.ranksys.ranksys.lda.LDARecommender;
+import org.ranksys.lda.LDAModelEstimator;
+import org.ranksys.lda.LDARecommender;
 
 /**
  * Example main of recommendations.

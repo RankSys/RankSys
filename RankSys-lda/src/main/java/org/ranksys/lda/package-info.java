@@ -10,4 +10,4 @@
 /**
  * LDA topic modelling and recommender.
  */
-package org.ranksys.ranksys.lda;
+package org.ranksys.lda;
