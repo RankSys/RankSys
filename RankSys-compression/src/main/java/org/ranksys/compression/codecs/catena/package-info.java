@@ -7,6 +7,6 @@
  */
 
 /**
- * Implementation of Group VByte by Catena.
+ * Codecs from Matteo Catena.
  */
 package org.ranksys.compression.codecs.catena;
