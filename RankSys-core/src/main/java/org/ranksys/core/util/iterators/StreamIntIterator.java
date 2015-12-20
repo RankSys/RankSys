@@ -20,6 +20,11 @@ public class StreamIntIterator implements IntIterator {
 
     private final OfInt it;
 
+    /**
+     * Constructor.
+     *
+     * @param stream wrapped stream
+     */
     public StreamIntIterator(IntStream stream) {
         this.it = stream.iterator();
     }
