@@ -16,7 +16,7 @@ import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import static java.lang.Math.pow;
 
 /**
- * Item-based nearest neighbors recommender.
+ * User-based nearest neighbors recommender.
  * 
  * F. Aiolli. Efficient Top-N Recommendation for Very Large Scale Binary Rated
  * Datasets. RecSys 2013.
