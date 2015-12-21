@@ -155,10 +155,11 @@ public class RecommenderExample {
             double alpha = 1.0;
             double beta = 0.01;
             int numIter = 200;
+            int burninPeriod = 50;
 
             ParallelTopicModel topicModel = null;
             try {
-                topicModel = LDAModelEstimator.estimate(trainData, k, alpha, beta, numIter);
+                topicModel = LDAModelEstimator.estimate(trainData, k, alpha, beta, numIter, burninPeriod);
             } catch (IOException ex) {
                 throw new UncheckedIOException(ex);
             }

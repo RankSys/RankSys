@@ -31,12 +31,13 @@ public class LDAModelEstimator {
      * @return a topic model
      * @throws IOException when internal IO error occurs
      */
-    public static <U, I> ParallelTopicModel estimate(FastPreferenceData<U, I> preferences, int k, double alpha, double beta, int numIterations) throws IOException {
+    public static <U, I> ParallelTopicModel estimate(FastPreferenceData<U, I> preferences, int k, double alpha, double beta, int numIterations, int burninPeriod) throws IOException {
         
         ParallelTopicModel topicModel = new ParallelTopicModel(k, alpha * k, beta);
         topicModel.addInstances(new LDAInstanceList<>(preferences));
         topicModel.setTopicDisplay(numIterations + 1, 0);
         topicModel.setNumIterations(numIterations);
+        topicModel.setBurninPeriod(burninPeriod);
         topicModel.setNumThreads(Runtime.getRuntime().availableProcessors());
 
         topicModel.estimate();
