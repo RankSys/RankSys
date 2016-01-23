@@ -35,6 +35,7 @@ public class LDAModelEstimator {
      * @param alpha alpha in model
      * @param beta beta in model
      * @param numIterations number of iterations
+     * @param burninPeriod burnin period
      * @return a topic model
      * @throws IOException when internal IO error occurs
      */
