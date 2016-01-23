@@ -2,9 +2,9 @@
 
 ## [Team](https://github.com/RankSys/RankSys/wiki/Team) || [References](https://github.com/RankSys/RankSys/wiki/References) || [Javadoc](http://ranksys.github.io/javadoc/) || [Wiki](https://github.com/RankSys/RankSys/wiki/) || [Twitter](https://twitter.com/ranksys)
 
-[![Release](https://img.shields.io/github/release/ranksys/RankSys.svg?label=maven)](https://jitpack.io/#org.ranksys/RankSys/0.4.2)
+[![Release](https://jitpack.io/v/org.ranksys/RankSys.svg)](https://jitpack.io/#org.ranksys/RankSys)
 [![Build Status](https://travis-ci.org/RankSys/RankSys.svg?branch=master)](https://travis-ci.org/RankSys/RankSys)
-[![GitHub license](https://img.shields.io/github/license/ranksys/RankSys.svg)]()
+[![GitHub license](https://img.shields.io/github/license/ranksys/RankSys.svg)](https://www.mozilla.org/en-US/MPL/)
 
 ## Introduction
 
