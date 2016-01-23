@@ -8,6 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.examples;
 
+import cc.mallet.topics.ParallelTopicModel;
 import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
 import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
@@ -50,6 +51,8 @@ import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import org.ranksys.lda.LDAModelEstimator;
+import org.ranksys.lda.LDARecommender;
 
 /**
  * Example main of recommendations.
@@ -144,6 +147,24 @@ public class RecommenderExample {
             Factorization<Long, Long> factorization = new PLSAFactorizer<Long, Long>(numIter).factorize(k, trainData);
 
             return new MFRecommender<>(userIndex, itemIndex, factorization);
+        });
+
+        // LDA topic modelling by Blei et al. 2003
+        recMap.put("lda", () -> {
+            int k = 50;
+            double alpha = 1.0;
+            double beta = 0.01;
+            int numIter = 200;
+            int burninPeriod = 50;
+
+            ParallelTopicModel topicModel = null;
+            try {
+                topicModel = LDAModelEstimator.estimate(trainData, k, alpha, beta, numIter, burninPeriod);
+            } catch (IOException ex) {
+                throw new UncheckedIOException(ex);
+            }
+
+            return new LDARecommender<>(userIndex, itemIndex, topicModel);
         });
 
         ////////////////////////////////

@@ -62,7 +62,7 @@ public abstract class SetSimilarity implements Similarity {
         };
     }
 
-    protected Int2IntMap getIntersectionMap(int idx1) {
+    private Int2IntMap getIntersectionMap(int idx1) {
         Int2IntOpenHashMap intersectionMap = new Int2IntOpenHashMap();
         intersectionMap.defaultReturnValue(0);
 
@@ -77,7 +77,7 @@ public abstract class SetSimilarity implements Similarity {
         return intersectionMap;
     }
 
-    protected int[] getIntersectionArray(int idx1) {
+    private int[] getIntersectionArray(int idx1) {
         int[] intersectionMap = new int[data.numUsers()];
 
         data.getUidxPreferences(idx1).forEach(ip -> {
@@ -91,7 +91,7 @@ public abstract class SetSimilarity implements Similarity {
         return intersectionMap;
     }
 
-    protected Int2IntMap getFasterIntersectionMap(int uidx) {
+    private Int2IntMap getFasterIntersectionMap(int uidx) {
         Int2IntOpenHashMap intersectionMap = new Int2IntOpenHashMap();
         intersectionMap.defaultReturnValue(0);
 
@@ -108,7 +108,7 @@ public abstract class SetSimilarity implements Similarity {
         return intersectionMap;
     }
 
-    protected int[] getFasterIntersectionArray(int uidx) {
+    private int[] getFasterIntersectionArray(int uidx) {
         int[] intersectionMap = new int[data.numUsers()];
 
         IntIterator iidxs = data.getUidxIidxs(uidx);
