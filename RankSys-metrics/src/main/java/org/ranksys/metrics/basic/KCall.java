@@ -19,6 +19,8 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
  * Chen, H., Karger, D. R. (2006). Less is More: Probabilistic Models for Retrieving Fewer Relevant Documents. SIGIR'06. doi:10.1145/1148170.1148245
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * @param <U> user type
+ * @param <I> item type
  */
 public class KCall<U, I> extends AbstractRecommendationMetric<U, I> {
 
@@ -26,6 +28,13 @@ public class KCall<U, I> extends AbstractRecommendationMetric<U, I> {
     private final int cutoff;
     private final int k;
 
+    /**
+     * Constructor.
+     *
+     * @param cutoff maximum number of recommended items to be examined
+     * @param k how many relevant items are needed to return 1
+     * @param relModel relevance model
+     */
     public KCall(int cutoff, int k, RelevanceModel<U, I> relModel) {
         this.relModel = relModel;
         this.cutoff = cutoff;
