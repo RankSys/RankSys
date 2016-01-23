@@ -94,7 +94,14 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
      */
     public class FeatureUserIntentModel implements UserIntentModel<U, I, F> {
 
+        /**
+         * Map feature to p(f|u)
+         */
         protected final Object2DoubleOpenHashMap<F> pfu;
+
+        /**
+         * Map feature to p(u|f)
+         */
         protected final Object2DoubleOpenHashMap<F> puf;
 
         /**

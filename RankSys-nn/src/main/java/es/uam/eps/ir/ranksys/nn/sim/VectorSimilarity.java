@@ -95,7 +95,7 @@ public abstract class VectorSimilarity implements Similarity {
         };
     }
 
-    protected Int2DoubleMap getProductMap(int idx1) {
+    private Int2DoubleMap getProductMap(int idx1) {
         Int2DoubleOpenHashMap productMap = new Int2DoubleOpenHashMap();
         productMap.defaultReturnValue(0.0);
 
@@ -110,7 +110,7 @@ public abstract class VectorSimilarity implements Similarity {
         return productMap;
     }
 
-    protected double[] getProductArray(int idx1) {
+    private double[] getProductArray(int idx1) {
         double[] productMap = new double[data.numUsers()];
 
         data.getUidxPreferences(idx1).forEach(ip -> {
@@ -124,11 +124,11 @@ public abstract class VectorSimilarity implements Similarity {
         return productMap;
     }
 
-    protected double getNorm2(int idx) {
+    private double getNorm2(int idx) {
         return data.getUidxPreferences(idx).mapToDouble(ip -> ip.v * ip.v).sum();
     }
 
-    protected Int2DoubleMap getFasterProductMap(int uidx) {
+    private Int2DoubleMap getFasterProductMap(int uidx) {
         Int2DoubleOpenHashMap productMap = new Int2DoubleOpenHashMap();
         productMap.defaultReturnValue(0.0);
 
@@ -149,7 +149,7 @@ public abstract class VectorSimilarity implements Similarity {
         return productMap;
     }
 
-    protected double[] getFasterProductArray(int uidx) {
+    private double[] getFasterProductArray(int uidx) {
         double[] productMap = new double[data.numUsers()];
 
         IntIterator iidxs = data.getUidxIidxs(uidx);
@@ -169,7 +169,7 @@ public abstract class VectorSimilarity implements Similarity {
         return productMap;
     }
 
-    protected double getFasterNorm2(int uidx) {
+    private double getFasterNorm2(int uidx) {
         DoubleIterator ivs = data.getUidxVs(uidx);
         double sum = 0;
         while (ivs.hasNext()) {
