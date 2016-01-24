@@ -26,8 +26,8 @@ import org.ranksys.core.preference.PointWisePreferenceData;
 public interface FastPointWisePreferenceData<U, I> extends PointWisePreferenceData<U, I>, FastPreferenceData<U, I> {
 
     @Override
-    public default Optional<IdPref<I>> getPreference(U u, I i) {
-        Optional<IdxPref> pref = getPreference(user2uidx(u), item2iidx(i));
+    public default Optional<? extends IdPref<I>> getPreference(U u, I i) {
+        Optional<? extends IdxPref> pref = getPreference(user2uidx(u), item2iidx(i));
 
         if (!pref.isPresent()) {
             return Optional.empty();
@@ -43,5 +43,5 @@ public interface FastPointWisePreferenceData<U, I> extends PointWisePreferenceDa
      * @param iidx item idx
      * @return optional preference for item if it exists
      */
-    public Optional<IdxPref> getPreference(int uidx, int iidx);
+    public Optional<? extends IdxPref> getPreference(int uidx, int iidx);
 }
