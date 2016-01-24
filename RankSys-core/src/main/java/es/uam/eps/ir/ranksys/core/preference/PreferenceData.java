@@ -13,7 +13,7 @@ import es.uam.eps.ir.ranksys.core.index.UserIndex;
 import java.util.stream.Stream;
 
 /**
- * User-item preference data required for recommendation algorithms
+ * User-item preference data required for recommendation algorithms.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * 
