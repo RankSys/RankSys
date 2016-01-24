@@ -1,29 +1,21 @@
 /* 
- * Copyright (C) 2015 RankSys http://ranksys.org
+ * Copyright (C) 2016 RankSys http://ranksys.org
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package org.ranksys.context.pref;
 
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
-import es.uam.eps.ir.ranksys.fast.preference.FastPointWisePreferenceData;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
+import org.ranksys.fast.preference.FastPointWisePreferenceData;
 
 /**
  *
- * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
+ * @author Saúl Vargas (Saul.Vargas@mendeley.com)
  */
 public interface ContextFastPreferenceData<U, I, C> extends ContextPreferenceData<U, I, C>, FastPointWisePreferenceData<U, I> {
 
@@ -34,15 +26,19 @@ public interface ContextFastPreferenceData<U, I, C> extends ContextPreferenceDat
     public Stream<IdxPrefCtx<C>> getIidxPreferences(int iidx);
 
     @Override
-    public default IdPrefCtx<I, C> getPreference(U u, I i) {
-        IdxPrefCtx pref = getPreference(user2uidx(u), item2iidx(i));
-        
-        return new IdPrefCtx<>(i, pref.v, pref.cs);
+    public default Optional<IdPrefCtx<I, C>> getPreference(U u, I i) {
+        Optional<IdxPrefCtx<C>> pref = getPreference(user2uidx(u), item2iidx(i));
+
+        if (pref.isPresent()) {
+            return Optional.of(new IdPrefCtx<>(i, pref.get().v, pref.get().cs));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public IdxPrefCtx<C> getPreference(int uidx, int iidx);
-    
+    public Optional<IdxPrefCtx<C>> getPreference(int uidx, int iidx);
+
     public class IdxPrefCtx<C> extends IdxPref {
 
         public List<C> cs;

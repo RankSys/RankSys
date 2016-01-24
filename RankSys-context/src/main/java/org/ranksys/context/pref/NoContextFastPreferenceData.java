@@ -1,32 +1,24 @@
 /* 
- * Copyright (C) 2015 RankSys http://ranksys.org
+ * Copyright (C) 2016 RankSys http://ranksys.org
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package org.ranksys.context.pref;
 
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
-import es.uam.eps.ir.ranksys.fast.preference.FastPointWisePreferenceData;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.ranksys.fast.preference.FastPointWisePreferenceData;
 
 /**
  *
- * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
+ * @author Saúl Vargas (Saul.Vargas@mendeley.com)
  */
 public class NoContextFastPreferenceData<U, I, C> extends NoContextPreferenceData<U, I, C> implements ContextFastPreferenceData<U, I, C> {
 
@@ -45,12 +37,12 @@ public class NoContextFastPreferenceData<U, I, C> extends NoContextPreferenceDat
     }
 
     @Override
-    public IdxPrefCtx<C> getPreference(int uidx, int iidx) {
-        IdxPref p = ((FastPointWisePreferenceData<U, I>) d).getPreference(uidx, iidx);
-        if (p == null) {
-            return null;
+    public Optional<IdxPrefCtx<C>> getPreference(int uidx, int iidx) {
+        Optional<? extends IdxPref> p = ((FastPointWisePreferenceData<U, I>) d).getPreference(uidx, iidx);
+        if (!p.isPresent()) {
+            return Optional.empty();
         } else {
-            return new IdxPrefCtx<>(p.idx, p.v, Arrays.asList(emptyCtx));
+            return Optional.of(new IdxPrefCtx<>(p.get().idx, p.get().v, Arrays.asList(emptyCtx)));
         }
     }
 

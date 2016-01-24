@@ -1,29 +1,21 @@
 /* 
- * Copyright (C) 2015 RankSys http://ranksys.org
+ * Copyright (C) 2016 RankSys http://ranksys.org
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package org.ranksys.context.pref;
 
 import es.uam.eps.ir.ranksys.core.preference.IdPref;
-import es.uam.eps.ir.ranksys.core.preference.PointWisePreferenceData;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Stream;
+import org.ranksys.core.preference.PointWisePreferenceData;
 
 /**
  *
- * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
+ * @author Saúl Vargas (Saul.Vargas@mendeley.com)
  */
 public class NoContextPreferenceData<U, I, C> implements ContextPreferenceData<U, I, C> {
 
@@ -46,12 +38,12 @@ public class NoContextPreferenceData<U, I, C> implements ContextPreferenceData<U
     }
 
     @Override
-    public IdPrefCtx<I, C> getPreference(U u, I i) {
-        IdPref<I> p = d.getPreference(u, i);
-        if (p == null) {
-            return null;
+    public Optional<IdPrefCtx<I, C>> getPreference(U u, I i) {
+        Optional<? extends IdPref<I>> p = d.getPreference(u, i);
+        if (!p.isPresent()) {
+            return Optional.empty();
         } else {
-            return new IdPrefCtx<>(p.id, p.v, Arrays.asList(emptyCtx));
+            return Optional.of(new IdPrefCtx<>(p.get().id, p.get().v, Arrays.asList(emptyCtx)));
         }
     }
 
