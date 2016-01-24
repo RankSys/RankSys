@@ -13,7 +13,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
     <artifactId>RankSys</artifactId>
     <groupId>org.ranksys</groupId>
-    <version>0.4.3-SNAPSHOT</version>
+    <version>context-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -34,6 +34,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         <module>RankSys-novelty</module>
         <module>RankSys-diversity</module>
         <module>RankSys-compression</module>
+        <module>RankSys-context</module>
         <module>RankSys-examples</module>
     </modules>
     
