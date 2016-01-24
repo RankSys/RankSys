@@ -20,13 +20,17 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.ranksys.context.pref.ContextFastPreferenceData.IdxPrefCtx;
+import org.ranksys.core.util.iterators.StreamDoubleIterator;
+import org.ranksys.core.util.iterators.StreamIntIterator;
 
 /**
+ * Simple implementation of context-aware fast preference data.
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
- *
- * @param <U> type of the users
- * @param <I> type of the items
+ * 
+ * @param <U> user type
+ * @param <C> context type
+ * @param <I> item type
  */
 public class SimpleContextFastPreferenceData<U, I, C> extends AbstractFastPreferenceData<U, I> implements ContextFastPreferenceData<U, I, C> {
 
@@ -43,6 +47,7 @@ public class SimpleContextFastPreferenceData<U, I, C> extends AbstractFastPrefer
      * @param iidxList list of lists of preferences by item index
      * @param uIndex user index
      * @param iIndex item index
+     * @param contextSize dimensionality of the context
      */
     public SimpleContextFastPreferenceData(int numPreferences, List<List<IdxPrefCtx<C>>> uidxList, List<List<IdxPrefCtx<C>>> iidxList, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, int contextSize) {
         super(uIndex, iIndex);
@@ -146,32 +151,27 @@ public class SimpleContextFastPreferenceData<U, I, C> extends AbstractFastPrefer
 
     @Override
     public IntIterator getUidxIidxs(int uidx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new StreamIntIterator(getUidxPreferences(uidx).mapToInt(p -> p.idx));
     }
 
     @Override
     public DoubleIterator getUidxVs(int uidx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new StreamDoubleIterator(getUidxPreferences(uidx).mapToDouble(p -> p.v));
     }
 
     @Override
     public IntIterator getIidxUidxs(int iidx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new StreamIntIterator(getIidxPreferences(iidx).mapToInt(p -> p.idx));
     }
 
     @Override
     public DoubleIterator getIidxVs(int iidx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new StreamDoubleIterator(getIidxPreferences(iidx).mapToDouble(p -> p.v));
     }
 
     @Override
     public boolean useIteratorsPreferentially() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Optional<IdPrefCtx<I, C>> getPreference(U u, I i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
 }

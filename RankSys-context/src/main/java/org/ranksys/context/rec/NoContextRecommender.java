@@ -16,13 +16,23 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
+ * Wrapper for a regular recommender as a context-aware one.
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * 
+ * @param <U> user type
+ * @param <C> context type
+ * @param <I> item type
  */
 public class NoContextRecommender<U, I, C> implements ContextRecommender<U, I, C> {
 
     private final Recommender<U, I> recommender;
 
+    /**
+     * Constructor.
+     *
+     * @param recommender wrapped recommender
+     */
     public NoContextRecommender(Recommender<U, I> recommender) {
         this.recommender = recommender;
     }

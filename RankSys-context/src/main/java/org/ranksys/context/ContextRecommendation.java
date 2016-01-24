@@ -13,16 +13,28 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
 import java.util.List;
 
 /**
+ * Context-aware recommendation.
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * 
+ * @param <U> user type
+ * @param <C> context type
+ * @param <I> item type
  */
 public class ContextRecommendation<U, I, C> extends Recommendation<IdObject<U, C>, I> {
 
+    /**
+     * Constructor.
+     *
+     * @param user user
+     * @param ctx context
+     * @param items recommended item-score pairs
+     */
     public ContextRecommendation(U user,  C ctx, List<IdDouble<I>> items) {
         this(new IdObject<>(user, ctx), items);
     }
 
-    public ContextRecommendation(IdObject<U, C> userCtx, List<IdDouble<I>> items) {
+    protected ContextRecommendation(IdObject<U, C> userCtx, List<IdDouble<I>> items) {
         super(userCtx, items);
     }
 }

@@ -33,8 +33,13 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
+ * User-item-value-context recommendation file writer and reader.
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * 
+ * @param <U> user type
+ * @param <C> context type
+ * @param <I> item type
  */
 public class ContextRecommendationFormat<U, I, C> implements RecommendationFormat<IdObject<U, C>, I> {
 
@@ -44,6 +49,15 @@ public class ContextRecommendationFormat<U, I, C> implements RecommendationForma
     private final Function<C, String> contextWriter;
     private final Function<String, C> contextReader;
 
+    /**
+     * Constructor.
+     *
+     * @param up user parser
+     * @param ip item parser
+     * @param vp value parser
+     * @param contextWriter context writer
+     * @param contextReader context reader
+     */
     public ContextRecommendationFormat(Parser<U> up, Parser<I> ip, DoubleParser vp, Function<C, String> contextWriter, Function<String, C> contextReader) {
         this.up = up;
         this.ip = ip;

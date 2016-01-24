@@ -14,8 +14,14 @@ import java.util.stream.Stream;
 import org.ranksys.fast.preference.FastPointWisePreferenceData;
 
 /**
+ * Fast context-aware preference data. Each user-item preference is accompanied by
+ * the list of context in which the interaction occurred.
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * 
+ * @param <U> user type
+ * @param <C> context type
+ * @param <I> item type
  */
 public interface ContextFastPreferenceData<U, I, C> extends ContextPreferenceData<U, I, C>, FastPointWisePreferenceData<U, I> {
 
@@ -39,15 +45,38 @@ public interface ContextFastPreferenceData<U, I, C> extends ContextPreferenceDat
     @Override
     public Optional<IdxPrefCtx<C>> getPreference(int uidx, int iidx);
 
+    /**
+     * A fast context-aware preference.
+     *
+     * @param <C> context type
+     */
     public class IdxPrefCtx<C> extends IdxPref {
 
+        /**
+         * List of contexts for which there was an interaction with item id.
+         */
         public List<C> cs;
 
+        /**
+         * Constructor.
+         *
+         * @param idx item
+         * @param v value
+         * @param cs list of contexts
+         */
         public IdxPrefCtx(int idx, double v, List<C> cs) {
             super(idx, v);
             this.cs = cs;
         }
 
+        /**
+         * Re-use this object with new values for its fields.
+         *
+         * @param idx item
+         * @param v value
+         * @param cs list of contexts
+         * @return this object with the new values
+         */
         public IdxPref refill(int idx, double v, List<C> cs) {
             this.idx = idx;
             this.v = v;

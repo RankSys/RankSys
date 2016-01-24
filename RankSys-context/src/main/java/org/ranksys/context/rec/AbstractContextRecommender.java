@@ -11,12 +11,18 @@ import org.ranksys.context.ContextRecommendation;
 import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.rec.AbstractRecommender;
 import java.util.Set;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toSet;
 import java.util.stream.Stream;
 
 /**
+ * Abstract context-aware recommender implementing the methods for free
+ * recommendation and candidates ranker.
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * 
+ * @param <U> user type
+ * @param <C> context type
+ * @param <I> item type
  */
 public abstract class AbstractContextRecommender<U, I, C> extends AbstractRecommender<IdObject<U, C>, I> implements ContextRecommender<U, I, C> {
 
@@ -27,7 +33,7 @@ public abstract class AbstractContextRecommender<U, I, C> extends AbstractRecomm
 
     @Override
     public ContextRecommendation<U, I, C> getRecommendation(final U u, final C c, Stream<I> candidates) {
-        Set<I> set = candidates.collect(Collectors.toSet());
+        Set<I> set = candidates.collect(toSet());
 
         return getRecommendation(u, c, 0, item -> set.contains(item));
     }
