@@ -92,7 +92,7 @@ public class MFRecommender<U, I> extends AbstractFastRecommender<U, I> {
         
         List<IdxDouble> items = candidates
                 .mapToObj(iidx -> new IdxDouble(iidx, q.viewRow(iidx).zDotProduct(pu)))
-                .sorted(comparingDouble(r -> r.v))
+                .sorted(comparingDouble((IdxDouble r) -> r.v).reversed())
                 .collect(toList());
         
         return new FastRecommendation(uidx, items);
