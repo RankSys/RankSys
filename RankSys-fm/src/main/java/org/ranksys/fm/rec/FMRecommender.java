@@ -15,11 +15,14 @@ import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import static java.lang.Float.NaN;
+import static java.util.Comparator.comparingDouble;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
+import java.util.stream.IntStream;
 import org.ranksys.javafm.FM;
 import org.ranksys.javafm.instance.FMInstance;
 
@@ -61,4 +64,24 @@ public class FMRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
         return new FastRecommendation(uidx, items);
     }
+
+    @Override
+    public FastRecommendation getRecommendation(int uidx, IntStream candidates) {
+        Function<IdxPref, FMInstance> uip = instanceProvider.apply(uidx);
+
+        List<IdxDouble> items = candidates
+                .mapToObj(iidx -> {
+                    FMInstance x = uip.apply(new IdxPref(iidx, NaN));
+                    if (x != null) {
+                        return new IdxDouble(iidx, fm.prediction(x));
+                    } else {
+                        return new IdxDouble(iidx, NaN);
+                    }
+                })
+                .sorted(comparingDouble((IdxDouble r) -> r.v).reversed())
+                .collect(toList());
+
+        return new FastRecommendation(uidx, items);
+    }
+
 }
