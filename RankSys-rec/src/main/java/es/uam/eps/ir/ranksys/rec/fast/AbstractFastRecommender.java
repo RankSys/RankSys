@@ -20,13 +20,13 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
- * Abstract (fast) recommender. It implements the free and candidate-based 
- * recommendation methods as variants of the filter recommendation.
+ * Abstract (fast) recommender. It implements the free and candidate-based recommendation methods as variants of the filter recommendation.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  */
@@ -86,6 +86,13 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
     }
 
     @Override
+    public Recommendation<U, I> getRecommendation(U u, int maxLength) {
+        FastRecommendation rec = getRecommendation(user2uidx(u), maxLength);
+
+        return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream().map(iv -> new IdDouble<>(iidx2item(iv.idx), iv.v)).collect(Collectors.toList()));
+    }
+
+    @Override
     public FastRecommendation getRecommendation(int uidx, int maxLength) {
         return getRecommendation(uidx, maxLength, iidx -> true);
     }
@@ -99,6 +106,13 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
 
     @Override
     public abstract FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter);
+
+    @Override
+    public Recommendation<U, I> getRecommendation(U u, Stream<I> candidates) {
+        FastRecommendation rec = getRecommendation(user2uidx(u), candidates.mapToInt(this::item2iidx));
+
+        return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream().map(iv -> new IdDouble<>(iidx2item(iv.idx), iv.v)).collect(Collectors.toList()));
+    }
 
     @Override
     public FastRecommendation getRecommendation(int uidx, IntStream candidates) {
