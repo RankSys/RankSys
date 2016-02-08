@@ -28,7 +28,7 @@ import org.ranksys.javafm.instance.FMInstance;
 
 /**
  *
- * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
+ * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class FMRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
