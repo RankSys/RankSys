@@ -26,7 +26,7 @@ import java.util.stream.Stream;
  *
  * @param <U> type of the users
  */
-public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
+public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable {
 
     private final IdxIndex<U> uMap;
 
@@ -73,8 +73,7 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
     }
 
     /**
-     * Creates a user index from a file where the first column lists the users.
-     * This method sorts the users ids and then assigns integer ids in that order.
+     * Creates a user index from a file where the first column lists the users. This method sorts the users ids and then assigns integer ids in that order.
      *
      * @param <U> type of the users
      * @param path path of the file
@@ -101,8 +100,7 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
     }
 
     /**
-     * Creates a user index from an input stream where the first column lists the users.
-     * This method sorts the users ids and then assigns integer ids in that order.
+     * Creates a user index from an input stream where the first column lists the users. This method sorts the users ids and then assigns integer ids in that order.
      *
      * @param <U> type of the users
      * @param in input stream
@@ -115,8 +113,7 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
     }
 
     /**
-     * Creates a user index from an input stream where the first column lists the users.
-     * This method sorts the users ids and then assigns integer ids in that order.
+     * Creates a user index from an input stream where the first column lists the users. This method sorts the users ids and then assigns integer ids in that order.
      *
      * @param <U> type of the users
      * @param in input stream
@@ -126,12 +123,23 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable{
      * @throws IOException when IO error
      */
     public static <U> SimpleFastUserIndex<U> load(InputStream in, Parser<U> uParser, boolean sort) throws IOException {
-        SimpleFastUserIndex<U> userIndex = new SimpleFastUserIndex<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             Stream<U> users = reader.lines()
                     .map(line -> uParser.parse(split(line, '\t')[0]));
-            (sort ? users.sorted() : users).forEach(u -> userIndex.add(u));
+            return load(sort ? users.sorted() : users);
         }
+    }
+
+    /**
+     * Creates a user index from a stream of user objects.
+     *
+     * @param <U> type of the users
+     * @param users stream of user objects
+     * @return a fast user index
+     */
+    public static <U> SimpleFastUserIndex<U> load(Stream<U> users) {
+        SimpleFastUserIndex<U> userIndex = new SimpleFastUserIndex<>();
+        users.forEach(userIndex::add);
         return userIndex;
     }
 }

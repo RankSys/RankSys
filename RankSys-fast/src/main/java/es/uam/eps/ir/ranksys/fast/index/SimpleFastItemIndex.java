@@ -126,12 +126,23 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I>, Serializable {
      * @throws IOException when IO error
      */
     public static <I> SimpleFastItemIndex<I> load(InputStream in, Parser<I> iParser, boolean sort) throws IOException {
-        SimpleFastItemIndex<I> itemIndex = new SimpleFastItemIndex<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             Stream<I> items = reader.lines()
                     .map(line -> iParser.parse(split(line, '\t')[0]));
-            (sort ? items.sorted() : items).forEach(i -> itemIndex.add(i));
+            return load(sort ? items.sorted() : items);
         }
+    }
+    
+    /**
+     * Creates an item index from a stream of item objects.
+     *
+     * @param <I> type of the items
+     * @param items stream of item objects
+     * @return a fast item index
+     */
+    public static <I> SimpleFastItemIndex<I> load(Stream<I> items) {
+        SimpleFastItemIndex<I> itemIndex = new SimpleFastItemIndex<>();
+        items.forEach(itemIndex::add);
         return itemIndex;
     }
 
