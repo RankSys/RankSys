@@ -27,6 +27,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
+ * Test for AbstractFastRecommender
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
