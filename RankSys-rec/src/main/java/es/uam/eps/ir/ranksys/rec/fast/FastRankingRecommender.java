@@ -14,6 +14,7 @@ import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+import static java.lang.Math.min;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntPredicate;
@@ -48,11 +49,7 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
 
         Int2DoubleMap scoresMap = getScoresMap(uidx);
 
-        if (maxLength == 0) {
-            maxLength = scoresMap.size();
-        }
-
-        final IntDoubleTopN topN = new IntDoubleTopN(maxLength);
+        final IntDoubleTopN topN = new IntDoubleTopN(min(maxLength, scoresMap.size()));
         scoresMap.int2DoubleEntrySet().forEach(e -> {
             int iidx = e.getIntKey();
             double score = e.getDoubleValue();

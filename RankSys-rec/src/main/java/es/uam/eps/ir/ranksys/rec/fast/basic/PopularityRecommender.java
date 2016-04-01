@@ -12,6 +12,7 @@ import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
+import static java.lang.Math.min;
 import static java.util.Collections.sort;
 import java.util.List;
 import java.util.function.IntPredicate;
@@ -46,13 +47,10 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     @Override
     public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
-        if (maxLength == 0) {
-            maxLength = popList.size();
-        }
         
         List<IdxDouble> items = popList.stream()
                 .filter(is -> filter.test(is.idx))
-                .limit(maxLength)
+                .limit(min(maxLength, popList.size()))
                 .collect(toList());
         
         return new FastRecommendation(uidx, items);

@@ -93,6 +93,11 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
     }
 
     @Override
+    public FastRecommendation getRecommendation(int uidx) {
+        return getRecommendation(uidx, Integer.MAX_VALUE);
+    }
+
+    @Override
     public FastRecommendation getRecommendation(int uidx, int maxLength) {
         return getRecommendation(uidx, maxLength, iidx -> true);
     }
@@ -102,6 +107,11 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
         FastRecommendation rec = getRecommendation(user2uidx(u), maxLength, iidx -> filter.test(iidx2item(iidx)));
 
         return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream().map(iv -> new IdDouble<>(iidx2item(iv.idx), iv.v)).collect(Collectors.toList()));
+    }
+
+    @Override
+    public FastRecommendation getRecommendation(int uidx, IntPredicate filter) {
+        return getRecommendation(uidx, Integer.MAX_VALUE, filter);
     }
 
     @Override
@@ -119,6 +129,6 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
         IntSet set = new IntOpenHashSet();
         candidates.forEach(iidx -> set.add(iidx));
 
-        return getRecommendation(uidx, 0, item -> set.contains(item));
+        return getRecommendation(uidx, item -> set.contains(item));
     }
 }

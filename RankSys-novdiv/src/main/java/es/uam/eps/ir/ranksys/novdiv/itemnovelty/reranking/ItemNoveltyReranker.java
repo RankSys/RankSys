@@ -16,6 +16,7 @@ import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import static java.lang.Math.min;
 import java.util.List;
 
 /**
@@ -52,19 +53,17 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
         U user = recommendation.getUser();
-        ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getModel(user);
+        List<IdDouble<I>> items = recommendation.getItems();
+        int M = items.size();
+        int N = min(maxLength, M);
+        
+        if (lambda == 0.0) {
+            return getBasePerm(N);
+        }
 
+        ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getModel(user);
         if (uinm == null) {
             return new int[0];
-        }
-
-        int N = maxLength;
-        if (maxLength == 0) {
-            N = recommendation.getItems().size();
-        }
-
-        if (lambda == 0.0) {
-            return getBasePerm(Math.min(N, recommendation.getItems().size()));
         }
 
         Object2DoubleMap<I> novMap = new Object2DoubleOpenHashMap<>();
@@ -78,10 +77,8 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
         });
 
         IntDoubleTopN topN = new IntDoubleTopN(N);
-        List<IdDouble<I>> list = recommendation.getItems();
-        int M = list.size();
-        for (int i = 0; i < list.size(); i++) {
-            topN.add(M - i, value(list.get(i), relStats, novMap, novStats));
+        for (int i = 0; i < M; i++) {
+            topN.add(M - i, value(items.get(i), relStats, novMap, novStats));
         }
         topN.sort();
 

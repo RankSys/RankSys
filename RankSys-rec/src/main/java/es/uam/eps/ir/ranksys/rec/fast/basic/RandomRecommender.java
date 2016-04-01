@@ -16,6 +16,7 @@ import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import static java.lang.Double.NaN;
+import static java.lang.Math.min;
 import java.util.ArrayList;
 import java.util.Collections;
 import static java.util.Collections.shuffle;
@@ -57,14 +58,12 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     @Override
     public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
-        if (maxLength == 0) {
-            maxLength = randomList.size();
-        }
 
+        int N = min(maxLength, randomList.size());
         List<IdxDouble> recommended = new ArrayList<>();
         int s = random.nextInt(randomList.size());
         int j = s;
-        for (int i = 0; i < maxLength; i++) {
+        for (int i = 0; i < N; i++) {
             IdxDouble iv = randomList.get(j);
             while (!filter.test(iv.idx)) {
                 j = (j + 1) % randomList.size();
