@@ -82,7 +82,21 @@ public class SimpleFastFeatureIndex<F> implements FastFeatureIndex<F> {
      * @throws IOException when file does not exist or when IO error
      */
     public static <F> SimpleFastFeatureIndex<F> load(String path, Parser<F> fParser) throws IOException {
-        return load(new FileInputStream(path), fParser);
+        return load(path, fParser, true);
+    }
+
+    /**
+     * Creates a feature index from a file where the first column lists the features.
+     *
+     * @param <F> type of the features
+     * @param path path of the file
+     * @param fParser feature type parser
+     * @param sort if true, feature ids in the stream are sorted before assigning integer indices
+     * @return a fast feature index
+     * @throws IOException when file does not exist or when IO error
+     */
+    public static <F> SimpleFastFeatureIndex<F> load(String path, Parser<F> fParser, boolean sort) throws IOException {
+        return load(new FileInputStream(path), fParser, sort);
     }
 
     /**
@@ -95,13 +109,37 @@ public class SimpleFastFeatureIndex<F> implements FastFeatureIndex<F> {
      * @throws IOException when IO error
      */
     public static <F> SimpleFastFeatureIndex<F> load(InputStream in, Parser<F> iParser) throws IOException {
-        SimpleFastFeatureIndex<F> featureIndex = new SimpleFastFeatureIndex<>();
+        return load(in, iParser, true);
+    }
+
+    /**
+     * Creates a feature index from an input stream where the first column lists the features.
+     *
+     * @param <F> type of the features
+     * @param in input stream
+     * @param iParser feature type parser
+     * @param sort if true, feature ids in the stream are sorted before assigning integer indices
+     * @return a fast feature index
+     * @throws IOException when IO error
+     */
+    public static <F> SimpleFastFeatureIndex<F> load(InputStream in, Parser<F> iParser, boolean sort) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            reader.lines()
-                    .map(line -> iParser.parse(split(line, '\t')[0]))
-                    .sorted()
-                    .forEach(f -> featureIndex.add(f));
+            Stream<F> features = reader.lines()
+                    .map(line -> iParser.parse(split(line, '\t')[0]));
+            return load(sort ? features.sorted() : features);
         }
+    }
+
+    /**
+     * Creates a feature index from a stream of feature objects.
+     *
+     * @param <F> type of the features
+     * @param features stream of feature objects
+     * @return a fast feature index
+     */
+    public static <F> SimpleFastFeatureIndex<F> load(Stream<F> features) {
+        SimpleFastFeatureIndex<F> featureIndex = new SimpleFastFeatureIndex<>();
+        features.forEach(featureIndex::add);
         return featureIndex;
     }
 
