@@ -11,8 +11,10 @@ package es.uam.eps.ir.ranksys.fast.preference;
 import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.IntIterator;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.ranksys.fast.preference.FastPointWisePreferenceData;
 
 /**
  * Transposed preferences, where users and items change roles. This class is useful to simplify the implementation of many algorithms that work user or item-wise, such as similarities or matrix factorization.
@@ -22,7 +24,7 @@ import java.util.stream.Stream;
  * @param <I> type of the items
  * @param <U> type of the users
  */
-public class TransposedPreferenceData<I, U> implements FastPreferenceData<I, U> {
+public class TransposedPreferenceData<I, U> implements FastPreferenceData<I, U>, FastPointWisePreferenceData<I, U> {
 
     /**
      * The original preferences.
@@ -181,6 +183,26 @@ public class TransposedPreferenceData<I, U> implements FastPreferenceData<I, U> 
     @Override
     public DoubleIterator getIidxVs(int iidx) {
         return d.getUidxVs(iidx);
+    }
+
+    @Override
+    public Optional<IdxPref> getPreference(int uidx, int iidx) {
+        Optional<? extends IdxPref> pref = ((FastPointWisePreferenceData<U, I>) d).getPreference(iidx, uidx);
+        if (pref.isPresent()) {
+            return Optional.of(new IdxPref(iidx, pref.get().v));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<IdPref<U>> getPreference(I u, U i) {
+        Optional<? extends IdPref<I>> pref = ((FastPointWisePreferenceData<U, I>) d).getPreference(i, u);
+        if (pref.isPresent()) {
+            return Optional.of(new IdPref<>(i, pref.get().v));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override

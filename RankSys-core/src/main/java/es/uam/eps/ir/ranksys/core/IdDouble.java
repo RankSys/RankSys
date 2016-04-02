@@ -10,6 +10,7 @@ package es.uam.eps.ir.ranksys.core;
 
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A pair of a user/item/feature ID and a double.
@@ -46,7 +47,7 @@ public class IdDouble<I> implements Object2DoubleMap.Entry<I>, Serializable {
         this.id = id;
         this.v = v;
     }
-    
+
     /**
      * Re-fills the IdDouble object and returns itself.
      *
@@ -92,6 +93,32 @@ public class IdDouble<I> implements Object2DoubleMap.Entry<I>, Serializable {
     @Override
     public Double setValue(Double value) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.id);
+        hash = 67 * hash + (int) (Double.doubleToLongBits(this.v) ^ (Double.doubleToLongBits(this.v) >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final IdDouble<?> other = (IdDouble<?>) obj;
+        if (Double.doubleToLongBits(this.v) != Double.doubleToLongBits(other.v)) {
+            return false;
+        }
+        return Objects.equals(this.id, other.id);
     }
 
 }

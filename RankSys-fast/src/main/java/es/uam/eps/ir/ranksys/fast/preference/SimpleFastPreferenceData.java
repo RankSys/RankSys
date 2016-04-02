@@ -8,6 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
+import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
@@ -22,10 +23,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
+import static java.util.Comparator.comparingInt;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.ranksys.fast.preference.FastPointWisePreferenceData;
 import org.ranksys.core.util.iterators.StreamDoubleIterator;
 import org.ranksys.core.util.iterators.StreamIntIterator;
 
@@ -37,7 +41,7 @@ import org.ranksys.core.util.iterators.StreamIntIterator;
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> implements Serializable {
+public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> implements FastPointWisePreferenceData<U, I>, Serializable {
 
     private final int numPreferences;
     private final List<List<IdxPref>> uidxList;
@@ -57,6 +61,13 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
         this.numPreferences = numPreferences;
         this.uidxList = uidxList;
         this.iidxList = iidxList;
+
+        uidxList.parallelStream()
+                .filter(l -> l != null)
+                .forEach(l -> l.sort(comparingInt(p -> p.idx)));
+        iidxList.parallelStream()
+                .filter(l -> l != null)
+                .forEach(l -> l.sort(comparingInt(p -> p.idx)));
     }
 
     @Override
@@ -120,6 +131,29 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
     public int numItemsWithPreferences() {
         return (int) iidxList.stream()
                 .filter(iv -> iv != null).count();
+    }
+
+    @Override
+    public Optional<IdxPref> getPreference(int uidx, int iidx) {
+        List<IdxPref> uList = uidxList.get(uidx);
+
+        int low = 0;
+        int high = uList.size() - 1;
+
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            IdxPref p = uList.get(mid);
+            int cmp = Integer.compare(p.idx, iidx);
+            if (cmp < 0) {
+                low = mid + 1;
+            } else if (cmp > 0) {
+                high = mid - 1;
+            } else {
+                return Optional.of(p);
+            }
+        }
+
+        return Optional.empty();
     }
 
     @Override
