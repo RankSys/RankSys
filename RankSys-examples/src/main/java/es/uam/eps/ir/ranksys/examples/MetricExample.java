@@ -44,8 +44,10 @@ import es.uam.eps.ir.ranksys.novelty.unexp.metrics.EPD;
 import java.util.HashMap;
 import java.util.Map;
 
-import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.*;
+import java.io.FileInputStream;
+import static org.ranksys.examples.Utils.readFeatureTuples;
+import static org.ranksys.examples.Utils.readPreferenceTuples;
 
 /**
  * Example main of metrics.
@@ -63,13 +65,13 @@ public class MetricExample {
         Double threshold = Double.parseDouble(args[4]);
 
         // USER - ITEM - RATING files for train and test
-        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(trainDataPath, lp, lp, ddp);
-        PreferenceData<Long, Long> testData = SimplePreferenceData.load(testDataPath, lp, lp, ddp);
+        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(readPreferenceTuples(new FileInputStream(trainDataPath)));
+        PreferenceData<Long, Long> testData = SimplePreferenceData.load(readPreferenceTuples(new FileInputStream(testDataPath)));
         PreferenceData<Long, Long> totalData = new ConcatPreferenceData<>(trainData, testData);
         // EVALUATED AT CUTOFF 10
         int cutoff = 10;
         // ITEM - FEATURE file
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(featurePath, lp, sp, v -> 1.0);
+        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(readFeatureTuples(new FileInputStream(featurePath)));
         // COSINE DISTANCE
         ItemDistanceModel<Long> dist = new CosineFeatureItemDistanceModel<>(featureData);
         // BINARY RELEVANCE

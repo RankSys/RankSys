@@ -8,18 +8,11 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
-import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
+import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData.PreferenceDataTuple;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.IntIterator;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -147,43 +140,7 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
         return false;
     }
 
-    /**
-     * Load preferences from a file.
-     *
-     * Each line is a different preference, with tab-separated fields indicating user, item, weight and other information.
-     *
-     * @param <U> type of the users
-     * @param <I> type of the items
-     * @param path path of the input file
-     * @param uParser user type parser
-     * @param iParser item type parser
-     * @param dp double parse
-     * @param uIndex user index
-     * @param iIndex item index
-     * @return a simple list-of-lists FastPreferenceData with the information read
-     * @throws IOException when path does not exists of IO error
-     */
-    public static <U, I> SimpleFastPreferenceData<U, I> load(String path, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
-        return load(new FileInputStream(path), uParser, iParser, dp, uIndex, iIndex);
-    }
-
-    /**
-     * Load preferences from an input stream.
-     *
-     * Each line is a different preference, with tab-separated fields indicating user, item, weight and other information.
-     *
-     * @param <U> type of the users
-     * @param <I> type of the items
-     * @param in input stream to read from
-     * @param uParser user type parser
-     * @param iParser item type parser
-     * @param dp double parse
-     * @param uIndex user index
-     * @param iIndex item index
-     * @return a simple list-of-lists FastPreferenceData with the information read
-     * @throws IOException when path does not exists of IO error
-     */
-    public static <U, I> SimpleFastPreferenceData<U, I> load(InputStream in, Parser<U> uParser, Parser<I> iParser, DoubleParser dp, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
+    public static <U, I> SimpleFastPreferenceData<U, I> load(Stream<PreferenceDataTuple<U, I>> tuples, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
         AtomicInteger numPreferences = new AtomicInteger();
 
         List<List<IdxPref>> uidxList = new ArrayList<>();
@@ -196,38 +153,26 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
             iidxList.add(null);
         }
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            reader.lines().forEach(l -> {
-                CharSequence[] tokens = split(l, '\t', 4);
-                U user = uParser.parse(tokens[0]);
-                I item = iParser.parse(tokens[1]);
-                double value;
-                if (tokens.length >= 3) {
-                    value = dp.parse(tokens[2]);
-                } else {
-                    value = dp.parse(null);
-                }
+        tuples.forEach(t -> {
+            int uidx = uIndex.user2uidx(t.user);
+            int iidx = iIndex.item2iidx(t.item);
 
-                int uidx = uIndex.user2uidx(user);
-                int iidx = iIndex.item2iidx(item);
+            numPreferences.incrementAndGet();
 
-                numPreferences.incrementAndGet();
+            List<IdxPref> uList = uidxList.get(uidx);
+            if (uList == null) {
+                uList = new ArrayList<>();
+                uidxList.set(uidx, uList);
+            }
+            uList.add(new IdxPref(iidx, t.value));
 
-                List<IdxPref> uList = uidxList.get(uidx);
-                if (uList == null) {
-                    uList = new ArrayList<>();
-                    uidxList.set(uidx, uList);
-                }
-                uList.add(new IdxPref(iidx, value));
-
-                List<IdxPref> iList = iidxList.get(iidx);
-                if (iList == null) {
-                    iList = new ArrayList<>();
-                    iidxList.set(iidx, iList);
-                }
-                iList.add(new IdxPref(uidx, value));
-            });
-        }
+            List<IdxPref> iList = iidxList.get(iidx);
+            if (iList == null) {
+                iList = new ArrayList<>();
+                iidxList.set(iidx, iList);
+            }
+            iList.add(new IdxPref(uidx, t.value));
+        });
 
         return new SimpleFastPreferenceData<>(numPreferences.intValue(), uidxList, iidxList, uIndex, iIndex);
     }

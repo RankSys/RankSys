@@ -28,9 +28,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp;
+import java.io.FileInputStream;
+import static org.ranksys.examples.Utils.readFeatureTuples;
+import static org.ranksys.examples.Utils.readPreferenceTuples;
 
 /**
  * Example main of re-rankers.
@@ -47,8 +48,8 @@ public class RerankerExample {
 
         double lambda = 0.5;
         int cutoff = 100;
-        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(trainDataPath, lp, lp, ddp);
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(featurePath, lp, sp, v -> 1.0);
+        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(readPreferenceTuples(new FileInputStream(trainDataPath)));
+        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(readFeatureTuples(new FileInputStream(featurePath)));
 
         Map<String, Supplier<Reranker<Long, Long>>> rerankersMap = new HashMap<>();
 

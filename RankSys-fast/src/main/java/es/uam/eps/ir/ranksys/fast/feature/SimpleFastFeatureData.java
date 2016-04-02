@@ -8,16 +8,10 @@
  */
 package es.uam.eps.ir.ranksys.fast.feature;
 
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
+import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData.FeatureDataTuple;
 import es.uam.eps.ir.ranksys.fast.IdxObject;
 import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -107,45 +101,7 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
                 .filter(fv -> fv != null).count();
     }
 
-    /**
-     * Load feature data from a file.
-     *
-     * Each line is a different item-feature pair, with tab-separated fields indicating item, feature and other information.
-     *
-     * @param <I> type of the items
-     * @param <F> type of the features
-     * @param <V> type of the information about item-feature pairs
-     * @param path file path
-     * @param iParser item type parser
-     * @param fParser feature type parser
-     * @param vParser information type parser
-     * @param iIndex item index
-     * @param fIndex feature index
-     * @return a simple map-based FeatureData
-     * @throws IOException when path does not exist or IO error
-     */
-    public static <I, F, V> SimpleFastFeatureData<I, F, V> load(String path, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) throws IOException {
-        return load(new FileInputStream(path), iParser, fParser, vParser, iIndex, fIndex);
-    }
-
-    /**
-     * Load feature data from a input stream.
-     *
-     * Each line is a different item-feature pair, with tab-separated fields indicating item, feature and other information.
-     *
-     * @param <I> type of the items
-     * @param <F> type of the features
-     * @param <V> type of the information about item-feature pairs
-     * @param in input stream
-     * @param iParser item type parser
-     * @param fParser feature type parser
-     * @param vParser information type parser
-     * @param iIndex item index
-     * @param fIndex feature index
-     * @return a simple map-based FeatureData
-     * @throws IOException when IO error
-     */
-    public static <I, F, V> SimpleFastFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) throws IOException {
+    public static <I, F, V> SimpleFastFeatureData<I, F, V> load(Stream<FeatureDataTuple<I, F, V>> tuples, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) {
 
         List<List<IdxObject<V>>> iidxList = new ArrayList<>();
         for (int iidx = 0; iidx < iIndex.numItems(); iidx++) {
@@ -157,40 +113,28 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
             fidxList.add(null);
         }
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            reader.lines().forEach(l -> {
-                CharSequence[] tokens = split(l, '\t', 3);
-                I item = iParser.parse(tokens[0]);
-                F feature = fParser.parse(tokens[1]);
-                V value;
-                if (tokens.length == 3) {
-                    value = vParser.parse(tokens[2]);
-                } else {
-                    value = vParser.parse(null);
-                }
+        tuples.forEach(t -> {
+            int iidx = iIndex.item2iidx(t.item);
+            int fidx = fIndex.feature2fidx(t.feat);
 
-                int iidx = iIndex.item2iidx(item);
-                int fidx = fIndex.feature2fidx(feature);
+            if (iidx == -1 || fidx == -1) {
+                return;
+            }
 
-                if (iidx == -1 || fidx == -1) {
-                    return;
-                }
+            List<IdxObject<V>> iList = iidxList.get(iidx);
+            if (iList == null) {
+                iList = new ArrayList<>();
+                iidxList.set(iidx, iList);
+            }
+            iList.add(new IdxObject<>(fidx, t.value));
 
-                List<IdxObject<V>> iList = iidxList.get(iidx);
-                if (iList == null) {
-                    iList = new ArrayList<>();
-                    iidxList.set(iidx, iList);
-                }
-                iList.add(new IdxObject<>(fidx, value));
-
-                List<IdxObject<V>> fList = fidxList.get(fidx);
-                if (fList == null) {
-                    fList = new ArrayList<>();
-                    fidxList.set(fidx, fList);
-                }
-                fList.add(new IdxObject<>(iidx, value));
-            });
-        }
+            List<IdxObject<V>> fList = fidxList.get(fidx);
+            if (fList == null) {
+                fList = new ArrayList<>();
+                fidxList.set(fidx, fList);
+            }
+            fList.add(new IdxObject<>(iidx, t.value));
+        });
 
         return new SimpleFastFeatureData<>(iidxList, fidxList, iIndex, fIndex);
     }

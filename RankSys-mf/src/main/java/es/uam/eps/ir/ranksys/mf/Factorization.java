@@ -12,7 +12,6 @@ import cern.colt.function.DoubleFunction;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.dp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.ip;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
@@ -258,12 +257,10 @@ public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
      * @param in input stream
      * @param uIndex fast user index
      * @param iIndex fast item index
-     * @param uParser user type parser
-     * @param iParser item type parser
      * @return a factorization
      * @throws IOException when IO error
      */
-    public static <U, I> Factorization<U, I> load(InputStream in, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, Parser<U> uParser, Parser<I> iParser) throws IOException {
+    public static <U, I> Factorization<U, I> load(InputStream in, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException {
         int K;
         DenseDoubleMatrix2D userMatrix;
         DenseDoubleMatrix2D itemMatrix;

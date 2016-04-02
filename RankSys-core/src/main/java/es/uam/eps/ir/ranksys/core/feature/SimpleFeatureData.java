@@ -9,12 +9,6 @@
 package es.uam.eps.ir.ranksys.core.feature;
 
 import es.uam.eps.ir.ranksys.core.IdObject;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,75 +111,40 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
         return featMap.keySet().stream();
     }
 
-    /**
-     * Load feature data from a file.
-     * 
-     * Each line is a different item-feature pair, with tab-separated fields indicating
-     * item, feature and other information.
-     *
-     * @param <I> type of the items
-     * @param <F> type of the features
-     * @param <V> type of the information about item-feature pairs
-     * @param path file path
-     * @param iParser item type parser
-     * @param fParser feature type parser
-     * @param vParser information type parser
-     * @return a simple map-based FeatureData
-     * @throws IOException when path does not exist or IO error
-     */
-    public static <I, F, V> SimpleFeatureData<I, F, V> load(String path, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
-        return load(new FileInputStream(path), iParser, fParser, vParser);
+    public static class FeatureDataTuple<I, F, V> {
+
+        public final I item;
+        public final F feat;
+        public final V value;
+
+        public FeatureDataTuple(I item, F feat, V value) {
+            this.item = item;
+            this.feat = feat;
+            this.value = value;
+        }
+
     }
 
-    /**
-     * Load feature data from a input stream.
-     * 
-     * Each line is a different item-feature pair, with tab-separated fields indicating
-     * item, feature and other information.
-     *
-     * @param <I> type of the items
-     * @param <F> type of the features
-     * @param <V> type of the information about item-feature pairs
-     * @param in input stream
-     * @param iParser item type parser
-     * @param fParser feature type parser
-     * @param vParser information type parser
-     * @return a simple map-based FeatureData
-     * @throws IOException when IO error
-     */
-    public static <I, F, V> SimpleFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
+    public static <I, F, V> SimpleFeatureData<I, F, V> load(Stream<FeatureDataTuple<I, F, V>> tuples) {
         Map<I, List<IdObject<F, V>>> itemMap = new HashMap<>();
         Map<F, List<IdObject<I, V>>> featMap = new HashMap<>();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            reader.lines().forEach(l -> {
-                String[] tokens = l.split("\t", 3);
-                I item = iParser.parse(tokens[0]);
-                F feat = fParser.parse(tokens[1]);
-                V value;
-                if (tokens.length == 2) {
-                    value = vParser.parse(null);
-                } else {
-                    value = vParser.parse(tokens[2]);
-                }
+        tuples.forEach(t -> {
+            List<IdObject<F, V>> iList = itemMap.get(t.item);
+            if (iList == null) {
+                iList = new ArrayList<>();
+                itemMap.put(t.item, iList);
+            }
+            iList.add(new IdObject<>(t.feat, t.value));
 
-                List<IdObject<F, V>> iList = itemMap.get(item);
-                if (iList == null) {
-                    iList = new ArrayList<>();
-                    itemMap.put(item, iList);
-                }
-                iList.add(new IdObject<>(feat, value));
-
-                List<IdObject<I, V>> fList = featMap.get(feat);
-                if (fList == null) {
-                    fList = new ArrayList<>();
-                    featMap.put(feat, fList);
-                }
-                fList.add(new IdObject<>(item, value));
-            });
-        }
+            List<IdObject<I, V>> fList = featMap.get(t.feat);
+            if (fList == null) {
+                fList = new ArrayList<>();
+                featMap.put(t.feat, fList);
+            }
+            fList.add(new IdObject<>(t.item, t.value));
+        });
 
         return new SimpleFeatureData<>(itemMap, featMap);
     }
-
 }
