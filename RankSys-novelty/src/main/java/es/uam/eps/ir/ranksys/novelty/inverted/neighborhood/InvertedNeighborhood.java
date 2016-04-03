@@ -9,13 +9,13 @@
 package es.uam.eps.ir.ranksys.novelty.inverted.neighborhood;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
-import es.uam.eps.ir.ranksys.fast.IdxObject;
 import es.uam.eps.ir.ranksys.nn.neighborhood.Neighborhood;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Inverted neighborhood.
@@ -48,10 +48,10 @@ public class InvertedNeighborhood implements Neighborhood {
         });
 
         IntStream.range(0, n).parallel().mapToObj(idx -> {
-            return new IdxObject<>(idx, neighborhood.getNeighbors(idx));
+            return tuple(idx, neighborhood.getNeighbors(idx));
         }).forEachOrdered(in -> {
-            int idx = in.idx;
-            in.v.forEach(is -> {
+            int idx = in.v1;
+            in.v2.forEach(is -> {
                 if (this.idxla[is.idx] != null) {
                     this.idxla[is.idx].add(idx);
                     this.simla[is.idx].add(is.v);

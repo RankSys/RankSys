@@ -9,12 +9,12 @@
 package es.uam.eps.ir.ranksys.nn.neighborhood;
 
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
-import es.uam.eps.ir.ranksys.fast.IdxObject;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 import static java.util.stream.Stream.empty;
+import org.ranksys.core.util.tuples.Tuple2io;
 
 /**
  * Cached neighborhood. Stores user neighborhoods.
@@ -55,16 +55,16 @@ public class CachedNeighborhood implements Neighborhood {
      * @param n number of users/items
      * @param neighborhoods stream of already calculated neighborhoods
      */
-    public CachedNeighborhood(int n, Stream<IdxObject<Stream<IdxDouble>>> neighborhoods) {
+    public CachedNeighborhood(int n, Stream<Tuple2io<Stream<IdxDouble>>> neighborhoods) {
 
         this.idxla = new IntArrayList[n];
         this.simla = new DoubleArrayList[n];
 
         neighborhoods.forEach(un -> {
-            int idx = un.idx;
+            int idx = un.v1;
             IntArrayList idxl = new IntArrayList();
             DoubleArrayList siml = new DoubleArrayList();
-            un.v.forEach(is -> {
+            un.v2.forEach(is -> {
                 idxl.add(is.idx);
                 siml.add(is.v);
             });

@@ -11,7 +11,6 @@ import org.ranksys.compression.codecs.CODEC;
 import static org.ranksys.compression.util.Delta.atled;
 import static org.ranksys.compression.util.Delta.delta;
 import static es.uam.eps.ir.ranksys.core.util.parsing.IntParser.dip;
-import es.uam.eps.ir.ranksys.fast.IdxObject;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
@@ -28,6 +27,8 @@ import java.util.stream.Stream;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import java.util.Arrays;
 import org.ranksys.core.util.iterators.ArrayDoubleIterator;
+import org.ranksys.core.util.tuples.Tuple2io;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * PreferenceData for binary data using compression.
@@ -63,7 +64,7 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
         this(ul(preferences), il(preferences), users, items, u_codec, i_codec);
     }
 
-    private static Stream<IdxObject<int[]>> ul(FastPreferenceData<?, ?> preferences) {
+    private static Stream<Tuple2io<int[]>> ul(FastPreferenceData<?, ?> preferences) {
         return preferences.getUidxWithPreferences().mapToObj(k -> {
             IdxPref[] pairs = preferences.getUidxPreferences(k)
                     .sorted((p1, p2) -> Integer.compare(p1.idx, p2.idx))
@@ -72,11 +73,11 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
             for (int i = 0; i < pairs.length; i++) {
                 idxs[i] = pairs[i].idx;
             }
-            return new IdxObject<>(k, idxs);
+            return tuple(k, idxs);
         });
     }
 
-    private static Stream<IdxObject<int[]>> il(FastPreferenceData<?, ?> preferences) {
+    private static Stream<Tuple2io<int[]>> il(FastPreferenceData<?, ?> preferences) {
         return ul(new TransposedPreferenceData<>(preferences));
     }
 
@@ -90,17 +91,17 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
      * @param u_codec user preferences list CODEC
      * @param i_codec item preferences list CODEC
      */
-    public BinaryCODECPreferenceData(Stream<IdxObject<int[]>> ul, Stream<IdxObject<int[]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
+    public BinaryCODECPreferenceData(Stream<Tuple2io<int[]>> ul, Stream<Tuple2io<int[]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
         super(users, items, u_codec, i_codec);
 
         index(ul, u_idxs, u_len, u_codec);
         index(il, i_idxs, i_len, i_codec);
     }
 
-    private static <Cx> void index(Stream<IdxObject<int[]>> lists, Cx[] idxs, int[] lens, CODEC<Cx> x_codec) {
+    private static <Cx> void index(Stream<Tuple2io<int[]>> lists, Cx[] idxs, int[] lens, CODEC<Cx> x_codec) {
         lists.parallel().forEach(list -> {
-            int k = list.idx;
-            int[] _idxs = list.v;
+            int k = list.v1;
+            int[] _idxs = list.v2;
 
             lens[k] = _idxs.length;
             if (!x_codec.isIntegrated()) {
@@ -183,7 +184,7 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
      * @return compressed preference data
      */
     public static <U, I, Cu, Ci> BinaryCODECPreferenceData<U, I, Cu, Ci> load(InputStream uo, InputStream io, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
-        Function<InputStream, Stream<IdxObject<int[]>>> reader = is -> {
+        Function<InputStream, Stream<Tuple2io<int[]>>> reader = is -> {
             return new BufferedReader(new InputStreamReader(is)).lines().map(line -> {
                 String[] tokens = line.split("\t");
                 int len = tokens.length - 1;
@@ -192,12 +193,12 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
                 for (int i = 0; i < len; i++) {
                     idxs[i] = dip.parse(tokens[i + 1]);
                 }
-                return new IdxObject<>(k, idxs);
+                return tuple(k, idxs);
             });
         };
 
-        Stream<IdxObject<int[]>> ul = reader.apply(uo);
-        Stream<IdxObject<int[]>> il = reader.apply(io);
+        Stream<Tuple2io<int[]>> ul = reader.apply(uo);
+        Stream<Tuple2io<int[]>> il = reader.apply(io);
 
         return new BinaryCODECPreferenceData<>(ul, il, users, items, u_codec, i_codec);
     }
