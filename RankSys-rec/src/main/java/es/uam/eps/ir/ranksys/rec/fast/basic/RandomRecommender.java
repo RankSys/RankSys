@@ -9,7 +9,6 @@
 package es.uam.eps.ir.ranksys.rec.fast.basic;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
@@ -17,7 +16,6 @@ import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import static java.lang.Double.NaN;
 import java.util.ArrayList;
 import java.util.Collections;
-import static java.util.Collections.shuffle;
 import java.util.List;
 import java.util.Random;
 import java.util.function.IntPredicate;
@@ -25,6 +23,8 @@ import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2od;
+import static java.util.Collections.shuffle;
+import org.ranksys.core.util.tuples.Tuple2id;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
@@ -38,7 +38,7 @@ import static org.ranksys.core.util.tuples.Tuples.tuple;
 public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     private final Random random;
-    private final List<IdxDouble> randomList;
+    private final List<Tuple2id> randomList;
 
     /**
      * Constructor.
@@ -50,7 +50,7 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
         super(uIndex, iIndex);
         random = new Random();
         randomList = iIndex.getAllIidx()
-                .mapToObj(iidx -> new IdxDouble(iidx, Double.NaN))
+                .mapToObj(iidx -> tuple(iidx, Double.NaN))
                 .collect(toList());
 
         shuffle(randomList);
@@ -62,12 +62,12 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
             maxLength = randomList.size();
         }
 
-        List<IdxDouble> recommended = new ArrayList<>();
+        List<Tuple2id> recommended = new ArrayList<>();
         int s = random.nextInt(randomList.size());
         int j = s;
         for (int i = 0; i < maxLength; i++) {
-            IdxDouble iv = randomList.get(j);
-            while (!filter.test(iv.idx)) {
+            Tuple2id iv = randomList.get(j);
+            while (!filter.test(iv.v1)) {
                 j = (j + 1) % randomList.size();
                 iv = randomList.get(j);
             }
@@ -85,13 +85,13 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
     public Recommendation<U, I> getRecommendation(U u, Stream<I> candidates) {
         List<Tuple2od<I>> items = candidates.map(i -> tuple(i, NaN)).collect(toList());
         Collections.shuffle(items, random);
-        
+
         return new Recommendation<>(u, items);
     }
 
     @Override
     public FastRecommendation getRecommendation(int uidx, IntStream candidates) {
-        List<IdxDouble> items = candidates.mapToObj(iidx -> new IdxDouble(iidx, NaN)).collect(toList());
+        List<Tuple2id> items = candidates.mapToObj(iidx -> tuple(iidx, NaN)).collect(toList());
         Collections.shuffle(items, random);
 
         return new FastRecommendation(uidx, items);

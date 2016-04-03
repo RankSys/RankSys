@@ -108,12 +108,12 @@ public abstract class AbstractFastPreferenceData<U, I> implements FastPreference
 
     @Override
     public Stream<? extends IdPref<I>> getUserPreferences(final U u) {
-        return getUidxPreferences(user2uidx(u)).map(iv -> new IdPref<>(iidx2item(iv.idx), iv.v));
+        return getUidxPreferences(user2uidx(u)).map(iv -> new IdPref<>(iidx2item(iv.v1), iv.v2));
     }
 
     @Override
     public Stream<? extends IdPref<U>> getItemPreferences(final I i) {
-        return getIidxPreferences(item2iidx(i)).map(uv -> new IdPref<>(uidx2user(uv.idx), uv.v));
+        return getIidxPreferences(item2iidx(i)).map(uv -> new IdPref<>(uidx2user(uv.v1), uv.v2));
     }
 
     @Override

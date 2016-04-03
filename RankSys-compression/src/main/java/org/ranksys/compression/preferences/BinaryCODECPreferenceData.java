@@ -29,6 +29,9 @@ import java.util.Arrays;
 import org.ranksys.core.util.iterators.ArrayDoubleIterator;
 import org.ranksys.core.util.tuples.Tuple2io;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * PreferenceData for binary data using compression.
@@ -67,11 +70,11 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
     private static Stream<Tuple2io<int[]>> ul(FastPreferenceData<?, ?> preferences) {
         return preferences.getUidxWithPreferences().mapToObj(k -> {
             IdxPref[] pairs = preferences.getUidxPreferences(k)
-                    .sorted((p1, p2) -> Integer.compare(p1.idx, p2.idx))
+                    .sorted((p1, p2) -> Integer.compare(p1.v1, p2.v1))
                     .toArray(n -> new IdxPref[n]);
             int[] idxs = new int[pairs.length];
             for (int i = 0; i < pairs.length; i++) {
-                idxs[i] = pairs[i].idx;
+                idxs[i] = pairs[i].v1;
             }
             return tuple(k, idxs);
         });
@@ -131,7 +134,7 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
         if (!x_codec.isIntegrated()) {
             atled(idxs, 0, len);
         }
-        return range(0, len).mapToObj(i -> pref.refill(idxs[i]));
+        return range(0, len).mapToObj(i -> new IdxPref(idxs[i], 1.0));
     }
 
     @Override

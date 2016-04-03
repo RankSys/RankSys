@@ -10,7 +10,6 @@ package es.uam.eps.ir.ranksys.mf.rec;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
@@ -21,9 +20,10 @@ import java.util.ArrayList;
 import static java.util.Comparator.comparingDouble;
 import java.util.List;
 import java.util.function.IntPredicate;
-import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
+import org.ranksys.core.util.tuples.Tuple2id;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Matrix factorization recommender. Scores are calculated as the inner product of user and item vectors.
@@ -72,9 +72,9 @@ public class MFRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
         topN.sort();
 
-        List<IdxDouble> items = topN.reverseStream()
-                .map(e -> new IdxDouble(e))
-                .collect(Collectors.toList());
+        List<Tuple2id> items = topN.reverseStream()
+                .map(e -> tuple(e.getIntKey(), e.getDoubleValue()))
+                .collect(toList());
 
         return new FastRecommendation(uidx, items);
     }
@@ -90,9 +90,9 @@ public class MFRecommender<U, I> extends AbstractFastRecommender<U, I> {
         
         DenseDoubleMatrix2D q = factorization.getItemMatrix();
         
-        List<IdxDouble> items = candidates
-                .mapToObj(iidx -> new IdxDouble(iidx, q.viewRow(iidx).zDotProduct(pu)))
-                .sorted(comparingDouble((IdxDouble r) -> r.v).reversed())
+        List<Tuple2id> items = candidates
+                .mapToObj(iidx -> tuple(iidx, q.viewRow(iidx).zDotProduct(pu)))
+                .sorted(comparingDouble(Tuple2id::v2).reversed())
                 .collect(toList());
         
         return new FastRecommendation(uidx, items);

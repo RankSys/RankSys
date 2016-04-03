@@ -189,7 +189,7 @@ public class TransposedPreferenceData<I, U> implements FastPreferenceData<I, U>,
     public Optional<IdxPref> getPreference(int uidx, int iidx) {
         Optional<? extends IdxPref> pref = ((FastPointWisePreferenceData<U, I>) d).getPreference(iidx, uidx);
         if (pref.isPresent()) {
-            return Optional.of(new IdxPref(iidx, pref.get().v));
+            return Optional.of(new IdxPref(iidx, pref.get().v2));
         } else {
             return Optional.empty();
         }

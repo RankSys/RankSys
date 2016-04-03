@@ -76,13 +76,13 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
     private static Stream<Tuple2io<int[][]>> ul(FastPreferenceData<?, ?> preferences) {
         return preferences.getUidxWithPreferences().mapToObj(k -> {
             IdxPref[] pairs = preferences.getUidxPreferences(k)
-                    .sorted((p1, p2) -> Integer.compare(p1.idx, p2.idx))
+                    .sorted((p1, p2) -> Integer.compare(p1.v1, p2.v1))
                     .toArray(n -> new IdxPref[n]);
             int[] idxs = new int[pairs.length];
             int[] vs = new int[pairs.length];
             for (int i = 0; i < pairs.length; i++) {
-                idxs[i] = pairs[i].idx;
-                vs[i] = (int) pairs[i].v;
+                idxs[i] = pairs[i].v1;
+                vs[i] = (int) pairs[i].v2;
             }
             return tuple(k, new int[][]{idxs, vs});
         });
@@ -144,7 +144,6 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
         if (len == 0) {
             return empty();
         }
-        IdxPref pref = new IdxPref();
         int[] idxs = new int[len];
         int[] vs = new int[len];
         x_codec.dec(cidxs, idxs, 0, len);
@@ -152,7 +151,7 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
         if (!x_codec.isIntegrated()) {
             atled(idxs, 0, len);
         }
-        return range(0, len).mapToObj(i -> pref.refill(idxs[i], vs[i]));
+        return range(0, len).mapToObj(i -> new IdxPref(idxs[i], vs[i]));
     }
 
     @Override

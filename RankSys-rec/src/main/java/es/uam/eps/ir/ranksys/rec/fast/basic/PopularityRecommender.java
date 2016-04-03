@@ -8,14 +8,15 @@
  */
 package es.uam.eps.ir.ranksys.rec.fast.basic;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
-import static java.util.Collections.sort;
 import java.util.List;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
+import static java.util.Collections.sort;
+import org.ranksys.core.util.tuples.Tuple2id;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Popularity-based recommender. Non-personalized recommender that returns the
@@ -28,7 +29,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
-    private final List<IdxDouble> popList;
+    private final List<Tuple2id> popList;
 
     /**
      * Constructor.
@@ -39,9 +40,9 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
         super(data, data);
 
         popList = data.getIidxWithPreferences()
-                .mapToObj(iidx -> new IdxDouble(iidx, (double) data.numUsers(iidx)))
+                .mapToObj(iidx -> tuple(iidx, (double) data.numUsers(iidx)))
                 .collect(toList());
-        sort(popList, (p1, p2) -> Double.compare(p2.v, p1.v));
+        sort(popList, (p1, p2) -> Double.compare(p2.v2, p1.v2));
     }
 
     @Override
@@ -50,8 +51,8 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
             maxLength = popList.size();
         }
         
-        List<IdxDouble> items = popList.stream()
-                .filter(is -> filter.test(is.idx))
+        List<Tuple2id> items = popList.stream()
+                .filter(is -> filter.test(is.v1))
                 .limit(maxLength)
                 .collect(toList());
         

@@ -74,9 +74,9 @@ public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
         Int2DoubleOpenHashMap scoresMap = new Int2DoubleOpenHashMap();
         scoresMap.defaultReturnValue(0.0);
         data.getUidxPreferences(uidx).forEach(jp -> {
-            neighborhood.getNeighbors(jp.idx).forEach(is -> {
-                double w = pow(is.v, q);
-                scoresMap.addTo(is.idx, w * jp.v);
+            neighborhood.getNeighbors(jp.v1).forEach(is -> {
+                double w = pow(is.v2, q);
+                scoresMap.addTo(is.v1, w * jp.v2);
             });
         });
 

@@ -10,7 +10,6 @@ package es.uam.eps.ir.ranksys.novdiv.reranking;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
@@ -19,6 +18,8 @@ import java.util.List;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
+import org.ranksys.core.util.tuples.Tuple2id;
 import org.ranksys.core.util.tuples.Tuple2od;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
@@ -60,15 +61,15 @@ public class RerankingRecommender<U, I> extends AbstractFastRecommender<U, I> {
         
         U user = uidx2user(uidx);
         List<Tuple2od<I>> items = frec.getIidxs().stream()
-                .map(iv -> tuple(iidx2item(iv.idx), iv.v))
-                .collect(Collectors.toList());
+                .map(iv -> tuple(iidx2item(iv.v1), iv.v2))
+                .collect(toList());
         Recommendation<U, I> rec = new Recommendation<>(user, items);
         
         rec = reranker.rerankRecommendation(rec, maxLength);
         
-        List<IdxDouble> iidxs = rec.getItems().stream()
-                .map(iv -> new IdxDouble(item2iidx(iv.v1), iv.v2))
-                .collect(Collectors.toList());
+        List<Tuple2id> iidxs = rec.getItems().stream()
+                .map(iv -> tuple(item2iidx(iv.v1), iv.v2))
+                .collect(toList());
         frec = new FastRecommendation(uidx, iidxs);
         
         return frec;

@@ -90,7 +90,7 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
         FastRecommendation rec = getRecommendation(user2uidx(u), maxLength);
 
         return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream()
-                .map(iv -> tuple(iidx2item(iv.idx), iv.v))
+                .map(iv -> tuple(iidx2item(iv.v1), iv.v2))
                 .collect(toList()));
     }
 
@@ -104,7 +104,7 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
         FastRecommendation rec = getRecommendation(user2uidx(u), maxLength, iidx -> filter.test(iidx2item(iidx)));
 
         return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream()
-                .map(iv -> tuple(iidx2item(iv.idx), iv.v))
+                .map(iv -> tuple(iidx2item(iv.v1), iv.v2))
                 .collect(toList()));
     }
 
@@ -116,7 +116,7 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
         FastRecommendation rec = getRecommendation(user2uidx(u), candidates.mapToInt(this::item2iidx));
 
         return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream()
-                .map(iv -> tuple(iidx2item(iv.idx), iv.v))
+                .map(iv -> tuple(iidx2item(iv.v1), iv.v2))
                 .collect(toList()));
     }
 

@@ -64,7 +64,7 @@ public class FastFilterRecommenderRunner<U, I> extends AbstractRecommenderRunner
             FastRecommendation rec = ((FastRecommender<U, I>) recommender).getRecommendation(userIndex.user2uidx(user), maxLength, userFilter.apply(user));
             
             return new Recommendation<>(userIndex.uidx2user(rec.getUidx()), rec.getIidxs().stream()
-                    .map(iv -> tuple(itemIndex.iidx2item(iv.idx), iv.v))
+                    .map(iv -> tuple(itemIndex.iidx2item(iv.v1), iv.v2))
                     .collect(toList()));
         }, out);
     }

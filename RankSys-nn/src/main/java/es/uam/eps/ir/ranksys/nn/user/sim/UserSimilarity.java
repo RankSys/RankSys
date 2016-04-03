@@ -8,12 +8,12 @@
  */
 package es.uam.eps.ir.ranksys.nn.user.sim;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.function.IntToDoubleFunction;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2id;
 import org.ranksys.core.util.tuples.Tuple2od;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
@@ -91,7 +91,7 @@ public abstract class UserSimilarity<U> implements Similarity, FastUserIndex<U> 
      */
     public Stream<Tuple2od<U>> similarUsers(U u) {
         return similarUsers(user2uidx(u))
-                .map(us -> tuple(uidx2user(us.idx), us.v));
+                .map(us -> tuple(uidx2user(us.v1), us.v2));
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class UserSimilarity<U> implements Similarity, FastUserIndex<U> 
      * @param uidx user
      * @return a stream of user-similarity pairs
      */
-    public Stream<IdxDouble> similarUsers(int uidx) {
+    public Stream<Tuple2id> similarUsers(int uidx) {
         return sim.similarElems(uidx);
     }
 
@@ -115,7 +115,7 @@ public abstract class UserSimilarity<U> implements Similarity, FastUserIndex<U> 
     }
 
     @Override
-    public Stream<IdxDouble> similarElems(int idx) {
+    public Stream<Tuple2id> similarElems(int idx) {
         return sim.similarElems(idx);
     }
 

@@ -9,6 +9,7 @@
 package es.uam.eps.ir.ranksys.fast;
 
 import java.util.List;
+import org.ranksys.core.util.tuples.Tuple2id;
 
 /**
  * Fast recommendation, where users and items are identified by index.
@@ -18,7 +19,7 @@ import java.util.List;
 public class FastRecommendation {
 
     private final int uidx;
-    private final List<IdxDouble> iidxs;
+    private final List<Tuple2id> iidxs;
 
     /**
      * Constructor.
@@ -26,7 +27,7 @@ public class FastRecommendation {
      * @param uidx index of the user
      * @param iidxs list of item-score pairs identified by index.
      */
-    public FastRecommendation(int uidx, List<IdxDouble> iidxs) {
+    public FastRecommendation(int uidx, List<Tuple2id> iidxs) {
         this.uidx = uidx;
         this.iidxs = iidxs;
     }
@@ -45,7 +46,7 @@ public class FastRecommendation {
      *
      * @return the list of item-score pairs
      */
-    public List<IdxDouble> getIidxs() {
+    public List<Tuple2id> getIidxs() {
         return iidxs;
     }
 }

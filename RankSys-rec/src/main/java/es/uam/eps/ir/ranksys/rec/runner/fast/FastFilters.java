@@ -46,7 +46,7 @@ public class FastFilters {
     public static <U, I> Function<U, IntPredicate> notInTrain(FastPreferenceData<U, I> trainData) {
         return user -> {
             IntSet set = new IntOpenHashSet();
-            trainData.getUidxPreferences(trainData.user2uidx(user)).mapToInt(iv -> iv.idx).forEach(set::add);
+            trainData.getUidxPreferences(trainData.user2uidx(user)).mapToInt(iv -> iv.v1).forEach(set::add);
 
             return iidx -> !set.contains(iidx);
         };

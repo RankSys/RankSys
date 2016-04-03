@@ -8,8 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.nn.neighborhood;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2id;
 
 /**
  * Generic fast neighborhood. Implementing classes of this interface are under the
@@ -25,5 +25,5 @@ public interface Neighborhood {
      * @param idx user/index whose neighborhood is calculated
      * @return stream of user/item-similarity pairs.
      */
-    public Stream<IdxDouble> getNeighbors(int idx);
+    public Stream<Tuple2id> getNeighbors(int idx);
 }

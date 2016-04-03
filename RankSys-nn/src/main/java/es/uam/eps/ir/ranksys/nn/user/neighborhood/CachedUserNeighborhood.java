@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.nn.user.neighborhood;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.nn.neighborhood.CachedNeighborhood;
 import java.util.stream.Stream;
@@ -41,6 +40,6 @@ public class CachedUserNeighborhood<U> extends UserNeighborhood<U> {
      * @param neighborhoods stream of already calculated neighborhoods
      */
     public CachedUserNeighborhood(FastUserIndex<U> uIndex, Stream<Tuple2<U, Stream<Tuple2od<U>>>> neighborhoods) {
-        super(uIndex, new CachedNeighborhood(uIndex.numUsers(), neighborhoods.map(un -> tuple(uIndex.user2uidx(un.v1), un.v2.map(vs -> new IdxDouble(uIndex.user2uidx(vs.v1), vs.v2))))));
+        super(uIndex, new CachedNeighborhood(uIndex.numUsers(), neighborhoods.map(un -> tuple(uIndex.user2uidx(un.v1), un.v2.map(vs -> tuple(uIndex.user2uidx(vs.v1), vs.v2))))));
     }
 }

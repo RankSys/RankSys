@@ -9,14 +9,15 @@ package org.ranksys.lda;
 
 import cc.mallet.topics.ParallelTopicModel;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import java.util.List;
 import java.util.function.IntPredicate;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
+import org.ranksys.core.util.tuples.Tuple2id;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * LDA recommender.  See ParallelTopicModel in Mallet (http://mallet.cs.umass.edu/) for more details.
@@ -57,9 +58,9 @@ public class LDARecommender<U, I> extends AbstractFastRecommender<U, I> {
 
         topN.sort();
 
-        List<IdxDouble> items = topN.reverseStream()
-                .map(e -> new IdxDouble(e))
-                .collect(Collectors.toList());
+        List<Tuple2id> items = topN.reverseStream()
+                .map(e -> tuple(e.getIntKey(), e.getDoubleValue()))
+                .collect(toList());
 
         return new FastRecommendation(uidx, items);
     }

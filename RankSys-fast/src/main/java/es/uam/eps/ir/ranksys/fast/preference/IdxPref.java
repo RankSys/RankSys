@@ -8,9 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
-import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import java.io.Serializable;
+import org.ranksys.core.util.tuples.Tuple2id;
 
 /**
  * A user or item preference by indexes.
@@ -18,13 +17,7 @@ import java.io.Serializable;
  * @author Saúl Vargas (saul.vargas@uam.es)
  *
  */
-public class IdxPref extends IdxDouble implements Serializable {
-
-    /**
-     * Empty constructor.
-     */
-    public IdxPref() {
-    }
+public class IdxPref extends Tuple2id implements Serializable {
 
     /**
      * Constructor with both values.
@@ -34,34 +27,5 @@ public class IdxPref extends IdxDouble implements Serializable {
      */
     public IdxPref(int idx, double v) {
         super(idx, v);
-    }
-
-    /**
-     * Constructor from a Int2Double entry.
-     *
-     * @param e int-double entry
-     */
-    public IdxPref(Int2DoubleMap.Entry e) {
-        super(e);
-    }
-
-    @Override
-    public IdxPref refill(int idx, double v) {
-        this.idx = idx;
-        this.v = v;
-        return this;
-    }
-
-    /**
-     * Re-fills the IdxPref object (only the idx) and returns itself.
-     * 
-     * This is meant for binary data.
-     *
-     * @param idx index
-     * @return this
-     */
-    public IdxPref refill(int idx) {
-        this.idx = idx;
-        return this;
     }
 }

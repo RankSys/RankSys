@@ -71,8 +71,8 @@ public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
             DoubleMatrix1D su = q.zMult(pu, null);
             
             double err1 = data.getUidxPreferences(uidx).mapToDouble(iv -> {
-                double rui = iv.v;
-                double sui = su.getQuick(iv.idx);
+                double rui = iv.v2;
+                double sui = su.getQuick(iv.v1);
                 double cui = confidence.applyAsDouble(rui);
                 return cui * (rui - sui) * (rui - sui) - confidence.applyAsDouble(0) * sui * sui;
             }).sum();
@@ -118,8 +118,8 @@ public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
             b.assign(0.0);
 
             data.getUidxPreferences(uidx).forEach(iv -> {
-                int iidx = iv.idx;
-                double rui = iv.v;
+                int iidx = iv.v1;
+                double rui = iv.v2;
                 double cui = confidence.applyAsDouble(rui);
 
                 DoubleMatrix1D qi = q.viewRow(iidx);

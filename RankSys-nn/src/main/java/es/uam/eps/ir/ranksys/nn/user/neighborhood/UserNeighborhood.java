@@ -8,10 +8,10 @@
  */
 package es.uam.eps.ir.ranksys.nn.user.neighborhood;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.nn.neighborhood.Neighborhood;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2id;
 import org.ranksys.core.util.tuples.Tuple2od;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
@@ -67,7 +67,7 @@ public abstract class UserNeighborhood<U> implements Neighborhood, FastUserIndex
      * @return stream of user/item-similarity pairs.
      */
     @Override
-    public Stream<IdxDouble> getNeighbors(int idx) {
+    public Stream<Tuple2id> getNeighbors(int idx) {
         return neighborhood.getNeighbors(idx);
     }
 
@@ -79,6 +79,6 @@ public abstract class UserNeighborhood<U> implements Neighborhood, FastUserIndex
      */
     public Stream<Tuple2od<U>> getNeighbors(U u) {
         return getNeighbors(user2uidx(u))
-                .map(uv -> tuple(uidx2user(uv.idx), uv.v));
+                .map(uv -> tuple(uidx2user(uv.v1), uv.v2));
     }
 }

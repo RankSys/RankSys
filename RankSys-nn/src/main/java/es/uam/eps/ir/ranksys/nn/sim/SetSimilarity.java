@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.nn.sim;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
@@ -18,6 +17,8 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.IntToDoubleFunction;
 import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2id;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Set similarity. Based on the intersection of item/user profiles as sets.
@@ -50,11 +51,11 @@ public abstract class SetSimilarity implements Similarity {
     @Override
     public IntToDoubleFunction similarity(int idx1) {
         IntSet set = new IntOpenHashSet();
-        data.getUidxPreferences(idx1).map(iv -> iv.idx).forEach(set::add);
+        data.getUidxPreferences(idx1).map(iv -> iv.v1).forEach(set::add);
 
         return idx2 -> {
             int coo = (int) data.getUidxPreferences(idx2)
-                    .map(iv -> iv.idx)
+                    .map(iv -> iv.v1)
                     .filter(set::contains)
                     .count();
 
@@ -67,8 +68,8 @@ public abstract class SetSimilarity implements Similarity {
         intersectionMap.defaultReturnValue(0);
 
         data.getUidxPreferences(idx1).forEach(ip -> {
-            data.getIidxPreferences(ip.idx).forEach(up -> {
-                intersectionMap.addTo(up.idx, 1);
+            data.getIidxPreferences(ip.v1).forEach(up -> {
+                intersectionMap.addTo(up.v1, 1);
             });
         });
 
@@ -81,8 +82,8 @@ public abstract class SetSimilarity implements Similarity {
         int[] intersectionMap = new int[data.numUsers()];
 
         data.getUidxPreferences(idx1).forEach(ip -> {
-            data.getIidxPreferences(ip.idx).forEach(up -> {
-                intersectionMap[up.idx]++;
+            data.getIidxPreferences(ip.v1).forEach(up -> {
+                intersectionMap[up.v1]++;
             });
         });
 
@@ -125,7 +126,7 @@ public abstract class SetSimilarity implements Similarity {
     }
 
     @Override
-    public Stream<IdxDouble> similarElems(int idx1) {
+    public Stream<Tuple2id> similarElems(int idx1) {
         int na = data.numItems(idx1);
 
         if (data.useIteratorsPreferentially()) {
@@ -133,14 +134,14 @@ public abstract class SetSimilarity implements Similarity {
                 int[] intersectionMap = getFasterIntersectionArray(idx1);
                 return range(0, intersectionMap.length)
                         .filter(i -> intersectionMap[i] != 0)
-                        .mapToObj(i -> new IdxDouble(i, sim(intersectionMap[i], na, data.numItems(i))));
+                        .mapToObj(i -> tuple(i, sim(intersectionMap[i], na, data.numItems(i))));
             } else {
                 return getFasterIntersectionMap(idx1).int2IntEntrySet().stream()
                         .map(e -> {
                             int idx2 = e.getIntKey();
                             int coo = e.getIntValue();
                             int nb = data.numItems(idx2);
-                            return new IdxDouble(idx2, sim(coo, na, nb));
+                            return tuple(idx2, sim(coo, na, nb));
                         });
             }
         } else {
@@ -148,14 +149,14 @@ public abstract class SetSimilarity implements Similarity {
                 int[] intersectionMap = getIntersectionArray(idx1);
                 return range(0, intersectionMap.length)
                         .filter(i -> intersectionMap[i] != 0)
-                        .mapToObj(i -> new IdxDouble(i, sim(intersectionMap[i], na, data.numItems(i))));
+                        .mapToObj(i -> tuple(i, sim(intersectionMap[i], na, data.numItems(i))));
             } else {
                 return getIntersectionMap(idx1).int2IntEntrySet().stream()
                         .map(e -> {
                             int idx2 = e.getIntKey();
                             int coo = e.getIntValue();
                             int nb = data.numItems(idx2);
-                            return new IdxDouble(idx2, sim(coo, na, nb));
+                            return tuple(idx2, sim(coo, na, nb));
                         });
             }
         }

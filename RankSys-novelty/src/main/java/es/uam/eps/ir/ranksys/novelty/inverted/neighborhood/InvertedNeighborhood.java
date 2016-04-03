@@ -8,13 +8,13 @@
  */
 package es.uam.eps.ir.ranksys.novelty.inverted.neighborhood;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.nn.neighborhood.Neighborhood;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2id;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
@@ -52,9 +52,9 @@ public class InvertedNeighborhood implements Neighborhood {
         }).forEachOrdered(in -> {
             int idx = in.v1;
             in.v2.forEach(is -> {
-                if (this.idxla[is.idx] != null) {
-                    this.idxla[is.idx].add(idx);
-                    this.simla[is.idx].add(is.v);
+                if (this.idxla[is.v1] != null) {
+                    this.idxla[is.v1].add(idx);
+                    this.simla[is.v1].add(is.v2);
                 }
             });
         });
@@ -67,10 +67,10 @@ public class InvertedNeighborhood implements Neighborhood {
      * @return stream of user/item-similarity pairs.
      */
     @Override
-    public Stream<IdxDouble> getNeighbors(int idx) {
+    public Stream<Tuple2id> getNeighbors(int idx) {
         IntArrayList idxl = idxla[idx];
         DoubleArrayList siml = simla[idx];
-        return IntStream.range(0, idxl.size()).mapToObj(i -> new IdxDouble(idxl.getInt(i), siml.getDouble(i)));
+        return IntStream.range(0, idxl.size()).mapToObj(i -> tuple(idxl.getInt(i), siml.getDouble(i)));
     }
 
 }
