@@ -30,4 +30,8 @@ public class IdPref<I> extends Tuple2od<I> implements Serializable {
         super(id, v);
     }
 
+    public IdPref(Tuple2od<I> tuple) {
+        super(tuple);
+    }
+
 }
