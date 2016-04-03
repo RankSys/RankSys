@@ -91,7 +91,7 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         @Override
         protected double nov(IdDouble<I> itemValue) {
             Set<F> itemFeatures = featureData.getItemFeatures(itemValue.id)
-                    .map(fv -> fv.id)
+                    .map(fv -> fv.v1)
                     .collect(Collectors.toCollection(() -> new HashSet<>()));
 
             double iNonRed = featureCount.keySet().stream()
@@ -113,7 +113,7 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         @Override
         protected void update(IdDouble<I> bestItemValue) {
             featureData.getItemFeatures(bestItemValue.id)
-                    .map(fv -> fv.id)
+                    .map(fv -> fv.v1)
                     .forEach(f -> {
                         int c = featureCount.addTo(f, 1) + 1;
                         patienceNow.put(f, patienceLater.getDouble(f));

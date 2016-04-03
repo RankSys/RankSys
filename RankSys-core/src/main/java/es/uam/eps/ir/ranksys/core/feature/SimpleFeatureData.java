@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.core.feature;
 
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -20,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Simple map-based feature data.
@@ -33,8 +34,8 @@ import java.util.stream.Stream;
  */
 public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
 
-    private final Map<I, List<IdObject<F, V>>> itemMap;
-    private final Map<F, List<IdObject<I, V>>> featMap;
+    private final Map<I, List<Tuple2<F, V>>> itemMap;
+    private final Map<F, List<Tuple2<I, V>>> featMap;
 
     /**
      * Constructor
@@ -42,7 +43,7 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
      * @param itemMap item to features map
      * @param featMap feature to items map
      */
-    protected SimpleFeatureData(Map<I, List<IdObject<F, V>>> itemMap, Map<F, List<IdObject<I, V>>> featMap) {
+    protected SimpleFeatureData(Map<I, List<Tuple2<F, V>>> itemMap, Map<F, List<Tuple2<I, V>>> featMap) {
         this.itemMap = itemMap;
         this.featMap = featMap;
     }
@@ -58,12 +59,12 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
     }
 
     @Override
-    public Stream<IdObject<I, V>> getFeatureItems(F f) {
+    public Stream<Tuple2<I, V>> getFeatureItems(F f) {
         return featMap.getOrDefault(f, new ArrayList<>()).stream();
     }
 
     @Override
-    public Stream<IdObject<F, V>> getItemFeatures(I i) {
+    public Stream<Tuple2<F, V>> getItemFeatures(I i) {
         return itemMap.getOrDefault(i, new ArrayList<>()).stream();
     }
 
@@ -154,8 +155,8 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
      * @throws IOException when IO error
      */
     public static <I, F, V> SimpleFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
-        Map<I, List<IdObject<F, V>>> itemMap = new HashMap<>();
-        Map<F, List<IdObject<I, V>>> featMap = new HashMap<>();
+        Map<I, List<Tuple2<F, V>>> itemMap = new HashMap<>();
+        Map<F, List<Tuple2<I, V>>> featMap = new HashMap<>();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             reader.lines().forEach(l -> {
@@ -169,19 +170,19 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
                     value = vParser.parse(tokens[2]);
                 }
 
-                List<IdObject<F, V>> iList = itemMap.get(item);
+                List<Tuple2<F, V>> iList = itemMap.get(item);
                 if (iList == null) {
                     iList = new ArrayList<>();
                     itemMap.put(item, iList);
                 }
-                iList.add(new IdObject<>(feat, value));
+                iList.add(Tuple.tuple(feat, value));
 
-                List<IdObject<I, V>> fList = featMap.get(feat);
+                List<Tuple2<I, V>> fList = featMap.get(feat);
                 if (fList == null) {
                     fList = new ArrayList<>();
                     featMap.put(feat, fList);
                 }
-                fList.add(new IdObject<>(item, value));
+                fList.add(Tuple.tuple(item, value));
             });
         }
 

@@ -73,7 +73,7 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
             this.probNorm = new Object2DoubleOpenHashMap<>();
             recommendation.getItems().forEach(i -> {
                 featureData.getItemFeatures(i.id).sequential().forEach(fv -> {
-                    probNorm.addTo(fv.id, i.v);
+                    probNorm.addTo(fv.v1, i.v);
                 });
             });
             this.lcf = getLcf();
@@ -90,7 +90,7 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
         @Override
         protected double value(IdDouble<I> iv) {
             return featureData.getItemFeatures(iv.id)
-                    .map(fv -> fv.id)
+                    .map(fv -> fv.v1)
                     .mapToDouble(f -> (f.equals(lcf) ? lambda : (1 - lambda)) * quotient(f) * iv.v / probNorm.getDouble(f))
                     .sum();
         }
@@ -98,12 +98,12 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
         @Override
         protected void update(IdDouble<I> biv) {
             double norm = featureData.getItemFeatures(biv.id)
-                    .map(fv -> fv.id)
+                    .map(fv -> fv.v1)
                     .mapToDouble(f -> biv.v / probNorm.getDouble(f))
                     .sum();
 
             featureData.getItemFeatures(biv.id).sequential()
-                    .map(fv -> fv.id)
+                    .map(fv -> fv.v1)
                     .forEach(f -> {
                         double v = biv.v / (probNorm.getDouble(f) * norm);
                         featureCount.addTo(f, v);

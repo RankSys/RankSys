@@ -83,7 +83,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
         for (IdDouble<I> pair : recommendation.getItems()) {
             if (urm.isRelevant(pair.id)) {
                 double gain = featureData.getItemFeatures(pair.id).sequential()
-                        .map(fv -> fv.id)
+                        .map(fv -> fv.v1)
                         .mapToDouble(f -> {
                             int r = redundancy.addTo(f, 1);
                             return Math.pow(1 - alpha, r);
@@ -116,7 +116,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
             double bg = Double.NEGATIVE_INFINITY;
             for (I i : candidates) {
                 double gain = featureData.getItemFeatures(i)
-                        .map(fv -> fv.id)
+                        .map(fv -> fv.v1)
                         .mapToDouble(f -> {
                             return Math.pow(1 - alpha, redundancy.getInt(f));
                         }).sum();
@@ -127,7 +127,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
             }
             candidates.remove(bi);
             featureData.getItemFeatures(bi).sequential()
-                    .map(fv -> fv.id)
+                    .map(fv -> fv.v1)
                     .forEach(f -> redundancy.addTo(f, 1));
             ideal += bg * disc.disc(rank);
             rank++;

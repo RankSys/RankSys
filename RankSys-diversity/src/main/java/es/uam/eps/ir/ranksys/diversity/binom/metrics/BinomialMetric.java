@@ -73,7 +73,7 @@ public abstract class BinomialMetric<U, I, F> extends AbstractRecommendationMetr
         for (IdDouble<I> iv : recommendation.getItems()) {
             if (userRelModel.isRelevant(iv.id)) {
                 featureData.getItemFeatures(iv.id).forEach(fv -> {
-                    count.addTo(fv.id, 1);
+                    count.addTo(fv.v1, 1);
                 });
                 nrel++;
             }

@@ -15,7 +15,8 @@ import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Subtopic recall metric.
@@ -68,7 +69,9 @@ public class SRecall<U, I, F> extends AbstractRecommendationMetric<U, I> {
         int rank = 0;
         for (IdDouble<I> iv : recommendation.getItems()) {
             if (userRelModel.isRelevant(iv.id)) {
-                subtopics.addAll(featureData.getItemFeatures(iv.id).map(fv -> fv.id).collect(Collectors.toList()));
+                subtopics.addAll(featureData.getItemFeatures(iv.id)
+                        .map(Tuple2::v1)
+                        .collect(toList()));
             }
 
             rank++;

@@ -7,7 +7,6 @@
  */
 package org.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import org.ranksys.core.preference.PreferenceSampler;
 import es.uam.eps.ir.ranksys.fast.IdxObject;
@@ -15,6 +14,8 @@ import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Fast preference sampler, for stochastic algorithms.
@@ -26,12 +27,12 @@ import java.util.stream.Stream;
 public interface FastPreferenceSampler<U, I> extends PreferenceSampler<U, I>, FastUserIndex<U>, FastItemIndex<I> {
 
     @Override
-    public default Stream<IdObject<U, ? extends IdPref<I>>> sample() {
+    public default Stream<Tuple2<U, ? extends IdPref<I>>> sample() {
         return fastSample().map(pref -> {
             U u = uidx2user(pref.idx);
             I i = iidx2item(pref.v.idx);
             double v = pref.v.v;
-            return new IdObject<U, IdPref<I>>(u, new IdPref<>(i, v));
+            return Tuple.tuple(u, new IdPref<>(i, v));
         });
     }
 
