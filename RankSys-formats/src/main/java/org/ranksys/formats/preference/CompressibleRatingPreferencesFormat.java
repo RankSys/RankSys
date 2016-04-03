@@ -58,7 +58,7 @@ public class CompressibleRatingPreferencesFormat {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
                 prefs.getUidxWithPreferences().forEach(Unchecked.intConsumer(uidx -> {
                     String a = prefs.getUidxPreferences(uidx)
-                            .sorted(comparingInt(IdxPref::v1))
+                            .sorted(comparingInt(p -> p.v1))
                             .map(p -> p.v1 + "\t" + (int) p.v2)
                             .collect(joining("\t"));
 
