@@ -13,7 +13,6 @@ import es.uam.eps.ir.ranksys.nn.neighborhood.Neighborhood;
 import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2id;
 import org.ranksys.core.util.tuples.Tuple2od;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * User neighborhood. Wraps a generic neighborhood and a fast user index.
@@ -79,6 +78,6 @@ public abstract class UserNeighborhood<U> implements Neighborhood, FastUserIndex
      */
     public Stream<Tuple2od<U>> getNeighbors(U u) {
         return getNeighbors(user2uidx(u))
-                .map(uv -> tuple(uidx2user(uv.v1), uv.v2));
+                .map(this::uidx2user);
     }
 }

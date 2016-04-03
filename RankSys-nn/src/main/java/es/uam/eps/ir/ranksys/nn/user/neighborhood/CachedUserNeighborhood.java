@@ -11,9 +11,9 @@ package es.uam.eps.ir.ranksys.nn.user.neighborhood;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.nn.neighborhood.CachedNeighborhood;
 import java.util.stream.Stream;
+import static org.jooq.lambda.tuple.Tuple.tuple;
 import org.jooq.lambda.tuple.Tuple2;
 import org.ranksys.core.util.tuples.Tuple2od;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Cached user similarity. See {@link CachedNeighborhood}.
@@ -40,6 +40,8 @@ public class CachedUserNeighborhood<U> extends UserNeighborhood<U> {
      * @param neighborhoods stream of already calculated neighborhoods
      */
     public CachedUserNeighborhood(FastUserIndex<U> uIndex, Stream<Tuple2<U, Stream<Tuple2od<U>>>> neighborhoods) {
-        super(uIndex, new CachedNeighborhood(uIndex.numUsers(), neighborhoods.map(un -> tuple(uIndex.user2uidx(un.v1), un.v2.map(vs -> tuple(uIndex.user2uidx(vs.v1), vs.v2))))));
+        super(uIndex, new CachedNeighborhood(uIndex.numUsers(), neighborhoods
+                .map(t -> tuple(t.v1, t.v2.map(uIndex::user2uidx)))
+                .map(uIndex::user2uidx)));
     }
 }

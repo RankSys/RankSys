@@ -91,7 +91,7 @@ public abstract class UserSimilarity<U> implements Similarity, FastUserIndex<U> 
      */
     public Stream<Tuple2od<U>> similarUsers(U u) {
         return similarUsers(user2uidx(u))
-                .map(us -> tuple(uidx2user(us.v1), us.v2));
+                .map(this::uidx2user);
     }
 
     /**

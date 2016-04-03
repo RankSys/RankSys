@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Fast filter runner. It creates recommendations by using the filter method in the
@@ -64,7 +63,7 @@ public class FastFilterRecommenderRunner<U, I> extends AbstractRecommenderRunner
             FastRecommendation rec = ((FastRecommender<U, I>) recommender).getRecommendation(userIndex.user2uidx(user), maxLength, userFilter.apply(user));
             
             return new Recommendation<>(userIndex.uidx2user(rec.getUidx()), rec.getIidxs().stream()
-                    .map(iv -> tuple(itemIndex.iidx2item(iv.v1), iv.v2))
+                    .map(itemIndex::iidx2item)
                     .collect(toList()));
         }, out);
     }
