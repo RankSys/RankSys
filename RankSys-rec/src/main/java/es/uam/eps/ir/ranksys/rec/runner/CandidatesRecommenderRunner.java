@@ -8,12 +8,11 @@
  */
 package es.uam.eps.ir.ranksys.rec.runner;
 
-import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
+import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.rec.Recommender;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -33,18 +32,17 @@ public class CandidatesRecommenderRunner<U, I> extends AbstractRecommenderRunner
      * Constructor.
      *
      * @param users target users for which recommendations are generated
-     * @param format output recommendation format
      * @param candidatesSupplier function that provide the candidate items for
      * each user
      */
-    public CandidatesRecommenderRunner(Set<U> users, RecommendationFormat<U, I> format, Function<U, List<I>> candidatesSupplier) {
-        super(users.stream(), format);
+    public CandidatesRecommenderRunner(Set<U> users, Function<U, List<I>> candidatesSupplier) {
+        super(users.stream());
         this.candidatesSupplier = candidatesSupplier;
     }
 
     @Override
-    public void run(Recommender<U, I> recommender, OutputStream out) throws IOException {
-        run(user -> recommender.getRecommendation(user, candidatesSupplier.apply(user).stream()), out);
+    public void run(Recommender<U, I> recommender, Consumer<Recommendation<U, I>> consumer) {
+        run(user -> recommender.getRecommendation(user, candidatesSupplier.apply(user).stream()), consumer);
     }
 
 }

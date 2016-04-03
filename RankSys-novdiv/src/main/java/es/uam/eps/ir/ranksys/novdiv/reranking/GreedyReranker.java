@@ -8,16 +8,16 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
-import static java.lang.Double.isNaN;
-import static java.lang.Math.min;
 import java.util.List;
 import java.util.stream.IntStream;
+import static java.lang.Double.isNaN;
+import static java.lang.Math.min;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Greedy re-ranking. Greedily selects items from an input recommendation
@@ -105,7 +105,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
          */
         public int[] rerankPermutation() {
 
-            List<IdDouble<I>> list = recommendation.getItems();
+            List<Tuple2od<I>> list = recommendation.getItems();
 
             IntList perm = new IntArrayList();
             IntLinkedOpenHashSet remainingI = new IntLinkedOpenHashSet();
@@ -137,7 +137,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
          * @return the next element of the permutation that maximizes the 
          * objective function.
          */
-        protected int selectItem(IntSortedSet remainingI, List<IdDouble<I>> list) {
+        protected int selectItem(IntSortedSet remainingI, List<Tuple2od<I>> list) {
             double[] max = new double[]{Double.NEGATIVE_INFINITY};
             int[] bestI = new int[]{remainingI.firstInt()};
             remainingI.forEach(i -> {
@@ -160,7 +160,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
          * @param itemValue item-score pair of the input recommendation.
          * @return value of the function with the given item-score pair.
          */
-        protected abstract double value(IdDouble<I> itemValue);
+        protected abstract double value(Tuple2od<I> itemValue);
 
         /**
          * Updates the value of the objective function after a selection.
@@ -168,7 +168,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
          * @param bestItemValue item-score pair that has been selected to
          * be added to the re-ranking
          */
-        protected abstract void update(IdDouble<I> bestItemValue);
+        protected abstract void update(Tuple2od<I> bestItemValue);
     }
 
 }

@@ -7,11 +7,11 @@
  */
 package org.ranksys.core.preference;
 
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.index.ItemIndex;
 import es.uam.eps.ir.ranksys.core.index.UserIndex;
 import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Preference sampler, for stochastic algorithms.
@@ -27,5 +27,5 @@ public interface PreferenceSampler<U, I> extends UserIndex<U>, ItemIndex<I>{
      *
      * @return stream of user-item preferences
      */
-    public Stream<IdObject<U, ? extends IdPref<I>>> sample();
+    public Stream<Tuple2<U, ? extends IdPref<I>>> sample();
 }

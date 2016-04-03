@@ -8,10 +8,10 @@
  */
 package es.uam.eps.ir.ranksys.nn.neighborhood;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2id;
 
 /**
  * Top-K neighborhood. It keeps the k most similar users/items as neighbors.
@@ -41,11 +41,11 @@ public class TopKNeighborhood implements Neighborhood {
      * @return stream of user/item-similarity pairs.
      */
     @Override
-    public Stream<IdxDouble> getNeighbors(int idx) {
+    public Stream<Tuple2id> getNeighbors(int idx) {
 
         IntDoubleTopN topN = new IntDoubleTopN(k);
-        sim.similarElems(idx).forEach(is -> topN.add(is.idx, is.v));
+        sim.similarElems(idx).forEach(topN::add);
 
-        return topN.stream().map(e -> new IdxDouble(e));
+        return topN.stream();
     }
 }

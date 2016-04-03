@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
 import es.uam.eps.ir.ranksys.metrics.SystemMetric;
@@ -17,6 +16,7 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.List;
 import java.util.stream.IntStream;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Abstract sales diversity metrics. It handles the counting of how many times
@@ -79,13 +79,13 @@ public abstract class AbstractSalesDiversityMetric<U, I> extends AbstractSystemM
     @Override
     public void add(Recommendation<U, I> recommendation) {
         RelevanceModel.UserRelevanceModel<U, I> urm = rel.getModel(recommendation.getUser());
-        List<IdDouble<I>> list = recommendation.getItems();
+        List<Tuple2od<I>> list = recommendation.getItems();
 
         int rank = Math.min(cutoff, list.size());
         double userNorm = IntStream.range(0, rank).mapToDouble(disc::disc).sum();
 
         IntStream.range(0, rank).forEach(k -> {
-            I i = list.get(k).id;
+            I i = list.get(k).v1;
             double d = disc.disc(k);
             double w = d * urm.gain(i) / userNorm;
             itemCount.addTo(i, d);

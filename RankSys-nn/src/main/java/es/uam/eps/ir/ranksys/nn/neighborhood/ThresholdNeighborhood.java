@@ -8,9 +8,9 @@
  */
 package es.uam.eps.ir.ranksys.nn.neighborhood;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2id;
 
 /**
  * Threshold neighborhood. Items with a similarity above a threshold are kept
@@ -41,8 +41,8 @@ public class ThresholdNeighborhood implements Neighborhood {
      * @return stream of user/item-similarity pairs.
      */
     @Override
-    public Stream<IdxDouble> getNeighbors(int idx) {
-        return sim.similarElems(idx).filter(is -> is.v > threshold);
+    public Stream<Tuple2id> getNeighbors(int idx) {
+        return sim.similarElems(idx).filter(is -> is.v2 > threshold);
     }
 
 }

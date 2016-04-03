@@ -12,6 +12,7 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Precision metric: proportion of relevant items in a recommendation list.
@@ -50,7 +51,8 @@ public class Precision<U, I> extends AbstractRecommendationMetric<U, I> {
         
         return recommendation.getItems().stream()
                 .limit(cutoff)
-                .filter(is -> userRelModel.isRelevant(is.id))
+                .map(Tuple2od::v1)
+                .filter(userRelModel::isRelevant)
                 .count() / (double) cutoff;
     }
 }

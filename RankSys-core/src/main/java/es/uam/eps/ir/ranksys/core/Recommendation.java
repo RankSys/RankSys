@@ -9,6 +9,7 @@
 package es.uam.eps.ir.ranksys.core;
 
 import java.util.List;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * A recommendation issued to a user.
@@ -21,7 +22,7 @@ import java.util.List;
 public class Recommendation<U, I> {
 
     private final U user;
-    private final List<IdDouble<I>> items;
+    private final List<Tuple2od<I>> items;
 
     /**
      * Constructs the recommendation.
@@ -29,7 +30,7 @@ public class Recommendation<U, I> {
      * @param user the user that receives the recommendation
      * @param items a list of item ID-score pairs sorted by descending score
      */
-    public Recommendation(U user, List<IdDouble<I>> items) {
+    public Recommendation(U user, List<Tuple2od<I>> items) {
         this.user = user;
         this.items = items;
     }
@@ -48,7 +49,7 @@ public class Recommendation<U, I> {
      * 
      * @return a list of item ID-score pairs sorted by descending score
      */
-    public List<IdDouble<I>> getItems() {
+    public List<Tuple2od<I>> getItems() {
         return items;
     }
 }
