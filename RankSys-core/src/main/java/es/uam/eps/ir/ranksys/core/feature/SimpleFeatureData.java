@@ -8,18 +8,14 @@
  */
 package es.uam.eps.ir.ranksys.core.feature;
 
-import es.uam.eps.ir.ranksys.core.IdObject;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import static org.jooq.lambda.tuple.Tuple.tuple;
+import org.jooq.lambda.tuple.Tuple2;
+import org.jooq.lambda.tuple.Tuple3;
 
 /**
  * Simple map-based feature data.
@@ -33,8 +29,8 @@ import java.util.stream.Stream;
  */
 public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
 
-    private final Map<I, List<IdObject<F, V>>> itemMap;
-    private final Map<F, List<IdObject<I, V>>> featMap;
+    private final Map<I, List<Tuple2<F, V>>> itemMap;
+    private final Map<F, List<Tuple2<I, V>>> featMap;
 
     /**
      * Constructor
@@ -42,7 +38,7 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
      * @param itemMap item to features map
      * @param featMap feature to items map
      */
-    protected SimpleFeatureData(Map<I, List<IdObject<F, V>>> itemMap, Map<F, List<IdObject<I, V>>> featMap) {
+    protected SimpleFeatureData(Map<I, List<Tuple2<F, V>>> itemMap, Map<F, List<Tuple2<I, V>>> featMap) {
         this.itemMap = itemMap;
         this.featMap = featMap;
     }
@@ -58,12 +54,12 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
     }
 
     @Override
-    public Stream<IdObject<I, V>> getFeatureItems(F f) {
+    public Stream<Tuple2<I, V>> getFeatureItems(F f) {
         return featMap.getOrDefault(f, new ArrayList<>()).stream();
     }
 
     @Override
-    public Stream<IdObject<F, V>> getItemFeatures(I i) {
+    public Stream<Tuple2<F, V>> getItemFeatures(I i) {
         return itemMap.getOrDefault(i, new ArrayList<>()).stream();
     }
 
@@ -117,75 +113,26 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
         return featMap.keySet().stream();
     }
 
-    /**
-     * Load feature data from a file.
-     * 
-     * Each line is a different item-feature pair, with tab-separated fields indicating
-     * item, feature and other information.
-     *
-     * @param <I> type of the items
-     * @param <F> type of the features
-     * @param <V> type of the information about item-feature pairs
-     * @param path file path
-     * @param iParser item type parser
-     * @param fParser feature type parser
-     * @param vParser information type parser
-     * @return a simple map-based FeatureData
-     * @throws IOException when path does not exist or IO error
-     */
-    public static <I, F, V> SimpleFeatureData<I, F, V> load(String path, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
-        return load(new FileInputStream(path), iParser, fParser, vParser);
-    }
+    public static <I, F, V> SimpleFeatureData<I, F, V> load(Stream<Tuple3<I, F, V>> tuples) {
+        Map<I, List<Tuple2<F, V>>> itemMap = new HashMap<>();
+        Map<F, List<Tuple2<I, V>>> featMap = new HashMap<>();
 
-    /**
-     * Load feature data from a input stream.
-     * 
-     * Each line is a different item-feature pair, with tab-separated fields indicating
-     * item, feature and other information.
-     *
-     * @param <I> type of the items
-     * @param <F> type of the features
-     * @param <V> type of the information about item-feature pairs
-     * @param in input stream
-     * @param iParser item type parser
-     * @param fParser feature type parser
-     * @param vParser information type parser
-     * @return a simple map-based FeatureData
-     * @throws IOException when IO error
-     */
-    public static <I, F, V> SimpleFeatureData<I, F, V> load(InputStream in, Parser<I> iParser, Parser<F> fParser, Parser<V> vParser) throws IOException {
-        Map<I, List<IdObject<F, V>>> itemMap = new HashMap<>();
-        Map<F, List<IdObject<I, V>>> featMap = new HashMap<>();
+        tuples.forEach(t -> {
+            List<Tuple2<F, V>> iList = itemMap.get(t.v1);
+            if (iList == null) {
+                iList = new ArrayList<>();
+                itemMap.put(t.v1, iList);
+            }
+            iList.add(tuple(t.v2, t.v3));
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            reader.lines().forEach(l -> {
-                String[] tokens = l.split("\t", 3);
-                I item = iParser.parse(tokens[0]);
-                F feat = fParser.parse(tokens[1]);
-                V value;
-                if (tokens.length == 2) {
-                    value = vParser.parse(null);
-                } else {
-                    value = vParser.parse(tokens[2]);
-                }
-
-                List<IdObject<F, V>> iList = itemMap.get(item);
-                if (iList == null) {
-                    iList = new ArrayList<>();
-                    itemMap.put(item, iList);
-                }
-                iList.add(new IdObject<>(feat, value));
-
-                List<IdObject<I, V>> fList = featMap.get(feat);
-                if (fList == null) {
-                    fList = new ArrayList<>();
-                    featMap.put(feat, fList);
-                }
-                fList.add(new IdObject<>(item, value));
-            });
-        }
+            List<Tuple2<I, V>> fList = featMap.get(t.v2);
+            if (fList == null) {
+                fList = new ArrayList<>();
+                featMap.put(t.v2, fList);
+            }
+            fList.add(tuple(t.v1, t.v3));
+        });
 
         return new SimpleFeatureData<>(itemMap, featMap);
     }
-
 }

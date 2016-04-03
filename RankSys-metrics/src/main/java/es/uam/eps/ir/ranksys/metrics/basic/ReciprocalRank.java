@@ -8,12 +8,12 @@
  */
 package es.uam.eps.ir.ranksys.metrics.basic;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import java.util.List;
 import static java.util.stream.IntStream.range;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Reciprocal Rank (RR, also known as MRR when averaged over queries/users).
@@ -48,10 +48,10 @@ public class ReciprocalRank<U, I> extends AbstractRecommendationMetric<U, I> {
     public double evaluate(Recommendation<U, I> recommendation) {
         RelevanceModel.UserRelevanceModel<U, I> urm = relModel.getModel(recommendation.getUser());
 
-        List<IdDouble<I>> items = recommendation.getItems();
+        List<Tuple2od<I>> items = recommendation.getItems();
         int r = range(0, items.size())
                 .limit(cutoff)
-                .filter(k -> urm.isRelevant(items.get(k).id))
+                .filter(k -> urm.isRelevant(items.get(k).v1))
                 .findFirst().orElse(-1);
         
         if (r == -1) {

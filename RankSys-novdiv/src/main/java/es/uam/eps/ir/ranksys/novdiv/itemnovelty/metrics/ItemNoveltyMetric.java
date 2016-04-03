@@ -8,12 +8,12 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.itemnovelty.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.novdiv.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Item novelty metric.
@@ -77,8 +77,8 @@ public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetr
         double norm = 0.0;
 
         int rank = 0;
-        for (IdDouble<I> iv : recommendation.getItems()) {
-            nov += disc.disc(rank) * userRelModel.gain(iv.id) * uinm.novelty(iv.id);
+        for (Tuple2od<I> iv : recommendation.getItems()) {
+            nov += disc.disc(rank) * userRelModel.gain(iv.v1) * uinm.novelty(iv.v1);
             norm += disc.disc(rank);
             rank++;
             if (rank >= cutoff) {

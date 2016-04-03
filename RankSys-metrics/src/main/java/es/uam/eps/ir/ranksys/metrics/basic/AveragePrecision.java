@@ -9,11 +9,11 @@
 package es.uam.eps.ir.ranksys.metrics.basic;
 
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel.UserIdealRelevanceModel;
 import static java.lang.Math.min;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Average Precision: average of the precision at each recall level.
@@ -54,9 +54,9 @@ public class AveragePrecision<U, I> extends AbstractRecommendationMetric<U, I> {
         int relCount = 0;
         int rank = 0;
 
-        for (IdDouble<I> pair : recommendation.getItems()) {
+        for (Tuple2od<I> pair : recommendation.getItems()) {
             rank++;
-            if (userRelModel.isRelevant(pair.id)) {
+            if (userRelModel.isRelevant(pair.v1)) {
                 relCount++;
                 ap += relCount / (double) rank;
             }

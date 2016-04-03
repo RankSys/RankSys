@@ -74,10 +74,10 @@ public class UserNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
         Int2DoubleOpenHashMap scoresMap = new Int2DoubleOpenHashMap();
         scoresMap.defaultReturnValue(0.0);
         neighborhood.getNeighbors(uidx).forEach(vs -> {
-            double w = pow(vs.v, q);
-            data.getUidxPreferences(vs.idx).forEach(iv -> {
-                double p = w * iv.v;
-                scoresMap.addTo(iv.idx, p);
+            double w = pow(vs.v2, q);
+            data.getUidxPreferences(vs.v1).forEach(iv -> {
+                double p = w * iv.v2;
+                scoresMap.addTo(iv.v1, p);
             });
         });
 

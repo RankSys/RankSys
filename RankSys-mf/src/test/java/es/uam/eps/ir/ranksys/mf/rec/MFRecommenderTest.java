@@ -8,7 +8,6 @@
 package es.uam.eps.ir.ranksys.mf.rec;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
@@ -20,6 +19,8 @@ import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.ranksys.core.util.tuples.Tuple2id;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  *
@@ -69,11 +70,11 @@ public class MFRecommenderTest {
         int maxLength = 2;
         IntPredicate filter = i -> i % 2 == 0;
 
-        List<IdxDouble> result = recommender.getRecommendation(0, maxLength, filter).getIidxs();
+        List<Tuple2id> result = recommender.getRecommendation(0, maxLength, filter).getIidxs();
 
-        List<IdxDouble> expected = Arrays.asList(
-                new IdxDouble(0, 6.1),
-                new IdxDouble(2, 4.1)
+        List<Tuple2id> expected = Arrays.asList(
+                tuple(0, 6.1),
+                tuple(2, 4.1)
         );
         
         assertEquals(expected, result);
@@ -83,12 +84,12 @@ public class MFRecommenderTest {
     public void testCandidates() {
         IntStream candidates = IntStream.of(1, 3, 5);
         
-        List<IdxDouble> result = recommender.getRecommendation(0, candidates).getIidxs();
+        List<Tuple2id> result = recommender.getRecommendation(0, candidates).getIidxs();
 
-        List<IdxDouble> expected = Arrays.asList(
-                new IdxDouble(1, 5.1),
-                new IdxDouble(3, 3.1),
-                new IdxDouble(5, 1.1)
+        List<Tuple2id> expected = Arrays.asList(
+                tuple(1, 5.1),
+                tuple(3, 3.1),
+                tuple(5, 1.1)
         );
         
         assertEquals(expected, result);

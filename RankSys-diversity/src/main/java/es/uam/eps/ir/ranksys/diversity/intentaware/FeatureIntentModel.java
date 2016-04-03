@@ -14,6 +14,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
 import java.util.Set;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Default feature-based intent-aware model. Features of the items in the user profiles are used as proxies for intents, and the probability of each is proportional to its occurrence in the profiles.
@@ -70,12 +71,14 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
     }
 
     private void init() {
-        Object2DoubleOpenHashMap<F> featureNorms = new Object2DoubleOpenHashMap<>();
+        featureNorms = new Object2DoubleOpenHashMap<>();
         featureData.getAllFeatures().forEach(f -> {
-            int count = featureData.getFeatureItems(f).mapToInt(i -> totalData.numUsers(i.id)).sum();
+            int count = featureData.getFeatureItems(f)
+                    .map(Tuple2::v1)
+                    .mapToInt(totalData::numUsers)
+                    .sum();
             featureNorms.put(f, count);
         });
-        this.featureNorms = featureNorms;
     }
 
     /**
@@ -115,8 +118,8 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
 
             int[] norm = {0};
             totalData.getUserPreferences(user).forEach(iv -> {
-                featureData.getItemFeatures(iv.id).forEach(fv -> {
-                    tmpCounts.addTo(fv.id, 1.0);
+                featureData.getItemFeatures(iv.v1).forEach(fv -> {
+                    tmpCounts.addTo(fv.v1, 1.0);
                     norm[0]++;
                 });
             });
@@ -126,16 +129,13 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
                 featureData.getAllFeatures().sequential().forEach(f -> tmpCounts.put(f, 1.0));
             }
 
-            Object2DoubleOpenHashMap<F> puf = new Object2DoubleOpenHashMap<>();
-            Object2DoubleOpenHashMap<F> pfu = new Object2DoubleOpenHashMap<>();
+            puf = new Object2DoubleOpenHashMap<>();
+            pfu = new Object2DoubleOpenHashMap<>();
             tmpCounts.object2DoubleEntrySet().forEach(e -> {
                 F f = e.getKey();
                 puf.put(f, e.getDoubleValue() / featureNorms.getDouble(f));
                 pfu.put(f, e.getDoubleValue() / norm[0]);
             });
-
-            this.puf = puf;
-            this.pfu = pfu;
         }
 
         /**
@@ -156,7 +156,9 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
          */
         @Override
         public Stream<F> getItemIntents(I i) {
-            return featureData.getItemFeatures(i).map(fv -> fv.id).filter(getIntents()::contains);
+            return featureData.getItemFeatures(i)
+                    .map(Tuple2::v1)
+                    .filter(getIntents()::contains);
         }
 
         /**

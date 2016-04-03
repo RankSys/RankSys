@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.itemnovelty.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.novdiv.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.core.util.Stats;
@@ -16,7 +15,9 @@ import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import static java.lang.Math.min;
 import java.util.List;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Item Novelty re-ranker. It re-ranks the output of a recommendation by re-scoring through a linear combination of the relevance scores and the output of a {@link ItemNovelty}.
@@ -52,41 +53,37 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
         U user = recommendation.getUser();
-        ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getModel(user);
+        List<Tuple2od<I>> items = recommendation.getItems();
+        int M = items.size();
+        int N = min(maxLength, M);
+        
+        if (lambda == 0.0) {
+            return getBasePerm(N);
+        }
 
+        ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getModel(user);
         if (uinm == null) {
             return new int[0];
-        }
-
-        int N = maxLength;
-        if (maxLength == 0) {
-            N = recommendation.getItems().size();
-        }
-
-        if (lambda == 0.0) {
-            return getBasePerm(Math.min(N, recommendation.getItems().size()));
         }
 
         Object2DoubleMap<I> novMap = new Object2DoubleOpenHashMap<>();
         Stats relStats = new Stats();
         Stats novStats = new Stats();
         recommendation.getItems().forEach(itemValue -> {
-            double nov = uinm.novelty(itemValue.id);
-            novMap.put(itemValue.id, nov);
-            relStats.accept(itemValue.v);
+            double nov = uinm.novelty(itemValue.v1);
+            novMap.put(itemValue.v1, nov);
+            relStats.accept(itemValue.v2);
             novStats.accept(nov);
         });
 
         IntDoubleTopN topN = new IntDoubleTopN(N);
-        List<IdDouble<I>> list = recommendation.getItems();
-        int M = list.size();
-        for (int i = 0; i < list.size(); i++) {
-            topN.add(M - i, value(list.get(i), relStats, novMap, novStats));
+        for (int i = 0; i < M; i++) {
+            topN.add(M - i, value(items.get(i), relStats, novMap, novStats));
         }
         topN.sort();
 
         int[] perm = topN.reverseStream()
-                .mapToInt(e -> M - e.getIntKey())
+                .mapToInt(e -> M - e.v1)
                 .toArray();
 
         return perm;
@@ -117,7 +114,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
      * @return the new score resulting by a normalized linear combination 
      * between relevance and novelty
      */
-    protected double value(IdDouble<I> iv, Stats relStats, Object2DoubleMap<I> novMap, Stats novStats) {
-        return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.getDouble(iv.id), novStats);
+    protected double value(Tuple2od<I> iv, Stats relStats, Object2DoubleMap<I> novMap, Stats novStats) {
+        return (1 - lambda) * norm(iv.v2, relStats) + lambda * norm(novMap.getDouble(iv.v1), novStats);
     }
 }

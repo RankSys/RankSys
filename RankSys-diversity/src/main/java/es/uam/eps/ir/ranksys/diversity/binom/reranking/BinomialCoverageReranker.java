@@ -8,13 +8,14 @@
  */
 package es.uam.eps.ir.ranksys.diversity.binom.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.novdiv.reranking.LambdaReranker;
 import java.util.HashSet;
 import java.util.Set;
+import org.jooq.lambda.tuple.Tuple2;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Binomial coverage reranker.
@@ -81,9 +82,9 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected double nov(IdDouble<I> itemValue) {
-            double iCoverage = featureData.getItemFeatures(itemValue.id)
-                    .map(fv -> fv.id)
+        protected double nov(Tuple2od<I> itemValue) {
+            double iCoverage = featureData.getItemFeatures(itemValue.v1)
+                    .map(Tuple2::v1)
                     .filter(uncoveredFeatures::contains)
                     .mapToDouble(f -> ubm.longing(f, cutoff))
                     .reduce((x, y) -> x * y).orElse(1.0);
@@ -94,9 +95,9 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
         }
 
         @Override
-        protected void update(IdDouble<I> bestItemValue) {
-            double iCoverage = featureData.getItemFeatures(bestItemValue.id).sequential()
-                    .map(fv -> fv.id)
+        protected void update(Tuple2od<I> bestItemValue) {
+            double iCoverage = featureData.getItemFeatures(bestItemValue.v1).sequential()
+                    .map(Tuple2::v1)
                     .filter(uncoveredFeatures::remove)
                     .mapToDouble(f -> ubm.longing(f, cutoff))
                     .reduce((x, y) -> x * y).orElse(1.0);

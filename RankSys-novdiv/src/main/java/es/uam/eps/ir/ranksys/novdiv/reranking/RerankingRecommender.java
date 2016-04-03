@@ -8,18 +8,19 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import es.uam.eps.ir.ranksys.rec.fast.FastRecommender;
+import static java.lang.Math.min;
 import java.util.List;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
+import org.ranksys.core.util.tuples.Tuple2id;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Wrapper for re-ranker that re-ranks the output of another recommender.
@@ -50,24 +51,24 @@ public class RerankingRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     @Override
     public Recommendation<U, I> getRecommendation(U u, int maxLength, Predicate<I> filter) {
-        return reranker.rerankRecommendation(recommender.getRecommendation(u, 0, filter), maxLength);
+        return reranker.rerankRecommendation(recommender.getRecommendation(u, filter), maxLength);
     }
 
     @Override
     public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
-        FastRecommendation frec = recommender.getRecommendation(uidx, 0, filter);
+        FastRecommendation frec = recommender.getRecommendation(uidx, filter);
         
         U user = uidx2user(uidx);
-        List<IdDouble<I>> items = frec.getIidxs().stream()
-                .map(iv -> new IdDouble<>(iidx2item(iv.idx), iv.v))
-                .collect(Collectors.toList());
+        List<Tuple2od<I>> items = frec.getIidxs().stream()
+                .map(this::iidx2item)
+                .collect(toList());
         Recommendation<U, I> rec = new Recommendation<>(user, items);
         
-        rec = reranker.rerankRecommendation(rec, maxLength);
+        rec = reranker.rerankRecommendation(rec, min(maxLength, items.size()));
         
-        List<IdxDouble> iidxs = rec.getItems().stream()
-                .map(iv -> new IdxDouble(item2iidx(iv.id), iv.v))
-                .collect(Collectors.toList());
+        List<Tuple2id> iidxs = rec.getItems().stream()
+                .map(this::item2iidx)
+                .collect(toList());
         frec = new FastRecommendation(uidx, iidxs);
         
         return frec;

@@ -8,15 +8,15 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import static es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker.getBasePerm;
 import es.uam.eps.ir.ranksys.core.util.Stats;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
-import static java.lang.Math.min;
 import java.util.List;
+import static java.lang.Math.min;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Linear combination re-ranker that combines the original score of the input 
@@ -117,23 +117,23 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
         }
         
         @Override
-        protected int selectItem(IntSortedSet remainingI, List<IdDouble<I>> list) {
+        protected int selectItem(IntSortedSet remainingI, List<Tuple2od<I>> list) {
             novMap = new Object2DoubleOpenHashMap<>();
             relStats = new Stats();
             novStats = new Stats();
             remainingI.forEach(i -> {
-                IdDouble<I> itemValue = list.get(i);
+                Tuple2od<I> itemValue = list.get(i);
                 double nov = nov(itemValue);
-                novMap.put(itemValue.id, nov);
-                relStats.accept(itemValue.v);
+                novMap.put(itemValue.v1, nov);
+                relStats.accept(itemValue.v2);
                 novStats.accept(nov);
             });
             return super.selectItem(remainingI, list);
         }
 
         @Override
-        protected double value(IdDouble<I> iv) {
-            return (1 - lambda) * norm(iv.v, relStats) + lambda * norm(novMap.getDouble(iv.id), novStats);
+        protected double value(Tuple2od<I> iv) {
+            return (1 - lambda) * norm(iv.v2, relStats) + lambda * norm(novMap.getDouble(iv.v1), novStats);
         }
 
         /**
@@ -142,7 +142,7 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
          * @param iv item-relevance pair
          * @return the novelty of the item
          */
-        protected abstract double nov(IdDouble<I> iv);
+        protected abstract double nov(Tuple2od<I> iv);
 
     }
 }

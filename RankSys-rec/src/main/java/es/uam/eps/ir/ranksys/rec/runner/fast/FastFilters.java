@@ -11,6 +11,7 @@ package es.uam.eps.ir.ranksys.rec.runner.fast;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.feature.FastFeatureData;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
+import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.Function;
@@ -46,7 +47,9 @@ public class FastFilters {
     public static <U, I> Function<U, IntPredicate> notInTrain(FastPreferenceData<U, I> trainData) {
         return user -> {
             IntSet set = new IntOpenHashSet();
-            trainData.getUidxPreferences(trainData.user2uidx(user)).mapToInt(iv -> iv.idx).forEach(set::add);
+            trainData.getUidxPreferences(trainData.user2uidx(user))
+                    .mapToInt(IdxPref::v1)
+                    .forEach(set::add);
 
             return iidx -> !set.contains(iidx);
         };

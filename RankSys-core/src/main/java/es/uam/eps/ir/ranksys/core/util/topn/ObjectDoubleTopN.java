@@ -8,8 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.core.util.topn;
 
-import it.unimi.dsi.fastutil.objects.AbstractObject2DoubleMap.BasicEntry;
-import it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry;
+import org.ranksys.core.util.tuples.Tuple2od;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Bounded min-heap to keep just the top-n greatest object-double pairs according to the value of the double.
@@ -18,7 +18,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry;
  *
  * @param <T> type of the object
  */
-public class ObjectDoubleTopN<T> extends AbstractTopN<Entry<T>> {
+public class ObjectDoubleTopN<T> extends AbstractTopN<Tuple2od<T>> {
 
     private final T[] keys;
     private final double[] values;
@@ -43,30 +43,30 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Entry<T>> {
      * @return true if the pair was added to the heap, false otherwise
      */
     public boolean add(T object, double value) {
-        return add(new BasicEntry<>(object, value));
+        return add(tuple(object, value));
     }
 
     @Override
-    protected Entry<T> get(int i) {
-        return new BasicEntry<>(keys[i], values[i]);
+    protected Tuple2od<T> get(int i) {
+        return tuple(keys[i], values[i]);
     }
 
     @Override
-    protected void set(int i, Entry<T> e) {
-        keys[i] = e.getKey();
-        values[i] = e.getDoubleValue();
+    protected void set(int i, Tuple2od<T> e) {
+        keys[i] = e.v1;
+        values[i] = e.v2;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected int compare(int i, Entry<T> e) {
-        double v = e.getDoubleValue();
+    protected int compare(int i, Tuple2od<T> e) {
+        double v = e.v2;
 
         int c = Double.compare(values[i], v);
         if (c != 0) {
             return c;
         } else {
-            c = ((Comparable<T>) keys[i]).compareTo(e.getKey());
+            c = ((Comparable<T>) keys[i]).compareTo(e.v1);
             return c;
         }
     }

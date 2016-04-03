@@ -8,14 +8,15 @@
  */
 package es.uam.eps.ir.ranksys.diversity.other.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
+import org.jooq.lambda.tuple.Tuple2;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Subtopic recall metric.
@@ -66,9 +67,11 @@ public class SRecall<U, I, F> extends AbstractRecommendationMetric<U, I> {
         Set<F> subtopics = new HashSet<>();
         
         int rank = 0;
-        for (IdDouble<I> iv : recommendation.getItems()) {
-            if (userRelModel.isRelevant(iv.id)) {
-                subtopics.addAll(featureData.getItemFeatures(iv.id).map(fv -> fv.id).collect(Collectors.toList()));
+        for (Tuple2od<I> iv : recommendation.getItems()) {
+            if (userRelModel.isRelevant(iv.v1)) {
+                subtopics.addAll(featureData.getItemFeatures(iv.v1)
+                        .map(Tuple2::v1)
+                        .collect(toList()));
             }
 
             rank++;
