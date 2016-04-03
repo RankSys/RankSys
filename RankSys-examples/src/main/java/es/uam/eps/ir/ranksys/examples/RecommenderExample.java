@@ -51,6 +51,7 @@ import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import org.jooq.lambda.Unchecked;
 import org.ranksys.lda.LDAModelEstimator;
 import org.ranksys.lda.LDARecommender;
 
@@ -150,22 +151,17 @@ public class RecommenderExample {
         });
 
         // LDA topic modelling by Blei et al. 2003
-        recMap.put("lda", () -> {
+        recMap.put("lda", Unchecked.supplier(()-> {
             int k = 50;
             double alpha = 1.0;
             double beta = 0.01;
             int numIter = 200;
             int burninPeriod = 50;
 
-            ParallelTopicModel topicModel = null;
-            try {
-                topicModel = LDAModelEstimator.estimate(trainData, k, alpha, beta, numIter, burninPeriod);
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
+            ParallelTopicModel topicModel = LDAModelEstimator.estimate(trainData, k, alpha, beta, numIter, burninPeriod);
 
             return new LDARecommender<>(userIndex, itemIndex, topicModel);
-        });
+        }));
 
         ////////////////////////////////
         // GENERATING RECOMMENDATIONS //
@@ -176,13 +172,9 @@ public class RecommenderExample {
         int maxLength = 100;
         RecommenderRunner<Long, Long> runner = new FastFilterRecommenderRunner<>(userIndex, itemIndex, targetUsers, format, filter, maxLength);
 
-        recMap.forEach((name, recommender) -> {
-            try {
-                System.out.println("Running " + name);
-                runner.run(recommender.get(), name);
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
-        });
+        recMap.forEach(Unchecked.biConsumer((name, recommender) -> {
+            System.out.println("Running " + name);
+            runner.run(recommender.get(), name);
+        }));
     }
 }

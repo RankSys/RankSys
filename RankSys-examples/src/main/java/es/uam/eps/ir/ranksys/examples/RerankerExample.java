@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
 import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp;
+import org.jooq.lambda.Unchecked;
 
 /**
  * Example main of re-rankers.
@@ -64,23 +65,15 @@ public class RerankerExample {
 
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
 
-        rerankersMap.forEach((name, rerankerSupplier) -> {
+        rerankersMap.forEach(Unchecked.biConsumer((name, rerankerSupplier) -> {
             System.out.println("Running " + name);
             String recOut = String.format("%s_%s", recIn, name);
             Reranker<Long, Long> reranker = rerankerSupplier.get();
             try (RecommendationFormat.Writer<Long, Long> writer = format.getWriter(recOut)) {
                 format.getReader(recIn).readAll()
                         .map(rec -> reranker.rerankRecommendation(rec, cutoff))
-                        .forEach(rerankedRecommendation -> {
-                            try {
-                                writer.write(rerankedRecommendation);
-                            } catch (IOException ex) {
-                                throw new UncheckedIOException(ex);
-                            }
-                        });
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
+                        .forEach(Unchecked.consumer(writer::write));
             }
-        });
+        }));
     }
 }

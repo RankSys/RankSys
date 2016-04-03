@@ -25,21 +25,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterators;
 import java.util.logging.Level;
-import static java.util.logging.Logger.getLogger;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Simple format for recommendations: tab-separated user-item-score triplets, 
- * grouping first by user (not necessarily in order) and then by decreasing
- * order of score. 
+ * Simple format for recommendations: tab-separated user-item-score triplets, grouping first by user (not necessarily in order) and then by decreasing order of score.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  */
 public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U, I> {
+
+    private static final Logger LOG = Logger.getLogger(SimpleRecommendationFormat.class.getName());
 
     private final Parser<U> uParser;
     private final Parser<I> iParser;
@@ -104,14 +104,9 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
 
         @Override
         public Stream<Recommendation<U, I>> readAll() throws IOException {
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                RecommendationIterator iterator = new RecommendationIterator(reader);
-                return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
-            } catch (IOException ex) {
-                getLogger(SimpleRecommendationFormat.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            RecommendationIterator iterator = new RecommendationIterator(reader);
+            return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
         }
 
     }
@@ -124,7 +119,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
         private final BufferedReader reader;
         private boolean eos = false;
 
-        public RecommendationIterator(BufferedReader reader) throws IOException {
+        public RecommendationIterator(BufferedReader reader) {
             this.reader = reader;
         }
 
@@ -138,13 +133,13 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
                 try {
                     line = reader.readLine();
                 } catch (IOException ex) {
-                    getLogger(Recommendation.class.getName()).log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, null, ex);
                 }
                 if (line == null) {
                     try {
                         reader.close();
                     } catch (IOException ex) {
-                        getLogger(Recommendation.class.getName()).log(Level.SEVERE, null, ex);
+                        LOG.log(Level.SEVERE, null, ex);
                     }
                     return false;
                 } else {
@@ -183,7 +178,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
                     }
                 }
             } catch (IOException ex) {
-                getLogger(Recommendation.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
             if (line == null) {
                 lastU = null;

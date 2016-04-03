@@ -18,19 +18,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Level;
-import static java.util.logging.Logger.getLogger;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.jooq.lambda.Unchecked;
 
 /**
  * Generic recommender runner. This class handles the print of the output.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  */
 public abstract class AbstractRecommenderRunner<U, I> implements RecommenderRunner<U, I> {
+
+    private static final Logger LOG = Logger.getLogger(AbstractRecommenderRunner.class.getName());
 
     private final List<U> users;
     private final RecommendationFormat<U, I> format;
@@ -49,8 +52,7 @@ public abstract class AbstractRecommenderRunner<U, I> implements RecommenderRunn
     /**
      * Prints the recommendations.
      *
-     * @param recProvider function that provides the recommendations by calling
-     * a recommender
+     * @param recProvider function that provides the recommendations by calling a recommender
      * @param out output stream through which recommendations are printed
      * @throws IOException when IO error
      */
@@ -58,34 +60,27 @@ public abstract class AbstractRecommenderRunner<U, I> implements RecommenderRunn
         try (RecommendationFormat.Writer<U, I> writer = format.getWriter(out)) {
             Map<U, Recommendation<U, I>> pendingRecommendations = new HashMap<>();
             List<U> usersAux = new ArrayList<>(users);
-            
+
             users.parallelStream()
-                    .map(user -> recProvider.apply(user))
-                    .forEachOrdered(recommendation -> {
+                    .map(recProvider)
+                    .forEachOrdered(Unchecked.consumer(recommendation -> {
                         if (recommendation.getUser().equals(usersAux.get(0))) {
-                            writeCatchExceptions(writer, recommendation);
+                            writer.write(recommendation);
                             usersAux.remove(0);
 
                             while (!usersAux.isEmpty() && pendingRecommendations.containsKey(usersAux.get(0))) {
                                 recommendation = pendingRecommendations.get(usersAux.get(0));
-                                writeCatchExceptions(writer, recommendation);
+                                writer.write(recommendation);
                                 usersAux.remove(0);
                             }
                         } else {
                             pendingRecommendations.put(recommendation.getUser(), recommendation);
                         }
-                    });
+                    }, ex -> LOG.log(Level.SEVERE, null, ex)));
 
-            usersAux.forEach(user -> writeCatchExceptions(writer, pendingRecommendations.get(user)));
+            usersAux.stream()
+                    .map(pendingRecommendations::get)
+                    .forEach(Unchecked.consumer(writer::write));
         }
     }
-
-    private void writeCatchExceptions(RecommendationFormat.Writer<U, I> writer, Recommendation<U, I> recommendation) {
-        try {
-            writer.write(recommendation);
-        } catch (IOException ex) {
-            getLogger(FilterRecommenderRunner.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
 }
