@@ -8,10 +8,11 @@
  */
 package es.uam.eps.ir.ranksys.fast.feature;
 
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Abstract FastFeatureData, implementing the interfaces of FastItemIndex and
@@ -60,13 +61,13 @@ public abstract class AbstractFastFeatureData<I, F, V> implements FastFeatureDat
     }
 
     @Override
-    public Stream<IdObject<I, V>> getFeatureItems(F f) {
-        return getFidxItems(feature2fidx(f)).map(iv -> new IdObject<>(iidx2item(iv.idx), iv.v));
+    public Stream<Tuple2<I, V>> getFeatureItems(F f) {
+        return getFidxItems(feature2fidx(f)).map(this::iidx2item);
     }
 
     @Override
-    public Stream<IdObject<F, V>> getItemFeatures(I i) {
-        return getIidxFeatures(item2iidx(i)).map(fv -> new IdObject<>(fidx2feature(fv.idx), fv.v));
+    public Stream<Tuple2<F, V>> getItemFeatures(I i) {
+        return getIidxFeatures(item2iidx(i)).map(this::fidx2feature);
     }
 
     @Override

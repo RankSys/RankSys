@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.diversity.binom.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
@@ -19,6 +18,8 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.jooq.lambda.tuple.Tuple2;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Binomial redundancy reranker.
@@ -89,9 +90,9 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         }
 
         @Override
-        protected double nov(IdDouble<I> itemValue) {
-            Set<F> itemFeatures = featureData.getItemFeatures(itemValue.id)
-                    .map(fv -> fv.id)
+        protected double nov(Tuple2od<I> itemValue) {
+            Set<F> itemFeatures = featureData.getItemFeatures(itemValue.v1)
+                    .map(Tuple2::v1)
                     .collect(Collectors.toCollection(() -> new HashSet<>()));
 
             double iNonRed = featureCount.keySet().stream()
@@ -111,9 +112,9 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         }
 
         @Override
-        protected void update(IdDouble<I> bestItemValue) {
-            featureData.getItemFeatures(bestItemValue.id)
-                    .map(fv -> fv.id)
+        protected void update(Tuple2od<I> bestItemValue) {
+            featureData.getItemFeatures(bestItemValue.v1)
+                    .map(Tuple2::v1)
                     .forEach(f -> {
                         int c = featureCount.addTo(f, 1) + 1;
                         patienceNow.put(f, patienceLater.getDouble(f));

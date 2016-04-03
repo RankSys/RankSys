@@ -8,13 +8,13 @@
  */
 package es.uam.eps.ir.ranksys.novelty.inverted.br;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.rec.Recommender;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import static java.lang.Math.pow;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Prior smoothed Bayesian probabilistic reformulation re-ranker. Estimation of
@@ -64,7 +64,7 @@ public class AlphaBayesRuleReranker<U, I> extends BayesRuleReranker<U, I> {
      * @param recommender recommender whose norm is used
      */
     public AlphaBayesRuleReranker(double alpha, Stream<U> users, Recommender<U, I> recommender) {
-        this(alpha, users.parallel().map(u -> recommender.getRecommendation(u, 0)));
+        this(alpha, users.parallel().map(u -> recommender.getRecommendation(u)));
     }
 
     /**
@@ -80,14 +80,14 @@ public class AlphaBayesRuleReranker<U, I> extends BayesRuleReranker<U, I> {
                 .flatMap(recommendation -> recommendation.getItems().stream())
                 .collect(
                         () -> new Object2DoubleOpenHashMap<I>(),
-                        (m, iv) -> m.addTo(iv.id, iv.v),
+                        (m, iv) -> m.addTo(iv.v1, iv.v2),
                         (m1, m2) -> m2.object2DoubleEntrySet().forEach(e -> m1.addTo(e.getKey(), e.getDoubleValue()))
                 );
     }
 
     @Override
-    protected double likelihood(IdDouble<I> iv) {
-        return iv.v / norm.get(iv.id);
+    protected double likelihood(Tuple2od<I> iv) {
+        return iv.v2 / norm.get(iv.v1);
     }
 
     @Override

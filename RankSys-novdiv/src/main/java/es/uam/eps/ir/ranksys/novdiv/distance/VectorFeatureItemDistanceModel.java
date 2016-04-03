@@ -8,13 +8,13 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.distance;
 
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.concurrent.atomic.DoubleAdder;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Feature-based item distance model that considers the features of items as
@@ -45,14 +45,14 @@ public abstract class VectorFeatureItemDistanceModel<I, F> extends FeatureItemDi
      * features of an item
      */
     @Override
-    public ToDoubleFunction<Stream<IdObject<F, Double>>> dist(Stream<IdObject<F, Double>> features1) {
+    public ToDoubleFunction<Stream<Tuple2<F, Double>>> dist(Stream<Tuple2<F, Double>> features1) {
         Object2DoubleMap<F> auxMap = new Object2DoubleOpenHashMap<>();
         auxMap.defaultReturnValue(0.0);
         DoubleAdder norm1 = new DoubleAdder();
 
         features1.forEach(fv -> {
-            auxMap.put(fv.id, fv.v);
-            norm1.add(fv.v * fv.v);
+            auxMap.put(fv.v1, fv.v2);
+            norm1.add(fv.v2 * fv.v2);
         });
 
         if (norm1.doubleValue() == 0) {
@@ -63,8 +63,8 @@ public abstract class VectorFeatureItemDistanceModel<I, F> extends FeatureItemDi
             DoubleAdder prod = new DoubleAdder();
             DoubleAdder norm2 = new DoubleAdder();
             features2.forEach(fv -> {
-                prod.add(fv.v * auxMap.getDouble(fv.id));
-                norm2.add(fv.v * fv.v);
+                prod.add(fv.v2 * auxMap.getDouble(fv.v1));
+                norm2.add(fv.v2 * fv.v2);
             });
 
             if (norm2.doubleValue() == 0) {

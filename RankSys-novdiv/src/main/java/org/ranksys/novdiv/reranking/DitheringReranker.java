@@ -7,14 +7,15 @@
  */
 package org.ranksys.novdiv.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker;
 import static java.lang.Math.log;
+import static java.lang.Math.min;
 import static java.lang.Math.sqrt;
 import java.util.List;
 import org.apache.commons.math3.distribution.NormalDistribution;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Dithering re-ranker. It re-ranks the output of a recommendation by adding
@@ -43,27 +44,24 @@ public class DitheringReranker<U, I> extends PermutationReranker<U, I> {
 
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
-        int N = maxLength;
-        if (maxLength == 0) {
-            N = recommendation.getItems().size();
-        }
+        List<Tuple2od<I>> items = recommendation.getItems();
+        int M = items.size();
+        int N = min(maxLength, M);
 
         if (variance == 0.0) {
-            return getBasePerm(Math.min(N, recommendation.getItems().size()));
+            return getBasePerm(N);
         }
         
         NormalDistribution dist = new NormalDistribution(0.0, sqrt(variance));
 
         IntDoubleTopN topN = new IntDoubleTopN(N);
-        List<IdDouble<I>> list = recommendation.getItems();
-        int M = list.size();
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < M; i++) {
             topN.add(M - i, log(i + 1) + dist.sample());
         }
         topN.sort();
 
         int[] perm = topN.stream()
-                .mapToInt(e -> M - e.getIntKey())
+                .mapToInt(e -> M - e.v1)
                 .toArray();
 
         return perm;

@@ -8,21 +8,18 @@
  */
 package es.uam.eps.ir.ranksys.rec.runner.fast;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.rec.Recommender;
 import es.uam.eps.ir.ranksys.rec.fast.FastRecommender;
 import es.uam.eps.ir.ranksys.rec.runner.AbstractRecommenderRunner;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
+import java.util.stream.Stream;
 
 /**
  * Fast filter runner. It creates recommendations by using the filter method in the
@@ -46,12 +43,11 @@ public class FastFilterRecommenderRunner<U, I> extends AbstractRecommenderRunner
      * @param userIndex fast user index
      * @param itemIndex fast item index
      * @param users target users
-     * @param format output recommendation format
      * @param userFilter item filter provider for each user
      * @param maxLength maximum length of the recommendation lists, 0 for no limit
      */
-    public FastFilterRecommenderRunner(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex, Set<U> users, RecommendationFormat<U, I> format, Function<U, IntPredicate> userFilter, int maxLength) {
-        super(users.stream(), format);
+    public FastFilterRecommenderRunner(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex, Stream<U> users, Function<U, IntPredicate> userFilter, int maxLength) {
+        super(users);
         this.userIndex = userIndex;
         this.itemIndex = itemIndex;
         this.userFilter = userFilter;
@@ -59,12 +55,14 @@ public class FastFilterRecommenderRunner<U, I> extends AbstractRecommenderRunner
     }
 
     @Override
-    public void run(Recommender<U, I> recommender, OutputStream out) throws IOException {
+    public void run(Recommender<U, I> recommender, Consumer<Recommendation<U, I>> consumer) {
         run(user -> {
             FastRecommendation rec = ((FastRecommender<U, I>) recommender).getRecommendation(userIndex.user2uidx(user), maxLength, userFilter.apply(user));
             
-            return new Recommendation<>(userIndex.uidx2user(rec.getUidx()), rec.getIidxs().stream().map(iv -> new IdDouble<I>(itemIndex.iidx2item(iv.idx), iv.v)).collect(Collectors.toList()));
-        }, out);
+            return new Recommendation<>(userIndex.uidx2user(rec.getUidx()), rec.getIidxs().stream()
+                    .map(itemIndex::iidx2item)
+                    .collect(toList()));
+        }, consumer);
     }
 
 }

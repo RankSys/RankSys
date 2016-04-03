@@ -10,4 +10,4 @@
 /**
  * String parsers.
  */
-package es.uam.eps.ir.ranksys.core.util.parsing;
+package org.ranksys.formats.parsing;

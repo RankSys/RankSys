@@ -8,13 +8,14 @@
  */
 package es.uam.eps.ir.ranksys.nn.neighborhood;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
-import es.uam.eps.ir.ranksys.fast.IdxObject;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 import static java.util.stream.Stream.empty;
+import org.ranksys.core.util.tuples.Tuple2id;
+import org.ranksys.core.util.tuples.Tuple2io;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Cached neighborhood. Stores user neighborhoods.
@@ -41,8 +42,8 @@ public class CachedNeighborhood implements Neighborhood {
             IntArrayList idxl = new IntArrayList();
             DoubleArrayList siml = new DoubleArrayList();
             neighborhood.getNeighbors(idx).forEach(is -> {
-                idxl.add(is.idx);
-                siml.add(is.v);
+                idxl.add(is.v1);
+                siml.add(is.v2);
             });
             idxla[idx] = idxl;
             simla[idx] = siml;
@@ -55,18 +56,18 @@ public class CachedNeighborhood implements Neighborhood {
      * @param n number of users/items
      * @param neighborhoods stream of already calculated neighborhoods
      */
-    public CachedNeighborhood(int n, Stream<IdxObject<Stream<IdxDouble>>> neighborhoods) {
+    public CachedNeighborhood(int n, Stream<Tuple2io<Stream<Tuple2id>>> neighborhoods) {
 
         this.idxla = new IntArrayList[n];
         this.simla = new DoubleArrayList[n];
 
         neighborhoods.forEach(un -> {
-            int idx = un.idx;
+            int idx = un.v1;
             IntArrayList idxl = new IntArrayList();
             DoubleArrayList siml = new DoubleArrayList();
-            un.v.forEach(is -> {
-                idxl.add(is.idx);
-                siml.add(is.v);
+            un.v2.forEach(is -> {
+                idxl.add(is.v1);
+                siml.add(is.v2);
             });
             idxla[idx] = idxl;
             simla[idx] = siml;
@@ -80,7 +81,7 @@ public class CachedNeighborhood implements Neighborhood {
      * @return stream of user/item-similarity pairs.
      */
     @Override
-    public Stream<IdxDouble> getNeighbors(int idx) {
+    public Stream<Tuple2id> getNeighbors(int idx) {
         if (idx < 0) {
             return empty();
         }
@@ -89,7 +90,7 @@ public class CachedNeighborhood implements Neighborhood {
         if (idxl == null || siml == null) {
             return empty();
         }
-        return range(0, idxl.size()).mapToObj(i -> new IdxDouble(idxl.getInt(i), siml.getDouble(i)));
+        return range(0, idxl.size()).mapToObj(i -> tuple(idxl.getInt(i), siml.getDouble(i)));
     }
 
 }

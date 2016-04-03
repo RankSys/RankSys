@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.rec.fast;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.rec.AbstractRecommender;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
@@ -18,7 +17,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -89,7 +88,14 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
     public Recommendation<U, I> getRecommendation(U u, int maxLength) {
         FastRecommendation rec = getRecommendation(user2uidx(u), maxLength);
 
-        return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream().map(iv -> new IdDouble<>(iidx2item(iv.idx), iv.v)).collect(Collectors.toList()));
+        return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream()
+                .map(this::iidx2item)
+                .collect(toList()));
+    }
+
+    @Override
+    public FastRecommendation getRecommendation(int uidx) {
+        return getRecommendation(uidx, Integer.MAX_VALUE);
     }
 
     @Override
@@ -101,7 +107,14 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
     public Recommendation<U, I> getRecommendation(U u, int maxLength, Predicate<I> filter) {
         FastRecommendation rec = getRecommendation(user2uidx(u), maxLength, iidx -> filter.test(iidx2item(iidx)));
 
-        return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream().map(iv -> new IdDouble<>(iidx2item(iv.idx), iv.v)).collect(Collectors.toList()));
+        return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream()
+                .map(this::iidx2item)
+                .collect(toList()));
+    }
+
+    @Override
+    public FastRecommendation getRecommendation(int uidx, IntPredicate filter) {
+        return getRecommendation(uidx, Integer.MAX_VALUE, filter);
     }
 
     @Override
@@ -111,7 +124,9 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
     public Recommendation<U, I> getRecommendation(U u, Stream<I> candidates) {
         FastRecommendation rec = getRecommendation(user2uidx(u), candidates.mapToInt(this::item2iidx));
 
-        return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream().map(iv -> new IdDouble<>(iidx2item(iv.idx), iv.v)).collect(Collectors.toList()));
+        return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream()
+                .map(this::iidx2item)
+                .collect(toList()));
     }
 
     @Override
@@ -119,6 +134,6 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
         IntSet set = new IntOpenHashSet();
         candidates.forEach(iidx -> set.add(iidx));
 
-        return getRecommendation(uidx, 0, item -> set.contains(item));
+        return getRecommendation(uidx, item -> set.contains(item));
     }
 }
