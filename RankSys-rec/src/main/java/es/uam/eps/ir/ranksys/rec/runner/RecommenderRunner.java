@@ -8,10 +8,9 @@
  */
 package es.uam.eps.ir.ranksys.rec.runner;
 
+import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.rec.Recommender;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.util.function.Consumer;
 
 /**
  * Recommender runner. Implementing classes provide convenient ways of 
@@ -26,23 +25,11 @@ import java.io.OutputStream;
 public interface RecommenderRunner<U, I> {
 
     /**
-     * Runs the recommender and stores the recommendations in a file.
-     *
-     * @param recommender recommender to be run
-     * @param path path of the file where the recommendations are saved
-     * @throws IOException when file does not exist or other IO error
-     */
-    public default void run(Recommender<U, I> recommender, String path) throws IOException {
-        run(recommender, new FileOutputStream(path));
-    }
-    
-    /**
      * Runs the recommender and prints the recommendations to an output
      * stream.
      *
      * @param recommender recommender to be run
-     * @param out output stream
-     * @throws IOException when an IO error
+     * @param consumer recommendation consumer
      */
-    public void run(Recommender<U, I> recommender, OutputStream out) throws IOException;
+    public void run(Recommender<U, I> recommender, Consumer<Recommendation<U, I>> consumer);
 }

@@ -8,6 +8,7 @@
 package org.ranksys.core.util;
 
 import static java.lang.Math.max;
+import org.ranksys.core.util.BinaryTree.Node;
 
 /**
  * Binary tree.
@@ -16,16 +17,16 @@ import static java.lang.Math.max;
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
  */
-public class BinaryTree {
+public class BinaryTree<N extends Node> {
 
-    private final Node rootNode;
+    private final N rootNode;
 
     /**
      * Constructor.
      *
      * @param root root node
      */
-    public BinaryTree(Node root) {
+    public BinaryTree(N root) {
         rootNode = root;
     }
 
@@ -52,7 +53,7 @@ public class BinaryTree {
      *
      * @return the root node
      */
-    public Node getRoot() {
+    public N getRoot() {
         return rootNode;
     }
 
@@ -134,7 +135,7 @@ public class BinaryTree {
             return l == null && r == null;
         }
 
-        private int numNodes() {
+        protected int numNodes() {
             int c = 1;
             if (this.l != null) {
                 c += l.numNodes();
@@ -146,7 +147,7 @@ public class BinaryTree {
             return c;
         }
 
-        private int depth() {
+        protected int depth() {
             if (isLeaf()) {
                 return 1;
             } else {

@@ -12,13 +12,16 @@ import es.uam.eps.ir.ranksys.core.feature.FeatureData
 import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData
 import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData
+import es.uam.eps.ir.ranksys.core.util.FastStringSplitter
+import org.ranksys.formats.feature.SimpleFeaturesReader
+import static org.ranksys.formats.parsing.Parsers.lp
+import static org.ranksys.formats.parsing.Parsers.sp
+import org.ranksys.formats.preference.SimpleRatingPreferencesReader
+import org.jooq.lambda.tuple.Tuple
 import spock.lang.Specification
 
 import java.util.stream.Collectors
-
-import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.sp
+import java.util.stream.Stream
 
 import static spock.util.matcher.HamcrestSupport.that
 import static spock.util.matcher.HamcrestMatchers.closeTo
@@ -33,8 +36,10 @@ class UserIntentModelSpec extends Specification {
         InputStream ratings = UserIntentModelSpec.class.getResourceAsStream("/intent_ratings");
         InputStream features = UserIntentModelSpec.class.getResourceAsStream("/intent_features");
 
-        PreferenceData trainData = SimplePreferenceData.load(ratings, lp, lp, ddp);
-        FeatureData featureData = SimpleFeatureData.load(features, lp, sp, { v -> 1.0 });
+        PreferenceData trainData = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(ratings, lp, lp));
+        
+        FeatureData featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(features, lp, sp));
+        
         intentModel = new FeatureIntentModel(trainData.getUsersWithPreferences(), trainData, featureData);
     }
 

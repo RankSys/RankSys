@@ -8,10 +8,10 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.distance;
 
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Feature-based item distance model.
@@ -43,8 +43,8 @@ public abstract class FeatureItemDistanceModel<I, F, V> implements ItemDistanceM
      */
     @Override
     public ToDoubleFunction<I> dist(I i) {
-        Stream<IdObject<F, V>> features1 = featureData.getItemFeatures(i);
-        ToDoubleFunction<Stream<IdObject<F, V>>> iDist = dist(features1);
+        Stream<Tuple2<F, V>> features1 = featureData.getItemFeatures(i);
+        ToDoubleFunction<Stream<Tuple2<F, V>>> iDist = dist(features1);
         return j -> {
             return iDist.applyAsDouble(featureData.getItemFeatures(j));
         };
@@ -58,5 +58,5 @@ public abstract class FeatureItemDistanceModel<I, F, V> implements ItemDistanceM
      * @return function that returns the feature-based similarity to the
      * features of an item
      */
-    protected abstract ToDoubleFunction<Stream<IdObject<F, V>>> dist(Stream<IdObject<F, V>> features1);
+    protected abstract ToDoubleFunction<Stream<Tuple2<F, V>>> dist(Stream<Tuple2<F, V>> features1);
 }

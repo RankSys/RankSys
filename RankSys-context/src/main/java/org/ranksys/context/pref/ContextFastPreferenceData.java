@@ -36,7 +36,7 @@ public interface ContextFastPreferenceData<U, I, C> extends ContextPreferenceDat
         Optional<IdxPrefCtx<C>> pref = getPreference(user2uidx(u), item2iidx(i));
 
         if (pref.isPresent()) {
-            return Optional.of(new IdPrefCtx<>(i, pref.get().v, pref.get().cs));
+            return Optional.of(new IdPrefCtx<>(i, pref.get().v2, pref.get().cs));
         } else {
             return Optional.empty();
         }
@@ -44,7 +44,7 @@ public interface ContextFastPreferenceData<U, I, C> extends ContextPreferenceDat
 
     @Override
     public Optional<IdxPrefCtx<C>> getPreference(int uidx, int iidx);
-
+    
     /**
      * A fast context-aware preference.
      *
@@ -68,21 +68,5 @@ public interface ContextFastPreferenceData<U, I, C> extends ContextPreferenceDat
             super(idx, v);
             this.cs = cs;
         }
-
-        /**
-         * Re-use this object with new values for its fields.
-         *
-         * @param idx item
-         * @param v value
-         * @param cs list of contexts
-         * @return this object with the new values
-         */
-        public IdxPref refill(int idx, double v, List<C> cs) {
-            this.idx = idx;
-            this.v = v;
-            this.cs = cs;
-            return this;
-        }
-
     }
 }

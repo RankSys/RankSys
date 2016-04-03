@@ -9,11 +9,11 @@
 package es.uam.eps.ir.ranksys.fast.feature;
 
 import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
-import es.uam.eps.ir.ranksys.fast.IdxObject;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2io;
 
 /**
  * Fast version of FeatureData, where item-feature relationships are
@@ -33,7 +33,7 @@ public interface FastFeatureData<I, F, V> extends FeatureData<I, F, V>, FastItem
      * @param iidx item index
      * @return features associated with the item
      */
-    Stream<IdxObject<V>> getIidxFeatures(final int iidx);
+    Stream<Tuple2io<V>> getIidxFeatures(final int iidx);
 
     /**
      * Returns the items having a feature.
@@ -41,7 +41,7 @@ public interface FastFeatureData<I, F, V> extends FeatureData<I, F, V>, FastItem
      * @param fidx feature index
      * @return items having the feature
      */
-    Stream<IdxObject<V>> getFidxItems(final int fidx);
+    Stream<Tuple2io<V>> getFidxItems(final int fidx);
 
     /**
      * Returns the number of items having a feature.

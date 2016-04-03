@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Filters for the filter recommender method in Recommender.
@@ -43,7 +44,9 @@ public class Filters {
      */
     public static <U, I> Function<U, Predicate<I>> notInTrain(PreferenceData<U, I> trainData) {
         return user -> {
-            Set<I> set = trainData.getUserPreferences(user).map(iv -> iv.id).collect(Collectors.toSet());
+            Set<I> set = trainData.getUserPreferences(user)
+                    .map(Tuple2od::v1)
+                    .collect(Collectors.toSet());
 
             return i -> !set.contains(i);
         };

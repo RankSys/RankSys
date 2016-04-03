@@ -9,9 +9,9 @@
 package es.uam.eps.ir.ranksys.core.feature;
 
 import es.uam.eps.ir.ranksys.core.index.FeatureIndex;
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.index.ItemIndex;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Item-feature data.
@@ -59,7 +59,7 @@ public interface FeatureData<I, F, V> extends ItemIndex<I>, FeatureIndex<F> {
      * @param f feature
      * @return stream of items with the feature.
      */
-    Stream<IdObject<I, V>> getFeatureItems(final F f);
+    Stream<Tuple2<I, V>> getFeatureItems(final F f);
 
     /**
      * Returns a stream of features of the item.
@@ -67,7 +67,7 @@ public interface FeatureData<I, F, V> extends ItemIndex<I>, FeatureIndex<F> {
      * @param i item
      * @return stream of features of the item.
      */
-    Stream<IdObject<F, V>> getItemFeatures(final I i);
+    Stream<Tuple2<F, V>> getItemFeatures(final I i);
 
     /**
      * Returns the number of features of the item.

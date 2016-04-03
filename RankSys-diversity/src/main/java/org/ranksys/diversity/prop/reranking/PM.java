@@ -7,12 +7,13 @@
  */
 package org.ranksys.diversity.prop.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.novdiv.reranking.GreedyReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import org.jooq.lambda.tuple.Tuple2;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Proportionality re-ranking method.
@@ -72,8 +73,8 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
             featureCount.defaultReturnValue(0.0);
             this.probNorm = new Object2DoubleOpenHashMap<>();
             recommendation.getItems().forEach(i -> {
-                featureData.getItemFeatures(i.id).sequential().forEach(fv -> {
-                    probNorm.addTo(fv.id, i.v);
+                featureData.getItemFeatures(i.v1).sequential().forEach(fv -> {
+                    probNorm.addTo(fv.v1, i.v2);
                 });
             });
             this.lcf = getLcf();
@@ -88,24 +89,24 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
         }
 
         @Override
-        protected double value(IdDouble<I> iv) {
-            return featureData.getItemFeatures(iv.id)
-                    .map(fv -> fv.id)
-                    .mapToDouble(f -> (f.equals(lcf) ? lambda : (1 - lambda)) * quotient(f) * iv.v / probNorm.getDouble(f))
+        protected double value(Tuple2od<I> iv) {
+            return featureData.getItemFeatures(iv.v1)
+                    .map(Tuple2::v1)
+                    .mapToDouble(f -> (f.equals(lcf) ? lambda : (1 - lambda)) * quotient(f) * iv.v2 / probNorm.getDouble(f))
                     .sum();
         }
 
         @Override
-        protected void update(IdDouble<I> biv) {
-            double norm = featureData.getItemFeatures(biv.id)
-                    .map(fv -> fv.id)
-                    .mapToDouble(f -> biv.v / probNorm.getDouble(f))
+        protected void update(Tuple2od<I> biv) {
+            double norm = featureData.getItemFeatures(biv.v1)
+                    .map(Tuple2::v1)
+                    .mapToDouble(f -> biv.v2 / probNorm.getDouble(f))
                     .sum();
 
-            featureData.getItemFeatures(biv.id).sequential()
-                    .map(fv -> fv.id)
+            featureData.getItemFeatures(biv.v1).sequential()
+                    .map(Tuple2::v1)
                     .forEach(f -> {
-                        double v = biv.v / (probNorm.getDouble(f) * norm);
+                        double v = biv.v2 / (probNorm.getDouble(f) * norm);
                         featureCount.addTo(f, v);
                     });
 

@@ -8,12 +8,12 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel.UserIntentModel;
 import es.uam.eps.ir.ranksys.novdiv.reranking.LambdaReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Relevance-based eXplicit Query Aspect Diversification re-ranker.
@@ -77,29 +77,29 @@ public class RXQuAD<U, I, F> extends LambdaReranker<U, I> {
             this.redundancy.defaultReturnValue(1.0);
             this.probNorm = new Object2DoubleOpenHashMap<>();
             recommendation.getItems().forEach(iv -> {
-                uim.getItemIntents(iv.id).sequential().forEach(f -> {
+                uim.getItemIntents(iv.v1).sequential().forEach(f -> {
                     if (!probNorm.containsKey(f)) {
-                        probNorm.put(f, iv.v);
+                        probNorm.put(f, iv.v2);
                     }
                 });
             });
         }
 
-        private double pif(IdDouble<I> iv, F f) {
-            return (Math.pow(2, iv.v / probNorm.getDouble(f)) - 1) / 2.0;
+        private double pif(Tuple2od<I> iv, F f) {
+            return (Math.pow(2, iv.v2 / probNorm.getDouble(f)) - 1) / 2.0;
         }
 
         @Override
-        protected double nov(IdDouble<I> iv) {
-            return uim.getItemIntents(iv.id)
+        protected double nov(Tuple2od<I> iv) {
+            return uim.getItemIntents(iv.v1)
                     .mapToDouble(f -> {
                         return uim.pf_u(f) * pif(iv, f) * redundancy.getDouble(f);
                     }).sum();
         }
 
         @Override
-        protected void update(IdDouble<I> biv) {
-            uim.getItemIntents(biv.id).sequential()
+        protected void update(Tuple2od<I> biv) {
+            uim.getItemIntents(biv.v1).sequential()
                     .forEach(f -> {
                         redundancy.put(f, redundancy.getDouble(f) * (1 - alpha * pif(biv, f)));
                     });

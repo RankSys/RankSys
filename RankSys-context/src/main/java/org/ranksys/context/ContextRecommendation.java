@@ -7,10 +7,11 @@
  */
 package org.ranksys.context;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import java.util.List;
+import static org.jooq.lambda.tuple.Tuple.tuple;
+import org.jooq.lambda.tuple.Tuple2;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Context-aware recommendation.
@@ -21,7 +22,7 @@ import java.util.List;
  * @param <C> context type
  * @param <I> item type
  */
-public class ContextRecommendation<U, I, C> extends Recommendation<IdObject<U, C>, I> {
+public class ContextRecommendation<U, I, C> extends Recommendation<Tuple2<U, C>, I> {
 
     /**
      * Constructor.
@@ -30,11 +31,11 @@ public class ContextRecommendation<U, I, C> extends Recommendation<IdObject<U, C
      * @param ctx context
      * @param items recommended item-score pairs
      */
-    public ContextRecommendation(U user,  C ctx, List<IdDouble<I>> items) {
-        this(new IdObject<>(user, ctx), items);
+    public ContextRecommendation(U user,  C ctx, List<Tuple2od<I>> items) {
+        this(tuple(user, ctx), items);
     }
 
-    protected ContextRecommendation(IdObject<U, C> userCtx, List<IdDouble<I>> items) {
+    protected ContextRecommendation(Tuple2<U, C> userCtx, List<Tuple2od<I>> items) {
         super(userCtx, items);
     }
 }

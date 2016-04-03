@@ -56,8 +56,12 @@ public class SimpleContextFastPreferenceData<U, I, C> extends AbstractFastPrefer
         this.iidxList = iidxList;
         this.contextSize = contextSize;
 
-        uidxList.stream().filter(list -> list != null).forEach(list -> sort(list, (p1, p2) -> compare(p1.idx, p2.idx)));
-        iidxList.stream().filter(list -> list != null).forEach(list -> sort(list, (p1, p2) -> compare(p1.idx, p2.idx)));
+        uidxList.stream()
+                .filter(list -> list != null)
+                .forEach(list -> sort(list, (p1, p2) -> compare(p1.v1, p2.v1)));
+        iidxList.stream()
+                .filter(list -> list != null)
+                .forEach(list -> sort(list, (p1, p2) -> compare(p1.v1, p2.v1)));
     }
 
     @Override
@@ -125,18 +129,20 @@ public class SimpleContextFastPreferenceData<U, I, C> extends AbstractFastPrefer
 
     @Override
     public Stream<IdPrefCtx<I, C>> getUserPreferences(U u) {
-        return getUidxPreferences(user2uidx(u)).map(iv -> new IdPrefCtx<>(iidx2item(iv.idx), iv.v, iv.cs));
+        return getUidxPreferences(user2uidx(u))
+                .map(iv -> new IdPrefCtx<>(iidx2item(iv.v1), iv.v2, iv.cs));
     }
 
     @Override
     public Stream<IdPrefCtx<U, C>> getItemPreferences(I i) {
-        return getIidxPreferences(item2iidx(i)).map(uv -> new IdPrefCtx<>(uidx2user(uv.idx), uv.v, uv.cs));
+        return getIidxPreferences(item2iidx(i))
+                .map(uv -> new IdPrefCtx<>(uidx2user(uv.v1), uv.v2, uv.cs));
     }
 
     @Override
     public Optional<IdxPrefCtx<C>> getPreference(int uidx, int iidx) {
         List<IdxPrefCtx<C>> list = uidxList.get(uidx);
-        int i = binarySearch(list, new IdxPrefCtx<>(iidx, 0.0, null), (p1, p2) -> compare(p1.idx, p2.idx));
+        int i = binarySearch(list, new IdxPrefCtx<>(iidx, 0.0, null), (p1, p2) -> compare(p1.v1, p2.v1));
         if (i < 0) {
             return Optional.empty();
         } else {
@@ -151,22 +157,22 @@ public class SimpleContextFastPreferenceData<U, I, C> extends AbstractFastPrefer
 
     @Override
     public IntIterator getUidxIidxs(int uidx) {
-        return new StreamIntIterator(getUidxPreferences(uidx).mapToInt(p -> p.idx));
+        return new StreamIntIterator(getUidxPreferences(uidx).mapToInt(p -> p.v1));
     }
 
     @Override
     public DoubleIterator getUidxVs(int uidx) {
-        return new StreamDoubleIterator(getUidxPreferences(uidx).mapToDouble(p -> p.v));
+        return new StreamDoubleIterator(getUidxPreferences(uidx).mapToDouble(p -> p.v2));
     }
 
     @Override
     public IntIterator getIidxUidxs(int iidx) {
-        return new StreamIntIterator(getIidxPreferences(iidx).mapToInt(p -> p.idx));
+        return new StreamIntIterator(getIidxPreferences(iidx).mapToInt(p -> p.v1));
     }
 
     @Override
     public DoubleIterator getIidxVs(int iidx) {
-        return new StreamDoubleIterator(getIidxPreferences(iidx).mapToDouble(p -> p.v));
+        return new StreamDoubleIterator(getIidxPreferences(iidx).mapToDouble(p -> p.v2));
     }
 
     @Override

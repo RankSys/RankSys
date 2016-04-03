@@ -68,7 +68,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             DoubleMatrix1D pU_z = pu_z.viewRow(uidx);
             DoubleMatrix1D pUi = piz.zMult(pU_z, null);
             return data.getUidxPreferences(uidx).mapToDouble(iv -> {
-                return -iv.v * pUi.getQuick(iv.idx);
+                return -iv.v2 * pUi.getQuick(iv.v1);
             }).sum();
         }).sum();
 
@@ -118,7 +118,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
     private void expectation(final DenseDoubleMatrix2D pz_u, final DenseDoubleMatrix2D piz, PLSAPreferenceData<U, I> qzData) {
         qzData.getUidxWithPreferences().parallel().forEach(uidx -> {
             qzData.getUidxPreferences(uidx).forEach(iqz -> {
-                int iidx = iqz.idx;
+                int iidx = iqz.v1;
                 double[] qz = ((PLSAPreferenceData.PLSAIdxPref) iqz).qz;
                 for (int z = 0; z < qz.length; z++) {
                     qz[z] = piz.getQuick(iidx, z) * pz_u.getQuick(uidx, z);
@@ -139,8 +139,8 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             final DoubleMatrix1D pz_U = pu_z.viewRow(uidx);
 
             qzData.getUidxPreferences(uidx).forEach(iqz -> {
-                int iidx = iqz.idx;
-                double v = iqz.v;
+                int iidx = iqz.v1;
+                double v = iqz.v2;
                 double[] qz = ((PLSAPreferenceData.PLSAIdxPref) iqz).qz;
                 Lock lock = lockMap.get(iidx);
 
@@ -188,7 +188,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             this.qz = new Long2ObjectOpenHashMap<>();
             data.getUidxWithPreferences().forEach(uidx -> {
                 data.getUidxPreferences(uidx).forEach(pref -> {
-                    putQz(uidx, pref.idx, new double[K]);
+                    putQz(uidx, pref.v1, new double[K]);
                 });
             });
 
@@ -225,13 +225,13 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         @Override
         public Stream<IdxPref> getUidxPreferences(int uidx) {
             return data.getUidxPreferences(uidx)
-                    .map(pref -> new PLSAIdxPref(pref.idx, pref.v, getQz(uidx, pref.idx)));
+                    .map(pref -> new PLSAIdxPref(pref.v1, pref.v2, getQz(uidx, pref.v1)));
         }
 
         @Override
         public Stream<IdxPref> getIidxPreferences(int iidx) {
             return data.getIidxPreferences(iidx)
-                    .map(pref -> new PLSAIdxPref(pref.idx, pref.v, getQz(pref.idx, iidx)));
+                    .map(pref -> new PLSAIdxPref(pref.v1, pref.v2, getQz(pref.v1, iidx)));
         }
 
         @Override

@@ -10,6 +10,9 @@ package es.uam.eps.ir.ranksys.novdiv.reranking;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import static java.lang.Math.min;
+import static java.lang.Math.min;
+import static java.lang.Math.min;
+import static java.lang.Math.min;
 
 /**
  * Null re-ranker that does not perform an actual re-ranking.

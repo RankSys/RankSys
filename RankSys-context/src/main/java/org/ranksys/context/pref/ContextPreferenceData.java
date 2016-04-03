@@ -65,21 +65,5 @@ public interface ContextPreferenceData<U, I, C> extends PointWisePreferenceData<
             super(id, v);
             this.cs = cs;
         }
-
-        /**
-         * Re-use this object with new values for its fields.
-         *
-         * @param id item
-         * @param v value
-         * @param cs list of contexts
-         * @return this object with the new values
-         */
-        public IdPrefCtx<I, C> refill(I id, double v, List<C> cs) {
-            this.id = id;
-            this.v = v;
-            this.cs = cs;
-            return this;
-        }
-
     }
 }

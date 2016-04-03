@@ -7,7 +7,6 @@
  */
 package org.ranksys.context.rel;
 
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel.UserIdealRelevanceModel;
@@ -15,6 +14,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Set;
 import java.util.function.DoubleUnaryOperator;
+import org.jooq.lambda.tuple.Tuple2;
 import org.ranksys.context.pref.ContextPreferenceData.IdPrefCtx;
 
 /**
@@ -26,7 +26,7 @@ import org.ranksys.context.pref.ContextPreferenceData.IdPrefCtx;
  * @param <C> context type
  * @param <I> item type
  */
-public class ContextGradedRelevanceModel<U, I, C> extends IdealRelevanceModel<IdObject<U, C>, I> {
+public class ContextGradedRelevanceModel<U, I, C> extends IdealRelevanceModel<Tuple2<U, C>, I> {
 
     private final PreferenceData<U, I> testData;
     private final DoubleUnaryOperator rel;
@@ -44,20 +44,20 @@ public class ContextGradedRelevanceModel<U, I, C> extends IdealRelevanceModel<Id
     }
 
     @Override
-    protected UserIdealRelevanceModel<IdObject<U, C>, I> get(IdObject<U, C> userCtx) {
+    protected UserIdealRelevanceModel<Tuple2<U, C>, I> get(Tuple2<U, C> userCtx) {
         return new UserContextGradedRelevanceModel(userCtx);
     }
 
-    private class UserContextGradedRelevanceModel implements UserIdealRelevanceModel<IdObject<U, C>, I> {
+    private class UserContextGradedRelevanceModel implements UserIdealRelevanceModel<Tuple2<U, C>, I> {
 
         private final Object2DoubleMap<I> relevantItems;
 
-        public UserContextGradedRelevanceModel(IdObject<U, C> userCtx) {
+        public UserContextGradedRelevanceModel(Tuple2<U, C> userCtx) {
             this.relevantItems = new Object2DoubleOpenHashMap<>();
-            testData.getUserPreferences(userCtx.id)
-                    .filter(p -> rel.applyAsDouble(p.v) > 0)
-                    .filter(p -> ((IdPrefCtx<I, C>) p).cs.contains(userCtx.v))
-                    .forEach(p -> relevantItems.put(p.id, rel.applyAsDouble(p.v)));
+            testData.getUserPreferences(userCtx.v1)
+                    .filter(p -> rel.applyAsDouble(p.v2) > 0)
+                    .filter(p -> ((IdPrefCtx<I, C>) p).cs.contains(userCtx.v2))
+                    .forEach(p -> relevantItems.put(p.v1, rel.applyAsDouble(p.v2)));
         }
 
         @Override

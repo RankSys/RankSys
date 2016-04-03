@@ -7,7 +7,6 @@
  */
 package org.ranksys.diversity.prop.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
@@ -15,6 +14,7 @@ import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rel.NoRelevanceModel;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Cumulative proportionality metric.
@@ -61,10 +61,10 @@ public class CPR<U, I, F> extends AbstractRecommendationMetric<U, I> {
         int rank = 0;
         int nr = 0;
         double cpr = 0.0;
-        for (IdDouble<I> iv : recommendation.getItems()) {
-            if (userRelModel.isRelevant(iv.id)) {
-                featureData.getItemFeatures(iv.id).forEach(fv -> {
-                    count.addTo(fv.id, 1);
+        for (Tuple2od<I> iv : recommendation.getItems()) {
+            if (userRelModel.isRelevant(iv.v1)) {
+                featureData.getItemFeatures(iv.v1).forEach(fv -> {
+                    count.addTo(fv.v1, 1);
                 });
             } else {
                 nr++;

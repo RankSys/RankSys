@@ -57,10 +57,10 @@ public class BackgroundBinaryRelevanceModel<U, I> extends RelevanceModel<U, I> {
             this.gainMap.defaultReturnValue(background);
 
             testData.getUserPreferences(user).forEach(iv -> {
-                if (iv.v >= threshold) {
-                    gainMap.put(iv.id, 1.0);
+                if (iv.v2 >= threshold) {
+                    gainMap.put(iv.v1, 1.0);
                 } else {
-                    gainMap.put(iv.id, 0.0);
+                    gainMap.put(iv.v1, 0.0);
                 }
             });
         }

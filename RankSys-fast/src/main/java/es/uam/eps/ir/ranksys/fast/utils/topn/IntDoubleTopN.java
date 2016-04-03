@@ -9,15 +9,15 @@
 package es.uam.eps.ir.ranksys.fast.utils.topn;
 
 import es.uam.eps.ir.ranksys.core.util.topn.AbstractTopN;
-import it.unimi.dsi.fastutil.ints.Int2DoubleMap.Entry;
-import it.unimi.dsi.fastutil.ints.AbstractInt2DoubleMap.BasicEntry;
+import org.ranksys.core.util.tuples.Tuple2id;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Bounded min-heap to keep just the top-n greatest integer-double pairs according to the value of the double.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class IntDoubleTopN extends AbstractTopN<Entry> {
+public class IntDoubleTopN extends AbstractTopN<Tuple2id> {
 
     private final int[] keys;
     private final double[] values;
@@ -41,24 +41,24 @@ public class IntDoubleTopN extends AbstractTopN<Entry> {
      * @return true if the pair was added to the heap, false otherwise
      */
     public boolean add(int key, double value) {
-        return add(new BasicEntry(key, value));
+        return add(tuple(key, value));
     }
 
     @Override
-    protected Entry get(int i) {
-        return new BasicEntry(keys[i], values[i]);
+    protected Tuple2id get(int i) {
+        return tuple(keys[i], values[i]);
     }
 
     @Override
-    protected void set(int i, Entry e) {
-        keys[i] = e.getIntKey();
-        values[i] = e.getDoubleValue();
+    protected void set(int i, Tuple2id e) {
+        keys[i] = e.v1;
+        values[i] = e.v2;
     }
 
     @Override
-    protected int compare(int i, Entry e) {
-        int k = e.getIntKey();
-        double v = e.getDoubleValue();
+    protected int compare(int i, Tuple2id e) {
+        int k = e.v1;
+        double v = e.v2;
 
         int c = Double.compare(values[i], v);
         if (c != 0) {

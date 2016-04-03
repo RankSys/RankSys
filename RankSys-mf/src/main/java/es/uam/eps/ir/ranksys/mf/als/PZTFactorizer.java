@@ -74,8 +74,8 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
             DoubleMatrix1D su = q.zMult(pu, null);
             
             double err1 = data.getUidxPreferences(uidx).mapToDouble(iv -> {
-                double rui = iv.v;
-                double sui = su.getQuick(iv.idx);
+                double rui = iv.v2;
+                double sui = su.getQuick(iv.v1);
                 double cui = confidence.applyAsDouble(rui);
                 return cui * (rui - sui) * (rui - sui) - confidence.applyAsDouble(0) * sui * sui;
             }).sum();
@@ -139,9 +139,9 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
         }
         int[] j = {K};
         prefs.forEach(iv -> {
-            q.viewRow(iv.idx).toArray(x[j[0]]);
-            double Cui = confidence.applyAsDouble(iv.v);
-            y[j[0]] = (Cui * iv.v) / (Cui - 1);
+            q.viewRow(iv.v1).toArray(x[j[0]]);
+            double Cui = confidence.applyAsDouble(iv.v2);
+            y[j[0]] = (Cui * iv.v2) / (Cui - 1);
             c[j[0]] = Cui - 1;
             j[0]++;
         });

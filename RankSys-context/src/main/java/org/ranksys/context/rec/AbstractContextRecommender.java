@@ -8,11 +8,11 @@
 package org.ranksys.context.rec;
 
 import org.ranksys.context.ContextRecommendation;
-import es.uam.eps.ir.ranksys.core.IdObject;
 import es.uam.eps.ir.ranksys.rec.AbstractRecommender;
 import java.util.Set;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Abstract context-aware recommender implementing the methods for free
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  * @param <C> context type
  * @param <I> item type
  */
-public abstract class AbstractContextRecommender<U, I, C> extends AbstractRecommender<IdObject<U, C>, I> implements ContextRecommender<U, I, C> {
+public abstract class AbstractContextRecommender<U, I, C> extends AbstractRecommender<Tuple2<U, C>, I> implements ContextRecommender<U, I, C> {
 
     @Override
     public ContextRecommendation<U, I, C> getRecommendation(final U u, final C c, int maxLength) {
