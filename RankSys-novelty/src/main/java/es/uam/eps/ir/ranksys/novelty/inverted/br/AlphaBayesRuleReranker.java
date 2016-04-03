@@ -64,7 +64,7 @@ public class AlphaBayesRuleReranker<U, I> extends BayesRuleReranker<U, I> {
      * @param recommender recommender whose norm is used
      */
     public AlphaBayesRuleReranker(double alpha, Stream<U> users, Recommender<U, I> recommender) {
-        this(alpha, users.parallel().map(u -> recommender.getRecommendation(u, 0)));
+        this(alpha, users.parallel().map(u -> recommender.getRecommendation(u)));
     }
 
     /**

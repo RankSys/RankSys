@@ -6,11 +6,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.core.format;
+package org.ranksys.formats.rec;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.dp;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -29,6 +27,8 @@ import java.util.stream.StreamSupport;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import org.ranksys.core.util.tuples.Tuple2od;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
+import org.ranksys.formats.parsing.Parser;
+import static org.ranksys.formats.parsing.Parsers.dp;
 
 /**
  * Simple format for recommendations: tab-separated user-item-score triplets, grouping first by user (not necessarily in order) and then by decreasing order of score.

@@ -10,18 +10,11 @@ package org.ranksys.compression.preferences;
 import org.ranksys.compression.codecs.CODEC;
 import static org.ranksys.compression.util.Delta.atled;
 import static org.ranksys.compression.util.Delta.delta;
-import static es.uam.eps.ir.ranksys.core.util.parsing.IntParser.dip;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.function.Function;
 import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
@@ -178,64 +171,4 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
         return new ArrayDoubleIterator(vsd);
     }
 
-    /**
-     * Reads two files for user and item preferences and builds a compressed PreferenceData. The format of the user preferences stream consists on one list per line, starting with the identifier of the user followed by the identifier-rating pairs of the items related to that. The item preferences stream follows the same format by swapping the roles of users and items.
-     *
-     * @param <U> type of users
-     * @param <I> type of items
-     * @param <Cu> coding for user identifiers
-     * @param <Ci> coding for item identifiers
-     * @param <Cv> coding for ratings
-     * @param up path to user preferences file
-     * @param ip path to item preferences file
-     * @param users user index
-     * @param items item index
-     * @param u_codec user preferences list CODEC
-     * @param i_codec item preferences list CODEC
-     * @param r_codec ratings CODEC
-     * @return compressed preference data
-     * @throws FileNotFoundException when one of the files does not exist
-     */
-    public static <U, I, Cu, Ci, Cv> RatingCODECPreferenceData<U, I, Cu, Ci, Cv> load(String up, String ip, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec) throws FileNotFoundException {
-        return load(new FileInputStream(up), new FileInputStream(ip), users, items, u_codec, i_codec, r_codec);
-    }
-
-    /**
-     * Reads two streams for user and item preferences and builds a compressed PreferenceData. The format of the user preferences stream consists on one list per line, starting with the identifier of the user followed by the identifier-rating pairs of the items related to that. The item preferences stream follows the same format by swapping the roles of users and items.
-     *
-     * @param <U> type of users
-     * @param <I> type of items
-     * @param <Cu> coding for user identifiers
-     * @param <Ci> coding for item identifiers
-     * @param <Cv> coding for ratings
-     * @param uo stream user preferences
-     * @param io stream item preferences
-     * @param users user index
-     * @param items item index
-     * @param u_codec user preferences list CODEC
-     * @param i_codec item preferences list CODEC
-     * @param r_codec ratings CODEC
-     * @return compressed preference data
-     */
-    public static <U, I, Cu, Ci, Cv> RatingCODECPreferenceData<U, I, Cu, Ci, Cv> load(InputStream uo, InputStream io, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec) {
-        Function<InputStream, Stream<Tuple2io<int[][]>>> reader = is -> {
-            return new BufferedReader(new InputStreamReader(is)).lines().map(line -> {
-                String[] tokens = line.split("\t");
-                int len = tokens.length / 2;
-                int k = dip.parse(tokens[0]);
-                int[] idxs = new int[len];
-                int[] vs = new int[len];
-                for (int i = 0; i < len; i++) {
-                    idxs[i] = dip.parse(tokens[2 * i + 1]);
-                    vs[i] = dip.parse(tokens[2 * i + 2]);
-                }
-                return tuple(k, new int[][]{idxs, vs});
-            });
-        };
-
-        Stream<Tuple2io<int[][]>> ul = reader.apply(uo);
-        Stream<Tuple2io<int[][]>> il = reader.apply(io);
-
-        return new RatingCODECPreferenceData<>(ul, il, users, items, u_codec, i_codec, r_codec);
-    }
 }

@@ -86,5 +86,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
             <artifactId>jool</artifactId>
             <version>0.9.10</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>RankSys-formats</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

@@ -28,20 +28,38 @@ public interface FastRecommender<U, I> extends Recommender<U, I>, FastUserIndex<
 
     /**
      * Free recommendation. Generate recommendations without any restriction
+     * on the items being recommended.
+     *
+     * @param uidx index of the user to be issued a recommendation
+     * @return a (fast) recommendation list
+     */
+    public FastRecommendation getRecommendation(int uidx);
+
+    /**
+     * Free recommendation. Generate recommendations without any restriction
      * on the items being recommended, but with a limit on the list size.
      *
      * @param uidx index of the user to be issued a recommendation
-     * @param maxLength maximum length of recommendation, set to 0 for no limit
+     * @param maxLength maximum length of recommendation
      * @return a (fast) recommendation list
      */
     public FastRecommendation getRecommendation(int uidx, int maxLength);
+
+    /**
+     * Filter recommendation. Recommends only the items that pass the filter.
+     *
+     * @param uidx index of the user to be issued a recommendation
+     * @param filter (fast) filter to decide which items might be recommended
+     * @return a (fast) recommendation list
+     */
+    public FastRecommendation getRecommendation(int uidx, IntPredicate filter);
 
     /**
      * Filter recommendation. Recommends only the items that pass the filter up
      * to a maximum list size.
      *
      * @param uidx index of the user to be issued a recommendation
-     * @param maxLength maximum length of recommendation, set to 0 for no limit
+     * @param maxLength maximum length of recommendation
      * @param filter (fast) filter to decide which items might be recommended
      * @return a (fast) recommendation list
      */

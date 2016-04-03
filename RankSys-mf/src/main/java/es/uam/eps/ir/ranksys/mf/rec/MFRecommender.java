@@ -16,6 +16,7 @@ import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import es.uam.eps.ir.ranksys.mf.Factorization;
+import static java.lang.Math.min;
 import java.util.ArrayList;
 import static java.util.Comparator.comparingDouble;
 import java.util.List;
@@ -58,10 +59,7 @@ public class MFRecommender<U, I> extends AbstractFastRecommender<U, I> {
             return new FastRecommendation(uidx, new ArrayList<>());
         }
 
-        if (maxLength == 0) {
-            maxLength = factorization.numItems();
-        }
-        IntDoubleTopN topN = new IntDoubleTopN(maxLength);
+        IntDoubleTopN topN = new IntDoubleTopN(min(maxLength, factorization.numItems()));
 
         DoubleMatrix1D r = factorization.getItemMatrix().zMult(pu, null);
         for (int iidx = 0; iidx < r.size(); iidx++) {

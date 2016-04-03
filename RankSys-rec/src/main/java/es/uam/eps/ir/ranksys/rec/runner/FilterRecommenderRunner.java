@@ -8,13 +8,12 @@
  */
 package es.uam.eps.ir.ranksys.rec.runner;
 
-import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
+import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.rec.Recommender;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Filter runner. It creates recommendations by using the filter method in the
@@ -34,19 +33,18 @@ public class FilterRecommenderRunner<U, I> extends AbstractRecommenderRunner<U, 
      * Constructor.
      *
      * @param users target users, those for which recommendations are generated.
-     * @param format output recommendation format
      * @param userFilter item filter provider for each user
      * @param maxLength maximum length of the recommendation lists, 0 for no limit
      */
-    public FilterRecommenderRunner(Set<U> users, RecommendationFormat<U, I> format, Function<U, Predicate<I>> userFilter, int maxLength) {
-        super(users.stream(), format);
+    public FilterRecommenderRunner(Stream<U> users, Function<U, Predicate<I>> userFilter, int maxLength) {
+        super(users);
         
         this.userFilter = userFilter;
         this.maxLength = maxLength;
     }
 
     @Override
-    public void run(final Recommender<U, I> recommender, OutputStream out) throws IOException {
-        run(user -> recommender.getRecommendation(user, maxLength, userFilter.apply(user)), out);
+    public void run(final Recommender<U, I> recommender, Consumer<Recommendation<U, I>> consumer) {
+        run(user -> recommender.getRecommendation(user, maxLength, userFilter.apply(user)), consumer);
     }
 }

@@ -13,6 +13,7 @@ import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
+import static java.lang.Math.min;
 import java.util.List;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
@@ -44,10 +45,8 @@ public class LDARecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     @Override
     public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
-        if (maxLength == 0) {
-            maxLength = numItems();
-        }
-        IntDoubleTopN topN = new IntDoubleTopN(maxLength);
+
+        IntDoubleTopN topN = new IntDoubleTopN(min(maxLength, numItems()));
 
         for (int iidx = 0; iidx < numItems(); iidx++) {
             if (filter.test(iidx)) {

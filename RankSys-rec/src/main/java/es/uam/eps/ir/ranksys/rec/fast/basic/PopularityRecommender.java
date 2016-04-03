@@ -11,10 +11,10 @@ package es.uam.eps.ir.ranksys.rec.fast.basic;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
+import static java.lang.Math.min;
 import java.util.List;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
-import static java.util.Collections.sort;
 import static java.util.Comparator.comparingDouble;
 import org.ranksys.core.util.tuples.Tuple2id;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
@@ -48,13 +48,10 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     @Override
     public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
-        if (maxLength == 0) {
-            maxLength = popList.size();
-        }
         
         List<Tuple2id> items = popList.stream()
                 .filter(is -> filter.test(is.v1))
-                .limit(maxLength)
+                .limit(min(maxLength, popList.size()))
                 .collect(toList());
         
         return new FastRecommendation(uidx, items);

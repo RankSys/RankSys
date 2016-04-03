@@ -9,10 +9,7 @@
 package es.uam.eps.ir.ranksys.examples;
 
 import cc.mallet.topics.ParallelTopicModel;
-import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
-import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
-import static es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser.ddp;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
+import static org.ranksys.formats.parsing.Parsers.lp;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
@@ -42,7 +39,6 @@ import es.uam.eps.ir.ranksys.rec.runner.RecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilterRecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilters;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -54,6 +50,11 @@ import java.util.stream.Collectors;
 import org.jooq.lambda.Unchecked;
 import org.ranksys.lda.LDAModelEstimator;
 import org.ranksys.lda.LDARecommender;
+import org.ranksys.formats.index.ItemsReader;
+import org.ranksys.formats.index.UsersReader;
+import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
+import org.ranksys.formats.rec.RecommendationFormat;
+import org.ranksys.formats.rec.SimpleRecommendationFormat;
 
 /**
  * Example main of recommendations.
@@ -69,10 +70,10 @@ public class RecommenderExample {
         String trainDataPath = args[2];
         String testDataPath = args[3];
 
-        FastUserIndex<Long> userIndex = SimpleFastUserIndex.load(userPath, lp);
-        FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(itemPath, lp);
-        FastPreferenceData<Long, Long> trainData = SimpleFastPreferenceData.load(trainDataPath, lp, lp, ddp, userIndex, itemIndex);
-        FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(testDataPath, lp, lp, ddp, userIndex, itemIndex);
+        FastUserIndex<Long> userIndex = SimpleFastUserIndex.load(UsersReader.read(userPath, lp));
+        FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(ItemsReader.read(itemPath, lp));
+        FastPreferenceData<Long, Long> trainData = SimpleFastPreferenceData.load(SimpleRatingPreferencesReader.get().read(trainDataPath, lp, lp), userIndex, itemIndex);
+        FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(SimpleRatingPreferencesReader.get().read(testDataPath, lp, lp), userIndex, itemIndex);
 
         //////////////////
         // RECOMMENDERS //
@@ -170,11 +171,11 @@ public class RecommenderExample {
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
         Function<Long, IntPredicate> filter = FastFilters.notInTrain(trainData);
         int maxLength = 100;
-        RecommenderRunner<Long, Long> runner = new FastFilterRecommenderRunner<>(userIndex, itemIndex, targetUsers, format, filter, maxLength);
+        RecommenderRunner<Long, Long> runner = new FastFilterRecommenderRunner<>(userIndex, itemIndex, targetUsers.stream(), filter, maxLength);
 
         recMap.forEach(Unchecked.biConsumer((name, recommender) -> {
             System.out.println("Running " + name);
-            runner.run(recommender.get(), name);
+            runner.run(recommender.get(), format.getWriter(name));
         }));
     }
 }

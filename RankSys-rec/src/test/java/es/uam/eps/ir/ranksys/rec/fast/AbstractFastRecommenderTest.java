@@ -12,6 +12,7 @@ import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.SimpleFastUserIndex;
+import static java.lang.Math.min;
 import java.util.Arrays;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparingDouble;
@@ -66,16 +67,13 @@ public class AbstractFastRecommenderTest {
         recommender = new AbstractFastRecommender<String, String>(uIndex, iIndex) {
             @Override
             public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
-                if (maxLength == 0) {
-                    maxLength = recs.size();
-                }
                 
                 List<Tuple2id> recs0;
                 if (uidx == 0) {
                     recs0 = recs.stream()
                             .filter(p -> filter.test(p.v1))
                             .sorted(comparingDouble(Tuple2id::v2).reversed())
-                            .limit(maxLength)
+                            .limit(min(maxLength, recs.size()))
                             .collect(toList());
                 } else {
                     recs0 = emptyList();

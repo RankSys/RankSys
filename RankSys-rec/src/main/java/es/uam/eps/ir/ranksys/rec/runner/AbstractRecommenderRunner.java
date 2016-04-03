@@ -9,19 +9,15 @@
 package es.uam.eps.ir.ranksys.rec.runner;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.jooq.lambda.Unchecked;
 
 /**
  * Generic recommender runner. This class handles the print of the output.
@@ -36,51 +32,43 @@ public abstract class AbstractRecommenderRunner<U, I> implements RecommenderRunn
     private static final Logger LOG = Logger.getLogger(AbstractRecommenderRunner.class.getName());
 
     private final List<U> users;
-    private final RecommendationFormat<U, I> format;
 
     /**
      * Constructor.
      *
      * @param users target users for which recommendations are generated
-     * @param format output recommendation format
      */
-    public AbstractRecommenderRunner(Stream<U> users, RecommendationFormat<U, I> format) {
+    public AbstractRecommenderRunner(Stream<U> users) {
         this.users = users.sorted().collect(Collectors.toList());
-        this.format = format;
     }
 
     /**
      * Prints the recommendations.
      *
      * @param recProvider function that provides the recommendations by calling a recommender
-     * @param out output stream through which recommendations are printed
-     * @throws IOException when IO error
+     * @param consumer recommendation consumer
      */
-    protected void run(Function<U, Recommendation<U, I>> recProvider, OutputStream out) throws IOException {
-        try (RecommendationFormat.Writer<U, I> writer = format.getWriter(out)) {
-            Map<U, Recommendation<U, I>> pendingRecommendations = new HashMap<>();
-            List<U> usersAux = new ArrayList<>(users);
+    protected void run(Function<U, Recommendation<U, I>> recProvider, Consumer<Recommendation<U, I>> consumer) {
+        Map<U, Recommendation<U, I>> pendingRecommendations = new HashMap<>();
+        List<U> usersAux = new ArrayList<>(users);
 
-            users.parallelStream()
-                    .map(recProvider)
-                    .forEachOrdered(Unchecked.consumer(recommendation -> {
-                        if (recommendation.getUser().equals(usersAux.get(0))) {
-                            writer.write(recommendation);
+        users.parallelStream()
+                .map(user -> recProvider.apply(user))
+                .forEachOrdered(recommendation -> {
+                    if (recommendation.getUser().equals(usersAux.get(0))) {
+                        consumer.accept(recommendation);
+                        usersAux.remove(0);
+
+                        while (!usersAux.isEmpty() && pendingRecommendations.containsKey(usersAux.get(0))) {
+                            recommendation = pendingRecommendations.get(usersAux.get(0));
+                            consumer.accept(recommendation);
                             usersAux.remove(0);
-
-                            while (!usersAux.isEmpty() && pendingRecommendations.containsKey(usersAux.get(0))) {
-                                recommendation = pendingRecommendations.get(usersAux.get(0));
-                                writer.write(recommendation);
-                                usersAux.remove(0);
-                            }
-                        } else {
-                            pendingRecommendations.put(recommendation.getUser(), recommendation);
                         }
-                    }, ex -> LOG.log(Level.SEVERE, null, ex)));
+                    } else {
+                        pendingRecommendations.put(recommendation.getUser(), recommendation);
+                    }
+                });
 
-            usersAux.stream()
-                    .map(pendingRecommendations::get)
-                    .forEach(Unchecked.consumer(writer::write));
-        }
+        usersAux.stream().map(pendingRecommendations::get).forEach(consumer);
     }
 }

@@ -11,6 +11,7 @@ package es.uam.eps.ir.ranksys.novelty.inverted.br;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker;
+import static java.lang.Math.min;
 import java.util.List;
 import org.ranksys.core.util.tuples.Tuple2od;
 
@@ -31,16 +32,13 @@ public abstract class BayesRuleReranker<U, I> extends PermutationReranker<U, I> 
 
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
-        int N = maxLength;
-        if (maxLength == 0) {
-            N = recommendation.getItems().size();
-        }
+        List<Tuple2od<I>> items = recommendation.getItems();
+        int M = items.size();
+        int N = min(maxLength, M);
 
         IntDoubleTopN topN = new IntDoubleTopN(N);
-        List<Tuple2od<I>> list = recommendation.getItems();
-        int M = list.size();
-        for (int i = 0; i < list.size(); i++) {
-            topN.add(M - i, likelihood(list.get(i)) * prior(list.get(i).v1));
+        for (int i = 0; i < M; i++) {
+            topN.add(M - i, likelihood(items.get(i)) * prior(items.get(i).v1));
         }
         topN.sort();
 
