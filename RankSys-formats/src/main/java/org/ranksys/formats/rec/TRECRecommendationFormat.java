@@ -19,13 +19,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterators;
 import java.util.logging.Level;
-import static java.util.logging.Logger.getLogger;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import static org.jooq.lambda.Seq.seq;
+import org.jooq.lambda.Unchecked;
 import org.ranksys.core.util.tuples.Tuple2od;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 import org.ranksys.formats.parsing.Parser;
-import static org.ranksys.formats.parsing.Parsers.dp;
+import static org.ranksys.formats.parsing.Parsers.pdp;
 
 /**
  *
@@ -33,9 +35,10 @@ import static org.ranksys.formats.parsing.Parsers.dp;
  */
 public class TRECRecommendationFormat<U, I> implements RecommendationFormat<U, I> {
 
+    private static final Logger LOG = Logger.getLogger(TRECRecommendationFormat.class.getName());
+
     private final Parser<U> uParser;
     private final Parser<I> iParser;
-    private final Parser<Double> vParser = dp;
 
     public TRECRecommendationFormat(Parser<U> uParser, Parser<I> iParser) {
         this.uParser = uParser;
@@ -43,11 +46,11 @@ public class TRECRecommendationFormat<U, I> implements RecommendationFormat<U, I
     }
 
     @Override
-    public Writer<U, I> getWriter(OutputStream out) throws IOException {
-        return new Writer<>(out);
+    public RecommendationFormat.Writer<U, I> getWriter(OutputStream out) throws IOException {
+        return new Writer(out);
     }
 
-    public static class Writer<U, I> implements RecommendationFormat.Writer<U, I> {
+    private class Writer implements RecommendationFormat.Writer<U, I> {
 
         private final BufferedWriter writer;
 
@@ -57,20 +60,18 @@ public class TRECRecommendationFormat<U, I> implements RecommendationFormat<U, I
 
         @Override
         public void write(Recommendation<U, I> recommendation) throws IOException {
-            int n = 1;
             U u = recommendation.getUser();
-            for (Tuple2od<I> pair : recommendation.getItems()) {
+            seq(recommendation.getItems()).zipWithIndex().forEach(Unchecked.consumer(t -> {
                 writer.write(u.toString());
                 writer.write("\tQ0\t");
-                writer.write(pair.v1.toString());
+                writer.write(t.v1.v1.toString());
                 writer.write("\t");
-                writer.write(Integer.toString(n));
+                writer.write(Long.toString(t.v2));
                 writer.write("\t");
-                writer.write(Double.toString(pair.v2));
+                writer.write(Double.toString(t.v1.v2));
                 writer.write("\tr");
                 writer.newLine();
-                n++;
-            }
+            }));
         }
 
         @Override
@@ -81,54 +82,37 @@ public class TRECRecommendationFormat<U, I> implements RecommendationFormat<U, I
     }
 
     @Override
-    public Reader<U, I> getReader(InputStream in) throws IOException {
-        return new Reader<>(uParser, iParser, vParser, in);
+    public RecommendationFormat.Reader<U, I> getReader(InputStream in) throws IOException {
+        return new Reader(in);
     }
 
-    public static class Reader<U, I> implements RecommendationFormat.Reader<U, I> {
+    private class Reader implements RecommendationFormat.Reader<U, I> {
 
-        private final Parser<U> uParser;
-        private final Parser<I> iParser;
-        private final Parser<Double> vParser;
         private final InputStream in;
 
-        public Reader(Parser<U> uParser, Parser<I> iParser, Parser<Double> vParser, InputStream in) {
-            this.uParser = uParser;
-            this.iParser = iParser;
-            this.vParser = vParser;
+        public Reader(InputStream in) {
             this.in = in;
         }
 
         @Override
         public Stream<Recommendation<U, I>> readAll() throws IOException {
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                RecommendationIterator<U, I> iterator = new RecommendationIterator<>(reader, uParser, iParser, vParser);
-                return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
-            } catch (IOException ex) {
-                getLogger(TRECRecommendationFormat.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            RecommendationIterator iterator = new RecommendationIterator(reader);
+            return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
         }
 
     }
 
-    private static class RecommendationIterator<U, I> implements Iterator<Recommendation<U, I>> {
+    private class RecommendationIterator implements Iterator<Recommendation<U, I>> {
 
         private U lastU = null;
         private I lastI;
         private Double lastS;
         private final BufferedReader reader;
-        private final Parser<U> uParser;
-        private final Parser<I> iParser;
-        private final Parser<Double> vParser;
         private boolean eos = false;
 
-        public RecommendationIterator(BufferedReader reader, final Parser<U> uParser, final Parser<I> iParser, final Parser<Double> vParser) throws IOException {
+        public RecommendationIterator(BufferedReader reader) throws IOException {
             this.reader = reader;
-            this.uParser = uParser;
-            this.iParser = iParser;
-            this.vParser = vParser;
         }
 
         @Override
@@ -141,20 +125,20 @@ public class TRECRecommendationFormat<U, I> implements RecommendationFormat<U, I
                 try {
                     line = reader.readLine();
                 } catch (IOException ex) {
-                    getLogger(Recommendation.class.getName()).log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, null, ex);
                 }
                 if (line == null) {
                     try {
                         reader.close();
                     } catch (IOException ex) {
-                        getLogger(Recommendation.class.getName()).log(Level.SEVERE, null, ex);
+                        LOG.log(Level.SEVERE, null, ex);
                     }
                     return false;
                 } else {
                     CharSequence[] tokens = split(line, '\t', 6);
                     lastU = uParser.parse(tokens[0]);
                     lastI = iParser.parse(tokens[2]);
-                    lastS = vParser.parse(tokens[4]);
+                    lastS = pdp.applyAsDouble(tokens[4]);
                     return true;
                 }
             } else {
@@ -175,7 +159,7 @@ public class TRECRecommendationFormat<U, I> implements RecommendationFormat<U, I
                     CharSequence[] tokens = split(line, '\t', 6);
                     U u = uParser.parse(tokens[0]);
                     I i = iParser.parse(tokens[2]);
-                    Double s = vParser.parse(tokens[4]);
+                    Double s = pdp.applyAsDouble(tokens[4]);
                     if (u.equals(lastU)) {
                         list.add(tuple(i, s));
                     } else {
@@ -186,7 +170,7 @@ public class TRECRecommendationFormat<U, I> implements RecommendationFormat<U, I
                     }
                 }
             } catch (IOException ex) {
-                getLogger(Recommendation.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
             if (line == null) {
                 lastU = null;

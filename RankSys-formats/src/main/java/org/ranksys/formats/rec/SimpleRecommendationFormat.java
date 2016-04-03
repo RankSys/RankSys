@@ -25,10 +25,11 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import org.jooq.lambda.Unchecked;
 import org.ranksys.core.util.tuples.Tuple2od;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 import org.ranksys.formats.parsing.Parser;
-import static org.ranksys.formats.parsing.Parsers.dp;
+import static org.ranksys.formats.parsing.Parsers.pdp;
 
 /**
  * Simple format for recommendations: tab-separated user-item-score triplets, grouping first by user (not necessarily in order) and then by decreasing order of score.
@@ -44,7 +45,6 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
 
     private final Parser<U> uParser;
     private final Parser<I> iParser;
-    private final Parser<Double> vParser = dp;
 
     /**
      * Constructor.
@@ -73,14 +73,14 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
         @Override
         public void write(Recommendation<U, I> recommendation) throws IOException {
             U u = recommendation.getUser();
-            for (Tuple2od<I> pair : recommendation.getItems()) {
+            recommendation.getItems().forEach(Unchecked.consumer(t -> {
                 writer.write(u.toString());
                 writer.write("\t");
-                writer.write(pair.v1.toString());
+                writer.write(t.v1.toString());
                 writer.write("\t");
-                writer.write(Double.toString(pair.v2));
+                writer.write(Double.toString(t.v2));
                 writer.newLine();
-            }
+            }));
         }
 
         @Override
@@ -147,7 +147,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
                     CharSequence[] tokens = split(line, '\t', 4);
                     lastU = uParser.parse(tokens[0]);
                     lastI = iParser.parse(tokens[1]);
-                    lastS = vParser.parse(tokens[2]);
+                    lastS = pdp.applyAsDouble(tokens[2]);
                     return true;
                 }
             } else {
@@ -168,7 +168,7 @@ public class SimpleRecommendationFormat<U, I> implements RecommendationFormat<U,
                     CharSequence[] tokens = split(line, '\t', 4);
                     U u = uParser.parse(tokens[0]);
                     I i = iParser.parse(tokens[1]);
-                    Double s = vParser.parse(tokens[2]);
+                    Double s = pdp.applyAsDouble(tokens[2]);
                     if (u.equals(lastU)) {
                         list.add(tuple(i, s));
                     } else {

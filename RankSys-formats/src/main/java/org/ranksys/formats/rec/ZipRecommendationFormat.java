@@ -20,12 +20,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterators;
 import java.util.logging.Level;
-import static java.util.logging.Logger.getLogger;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import org.jooq.lambda.Unchecked;
 import org.ranksys.core.util.tuples.Tuple2od;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 import org.ranksys.formats.parsing.Parser;
@@ -36,6 +37,8 @@ import static org.ranksys.formats.parsing.Parsers.pdp;
  * @author saul
  */
 public class ZipRecommendationFormat<U, I> implements RecommendationFormat<U, I> {
+
+    private static final Logger LOG = Logger.getLogger(ZipRecommendationFormat.class.getName());
 
     private final Parser<U> uParser;
     private final Parser<I> iParser;
@@ -48,11 +51,11 @@ public class ZipRecommendationFormat<U, I> implements RecommendationFormat<U, I>
     }
 
     @Override
-    public Writer<U, I> getWriter(OutputStream out) throws IOException {
-        return new Writer<>(out, ignoreScores);
+    public RecommendationFormat.Writer<U, I> getWriter(OutputStream out) throws IOException {
+        return new Writer(out, ignoreScores);
     }
 
-    public static class Writer<U, I> implements RecommendationFormat.Writer<U, I> {
+    private class Writer implements RecommendationFormat.Writer<U, I> {
 
         private final ZipOutputStream zip;
         private final BufferedWriter writer;
@@ -67,18 +70,17 @@ public class ZipRecommendationFormat<U, I> implements RecommendationFormat<U, I>
 
         @Override
         public void write(Recommendation<U, I> recommendation) throws IOException {
-
             U u = recommendation.getUser();
-            for (Tuple2od<I> pair : recommendation.getItems()) {
+            recommendation.getItems().forEach(Unchecked.consumer(t -> {
                 writer.write(u.toString());
                 writer.write("\t");
-                writer.write(pair.v1.toString());
+                writer.write(t.v1.toString());
                 if (!ignoreScores) {
                     writer.write("\t");
-                    writer.write(Double.toString(pair.v2));
+                    writer.write(Double.toString(t.v2));
                 }
                 writer.newLine();
-            }
+            }));
         }
 
         @Override
@@ -91,56 +93,43 @@ public class ZipRecommendationFormat<U, I> implements RecommendationFormat<U, I>
     }
 
     @Override
-    public Reader<U, I> getReader(InputStream in) throws IOException {
-        return new Reader<>(uParser, iParser, ignoreScores, in);
+    public RecommendationFormat.Reader<U, I> getReader(InputStream in) throws IOException {
+        return new Reader(ignoreScores, in);
     }
 
-    public static class Reader<U, I> implements RecommendationFormat.Reader<U, I> {
+    private class Reader implements RecommendationFormat.Reader<U, I> {
 
-        private final Parser<U> uParser;
-        private final Parser<I> iParser;
         private final boolean ignoreScores;
         private final InputStream in;
 
-        public Reader(Parser<U> uParser, Parser<I> iParser, boolean ignoreScores, InputStream in) {
-            this.uParser = uParser;
-            this.iParser = iParser;
+        public Reader(boolean ignoreScores, InputStream in) {
             this.ignoreScores = ignoreScores;
             this.in = in;
         }
 
         @Override
         public Stream<Recommendation<U, I>> readAll() throws IOException {
-            try {
-                ZipInputStream zip = new ZipInputStream(in);
-                zip.getNextEntry();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(zip), 128 * 1024);
+            ZipInputStream zip = new ZipInputStream(in);
+            zip.getNextEntry();
 
-                RecommendationIterator<U, I> iterator = new RecommendationIterator<>(reader, uParser, iParser, ignoreScores);
-                return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
-            } catch (IOException ex) {
-                getLogger(ZipRecommendationFormat.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(zip), 128 * 1024);
+            RecommendationIterator iterator = new RecommendationIterator(reader, ignoreScores);
+            return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
         }
 
     }
 
-    private static class RecommendationIterator<U, I> implements Iterator<Recommendation<U, I>> {
+    private class RecommendationIterator implements Iterator<Recommendation<U, I>> {
 
         private U lastU = null;
         private I lastI;
         private double lastS;
         private final BufferedReader reader;
-        private final Parser<U> uParser;
-        private final Parser<I> iParser;
         private final boolean ignoreScores;
         private boolean eos = false;
 
-        public RecommendationIterator(BufferedReader reader, final Parser<U> uParser, final Parser<I> iParser, final boolean ignoreScores) throws IOException {
+        public RecommendationIterator(BufferedReader reader, boolean ignoreScores) {
             this.reader = reader;
-            this.uParser = uParser;
-            this.iParser = iParser;
             this.ignoreScores = ignoreScores;
         }
 
@@ -154,13 +143,13 @@ public class ZipRecommendationFormat<U, I> implements RecommendationFormat<U, I>
                 try {
                     line = reader.readLine();
                 } catch (IOException ex) {
-                    getLogger(Recommendation.class.getName()).log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, null, ex);
                 }
                 if (line == null) {
                     try {
                         reader.close();
                     } catch (IOException ex) {
-                        getLogger(Recommendation.class.getName()).log(Level.SEVERE, null, ex);
+                        LOG.log(Level.SEVERE, null, ex);
                     }
                     return false;
                 } else {
@@ -199,7 +188,7 @@ public class ZipRecommendationFormat<U, I> implements RecommendationFormat<U, I>
                     }
                 }
             } catch (IOException ex) {
-                getLogger(Recommendation.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
             if (line == null) {
                 lastU = null;
