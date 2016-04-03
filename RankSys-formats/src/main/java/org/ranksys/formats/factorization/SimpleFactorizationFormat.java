@@ -16,7 +16,6 @@ import static java.lang.Double.parseDouble;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import static javafx.scene.input.KeyCode.K;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import static java.lang.Integer.parseInt;
 
@@ -68,7 +67,7 @@ public class SimpleFactorizationFormat implements FactorizationFormat {
             PrintStream ps = new PrintStream(zip);
             ps.println(factorization.numUsers());
             ps.println(factorization.numItems());
-            ps.println(K);
+            ps.println(factorization.getK());
             ps.flush();
             zip.closeEntry();
 
