@@ -40,8 +40,8 @@ public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U,
     }
 
     @Override
-    public Writer getWriter(String path) throws IOException {
-        return new Writer(path);
+    public Writer<U, I> getWriter(String path) throws IOException {
+        return new Writer<>(path);
     }
 
     @Override

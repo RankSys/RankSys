@@ -53,6 +53,7 @@ import org.ranksys.lda.LDARecommender;
 import org.ranksys.formats.index.ItemsReader;
 import org.ranksys.formats.index.UsersReader;
 import org.ranksys.formats.preference.PreferencesReader;
+import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
 import org.ranksys.formats.rec.RecommendationFormat;
 import org.ranksys.formats.rec.SimpleRecommendationFormat;
 
@@ -72,8 +73,8 @@ public class RecommenderExample {
 
         FastUserIndex<Long> userIndex = SimpleFastUserIndex.load(UsersReader.read(userPath, lp));
         FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(ItemsReader.read(itemPath, lp));
-        FastPreferenceData<Long, Long> trainData = SimpleFastPreferenceData.load(PreferencesReader.readRating(trainDataPath, lp, lp), userIndex, itemIndex);
-        FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(PreferencesReader.readRating(testDataPath, lp, lp), userIndex, itemIndex);
+        FastPreferenceData<Long, Long> trainData = SimpleFastPreferenceData.load(SimpleRatingPreferencesReader.get().read(trainDataPath, lp, lp), userIndex, itemIndex);
+        FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(SimpleRatingPreferencesReader.get().read(testDataPath, lp, lp), userIndex, itemIndex);
 
         //////////////////
         // RECOMMENDERS //

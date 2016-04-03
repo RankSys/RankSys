@@ -10,4 +10,4 @@
 /**
  * Write and read format for recommendations in files.
  */
-package es.uam.eps.ir.ranksys.core.format;
+package org.ranksys.formats.rec;

@@ -21,7 +21,7 @@ import org.ranksys.compression.preferences.RatingCODECPreferenceData;
 import org.ranksys.formats.index.ItemsReader;
 import org.ranksys.formats.index.UsersReader;
 import static org.ranksys.formats.parsing.Parsers.lp;
-import org.ranksys.formats.preference.PreferencesReader;
+import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
 
 /**
  * Example of usage of the RankSys-compression module.
@@ -47,7 +47,7 @@ public class CompressionExample {
         // READING USER, ITEM AND RATINGS FILES
         FastUserIndex<Long> users = SimpleFastUserIndex.load(UsersReader.read(userPath, lp));
         FastItemIndex<Long> items = SimpleFastItemIndex.load(ItemsReader.read(itemPath, lp));
-        FastPreferenceData<Long, Long> simpleData = SimpleFastPreferenceData.load(PreferencesReader.readRating(dataPath, lp, lp), users, items);
+        FastPreferenceData<Long, Long> simpleData = SimpleFastPreferenceData.load(SimpleRatingPreferencesReader.get().read(dataPath, lp, lp), users, items);
 
         // CREATING A COMPRESSED PREFERENCE DATA
         CODEC<int[]> uCodec = new IntegratedFORVBCODEC();

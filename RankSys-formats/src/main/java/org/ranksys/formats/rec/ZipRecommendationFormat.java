@@ -47,8 +47,8 @@ public class ZipRecommendationFormat<U, I> implements RecommendationFormat<U, I>
     }
 
     @Override
-    public Writer getWriter(OutputStream out) throws IOException {
-        return new Writer(out, ignoreScores);
+    public Writer<U, I> getWriter(OutputStream out) throws IOException {
+        return new Writer<>(out, ignoreScores);
     }
 
     public static class Writer<U, I> implements RecommendationFormat.Writer<U, I> {
@@ -115,7 +115,7 @@ public class ZipRecommendationFormat<U, I> implements RecommendationFormat<U, I>
                 zip.getNextEntry();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(zip), 128 * 1024);
 
-                RecommendationIterator iterator = new RecommendationIterator(reader, uParser, iParser, ignoreScores);
+                RecommendationIterator<U, I> iterator = new RecommendationIterator<>(reader, uParser, iParser, ignoreScores);
                 return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
             } catch (IOException ex) {
                 getLogger(ZipRecommendationFormat.class.getName()).log(Level.SEVERE, null, ex);

@@ -42,8 +42,8 @@ public class TRECRecommendationFormat<U, I> implements RecommendationFormat<U, I
     }
 
     @Override
-    public Writer getWriter(OutputStream out) throws IOException {
-        return new Writer(out);
+    public Writer<U, I> getWriter(OutputStream out) throws IOException {
+        return new Writer<>(out);
     }
 
     public static class Writer<U, I> implements RecommendationFormat.Writer<U, I> {
@@ -102,7 +102,7 @@ public class TRECRecommendationFormat<U, I> implements RecommendationFormat<U, I
         public Stream<Recommendation<U, I>> readAll() throws IOException {
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                RecommendationIterator iterator = new RecommendationIterator(reader, uParser, iParser, vParser);
+                RecommendationIterator<U, I> iterator = new RecommendationIterator<>(reader, uParser, iParser, vParser);
                 return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
             } catch (IOException ex) {
                 getLogger(TRECRecommendationFormat.class.getName()).log(Level.SEVERE, null, ex);

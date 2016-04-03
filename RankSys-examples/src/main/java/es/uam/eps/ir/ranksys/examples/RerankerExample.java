@@ -27,9 +27,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static org.ranksys.formats.parsing.Parsers.lp;
-import org.ranksys.formats.feature.FeaturesReader;
+import org.ranksys.formats.feature.SimpleFeaturesReader;
 import static org.ranksys.formats.parsing.Parsers.sp;
-import org.ranksys.formats.preference.PreferencesReader;
+import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
 import org.ranksys.formats.rec.RecommendationFormat;
 import org.ranksys.formats.rec.SimpleRecommendationFormat;
 
@@ -48,8 +48,8 @@ public class RerankerExample {
 
         double lambda = 0.5;
         int cutoff = 100;
-        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(PreferencesReader.readRating(trainDataPath, lp, lp));
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(FeaturesReader.read(featurePath, lp, sp));
+        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(trainDataPath, lp, lp));
+        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(featurePath, lp, sp));
 
         Map<String, Supplier<Reranker<Long, Long>>> rerankersMap = new HashMap<>();
 

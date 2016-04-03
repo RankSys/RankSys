@@ -15,12 +15,10 @@ import org.ranksys.formats.parsing.Parser;
 class Utils {
 
     static <T> Stream<T> readElemens(InputStream in, Parser<T> parser) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            return reader.lines()
-                    .map(line -> split(line, '\t', 2)[0])
-                    .map(parser)
-                    .sorted();
-        }
+        return new BufferedReader(new InputStreamReader(in)).lines()
+                .map(line -> split(line, '\t', 2)[0])
+                .map(parser)
+                .sorted();
     }
 
 }

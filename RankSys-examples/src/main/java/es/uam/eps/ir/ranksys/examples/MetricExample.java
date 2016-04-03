@@ -43,8 +43,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.ranksys.formats.parsing.Parsers.*;
-import org.ranksys.formats.feature.FeaturesReader;
+import org.ranksys.formats.feature.SimpleFeaturesReader;
 import org.ranksys.formats.preference.PreferencesReader;
+import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
 import org.ranksys.formats.rec.RecommendationFormat;
 import org.ranksys.formats.rec.SimpleRecommendationFormat;
 
@@ -64,13 +65,13 @@ public class MetricExample {
         Double threshold = Double.parseDouble(args[4]);
 
         // USER - ITEM - RATING files for train and test
-        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(PreferencesReader.readRating(trainDataPath, lp, lp));
-        PreferenceData<Long, Long> testData = SimplePreferenceData.load(PreferencesReader.readRating(testDataPath, lp, lp));
+        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(trainDataPath, lp, lp));
+        PreferenceData<Long, Long> testData = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(testDataPath, lp, lp));
         PreferenceData<Long, Long> totalData = new ConcatPreferenceData<>(trainData, testData);
         // EVALUATED AT CUTOFF 10
         int cutoff = 10;
         // ITEM - FEATURE file
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(FeaturesReader.read(featurePath, lp, sp));
+        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(featurePath, lp, sp));
         // COSINE DISTANCE
         ItemDistanceModel<Long> dist = new CosineFeatureItemDistanceModel<>(featureData);
         // BINARY RELEVANCE
