@@ -67,7 +67,7 @@ public abstract class AbstractFastFeatureData<I, F, V> implements FastFeatureDat
 
     @Override
     public Stream<Tuple2<F, V>> getItemFeatures(I i) {
-        return getIidxFeatures(item2iidx(i)).map(fv -> Tuple.tuple(fidx2feature(fv.v1), fv.v2));
+        return getIidxFeatures(item2iidx(i)).map(this::fidx2feature);
     }
 
     @Override
