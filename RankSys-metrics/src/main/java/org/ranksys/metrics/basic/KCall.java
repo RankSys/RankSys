@@ -47,7 +47,7 @@ public class KCall<U, I> extends AbstractRecommendationMetric<U, I> {
         
         return recommendation.getItems().stream()
                 .limit(cutoff)
-                .filter(is -> urm.isRelevant(is.id))
+                .filter(is -> urm.isRelevant(is.v1))
                 .count() >= k ? 1.0 : 0.0;
     }
 

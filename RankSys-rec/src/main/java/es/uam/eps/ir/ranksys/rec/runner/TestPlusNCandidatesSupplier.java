@@ -21,6 +21,9 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
+import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 
 /**
  * Provider of candidates for recommendation consisting in the preferences in a test set plus a set of randomly selected items from a test file for each user.
@@ -62,7 +65,7 @@ public class TestPlusNCandidatesSupplier<U, I> implements Supplier<Stream<Tuple2
                 for (CharSequence candidate : split(tokens[1], ',')) {
                     candidates.add(iParser.parse(candidate));
                 }
-                testData.getUserPreferences(user).forEach(iv -> candidates.add(iv.id));
+                testData.getUserPreferences(user).forEach(iv -> candidates.add(iv.v1));
 
                 return Tuple.tuple(user, candidates);
             });

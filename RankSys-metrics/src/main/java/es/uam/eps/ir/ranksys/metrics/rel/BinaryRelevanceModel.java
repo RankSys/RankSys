@@ -51,8 +51,8 @@ public class BinaryRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
 
         public UserBinaryRelevanceModel(U user) {
             this.relevantItems = testData.getUserPreferences(user)
-                    .filter(iv -> iv.v >= threshold)
-                    .map(iv -> iv.id)
+                    .filter(iv -> iv.v2 >= threshold)
+                    .map(iv -> iv.v1)
                     .collect(Collectors.toSet());
         }
 

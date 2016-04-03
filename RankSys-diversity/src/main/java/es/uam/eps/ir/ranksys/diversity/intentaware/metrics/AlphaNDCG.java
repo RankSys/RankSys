@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware.metrics;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.core.model.UserModel;
@@ -23,6 +22,7 @@ import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.HashSet;
 import java.util.Set;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * alpha-nDCG metric.
@@ -80,9 +80,9 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
         Object2IntOpenHashMap<F> redundancy = new Object2IntOpenHashMap<>();
         redundancy.defaultReturnValue(0);
 
-        for (IdDouble<I> pair : recommendation.getItems()) {
-            if (urm.isRelevant(pair.id)) {
-                double gain = featureData.getItemFeatures(pair.id).sequential()
+        for (Tuple2od<I> pair : recommendation.getItems()) {
+            if (urm.isRelevant(pair.v1)) {
+                double gain = featureData.getItemFeatures(pair.v1).sequential()
                         .map(fv -> fv.v1)
                         .mapToDouble(f -> {
                             int r = redundancy.addTo(f, 1);

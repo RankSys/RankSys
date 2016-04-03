@@ -74,9 +74,9 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
         AtomicInteger rank = new AtomicInteger();
         recommendation.getItems().stream().limit(cutoff).forEach(iv -> {
-            if (userRelModel.isRelevant(iv.id)) {
-                double gain = userRelModel.gain(iv.id);
-                uim.getItemIntents(iv.id).forEach(f -> {
+            if (userRelModel.isRelevant(iv.v1)) {
+                double gain = userRelModel.gain(iv.v1);
+                uim.getItemIntents(iv.v1).forEach(f -> {
                     double red = pNoPrevRel.getDouble(f);
                     erria.add(uim.pf_u(f) * gain * red / (1.0 + rank.intValue()));
                     pNoPrevRel.put(f, red * (1 - gain));
@@ -113,7 +113,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
             this.threshold = threshold;
 
             this.maxPreference = testData.getUsersWithPreferences().mapToDouble(u -> {
-                return testData.getUserPreferences(u).mapToDouble(pref -> pref.v)
+                return testData.getUserPreferences(u).mapToDouble(pref -> pref.v2)
                         .max().orElse(Double.NEGATIVE_INFINITY);
             }).max().orElse(Double.NEGATIVE_INFINITY);
         }
@@ -140,8 +140,8 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
                 gainMap.defaultReturnValue(0.0);
 
                 testData.getUserPreferences(user)
-                        .filter(iv -> iv.v >= threshold)
-                        .forEach(iv -> gainMap.put(iv.id, (Math.pow(2, iv.v) - 1) / (double) Math.pow(2, maxPreference)));
+                        .filter(iv -> iv.v2 >= threshold)
+                        .forEach(iv -> gainMap.put(iv.v1, (Math.pow(2, iv.v2) - 1) / (double) Math.pow(2, maxPreference)));
             }
 
             @Override

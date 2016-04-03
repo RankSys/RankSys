@@ -43,7 +43,7 @@ public class Filters {
      */
     public static <U, I> Function<U, Predicate<I>> notInTrain(PreferenceData<U, I> trainData) {
         return user -> {
-            Set<I> set = trainData.getUserPreferences(user).map(iv -> iv.id).collect(Collectors.toSet());
+            Set<I> set = trainData.getUserPreferences(user).map(iv -> iv.v1).collect(Collectors.toSet());
 
             return i -> !set.contains(i);
         };

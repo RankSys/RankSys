@@ -24,12 +24,12 @@ public class IdDouble<I> implements Object2DoubleMap.Entry<I>, Serializable {
     /**
      * The ID.
      */
-    public I id;
+    public I v1;
 
     /**
      * The double.
      */
-    public double v;
+    public double v2;
 
     /**
      * Empty constructor.
@@ -44,8 +44,8 @@ public class IdDouble<I> implements Object2DoubleMap.Entry<I>, Serializable {
      * @param v the double
      */
     public IdDouble(I id, double v) {
-        this.id = id;
-        this.v = v;
+        this.v1 = id;
+        this.v2 = v;
     }
 
     /**
@@ -56,8 +56,8 @@ public class IdDouble<I> implements Object2DoubleMap.Entry<I>, Serializable {
      * @return this
      */
     public IdDouble refill(I id, double v) {
-        this.id = id;
-        this.v = v;
+        this.v1 = id;
+        this.v2 = v;
         return this;
     }
 
@@ -77,17 +77,17 @@ public class IdDouble<I> implements Object2DoubleMap.Entry<I>, Serializable {
 
     @Override
     public double getDoubleValue() {
-        return v;
+        return v2;
     }
 
     @Override
     public I getKey() {
-        return id;
+        return v1;
     }
 
     @Override
     public Double getValue() {
-        return v;
+        return v2;
     }
 
     @Override
@@ -98,8 +98,8 @@ public class IdDouble<I> implements Object2DoubleMap.Entry<I>, Serializable {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        hash = 67 * hash + (int) (Double.doubleToLongBits(this.v) ^ (Double.doubleToLongBits(this.v) >>> 32));
+        hash = 67 * hash + Objects.hashCode(this.v1);
+        hash = 67 * hash + (int) (Double.doubleToLongBits(this.v2) ^ (Double.doubleToLongBits(this.v2) >>> 32));
         return hash;
     }
 
@@ -115,10 +115,10 @@ public class IdDouble<I> implements Object2DoubleMap.Entry<I>, Serializable {
             return false;
         }
         final IdDouble<?> other = (IdDouble<?>) obj;
-        if (Double.doubleToLongBits(this.v) != Double.doubleToLongBits(other.v)) {
+        if (Double.doubleToLongBits(this.v2) != Double.doubleToLongBits(other.v2)) {
             return false;
         }
-        return Objects.equals(this.id, other.id);
+        return Objects.equals(this.v1, other.v1);
     }
 
 }

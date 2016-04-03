@@ -8,13 +8,14 @@
  */
 package es.uam.eps.ir.ranksys.nn.item.sim;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.function.IntToDoubleFunction;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2od;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Item similarity. It wraps a generic fast similarity and a fast item index.
@@ -88,9 +89,9 @@ public abstract class ItemSimilarity<I> implements Similarity, FastItemIndex<I> 
      * @param i item
      * @return a stream of item-similarity pairs
      */
-    public Stream<IdDouble<I>> similarItems(I i) {
+    public Stream<Tuple2od<I>> similarItems(I i) {
         return similarItems(item2iidx(i))
-                .map(us -> new IdDouble<I>(iidx2item(us.idx), us.v));
+                .map(us -> tuple(iidx2item(us.idx), us.v));
     }
 
     /**

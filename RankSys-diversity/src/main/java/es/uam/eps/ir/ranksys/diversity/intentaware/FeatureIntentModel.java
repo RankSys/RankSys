@@ -114,7 +114,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
 
             int[] norm = {0};
             totalData.getUserPreferences(user).forEach(iv -> {
-                featureData.getItemFeatures(iv.id).forEach(fv -> {
+                featureData.getItemFeatures(iv.v1).forEach(fv -> {
                     tmpCounts.addTo(fv.v1, 1.0);
                     norm[0]++;
                 });

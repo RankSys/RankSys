@@ -7,7 +7,6 @@
  */
 package es.uam.eps.ir.ranksys.rec.fast;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
@@ -25,6 +24,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import org.ranksys.core.util.tuples.Tuple2od;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Test for AbstractFastRecommender
@@ -168,15 +169,15 @@ public class AbstractFastRecommenderTest {
         int maxLength = Integer.MAX_VALUE;
         Predicate<String> filter = item -> true;
         
-        List<IdDouble<String>> result = recommender.getRecommendation("0", maxLength, filter).getItems();
+        List<Tuple2od<String>> result = recommender.getRecommendation("0", maxLength, filter).getItems();
 
-        List<IdDouble<String>> expected = Arrays.asList(
-                new IdDouble<>("0", 6.0),
-                new IdDouble<>("1", 5.0),
-                new IdDouble<>("2", 4.0),
-                new IdDouble<>("3", 3.0),
-                new IdDouble<>("4", 2.0),
-                new IdDouble<>("5", 1.0)
+        List<Tuple2od<String>> expected = Arrays.asList(
+                tuple("0", 6.0),
+                tuple("1", 5.0),
+                tuple("2", 4.0),
+                tuple("3", 3.0),
+                tuple("4", 2.0),
+                tuple("5", 1.0)
         );
         
         assertEquals(expected, result);
@@ -186,15 +187,15 @@ public class AbstractFastRecommenderTest {
     public void testStdFree() {
         int maxLength = Integer.MAX_VALUE;
         
-        List<IdDouble<String>> result = recommender.getRecommendation("0", maxLength).getItems();
+        List<Tuple2od<String>> result = recommender.getRecommendation("0", maxLength).getItems();
 
-        List<IdDouble<String>> expected = Arrays.asList(
-                new IdDouble<>("0", 6.0),
-                new IdDouble<>("1", 5.0),
-                new IdDouble<>("2", 4.0),
-                new IdDouble<>("3", 3.0),
-                new IdDouble<>("4", 2.0),
-                new IdDouble<>("5", 1.0)
+        List<Tuple2od<String>> expected = Arrays.asList(
+                tuple("0", 6.0),
+                tuple("1", 5.0),
+                tuple("2", 4.0),
+                tuple("3", 3.0),
+                tuple("4", 2.0),
+                tuple("5", 1.0)
         );
         
         assertEquals(expected, result);
@@ -204,12 +205,12 @@ public class AbstractFastRecommenderTest {
     public void testStdCandidates() {
         Stream<String> candidates = Stream.of("1", "3", "5");
         
-        List<IdDouble<String>> result = recommender.getRecommendation("0", candidates).getItems();
+        List<Tuple2od<String>> result = recommender.getRecommendation("0", candidates).getItems();
 
-        List<IdDouble<String>> expected = Arrays.asList(
-                new IdDouble<>("1", 5.0),
-                new IdDouble<>("3", 3.0),
-                new IdDouble<>("5", 1.0)
+        List<Tuple2od<String>> expected = Arrays.asList(
+                tuple("1", 5.0),
+                tuple("3", 3.0),
+                tuple("5", 1.0)
         );
         
         assertEquals(expected, result);

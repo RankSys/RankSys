@@ -8,11 +8,11 @@
  */
 package es.uam.eps.ir.ranksys.novelty.inverted.br;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker;
 import java.util.List;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Bayesian probabilistic reformulation re-ranker.
@@ -37,10 +37,10 @@ public abstract class BayesRuleReranker<U, I> extends PermutationReranker<U, I> 
         }
 
         IntDoubleTopN topN = new IntDoubleTopN(N);
-        List<IdDouble<I>> list = recommendation.getItems();
+        List<Tuple2od<I>> list = recommendation.getItems();
         int M = list.size();
         for (int i = 0; i < list.size(); i++) {
-            topN.add(M - i, likelihood(list.get(i)) * prior(list.get(i).id));
+            topN.add(M - i, likelihood(list.get(i)) * prior(list.get(i).v1));
         }
         topN.sort();
 
@@ -57,7 +57,7 @@ public abstract class BayesRuleReranker<U, I> extends PermutationReranker<U, I> 
      * @param iv item-relevance pair
      * @return likelihood
      */
-    protected abstract double likelihood(IdDouble<I> iv);
+    protected abstract double likelihood(Tuple2od<I> iv);
 
     /**
      * Returns the prior of an item: p(i).

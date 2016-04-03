@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.rec.runner.fast;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
@@ -22,7 +21,8 @@ import java.io.OutputStream;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Fast filter runner. It creates recommendations by using the filter method in the
@@ -63,7 +63,9 @@ public class FastFilterRecommenderRunner<U, I> extends AbstractRecommenderRunner
         run(user -> {
             FastRecommendation rec = ((FastRecommender<U, I>) recommender).getRecommendation(userIndex.user2uidx(user), maxLength, userFilter.apply(user));
             
-            return new Recommendation<>(userIndex.uidx2user(rec.getUidx()), rec.getIidxs().stream().map(iv -> new IdDouble<I>(itemIndex.iidx2item(iv.idx), iv.v)).collect(Collectors.toList()));
+            return new Recommendation<>(userIndex.uidx2user(rec.getUidx()), rec.getIidxs().stream()
+                    .map(iv -> tuple(itemIndex.iidx2item(iv.idx), iv.v))
+                    .collect(toList()));
         }, out);
     }
 

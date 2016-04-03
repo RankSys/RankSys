@@ -61,7 +61,7 @@ public class Recall<U, I> extends AbstractRecommendationMetric<U, I> {
 
         return recommendation.getItems().stream()
                 .limit(cutoff)
-                .filter(is -> userRelModel.isRelevant(is.id))
+                .filter(is -> userRelModel.isRelevant(is.v1))
                 .count() / (double) numberOfAllRelevant;
     }
 }

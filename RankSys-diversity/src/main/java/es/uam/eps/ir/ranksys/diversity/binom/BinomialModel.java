@@ -169,7 +169,7 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
             
             int n = recommenderData.numItems(user);
             recommenderData.getUserPreferences(user).forEach(pref -> {
-                featureData.getItemFeatures(pref.id).forEach(feature -> {
+                featureData.getItemFeatures(pref.v1).forEach(feature -> {
                     probs.addTo(feature.v1, 1.0);
                 });
             });

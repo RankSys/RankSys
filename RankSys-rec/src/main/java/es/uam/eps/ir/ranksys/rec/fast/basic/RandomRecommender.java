@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.rec.fast.basic;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
@@ -25,6 +24,8 @@ import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2od;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Random recommender. It provides non-personalized recommendations without by extracting a sequence of a shuffled list of the items.
@@ -82,7 +83,7 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     @Override
     public Recommendation<U, I> getRecommendation(U u, Stream<I> candidates) {
-        List<IdDouble<I>> items = candidates.map(i -> new IdDouble<>(i, NaN)).collect(toList());
+        List<Tuple2od<I>> items = candidates.map(i -> tuple(i, NaN)).collect(toList());
         Collections.shuffle(items, random);
         
         return new Recommendation<>(u, items);

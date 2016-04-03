@@ -37,8 +37,9 @@ public interface FastPreferenceSampler<U, I> extends PreferenceSampler<U, I>, Fa
     }
 
     /**
+     * Get a stream of randomly sample user-item fast preferences.
      *
-     * @return
+     * @return stream of user-item fast preferences
      */
     public Stream<IdxObject<? extends IdxPref>> fastSample();
 
