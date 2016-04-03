@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.fast.feature;
 
-import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData.FeatureDataTuple;
 import es.uam.eps.ir.ranksys.fast.IdxObject;
 import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple3;
 
 /**
  * Simple implementation of FastFeatureData backed by nested lists.
@@ -101,7 +101,7 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
                 .filter(fv -> fv != null).count();
     }
 
-    public static <I, F, V> SimpleFastFeatureData<I, F, V> load(Stream<FeatureDataTuple<I, F, V>> tuples, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) {
+    public static <I, F, V> SimpleFastFeatureData<I, F, V> load(Stream<Tuple3<I, F, V>> tuples, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) {
 
         List<List<IdxObject<V>>> iidxList = new ArrayList<>();
         for (int iidx = 0; iidx < iIndex.numItems(); iidx++) {
@@ -114,8 +114,8 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
         }
 
         tuples.forEach(t -> {
-            int iidx = iIndex.item2iidx(t.item);
-            int fidx = fIndex.feature2fidx(t.feat);
+            int iidx = iIndex.item2iidx(t.v1);
+            int fidx = fIndex.feature2fidx(t.v2);
 
             if (iidx == -1 || fidx == -1) {
                 return;
@@ -126,14 +126,14 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
                 iList = new ArrayList<>();
                 iidxList.set(iidx, iList);
             }
-            iList.add(new IdxObject<>(fidx, t.value));
+            iList.add(new IdxObject<>(fidx, t.v3));
 
             List<IdxObject<V>> fList = fidxList.get(fidx);
             if (fList == null) {
                 fList = new ArrayList<>();
                 fidxList.set(fidx, fList);
             }
-            fList.add(new IdxObject<>(iidx, t.value));
+            fList.add(new IdxObject<>(iidx, t.v3));
         });
 
         return new SimpleFastFeatureData<>(iidxList, fidxList, iIndex, fIndex);

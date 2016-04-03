@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple3;
 
 /**
  * Simple map-based preference data
@@ -118,21 +119,7 @@ public class SimplePreferenceData<U, I> implements PreferenceData<U, I>, Seriali
         return itemMap.keySet().stream();
     }
 
-    public static class PreferenceDataTuple<U, I> {
-
-        public final U user;
-        public final I item;
-        public final double value;
-
-        public PreferenceDataTuple(U user, I item, double value) {
-            this.user = user;
-            this.item = item;
-            this.value = value;
-        }
-
-    }
-
-    public static <U, I> SimplePreferenceData<U, I> load(Stream<PreferenceDataTuple<U, I>> tuples) {
+    public static <U, I> SimplePreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples) {
         Map<U, List<IdPref<I>>> userMap = new HashMap<>();
         Map<I, List<IdPref<U>>> itemMap = new HashMap<>();
         AtomicInteger numPreferences = new AtomicInteger(0);
@@ -140,19 +127,19 @@ public class SimplePreferenceData<U, I> implements PreferenceData<U, I>, Seriali
         tuples.forEach(t -> {
             numPreferences.incrementAndGet();
 
-            List<IdPref<I>> uList = userMap.get(t.user);
+            List<IdPref<I>> uList = userMap.get(t.v1);
             if (uList == null) {
                 uList = new ArrayList<>();
-                userMap.put(t.user, uList);
+                userMap.put(t.v1, uList);
             }
-            uList.add(new IdPref<>(t.item, t.value));
+            uList.add(new IdPref<>(t.v2, t.v3));
 
-            List<IdPref<U>> iList = itemMap.get(t.item);
+            List<IdPref<U>> iList = itemMap.get(t.v2);
             if (iList == null) {
                 iList = new ArrayList<>();
-                itemMap.put(t.item, iList);
+                itemMap.put(t.v2, iList);
             }
-            iList.add(new IdPref<>(t.user, t.value));
+            iList.add(new IdPref<>(t.v1, t.v3));
         });
 
         return new SimplePreferenceData<>(userMap, itemMap, numPreferences.intValue());

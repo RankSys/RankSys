@@ -10,11 +10,10 @@ package es.uam.eps.ir.ranksys.diversity.intentaware
 
 import es.uam.eps.ir.ranksys.core.feature.FeatureData
 import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData
-import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData.FeatureDataTuple
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData
 import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData
-import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData.PreferenceDataTuple
-import es.uam.eps.ir.ranksys.core.util.FastStringSplitter;
+import es.uam.eps.ir.ranksys.core.util.FastStringSplitter
+import org.jooq.lambda.tuple.Tuple
 import spock.lang.Specification
 
 import java.util.stream.Collectors
@@ -39,7 +38,7 @@ class UserIntentModelSpec extends Specification {
             Long item = Long.parseLong(tokens[1]);
             double value = Double.parseDouble(tokens[2]);
 
-            return new PreferenceDataTuple<>(user, item, value);
+            return Tuple.tuple(user, item, value);
         };
         PreferenceData trainData = SimplePreferenceData.load(pTuples);
         
@@ -49,7 +48,7 @@ class UserIntentModelSpec extends Specification {
             String feat = tokens[1];
             double value = 1.0;
 
-            return new FeatureDataTuple<>(item, feat, value);
+            return Tuple.tuple(item, feat, value);
         };
         FeatureData featureData = SimpleFeatureData.load(fTuples);
         

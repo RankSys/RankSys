@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData.PreferenceDataTuple;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple3;
 import org.ranksys.core.util.iterators.StreamDoubleIterator;
 import org.ranksys.core.util.iterators.StreamIntIterator;
 
@@ -140,7 +140,7 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
         return false;
     }
 
-    public static <U, I> SimpleFastPreferenceData<U, I> load(Stream<PreferenceDataTuple<U, I>> tuples, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
+    public static <U, I> SimpleFastPreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
         AtomicInteger numPreferences = new AtomicInteger();
 
         List<List<IdxPref>> uidxList = new ArrayList<>();
@@ -154,8 +154,8 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
         }
 
         tuples.forEach(t -> {
-            int uidx = uIndex.user2uidx(t.user);
-            int iidx = iIndex.item2iidx(t.item);
+            int uidx = uIndex.user2uidx(t.v1);
+            int iidx = iIndex.item2iidx(t.v2);
 
             numPreferences.incrementAndGet();
 
@@ -164,14 +164,14 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
                 uList = new ArrayList<>();
                 uidxList.set(uidx, uList);
             }
-            uList.add(new IdxPref(iidx, t.value));
+            uList.add(new IdxPref(iidx, t.v3));
 
             List<IdxPref> iList = iidxList.get(iidx);
             if (iList == null) {
                 iList = new ArrayList<>();
                 iidxList.set(iidx, iList);
             }
-            iList.add(new IdxPref(uidx, t.value));
+            iList.add(new IdxPref(uidx, t.v3));
         });
 
         return new SimpleFastPreferenceData<>(numPreferences.intValue(), uidxList, iidxList, uIndex, iIndex);

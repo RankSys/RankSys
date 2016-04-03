@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple3;
 
 /**
  * Simple map-based feature data.
@@ -111,38 +112,24 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
         return featMap.keySet().stream();
     }
 
-    public static class FeatureDataTuple<I, F, V> {
-
-        public final I item;
-        public final F feat;
-        public final V value;
-
-        public FeatureDataTuple(I item, F feat, V value) {
-            this.item = item;
-            this.feat = feat;
-            this.value = value;
-        }
-
-    }
-
-    public static <I, F, V> SimpleFeatureData<I, F, V> load(Stream<FeatureDataTuple<I, F, V>> tuples) {
+    public static <I, F, V> SimpleFeatureData<I, F, V> load(Stream<Tuple3<I, F, V>> tuples) {
         Map<I, List<IdObject<F, V>>> itemMap = new HashMap<>();
         Map<F, List<IdObject<I, V>>> featMap = new HashMap<>();
 
         tuples.forEach(t -> {
-            List<IdObject<F, V>> iList = itemMap.get(t.item);
+            List<IdObject<F, V>> iList = itemMap.get(t.v1);
             if (iList == null) {
                 iList = new ArrayList<>();
-                itemMap.put(t.item, iList);
+                itemMap.put(t.v1, iList);
             }
-            iList.add(new IdObject<>(t.feat, t.value));
+            iList.add(new IdObject<>(t.v2, t.v3));
 
-            List<IdObject<I, V>> fList = featMap.get(t.feat);
+            List<IdObject<I, V>> fList = featMap.get(t.v2);
             if (fList == null) {
                 fList = new ArrayList<>();
-                featMap.put(t.feat, fList);
+                featMap.put(t.v2, fList);
             }
-            fList.add(new IdObject<>(t.item, t.value));
+            fList.add(new IdObject<>(t.v1, t.v3));
         });
 
         return new SimpleFeatureData<>(itemMap, featMap);

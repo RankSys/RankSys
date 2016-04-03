@@ -7,8 +7,6 @@
  */
 package org.ranksys.examples;
 
-import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData.FeatureDataTuple;
-import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData.PreferenceDataTuple;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +16,8 @@ import java.util.stream.Stream;
 import java.util.function.Function;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import static java.lang.Long.parseLong;
+import org.jooq.lambda.tuple.Tuple;
+import org.jooq.lambda.tuple.Tuple3;
 
 /**
  *
@@ -46,7 +46,7 @@ public class Utils {
         return readElemens(in, CharSequence::toString);
     }
 
-    public static Stream<PreferenceDataTuple<Long, Long>> readPreferenceTuples(InputStream in) throws IOException {
+    public static Stream<Tuple3<Long, Long, Double>> readPreferenceTuples(InputStream in) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             return reader.lines().map(line -> {
                 CharSequence[] tokens = split(line, '\t', 4);
@@ -54,12 +54,12 @@ public class Utils {
                 Long item = parseLong(tokens[1].toString());
                 double value = parseDouble(tokens[2].toString());
 
-                return new PreferenceDataTuple<>(user, item, value);
+                return Tuple.tuple(user, item, value);
             });
         }
     }
 
-    public static Stream<FeatureDataTuple<Long, String, Double>> readFeatureTuples(InputStream in) throws IOException {
+    public static Stream<Tuple3<Long, String, Double>> readFeatureTuples(InputStream in) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             return reader.lines().map(line -> {
                 String[] tokens = line.split("\t", 3);
@@ -67,7 +67,7 @@ public class Utils {
                 String feat = tokens[1];
                 double value = 1.0;
 
-                return new FeatureDataTuple<>(item, feat, value);
+                return Tuple.tuple(item, feat, value);
             });
         }
     }
