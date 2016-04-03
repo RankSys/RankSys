@@ -12,6 +12,7 @@ import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.novdiv.reranking.GreedyReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import org.jooq.lambda.tuple.Tuple2;
 import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
@@ -90,7 +91,7 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
         @Override
         protected double value(Tuple2od<I> iv) {
             return featureData.getItemFeatures(iv.v1)
-                    .map(fv -> fv.v1)
+                    .map(Tuple2::v1)
                     .mapToDouble(f -> (f.equals(lcf) ? lambda : (1 - lambda)) * quotient(f) * iv.v2 / probNorm.getDouble(f))
                     .sum();
         }
@@ -98,12 +99,12 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
         @Override
         protected void update(Tuple2od<I> biv) {
             double norm = featureData.getItemFeatures(biv.v1)
-                    .map(fv -> fv.v1)
+                    .map(Tuple2::v1)
                     .mapToDouble(f -> biv.v2 / probNorm.getDouble(f))
                     .sum();
 
             featureData.getItemFeatures(biv.v1).sequential()
-                    .map(fv -> fv.v1)
+                    .map(Tuple2::v1)
                     .forEach(f -> {
                         double v = biv.v2 / (probNorm.getDouble(f) * norm);
                         featureCount.addTo(f, v);

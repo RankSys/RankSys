@@ -44,7 +44,7 @@ public class TopKNeighborhood implements Neighborhood {
     public Stream<Tuple2id> getNeighbors(int idx) {
 
         IntDoubleTopN topN = new IntDoubleTopN(k);
-        sim.similarElems(idx).forEach(is -> topN.add(is.v1, is.v2));
+        sim.similarElems(idx).forEach(topN::add);
 
         return topN.stream();
     }

@@ -71,7 +71,7 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
             avgDist = new Object2DoubleOpenHashMap<>();
             avgDist.defaultReturnValue(0.0);
             recommendation.getItems().stream().sequential()
-                    .map(iv -> iv.v1)
+                    .map(Tuple2od::v1)
                     .forEach(i -> avgDist.put(i, 0.0));
         }
 

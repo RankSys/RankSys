@@ -26,6 +26,7 @@ import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.doubles.DoubleIterators;
+import static java.util.Comparator.comparingInt;
 import static java.util.stream.Stream.empty;
 import org.ranksys.core.util.iterators.ArrayDoubleIterator;
 import org.ranksys.core.util.tuples.Tuple2io;
@@ -76,7 +77,7 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
     private static Stream<Tuple2io<int[][]>> ul(FastPreferenceData<?, ?> preferences) {
         return preferences.getUidxWithPreferences().mapToObj(k -> {
             IdxPref[] pairs = preferences.getUidxPreferences(k)
-                    .sorted((p1, p2) -> Integer.compare(p1.v1, p2.v1))
+                    .sorted(comparingInt(IdxPref::v1))
                     .toArray(n -> new IdxPref[n]);
             int[] idxs = new int[pairs.length];
             int[] vs = new int[pairs.length];

@@ -16,6 +16,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.apache.commons.math3.distribution.BinomialDistribution;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Binomial genre diversity model.
@@ -90,7 +91,8 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
         int n = recommenderData.numPreferences();
         featureData.getAllFeatures().sequential().forEach(f -> {
             int numPrefs = featureData.getFeatureItems(f)
-                    .mapToInt(i -> recommenderData.numUsers(i.v1))
+                    .map(Tuple2::v1)
+                    .mapToInt(recommenderData::numUsers)
                     .sum();
             probs.put(f, numPrefs / (double) n);
         });

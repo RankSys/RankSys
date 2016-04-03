@@ -41,7 +41,7 @@ public abstract class AbstractRecommender<U, I> implements Recommender<U, I> {
     public Recommendation<U, I> getRecommendation(U u, Stream<I> candidates) {
         Set<I> set = candidates.collect(Collectors.toCollection(() -> new HashSet<>()));
         List<Tuple2od<I>> items = getRecommendation(u, 0, item -> set.contains(item)).getItems();
-        items.forEach(is -> set.remove(is.v1));
+        items.stream().map(Tuple2od::v1).forEach(set::remove);
         set.stream().sorted().forEach(i -> items.add(tuple(i, Double.NaN)));
         
         return new Recommendation<>(u, items);

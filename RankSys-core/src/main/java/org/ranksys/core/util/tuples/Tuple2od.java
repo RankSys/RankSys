@@ -21,9 +21,12 @@ public class Tuple2od<T1> implements Comparable<Tuple2od<T1>>, Serializable, Clo
     public final T1 v1;
     public final double v2;
 
+    public Tuple2od(Tuple2<T1, Double> tuple) {
+        this(tuple.v1, tuple.v2);
+    }
+
     public Tuple2od(Tuple2od<T1> tuple) {
-        this.v1 = tuple.v1;
-        this.v2 = tuple.v2;
+        this(tuple.v1, tuple.v2);
     }
 
     public Tuple2od(T1 v1, double v2) {

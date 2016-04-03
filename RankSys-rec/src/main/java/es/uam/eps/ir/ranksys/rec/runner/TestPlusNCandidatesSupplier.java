@@ -8,8 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.rec.runner;
 
+import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -21,8 +21,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 
 /**
@@ -65,7 +63,9 @@ public class TestPlusNCandidatesSupplier<U, I> implements Supplier<Stream<Tuple2
                 for (CharSequence candidate : split(tokens[1], ',')) {
                     candidates.add(iParser.parse(candidate));
                 }
-                testData.getUserPreferences(user).forEach(iv -> candidates.add(iv.v1));
+                testData.getUserPreferences(user)
+                        .map(IdPref::v1)
+                        .forEach(candidates::add);
 
                 return Tuple.tuple(user, candidates);
             });

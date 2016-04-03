@@ -14,6 +14,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
 import java.util.Set;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple2;
 
 /**
  * Default feature-based intent-aware model. Features of the items in the user profiles are used as proxies for intents, and the probability of each is proportional to its occurrence in the profiles.
@@ -72,7 +73,10 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
     private void init() {
         featureNorms = new Object2DoubleOpenHashMap<>();
         featureData.getAllFeatures().forEach(f -> {
-            int count = featureData.getFeatureItems(f).mapToInt(i -> totalData.numUsers(i.v1)).sum();
+            int count = featureData.getFeatureItems(f)
+                    .map(Tuple2::v1)
+                    .mapToInt(totalData::numUsers)
+                    .sum();
             featureNorms.put(f, count);
         });
     }
@@ -152,7 +156,9 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
          */
         @Override
         public Stream<F> getItemIntents(I i) {
-            return featureData.getItemFeatures(i).map(fv -> fv.v1).filter(getIntents()::contains);
+            return featureData.getItemFeatures(i)
+                    .map(Tuple2::v1)
+                    .filter(getIntents()::contains);
         }
 
         /**

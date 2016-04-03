@@ -19,10 +19,13 @@ public class Tuple2id implements Comparable<Tuple2id>, Serializable, Cloneable {
 
     public final int v1;
     public final double v2;
+    
+    public Tuple2id(Tuple2<Integer, Double> tuple) {
+        this(tuple.v1, tuple.v2);
+    }
 
     public Tuple2id(Tuple2id tuple) {
-        this.v1 = tuple.v1;
-        this.v2 = tuple.v2;
+        this(tuple.v1, tuple.v2);
     }
 
     public Tuple2id(int v1, double v2) {

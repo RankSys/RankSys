@@ -9,6 +9,7 @@
 package es.uam.eps.ir.ranksys.nn.sim;
 
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntIterator;
@@ -51,11 +52,11 @@ public abstract class SetSimilarity implements Similarity {
     @Override
     public IntToDoubleFunction similarity(int idx1) {
         IntSet set = new IntOpenHashSet();
-        data.getUidxPreferences(idx1).map(iv -> iv.v1).forEach(set::add);
+        data.getUidxPreferences(idx1).map(IdxPref::v1).forEach(set::add);
 
         return idx2 -> {
             int coo = (int) data.getUidxPreferences(idx2)
-                    .map(iv -> iv.v1)
+                    .map(IdxPref::v1)
                     .filter(set::contains)
                     .count();
 

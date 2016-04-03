@@ -21,9 +21,12 @@ public class Tuple2io<T2> implements Comparable<Tuple2io<T2>>, Serializable, Clo
     public final int v1;
     public final T2 v2;
 
+    public Tuple2io(Tuple2<Integer, T2> tuple) {
+        this(tuple.v1, tuple.v2);
+    }
+
     public Tuple2io(Tuple2io<T2> tuple) {
-        this.v1 = tuple.v1;
-        this.v2 = tuple.v2;
+        this(tuple.v1, tuple.v2);
     }
 
     public Tuple2io(int v1, T2 v2) {

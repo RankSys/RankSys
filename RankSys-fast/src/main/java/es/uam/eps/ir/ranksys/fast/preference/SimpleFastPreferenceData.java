@@ -8,8 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import es.uam.eps.ir.ranksys.core.util.parsing.DoubleParser;
 import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
@@ -32,8 +30,6 @@ import java.util.stream.Stream;
 import org.ranksys.fast.preference.FastPointWisePreferenceData;
 import org.ranksys.core.util.iterators.StreamDoubleIterator;
 import org.ranksys.core.util.iterators.StreamIntIterator;
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 
 /**
@@ -67,10 +63,10 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
 
         uidxList.parallelStream()
                 .filter(l -> l != null)
-                .forEach(l -> l.sort(comparingInt(p -> p.v1)));
+                .forEach(l -> l.sort(comparingInt(IdxPref::v1)));
         iidxList.parallelStream()
                 .filter(l -> l != null)
-                .forEach(l -> l.sort(comparingInt(p -> p.v1)));
+                .forEach(l -> l.sort(comparingInt(IdxPref::v1)));
     }
 
     @Override
@@ -161,22 +157,22 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
 
     @Override
     public IntIterator getUidxIidxs(final int uidx) {
-        return new StreamIntIterator(getUidxPreferences(uidx).mapToInt(pref -> pref.v1));
+        return new StreamIntIterator(getUidxPreferences(uidx).mapToInt(IdxPref::v1));
     }
 
     @Override
     public DoubleIterator getUidxVs(final int uidx) {
-        return new StreamDoubleIterator(getUidxPreferences(uidx).mapToDouble(pref -> pref.v2));
+        return new StreamDoubleIterator(getUidxPreferences(uidx).mapToDouble(IdxPref::v2));
     }
 
     @Override
     public IntIterator getIidxUidxs(final int iidx) {
-        return new StreamIntIterator(getIidxPreferences(iidx).mapToInt(pref -> pref.v1));
+        return new StreamIntIterator(getIidxPreferences(iidx).mapToInt(IdxPref::v1));
     }
 
     @Override
     public DoubleIterator getIidxVs(final int iidx) {
-        return new StreamDoubleIterator(getIidxPreferences(iidx).mapToDouble(pref -> pref.v2));
+        return new StreamDoubleIterator(getIidxPreferences(iidx).mapToDouble(IdxPref::v2));
     }
 
     @Override

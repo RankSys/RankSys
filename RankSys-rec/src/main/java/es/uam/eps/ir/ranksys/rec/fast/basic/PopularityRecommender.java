@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
 import static java.util.Collections.sort;
+import static java.util.Comparator.comparingDouble;
 import org.ranksys.core.util.tuples.Tuple2id;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
@@ -41,8 +42,8 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
         popList = data.getIidxWithPreferences()
                 .mapToObj(iidx -> tuple(iidx, (double) data.numUsers(iidx)))
+                .sorted(comparingDouble(Tuple2id::v2).reversed())
                 .collect(toList());
-        sort(popList, (p1, p2) -> Double.compare(p2.v2, p1.v2));
     }
 
     @Override

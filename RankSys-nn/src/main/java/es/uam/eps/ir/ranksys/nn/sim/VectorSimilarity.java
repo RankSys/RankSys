@@ -9,6 +9,7 @@
 package es.uam.eps.ir.ranksys.nn.sim;
 
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
@@ -126,7 +127,10 @@ public abstract class VectorSimilarity implements Similarity {
     }
 
     private double getNorm2(int idx) {
-        return data.getUidxPreferences(idx).mapToDouble(ip -> ip.v2 * ip.v2).sum();
+        return data.getUidxPreferences(idx)
+                .mapToDouble(IdxPref::v2)
+                .map(x -> x * x)
+                .sum();
     }
 
     private Int2DoubleMap getFasterProductMap(int uidx) {

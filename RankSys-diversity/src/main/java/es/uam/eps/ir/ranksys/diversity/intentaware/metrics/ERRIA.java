@@ -10,6 +10,7 @@ package es.uam.eps.ir.ranksys.diversity.intentaware.metrics;
 
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.Recommendation;
+import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel.UserIntentModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
@@ -113,7 +114,8 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
             this.threshold = threshold;
 
             this.maxPreference = testData.getUsersWithPreferences().mapToDouble(u -> {
-                return testData.getUserPreferences(u).mapToDouble(pref -> pref.v2)
+                return testData.getUserPreferences(u)
+                        .mapToDouble(IdPref::v2)
                         .max().orElse(Double.NEGATIVE_INFINITY);
             }).max().orElse(Double.NEGATIVE_INFINITY);
         }

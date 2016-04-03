@@ -11,6 +11,7 @@ package es.uam.eps.ir.ranksys.metrics.rel;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Relevance model in which the items in a preference subset with a value
@@ -52,7 +53,7 @@ public class BinaryRelevanceModel<U, I> extends IdealRelevanceModel<U, I> {
         public UserBinaryRelevanceModel(U user) {
             this.relevantItems = testData.getUserPreferences(user)
                     .filter(iv -> iv.v2 >= threshold)
-                    .map(iv -> iv.v1)
+                    .map(Tuple2od::v1)
                     .collect(Collectors.toSet());
         }
 
