@@ -9,9 +9,7 @@
 package es.uam.eps.ir.ranksys.examples;
 
 import cc.mallet.topics.ParallelTopicModel;
-import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
-import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
+import static org.ranksys.formats.parsing.Parsers.lp;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
@@ -40,7 +38,6 @@ import es.uam.eps.ir.ranksys.rec.fast.basic.RandomRecommender;
 import es.uam.eps.ir.ranksys.rec.runner.RecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilterRecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilters;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.HashMap;
@@ -51,11 +48,13 @@ import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import static org.ranksys.examples.Utils.readItems;
 import org.ranksys.lda.LDAModelEstimator;
 import org.ranksys.lda.LDARecommender;
-import static org.ranksys.examples.Utils.readUsers;
-import static org.ranksys.examples.Utils.readPreferenceTuples;
+import org.ranksys.formats.index.ItemsReader;
+import org.ranksys.formats.index.UsersReader;
+import org.ranksys.formats.preference.PreferencesReader;
+import org.ranksys.formats.rec.RecommendationFormat;
+import org.ranksys.formats.rec.SimpleRecommendationFormat;
 
 /**
  * Example main of recommendations.
@@ -71,10 +70,10 @@ public class RecommenderExample {
         String trainDataPath = args[2];
         String testDataPath = args[3];
 
-        FastUserIndex<Long> userIndex = SimpleFastUserIndex.load(readUsers(new FileInputStream(userPath)));
-        FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(readItems(new FileInputStream(itemPath)));
-        FastPreferenceData<Long, Long> trainData = SimpleFastPreferenceData.load(readPreferenceTuples(new FileInputStream(trainDataPath)), userIndex, itemIndex);
-        FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(readPreferenceTuples(new FileInputStream(testDataPath)), userIndex, itemIndex);
+        FastUserIndex<Long> userIndex = SimpleFastUserIndex.load(UsersReader.read(userPath, lp));
+        FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(ItemsReader.read(itemPath, lp));
+        FastPreferenceData<Long, Long> trainData = SimpleFastPreferenceData.load(PreferencesReader.readRating(trainDataPath, lp, lp), userIndex, itemIndex);
+        FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(PreferencesReader.readRating(testDataPath, lp, lp), userIndex, itemIndex);
 
         //////////////////
         // RECOMMENDERS //
@@ -177,12 +176,12 @@ public class RecommenderExample {
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
         Function<Long, IntPredicate> filter = FastFilters.notInTrain(trainData);
         int maxLength = 100;
-        RecommenderRunner<Long, Long> runner = new FastFilterRecommenderRunner<>(userIndex, itemIndex, targetUsers, format, filter, maxLength);
+        RecommenderRunner<Long, Long> runner = new FastFilterRecommenderRunner<>(userIndex, itemIndex, targetUsers.stream(), filter, maxLength);
 
         recMap.forEach((name, recommender) -> {
             try {
                 System.out.println("Running " + name);
-                runner.run(recommender.get(), name);
+                runner.run(recommender.get(), format.getWriter(name));
             } catch (IOException ex) {
                 throw new UncheckedIOException(ex);
             }

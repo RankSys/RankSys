@@ -10,8 +10,6 @@ package es.uam.eps.ir.ranksys.examples;
 
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
-import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
-import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
 import es.uam.eps.ir.ranksys.diversity.distance.reranking.MMR;
@@ -28,10 +26,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.lp;
-import java.io.FileInputStream;
-import static org.ranksys.examples.Utils.readFeatureTuples;
-import static org.ranksys.examples.Utils.readPreferenceTuples;
+import static org.ranksys.formats.parsing.Parsers.lp;
+import org.ranksys.formats.feature.FeaturesReader;
+import static org.ranksys.formats.parsing.Parsers.sp;
+import org.ranksys.formats.preference.PreferencesReader;
+import org.ranksys.formats.rec.RecommendationFormat;
+import org.ranksys.formats.rec.SimpleRecommendationFormat;
 
 /**
  * Example main of re-rankers.
@@ -48,8 +48,8 @@ public class RerankerExample {
 
         double lambda = 0.5;
         int cutoff = 100;
-        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(readPreferenceTuples(new FileInputStream(trainDataPath)));
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(readFeatureTuples(new FileInputStream(featurePath)));
+        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(PreferencesReader.readRating(trainDataPath, lp, lp));
+        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(FeaturesReader.read(featurePath, lp, sp));
 
         Map<String, Supplier<Reranker<Long, Long>>> rerankersMap = new HashMap<>();
 

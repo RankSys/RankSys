@@ -6,13 +6,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.core.format;
+package org.ranksys.formats.rec;
 
 import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.dp;
+import org.ranksys.formats.parsing.Parser;
+import static org.ranksys.formats.parsing.Parsers.dp;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;

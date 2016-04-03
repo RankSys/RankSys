@@ -10,8 +10,6 @@ package es.uam.eps.ir.ranksys.examples;
 
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
-import es.uam.eps.ir.ranksys.core.format.RecommendationFormat;
-import es.uam.eps.ir.ranksys.core.format.SimpleRecommendationFormat;
 import es.uam.eps.ir.ranksys.core.preference.ConcatPreferenceData;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
@@ -44,10 +42,11 @@ import es.uam.eps.ir.ranksys.novelty.unexp.metrics.EPD;
 import java.util.HashMap;
 import java.util.Map;
 
-import static es.uam.eps.ir.ranksys.core.util.parsing.Parsers.*;
-import java.io.FileInputStream;
-import static org.ranksys.examples.Utils.readFeatureTuples;
-import static org.ranksys.examples.Utils.readPreferenceTuples;
+import static org.ranksys.formats.parsing.Parsers.*;
+import org.ranksys.formats.feature.FeaturesReader;
+import org.ranksys.formats.preference.PreferencesReader;
+import org.ranksys.formats.rec.RecommendationFormat;
+import org.ranksys.formats.rec.SimpleRecommendationFormat;
 
 /**
  * Example main of metrics.
@@ -65,13 +64,13 @@ public class MetricExample {
         Double threshold = Double.parseDouble(args[4]);
 
         // USER - ITEM - RATING files for train and test
-        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(readPreferenceTuples(new FileInputStream(trainDataPath)));
-        PreferenceData<Long, Long> testData = SimplePreferenceData.load(readPreferenceTuples(new FileInputStream(testDataPath)));
+        PreferenceData<Long, Long> trainData = SimplePreferenceData.load(PreferencesReader.readRating(trainDataPath, lp, lp));
+        PreferenceData<Long, Long> testData = SimplePreferenceData.load(PreferencesReader.readRating(testDataPath, lp, lp));
         PreferenceData<Long, Long> totalData = new ConcatPreferenceData<>(trainData, testData);
         // EVALUATED AT CUTOFF 10
         int cutoff = 10;
         // ITEM - FEATURE file
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(readFeatureTuples(new FileInputStream(featurePath)));
+        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(FeaturesReader.read(featurePath, lp, sp));
         // COSINE DISTANCE
         ItemDistanceModel<Long> dist = new CosineFeatureItemDistanceModel<>(featureData);
         // BINARY RELEVANCE
