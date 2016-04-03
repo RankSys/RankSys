@@ -20,7 +20,6 @@ import java.util.function.Predicate;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Abstract (fast) recommender. It implements the free and candidate-based recommendation methods as variants of the filter recommendation.
@@ -90,7 +89,7 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
         FastRecommendation rec = getRecommendation(user2uidx(u), maxLength);
 
         return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream()
-                .map(iv -> tuple(iidx2item(iv.v1), iv.v2))
+                .map(this::iidx2item)
                 .collect(toList()));
     }
 
@@ -104,7 +103,7 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
         FastRecommendation rec = getRecommendation(user2uidx(u), maxLength, iidx -> filter.test(iidx2item(iidx)));
 
         return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream()
-                .map(iv -> tuple(iidx2item(iv.v1), iv.v2))
+                .map(this::iidx2item)
                 .collect(toList()));
     }
 
@@ -116,7 +115,7 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
         FastRecommendation rec = getRecommendation(user2uidx(u), candidates.mapToInt(this::item2iidx));
 
         return new Recommendation<>(uidx2user(rec.getUidx()), rec.getIidxs().stream()
-                .map(iv -> tuple(iidx2item(iv.v1), iv.v2))
+                .map(this::iidx2item)
                 .collect(toList()));
     }
 

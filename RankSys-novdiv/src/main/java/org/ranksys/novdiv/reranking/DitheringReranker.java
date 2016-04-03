@@ -63,7 +63,7 @@ public class DitheringReranker<U, I> extends PermutationReranker<U, I> {
         topN.sort();
 
         int[] perm = topN.stream()
-                .mapToInt(e -> M - e.getIntKey())
+                .mapToInt(e -> M - e.v1)
                 .toArray();
 
         return perm;

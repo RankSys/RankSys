@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
 import org.ranksys.core.util.tuples.Tuple2id;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Recommender for top-n recommendations. It selects and orders the items whose
@@ -65,7 +64,6 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
         topN.sort();
 
         List<Tuple2id> items = topN.reverseStream()
-                .map(e -> tuple(e.getIntKey(), e.getDoubleValue()))
                 .collect(toList());
 
         return new FastRecommendation(uidx, items);

@@ -15,7 +15,6 @@ import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2id;
 import org.ranksys.core.util.tuples.Tuple2od;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Item similarity. It wraps a generic fast similarity and a fast item index.
@@ -91,7 +90,7 @@ public abstract class ItemSimilarity<I> implements Similarity, FastItemIndex<I> 
      */
     public Stream<Tuple2od<I>> similarItems(I i) {
         return similarItems(item2iidx(i))
-                .map(us -> tuple(iidx2item(us.v1), us.v2));
+                .map(this::iidx2item);
     }
 
     /**

@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2od;
 import static java.util.stream.StreamSupport.stream;
 import org.ranksys.core.util.tuples.Tuple2id;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Item neighborhood. Wraps a generic neighborhood and a fast item index.
@@ -80,6 +79,6 @@ public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex
      */
     public Stream<Tuple2od<I>> getNeighbors(I i) {
         return stream(getNeighbors(item2iidx(i)).spliterator(), false)
-                .map(iv -> tuple(iidx2item(iv.v1), iv.v2));
+                .map(this::iidx2item);
     }
 }

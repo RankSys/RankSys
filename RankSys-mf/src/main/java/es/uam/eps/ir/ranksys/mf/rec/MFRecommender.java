@@ -73,7 +73,6 @@ public class MFRecommender<U, I> extends AbstractFastRecommender<U, I> {
         topN.sort();
 
         List<Tuple2id> items = topN.reverseStream()
-                .map(e -> tuple(e.getIntKey(), e.getDoubleValue()))
                 .collect(toList());
 
         return new FastRecommendation(uidx, items);

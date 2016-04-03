@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
 import org.ranksys.core.util.tuples.Tuple2id;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * LDA recommender.  See ParallelTopicModel in Mallet (http://mallet.cs.umass.edu/) for more details.
@@ -59,7 +58,6 @@ public class LDARecommender<U, I> extends AbstractFastRecommender<U, I> {
         topN.sort();
 
         List<Tuple2id> items = topN.reverseStream()
-                .map(e -> tuple(e.getIntKey(), e.getDoubleValue()))
                 .collect(toList());
 
         return new FastRecommendation(uidx, items);

@@ -17,11 +17,9 @@ import es.uam.eps.ir.ranksys.rec.fast.FastRecommender;
 import java.util.List;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import org.ranksys.core.util.tuples.Tuple2id;
 import org.ranksys.core.util.tuples.Tuple2od;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Wrapper for re-ranker that re-ranks the output of another recommender.
@@ -61,14 +59,14 @@ public class RerankingRecommender<U, I> extends AbstractFastRecommender<U, I> {
         
         U user = uidx2user(uidx);
         List<Tuple2od<I>> items = frec.getIidxs().stream()
-                .map(iv -> tuple(iidx2item(iv.v1), iv.v2))
+                .map(this::iidx2item)
                 .collect(toList());
         Recommendation<U, I> rec = new Recommendation<>(user, items);
         
         rec = reranker.rerankRecommendation(rec, maxLength);
         
         List<Tuple2id> iidxs = rec.getItems().stream()
-                .map(iv -> tuple(item2iidx(iv.v1), iv.v2))
+                .map(this::item2iidx)
                 .collect(toList());
         frec = new FastRecommendation(uidx, iidxs);
         

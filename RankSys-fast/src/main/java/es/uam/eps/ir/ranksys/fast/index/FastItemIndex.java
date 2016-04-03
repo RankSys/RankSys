@@ -11,14 +11,18 @@ package es.uam.eps.ir.ranksys.fast.index;
 import es.uam.eps.ir.ranksys.core.index.ItemIndex;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple;
+import org.jooq.lambda.tuple.Tuple2;
+import org.ranksys.core.util.tuples.Tuple2id;
+import org.ranksys.core.util.tuples.Tuple2io;
+import org.ranksys.core.util.tuples.Tuple2od;
+import org.ranksys.core.util.tuples.Tuples;
 
 /**
- * Fast version of ItemIndex, where items are internally represented with 
- * numerical indices from 0 (inclusive) to the number of indexed items
- * (exclusive).
+ * Fast version of ItemIndex, where items are internally represented with numerical indices from 0 (inclusive) to the number of indexed items (exclusive).
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <I> type of the items
  */
 public interface FastItemIndex<I> extends ItemIndex<I> {
@@ -32,7 +36,7 @@ public interface FastItemIndex<I> extends ItemIndex<I> {
     public default Stream<I> getAllItems() {
         return getAllIidx().mapToObj(iidx -> iidx2item(iidx));
     }
-    
+
     /**
      * Gets all the indices of the items.
      *
@@ -41,7 +45,7 @@ public interface FastItemIndex<I> extends ItemIndex<I> {
     public default IntStream getAllIidx() {
         return IntStream.range(0, numItems());
     }
-    
+
     /**
      * Returns the index assigned to the item.
      *
@@ -57,4 +61,21 @@ public interface FastItemIndex<I> extends ItemIndex<I> {
      * @return the item whose index is iidx
      */
     public I iidx2item(int iidx);
+
+    public default <V> Tuple2io<V> item2iidx(Tuple2<I, V> tuple) {
+        return Tuples.tuple(item2iidx(tuple.v1), tuple.v2);
+    }
+
+    public default <V> Tuple2<I, V> iidx2item(Tuple2io<V> tuple) {
+        return Tuple.tuple(iidx2item(tuple.v1), tuple.v2);
+    }
+
+    public default Tuple2id item2iidx(Tuple2od<I> tuple) {
+        return Tuples.tuple(item2iidx(tuple.v1), tuple.v2);
+    }
+
+    public default Tuple2od<I> iidx2item(Tuple2id tuple) {
+        return Tuples.tuple(iidx2item(tuple.v1), tuple.v2);
+    }
+
 }

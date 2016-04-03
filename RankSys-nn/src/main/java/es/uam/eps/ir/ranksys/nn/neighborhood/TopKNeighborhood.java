@@ -12,7 +12,6 @@ import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2id;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Top-K neighborhood. It keeps the k most similar users/items as neighbors.
@@ -47,6 +46,6 @@ public class TopKNeighborhood implements Neighborhood {
         IntDoubleTopN topN = new IntDoubleTopN(k);
         sim.similarElems(idx).forEach(is -> topN.add(is.v1, is.v2));
 
-        return topN.stream().map(e -> tuple(e.getIntKey(), e.getDoubleValue()));
+        return topN.stream();
     }
 }
