@@ -58,7 +58,7 @@ public class CPR<U, I, F> extends AbstractRecommendationMetric<U, I> {
         Object2IntOpenHashMap<F> count = new Object2IntOpenHashMap<>();
         count.defaultReturnValue(0);
 
-        int rank = 0;
+        int rankMaster = 0;
         int nr = 0;
         double cpr = 0.0;
         for (Tuple2od<I> iv : recommendation.getItems()) {
@@ -75,12 +75,12 @@ public class CPR<U, I, F> extends AbstractRecommendationMetric<U, I> {
             if (relModel instanceof NoRelevanceModel) {
                 ideal[0] = 0;
             } else {
-                ideal[0] = 0.5 * (rank + 1) * (rank + 1);
+                ideal[0] = 0.5 * (rankMaster + 1) * (rankMaster + 1);
             }
 
-            int _rank = rank;
+            int rank = rankMaster;
             prob.getFeatures().forEach(f -> {
-                double v = prob.p(f) * (_rank + 1);
+                double v = prob.p(f) * (rank + 1);
                 int c = count.getInt(f);
                 if (v >= c) {
                     disprop[0] += (v - c) * (v - c);
@@ -90,13 +90,13 @@ public class CPR<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
             cpr += 1 - disprop[0] / ideal[0];
 
-            rank++;
-            if (rank >= cutoff) {
+            rankMaster++;
+            if (rankMaster >= cutoff) {
                 break;
             }
         }
 
-        cpr /= rank;
+        cpr /= rankMaster;
 
         return cpr;
     }

@@ -61,12 +61,12 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
 
     @Override
     public double error(Factorization<U, I> factorization, FastPreferenceData<U, I> data) {
-        DenseDoubleMatrix2D pu_z = factorization.getUserMatrix();
+        DenseDoubleMatrix2D puZ = factorization.getUserMatrix();
         DenseDoubleMatrix2D piz = factorization.getItemMatrix();
 
         double error = data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
-            DoubleMatrix1D pU_z = pu_z.viewRow(uidx);
-            DoubleMatrix1D pUi = piz.zMult(pU_z, null);
+            DoubleMatrix1D puZLocal = puZ.viewRow(uidx);
+            DoubleMatrix1D pUi = piz.zMult(puZLocal, null);
             return data.getUidxPreferences(uidx).mapToDouble(iv -> {
                 return -iv.v2 * pUi.getQuick(iv.v1);
             }).sum();
@@ -76,36 +76,36 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
     }
 
     @Override
-    public Factorization<U, I> factorize(int K, FastPreferenceData<U, I> data) {
-        DoubleFunction init = x -> sqrt(1.0 / K) * Math.random();
-        Factorization<U, I> factorization = new Factorization<>(data, data, K, init);
+    public Factorization<U, I> factorize(int k, FastPreferenceData<U, I> data) {
+        DoubleFunction init = x -> sqrt(1.0 / k) * Math.random();
+        Factorization<U, I> factorization = new Factorization<>(data, data, k, init);
         factorize(factorization, data);
         return factorization;
     }
 
     @Override
     public void factorize(Factorization<U, I> factorization, FastPreferenceData<U, I> data) {
-        DenseDoubleMatrix2D pu_z = factorization.getUserMatrix();
+        DenseDoubleMatrix2D puZMaster = factorization.getUserMatrix();
         DenseDoubleMatrix2D piz = factorization.getItemMatrix();
 
         IntSet uidxs = new IntOpenHashSet(data.getUidxWithPreferences().toArray());
-        IntStream.range(0, pu_z.rows()).filter(uidx -> !uidxs.contains(uidx)).forEach(uidx -> pu_z.viewRow(uidx).assign(0.0));
+        IntStream.range(0, puZMaster.rows()).filter(uidx -> !uidxs.contains(uidx)).forEach(uidx -> puZMaster.viewRow(uidx).assign(0.0));
         IntSet iidxs = new IntOpenHashSet(data.getIidxWithPreferences().toArray());
         IntStream.range(0, piz.rows()).filter(iidx -> !iidxs.contains(iidx)).forEach(iidx -> piz.viewRow(iidx).assign(0.0));
 
-        PLSAPreferenceData<U, I> plsaData = new PLSAPreferenceData<>(data, pu_z.columns());
+        PLSAPreferenceData<U, I> plsaData = new PLSAPreferenceData<>(data, puZMaster.columns());
 
-        for (int z = 0; z < pu_z.columns(); z++) {
-            final DoubleMatrix1D pu_Z = pu_z.viewColumn(z);
-            pu_Z.assign(mult(1 / pu_Z.aggregate(plus, identity)));
+        for (int z = 0; z < puZMaster.columns(); z++) {
+            final DoubleMatrix1D puZ = puZMaster.viewColumn(z);
+            puZ.assign(mult(1 / puZ.aggregate(plus, identity)));
         }
         piz.assign(mult(1 / piz.aggregate(plus, identity)));
 
         for (int t = 1; t <= numIter; t++) {
             long time0 = System.nanoTime();
 
-            expectation(pu_z, piz, plsaData);
-            maximization(pu_z, piz, plsaData);
+            expectation(puZMaster, piz, plsaData);
+            maximization(puZMaster, piz, plsaData);
 
             int iter = t;
             long time1 = System.nanoTime() - time0;
@@ -115,28 +115,28 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         }
     }
 
-    private void expectation(final DenseDoubleMatrix2D pz_u, final DenseDoubleMatrix2D piz, PLSAPreferenceData<U, I> qzData) {
+    private void expectation(final DenseDoubleMatrix2D pzU, final DenseDoubleMatrix2D piz, PLSAPreferenceData<U, I> qzData) {
         qzData.getUidxWithPreferences().parallel().forEach(uidx -> {
             qzData.getUidxPreferences(uidx).forEach(iqz -> {
                 int iidx = iqz.v1;
                 double[] qz = ((PLSAPreferenceData.PLSAIdxPref) iqz).qz;
                 for (int z = 0; z < qz.length; z++) {
-                    qz[z] = piz.getQuick(iidx, z) * pz_u.getQuick(uidx, z);
+                    qz[z] = piz.getQuick(iidx, z) * pzU.getQuick(uidx, z);
                 }
                 normalizeQz(qz);
             });
         });
     }
 
-    private void maximization(DenseDoubleMatrix2D pu_z, final DenseDoubleMatrix2D piz, final PLSAPreferenceData<U, I> qzData) {
+    private void maximization(DenseDoubleMatrix2D puZ, final DenseDoubleMatrix2D piz, final PLSAPreferenceData<U, I> qzData) {
         Int2ObjectMap<Lock> lockMap = new Int2ObjectOpenHashMap<>();
         qzData.getIidxWithPreferences().forEach(iidx -> lockMap.put(iidx, new ReentrantLock()));
 
-        pu_z.assign(0.0);
+        puZ.assign(0.0);
         piz.assign(0.0);
 
         qzData.getUidxWithPreferences().parallel().forEach(uidx -> {
-            final DoubleMatrix1D pz_U = pu_z.viewRow(uidx);
+            final DoubleMatrix1D pzU = puZ.viewRow(uidx);
 
             qzData.getUidxPreferences(uidx).forEach(iqz -> {
                 int iidx = iqz.v1;
@@ -146,7 +146,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
 
                 for (int z = 0; z < qz.length; z++) {
                     double r = qz[z] * v;
-                    pz_U.setQuick(z, pz_U.getQuick(z) + r);
+                    pzU.setQuick(z, pzU.getQuick(z) + r);
                 }
                 lock.lock();
                 try {
@@ -160,9 +160,9 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             });
         });
 
-        for (int z = 0; z < pu_z.columns(); z++) {
-            final DoubleMatrix1D pZ_u = pu_z.viewColumn(z);
-            pZ_u.assign(mult(1 / pZ_u.aggregate(plus, identity)));
+        for (int z = 0; z < puZ.columns(); z++) {
+            final DoubleMatrix1D pzU = puZ.viewColumn(z);
+            pzU.assign(mult(1 / pzU.aggregate(plus, identity)));
         }
         piz.assign(mult(1 / piz.aggregate(plus, identity)));
     }
@@ -182,13 +182,13 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         private final FastPreferenceData<U, I> data;
         private final Long2ObjectOpenHashMap<double[]> qz;
 
-        public PLSAPreferenceData(FastPreferenceData<U, I> data, int K) {
+        public PLSAPreferenceData(FastPreferenceData<U, I> data, int k) {
             super(data, data);
             this.data = data;
             this.qz = new Long2ObjectOpenHashMap<>();
             data.getUidxWithPreferences().forEach(uidx -> {
                 data.getUidxPreferences(uidx).forEach(pref -> {
-                    putQz(uidx, pref.v1, new double[K]);
+                    putQz(uidx, pref.v1, new double[k]);
                 });
             });
 

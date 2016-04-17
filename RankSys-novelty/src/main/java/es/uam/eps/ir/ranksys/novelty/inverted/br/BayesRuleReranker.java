@@ -33,17 +33,17 @@ public abstract class BayesRuleReranker<U, I> extends PermutationReranker<U, I> 
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
         List<Tuple2od<I>> items = recommendation.getItems();
-        int M = items.size();
-        int N = min(maxLength, M);
+        int m = items.size();
+        int n = min(maxLength, m);
 
-        IntDoubleTopN topN = new IntDoubleTopN(N);
-        for (int i = 0; i < M; i++) {
-            topN.add(M - i, likelihood(items.get(i)) * prior(items.get(i).v1));
+        IntDoubleTopN topN = new IntDoubleTopN(n);
+        for (int i = 0; i < m; i++) {
+            topN.add(m - i, likelihood(items.get(i)) * prior(items.get(i).v1));
         }
         topN.sort();
 
         int[] perm = topN.reverseStream()
-                .mapToInt(e -> M - e.v1)
+                .mapToInt(e -> m - e.v1)
                 .toArray();
 
         return perm;

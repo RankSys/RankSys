@@ -107,18 +107,18 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
     }
 
     private static DoubleMatrix2D getGt(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, double lambda) {
-        final int K = p.columns();
+        final int kMaster = p.columns();
 
-        DenseDoubleMatrix2D A1 = new DenseDoubleMatrix2D(K, K);
-        q.zMult(q, A1, 1.0, 0.0, true, false);
-        for (int k = 0; k < K; k++) {
-            A1.setQuick(k, k, lambda + A1.getQuick(k, k));
+        DenseDoubleMatrix2D a1 = new DenseDoubleMatrix2D(kMaster, kMaster);
+        q.zMult(q, a1, 1.0, 0.0, true, false);
+        for (int k = 0; k < kMaster; k++) {
+            a1.setQuick(k, k, lambda + a1.getQuick(k, k));
         }
 
-        EigenvalueDecomposition eig = new EigenvalueDecomposition(A1);
+        EigenvalueDecomposition eig = new EigenvalueDecomposition(a1);
         DoubleMatrix1D d = eig.getRealEigenvalues();
         DoubleMatrix2D gt = eig.getV();
-        for (int k = 0; k < K; k++) {
+        for (int k = 0; k < kMaster; k++) {
             double a = sqrt(d.get(k));
             gt.viewColumn(k).assign(x -> a * x);
         }
@@ -126,55 +126,55 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
         return gt;
     }
 
-    private static <O> void prepareRR1(int L, DoubleMatrix1D w, DoubleMatrix2D gt, DoubleMatrix2D q, int N, Stream<? extends IdxPref> prefs, DoubleUnaryOperator confidence, double lambda) {
-        int K = (int) w.size();
+    private static <O> void prepareRR1(int l, DoubleMatrix1D w, DoubleMatrix2D gt, DoubleMatrix2D q, int n, Stream<? extends IdxPref> prefs, DoubleUnaryOperator confidence, double lambda) {
+        int kMaster = (int) w.size();
 
-        double[][] x = new double[K + N][K];
-        double[] y = new double[K + N];
-        double[] c = new double[K + N];
-        for (int k = 0; k < K; k++) {
+        double[][] x = new double[kMaster + n][kMaster];
+        double[] y = new double[kMaster + n];
+        double[] c = new double[kMaster + n];
+        for (int k = 0; k < kMaster; k++) {
             gt.viewColumn(k).toArray(x[k]);
             y[k] = 0.0;
             c[k] = 1.0;
         }
-        int[] j = {K};
+        int[] j = {kMaster};
         prefs.forEach(iv -> {
             q.viewRow(iv.v1).toArray(x[j[0]]);
-            double Cui = confidence.applyAsDouble(iv.v2);
-            y[j[0]] = (Cui * iv.v2) / (Cui - 1);
-            c[j[0]] = Cui - 1;
+            double cui = confidence.applyAsDouble(iv.v2);
+            y[j[0]] = (cui * iv.v2) / (cui - 1);
+            c[j[0]] = cui - 1;
             j[0]++;
         });
         
-        doRR1(L, w, x, y, c, lambda);
+        doRR1(l, w, x, y, c, lambda);
     }
 
-    private static void doRR1(int L, DoubleMatrix1D w, double[][] x, double[] y, double[] c, double lambda) {
-        int N = x.length;
-        int K = x[0].length;
+    private static void doRR1(int iMaster, DoubleMatrix1D w, double[][] x, double[] y, double[] c, double lambda) {
+        int n = x.length;
+        int kMaster = x[0].length;
         
-        double[] e = new double[N];
-        for (int i = 0; i < N; i++) {
+        double[] e = new double[n];
+        for (int i = 0; i < n; i++) {
             double pred = 0.0;
-            for (int k = 0; k < K; k++) {
+            for (int k = 0; k < kMaster; k++) {
                 pred += w.getQuick(k) * x[i][k];
             }
             e[i] = y[i] - pred;
         }
 
-        for (int l = 0; l < L; l++) {
-            for (int k = 0; k < K; k++) {
-                for (int i = 0; i < N; i++) {
+        for (int l = 0; l < iMaster; l++) {
+            for (int k = 0; k < kMaster; k++) {
+                for (int i = 0; i < n; i++) {
                     e[i] += w.getQuick(k) * x[i][k];
                 }
                 double a = 0.0;
                 double d = 0.0;
-                for (int i = 0; i < N; i++) {
+                for (int i = 0; i < n; i++) {
                     a += c[i] * x[i][k] * x[i][k];
                     d += c[i] * x[i][k] * e[i];
                 }
                 w.setQuick(k, d / (lambda + a));
-                for (int i = 0; i < N; i++) {
+                for (int i = 0; i < n; i++) {
                     e[i] -= w.getQuick(k) * x[i][k];
                 }
             }

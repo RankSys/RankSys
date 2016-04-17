@@ -76,14 +76,14 @@ public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends Abstract
      *
      * @param users user index
      * @param items item index
-     * @param u_codec user preferences CODEC
-     * @param i_codec item preferences CODEC
+     * @param uCodec user preferences CODEC
+     * @param iCodec item preferences CODEC
      */
     @SuppressWarnings("unchecked")
-    public AbstractCODECPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
+    public AbstractCODECPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> uCodec, CODEC<Ci> iCodec) {
         super(users, items);
-        this.u_codec = u_codec;
-        this.i_codec = i_codec;
+        this.u_codec = uCodec;
+        this.i_codec = iCodec;
         this.u_idxs = (Cu[]) new Object[users.numUsers()];
         this.u_len = new int[users.numUsers()];
         this.i_idxs = (Ci[]) new Object[items.numItems()];
@@ -125,13 +125,13 @@ public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends Abstract
         return getIdx(i_idxs[iidx], i_len[iidx], i_codec);
     }
 
-    private static <Cx> IntIterator getIdx(Cx cidxs, int len, CODEC<Cx> x_codec) {
+    private static <Cx> IntIterator getIdx(Cx cidxs, int len, CODEC<Cx> xCodec) {
         if (len == 0) {
             return IntIterators.EMPTY_ITERATOR;
         }
         int[] idxs = new int[len];
-        x_codec.dec(cidxs, idxs, 0, len);
-        if (!x_codec.isIntegrated()) {
+        xCodec.dec(cidxs, idxs, 0, len);
+        if (!xCodec.isIntegrated()) {
             atled(idxs, 0, len);
         }
         return new ArrayIntIterator(idxs);

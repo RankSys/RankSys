@@ -96,25 +96,25 @@ public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
     }
 
     private static <U, I, O> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleUnaryOperator confidence, double lambda, FastPreferenceData<U, I> data) {
-        final int K = p.columns();
+        final int kMaster = p.columns();
 
-        DenseDoubleMatrix2D A1P = new DenseDoubleMatrix2D(K, K);
-        q.zMult(q, A1P, 1.0, 0.0, true, false);
-        for (int k = 0; k < K; k++) {
-            A1P.setQuick(k, k, lambda + A1P.getQuick(k, k));
+        DenseDoubleMatrix2D a1P = new DenseDoubleMatrix2D(kMaster, kMaster);
+        q.zMult(q, a1P, 1.0, 0.0, true, false);
+        for (int k = 0; k < kMaster; k++) {
+            a1P.setQuick(k, k, lambda + a1P.getQuick(k, k));
         }
 
-        DenseDoubleMatrix2D[] A2P = new DenseDoubleMatrix2D[q.rows()];
+        DenseDoubleMatrix2D[] a2P = new DenseDoubleMatrix2D[q.rows()];
         data.getIidxWithPreferences().parallel().forEach(iidx -> {
-            A2P[iidx] = new DenseDoubleMatrix2D(K, K);
+            a2P[iidx] = new DenseDoubleMatrix2D(kMaster, kMaster);
             DoubleMatrix1D qi = q.viewRow(iidx);
-            ALG.multOuter(qi, qi, A2P[iidx]);
+            ALG.multOuter(qi, qi, a2P[iidx]);
         });
 
         data.getUidxWithPreferences().parallel().forEach(uidx -> {
-            DoubleMatrix2D A = new DenseDoubleMatrix2D(K, K);
-            DoubleMatrix1D b = new DenseDoubleMatrix1D(K);
-            A.assign(A1P);
+            DoubleMatrix2D a = new DenseDoubleMatrix2D(kMaster, kMaster);
+            DoubleMatrix1D b = new DenseDoubleMatrix1D(kMaster);
+            a.assign(a1P);
             b.assign(0.0);
 
             data.getUidxPreferences(uidx).forEach(iv -> {
@@ -124,11 +124,11 @@ public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
 
                 DoubleMatrix1D qi = q.viewRow(iidx);
 
-                A.assign(A2P[iidx], (x, y) -> x + y * (cui - 1.0));
+                a.assign(a2P[iidx], (x, y) -> x + y * (cui - 1.0));
                 b.assign(qi, (x, y) -> x + y * rui * cui);
             });
             LUDecompositionQuick lu = new LUDecompositionQuick(0);
-            lu.decompose(A);
+            lu.decompose(a);
             lu.solve(b);
             p.viewRow(uidx).assign(b);
         });
