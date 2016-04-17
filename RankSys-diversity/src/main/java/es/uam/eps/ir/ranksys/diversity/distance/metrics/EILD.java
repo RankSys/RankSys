@@ -78,15 +78,15 @@ public class EILD<U, I> extends AbstractRecommendationMetric<U, I> {
         RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
 
         List<Tuple2od<I>> items = recommendation.getItems();
-        int N = Math.min(cutoff, items.size());
+        int n = Math.min(cutoff, items.size());
 
         double eild = 0.0;
         double norm = 0;
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < n; i++) {
             double ieild = 0.0;
             double inorm = 0.0;
             ToDoubleFunction<I> iDist = distModel.dist(items.get(i).v1);
-            for (int j = 0; j < N; j++) {
+            for (int j = 0; j < n; j++) {
                 if (i == j) {
                     continue;
                 }

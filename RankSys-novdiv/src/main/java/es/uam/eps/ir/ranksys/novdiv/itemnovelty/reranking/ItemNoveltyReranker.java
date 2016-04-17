@@ -54,11 +54,11 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
     public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
         U user = recommendation.getUser();
         List<Tuple2od<I>> items = recommendation.getItems();
-        int M = items.size();
-        int N = min(maxLength, M);
+        int m = items.size();
+        int n = min(maxLength, m);
         
         if (lambda == 0.0) {
-            return getBasePerm(N);
+            return getBasePerm(n);
         }
 
         ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getModel(user);
@@ -76,14 +76,14 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
             novStats.accept(nov);
         });
 
-        IntDoubleTopN topN = new IntDoubleTopN(N);
-        for (int i = 0; i < M; i++) {
-            topN.add(M - i, value(items.get(i), relStats, novMap, novStats));
+        IntDoubleTopN topN = new IntDoubleTopN(n);
+        for (int i = 0; i < m; i++) {
+            topN.add(m - i, value(items.get(i), relStats, novMap, novStats));
         }
         topN.sort();
 
         int[] perm = topN.reverseStream()
-                .mapToInt(e -> M - e.v1)
+                .mapToInt(e -> m - e.v1)
                 .toArray();
 
         return perm;

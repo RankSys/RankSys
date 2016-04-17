@@ -137,11 +137,11 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
          * not included in a recommendation list of a given size.
          *
          * @param f feature
-         * @param N recommendation list size 
+         * @param n recommendation list size 
          * @return longing score
          */
-        public double longing(F f, int N) {
-            return Math.pow(1 - p(f), N);
+        public double longing(F f, int n) {
+            return Math.pow(1 - p(f), n);
         }
 
         /**
@@ -151,13 +151,13 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
          * @param k number of times the feature appears in items in the 
          * recommendation.
          * @param f feature
-         * @param N recommendation list size
+         * @param n recommendation list size
          * @return patience score
          */
-        public double patience(int k, F f, int N) {
+        public double patience(int k, F f, int n) {
             double pf = p(f);
-            BinomialDistribution dist = new BinomialDistribution(null, N, pf);
-            double p0 = Math.pow(1 - pf, N);
+            BinomialDistribution dist = new BinomialDistribution(null, n, pf);
+            double p0 = Math.pow(1 - pf, n);
             return 1 - (dist.cumulativeProbability(k - 1) - p0) / (1 - p0);
         }
 

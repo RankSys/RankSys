@@ -54,15 +54,15 @@ public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
      *
      * @param uIndex fast user index
      * @param iIndex fast item index
-     * @param K dimension of the latent feature space
+     * @param k dimension of the latent feature space
      * @param initFunction function to initialize the cells of the matrices
      */
-    public Factorization(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, int K, DoubleFunction initFunction) {
-        this.userMatrix = new DenseDoubleMatrix2D(uIndex.numUsers(), K);
+    public Factorization(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, int k, DoubleFunction initFunction) {
+        this.userMatrix = new DenseDoubleMatrix2D(uIndex.numUsers(), k);
         this.userMatrix.assign(initFunction);
-        this.itemMatrix = new DenseDoubleMatrix2D(iIndex.numItems(), K);
+        this.itemMatrix = new DenseDoubleMatrix2D(iIndex.numItems(), k);
         this.itemMatrix.assign(initFunction);
-        this.K = K;
+        this.K = k;
         this.uIndex = uIndex;
         this.iIndex = iIndex;
     }
@@ -74,12 +74,12 @@ public class Factorization<U, I> implements FastItemIndex<I>, FastUserIndex<U> {
      * @param iIndex fast item index
      * @param userMatrix user matrix
      * @param itemMatrix item matrix
-     * @param K dimension of the latent feature space
+     * @param k dimension of the latent feature space
      */
-    public Factorization(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, DenseDoubleMatrix2D userMatrix, DenseDoubleMatrix2D itemMatrix, int K) {
+    public Factorization(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, DenseDoubleMatrix2D userMatrix, DenseDoubleMatrix2D itemMatrix, int k) {
         this.userMatrix = userMatrix;
         this.itemMatrix = itemMatrix;
-        this.K = K;
+        this.K = k;
         this.uIndex = uIndex;
         this.iIndex = iIndex;
     }

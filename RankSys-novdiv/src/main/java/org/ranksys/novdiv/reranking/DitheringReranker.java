@@ -45,23 +45,23 @@ public class DitheringReranker<U, I> extends PermutationReranker<U, I> {
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
         List<Tuple2od<I>> items = recommendation.getItems();
-        int M = items.size();
-        int N = min(maxLength, M);
+        int m = items.size();
+        int n = min(maxLength, m);
 
         if (variance == 0.0) {
-            return getBasePerm(N);
+            return getBasePerm(n);
         }
         
         NormalDistribution dist = new NormalDistribution(0.0, sqrt(variance));
 
-        IntDoubleTopN topN = new IntDoubleTopN(N);
-        for (int i = 0; i < M; i++) {
-            topN.add(M - i, log(i + 1) + dist.sample());
+        IntDoubleTopN topN = new IntDoubleTopN(n);
+        for (int i = 0; i < m; i++) {
+            topN.add(m - i, log(i + 1) + dist.sample());
         }
         topN.sort();
 
         int[] perm = topN.stream()
-                .mapToInt(e -> M - e.v1)
+                .mapToInt(e -> m - e.v1)
                 .toArray();
 
         return perm;

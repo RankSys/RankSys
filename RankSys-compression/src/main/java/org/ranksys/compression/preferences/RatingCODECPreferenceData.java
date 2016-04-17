@@ -59,12 +59,12 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
      * @param preferences input preference data to be copied
      * @param users user index
      * @param items item index
-     * @param u_codec user preferences list CODEC
-     * @param i_codec item preferences list CODEC
-     * @param r_codec ratings CODEC
+     * @param uCodec user preferences list CODEC
+     * @param iCodec item preferences list CODEC
+     * @param rCodec ratings CODEC
      */
-    public RatingCODECPreferenceData(FastPreferenceData<U, I> preferences, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec) {
-        this(ul(preferences), il(preferences), users, items, u_codec, i_codec, r_codec);
+    public RatingCODECPreferenceData(FastPreferenceData<U, I> preferences, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> uCodec, CODEC<Ci> iCodec, CODEC<Cv> rCodec) {
+        this(ul(preferences), il(preferences), users, items, uCodec, iCodec, rCodec);
     }
 
     private static Stream<Tuple2io<int[][]>> ul(FastPreferenceData<?, ?> preferences) {
@@ -93,34 +93,34 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
      * @param il stream of item preferences lists (id-rating)
      * @param users user index
      * @param items item index
-     * @param u_codec user preferences list CODEC
-     * @param i_codec item preferences list CODEC
-     * @param r_codec ratings CODEC
+     * @param uCodec user preferences list CODEC
+     * @param iCodec item preferences list CODEC
+     * @param rCodec ratings CODEC
      */
     @SuppressWarnings("unchecked")
-    public RatingCODECPreferenceData(Stream<Tuple2io<int[][]>> ul, Stream<Tuple2io<int[][]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec) {
-        super(users, items, u_codec, i_codec);
+    public RatingCODECPreferenceData(Stream<Tuple2io<int[][]>> ul, Stream<Tuple2io<int[][]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> uCodec, CODEC<Ci> iCodec, CODEC<Cv> rCodec) {
+        super(users, items, uCodec, iCodec);
 
-        this.r_codec = r_codec;
+        this.r_codec = rCodec;
         this.u_vs = (Cv[]) new Object[users.numUsers()];
         this.i_vs = (Cv[]) new Object[items.numItems()];
 
-        index(ul, u_idxs, u_vs, u_len, u_codec, r_codec);
-        index(il, i_idxs, i_vs, i_len, i_codec, r_codec);
+        index(ul, u_idxs, u_vs, u_len, uCodec, rCodec);
+        index(il, i_idxs, i_vs, i_len, iCodec, rCodec);
     }
 
-    private static <Cx, Cv> void index(Stream<Tuple2io<int[][]>> lists, Cx[] idxs, Cv[] vs, int[] lens, CODEC<Cx> x_codec, CODEC<Cv> r_codec) {
+    private static <Cx, Cv> void index(Stream<Tuple2io<int[][]>> lists, Cx[] cxIdxs, Cv[] cxVs, int[] lens, CODEC<Cx> xCodec, CODEC<Cv> rCodec) {
         lists.parallel().forEach(list -> {
             int k = list.v1;
-            int[] _idxs = list.v2[0];
-            int[] _vs = list.v2[1];
+            int[] idxs = list.v2[0];
+            int[] vs = list.v2[1];
 
-            lens[k] = _idxs.length;
-            if (!x_codec.isIntegrated()) {
-                delta(_idxs, 0, _idxs.length);
+            lens[k] = idxs.length;
+            if (!xCodec.isIntegrated()) {
+                delta(idxs, 0, idxs.length);
             }
-            idxs[k] = x_codec.co(_idxs, 0, _idxs.length);
-            vs[k] = r_codec.co(_vs, 0, _vs.length);
+            cxIdxs[k] = xCodec.co(idxs, 0, idxs.length);
+            cxVs[k] = rCodec.co(vs, 0, vs.length);
         });
     }
 
@@ -134,15 +134,15 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
         return getPreferences(i_idxs[iidx], i_vs[iidx], i_len[iidx], i_codec, r_codec);
     }
 
-    private static <Cx, Cv> Stream<IdxPref> getPreferences(Cx cidxs, Cv cvs, int len, CODEC<Cx> x_codec, CODEC<Cv> r_codec) {
+    private static <Cx, Cv> Stream<IdxPref> getPreferences(Cx cidxs, Cv cvs, int len, CODEC<Cx> xCodec, CODEC<Cv> rCodec) {
         if (len == 0) {
             return empty();
         }
         int[] idxs = new int[len];
         int[] vs = new int[len];
-        x_codec.dec(cidxs, idxs, 0, len);
-        r_codec.dec(cvs, vs, 0, len);
-        if (!x_codec.isIntegrated()) {
+        xCodec.dec(cidxs, idxs, 0, len);
+        rCodec.dec(cvs, vs, 0, len);
+        if (!xCodec.isIntegrated()) {
             atled(idxs, 0, len);
         }
         return range(0, len).mapToObj(i -> new IdxPref(idxs[i], vs[i]));
@@ -158,12 +158,12 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
         return getVs(i_vs[iidx], i_len[iidx], r_codec);
     }
 
-    private static <Cv> DoubleIterator getVs(Cv cvs, int len, CODEC<Cv> r_codec) {
+    private static <Cv> DoubleIterator getVs(Cv cvs, int len, CODEC<Cv> rCodec) {
         if (len == 0) {
             return DoubleIterators.EMPTY_ITERATOR;
         }
         int[] vsi = new int[len];
-        r_codec.dec(cvs, vsi, 0, len);
+        rCodec.dec(cvs, vsi, 0, len);
         double[] vsd = new double[len];
         for (int i = 0; i < len; i++) {
             vsd[i] = vsi[i];

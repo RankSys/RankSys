@@ -51,11 +51,11 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
      * @param preferences input preference data to be copied
      * @param users user index
      * @param items item index
-     * @param u_codec user preferences list CODEC
-     * @param i_codec item preferences list CODEC
+     * @param uCodec user preferences list CODEC
+     * @param iCodec item preferences list CODEC
      */
-    public BinaryCODECPreferenceData(FastPreferenceData<U, I> preferences, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
-        this(ul(preferences), il(preferences), users, items, u_codec, i_codec);
+    public BinaryCODECPreferenceData(FastPreferenceData<U, I> preferences, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> uCodec, CODEC<Ci> iCodec) {
+        this(ul(preferences), il(preferences), users, items, uCodec, iCodec);
     }
 
     private static Stream<Tuple2io<int[]>> ul(FastPreferenceData<?, ?> preferences) {
@@ -82,26 +82,26 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
      * @param il stream of item preferences lists
      * @param users user index
      * @param items item index
-     * @param u_codec user preferences list CODEC
-     * @param i_codec item preferences list CODEC
+     * @param uCodec user preferences list CODEC
+     * @param iCodec item preferences list CODEC
      */
-    public BinaryCODECPreferenceData(Stream<Tuple2io<int[]>> ul, Stream<Tuple2io<int[]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
-        super(users, items, u_codec, i_codec);
+    public BinaryCODECPreferenceData(Stream<Tuple2io<int[]>> ul, Stream<Tuple2io<int[]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> uCodec, CODEC<Ci> iCodec) {
+        super(users, items, uCodec, iCodec);
 
-        index(ul, u_idxs, u_len, u_codec);
-        index(il, i_idxs, i_len, i_codec);
+        index(ul, u_idxs, u_len, uCodec);
+        index(il, i_idxs, i_len, iCodec);
     }
 
-    private static <Cx> void index(Stream<Tuple2io<int[]>> lists, Cx[] idxs, int[] lens, CODEC<Cx> x_codec) {
+    private static <Cx> void index(Stream<Tuple2io<int[]>> lists, Cx[] cxIdxs, int[] lens, CODEC<Cx> xCodec) {
         lists.parallel().forEach(list -> {
             int k = list.v1;
-            int[] _idxs = list.v2;
+            int[] idxs = list.v2;
 
-            lens[k] = _idxs.length;
-            if (!x_codec.isIntegrated()) {
-                delta(_idxs, 0, _idxs.length);
+            lens[k] = idxs.length;
+            if (!xCodec.isIntegrated()) {
+                delta(idxs, 0, idxs.length);
             }
-            idxs[k] = x_codec.co(_idxs, 0, _idxs.length);
+            cxIdxs[k] = xCodec.co(idxs, 0, idxs.length);
         });
     }
 
@@ -115,14 +115,14 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
         return getPreferences(i_idxs[iidx], i_len[iidx], i_codec);
     }
 
-    private static <Cx> Stream<IdxPref> getPreferences(Cx cidxs, int len, CODEC<Cx> x_codec) {
+    private static <Cx> Stream<IdxPref> getPreferences(Cx cidxs, int len, CODEC<Cx> xCodec) {
         if (len == 0) {
             return Stream.empty();
         }
         IdxPref pref = new IdxPref(-1, 1.0);
         int[] idxs = new int[len];
-        x_codec.dec(cidxs, idxs, 0, len);
-        if (!x_codec.isIntegrated()) {
+        xCodec.dec(cidxs, idxs, 0, len);
+        if (!xCodec.isIntegrated()) {
             atled(idxs, 0, len);
         }
         return range(0, len).mapToObj(i -> new IdxPref(idxs[i], 1.0));
