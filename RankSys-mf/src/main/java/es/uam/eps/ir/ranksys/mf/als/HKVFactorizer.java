@@ -66,7 +66,7 @@ public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
     public double error(DenseDoubleMatrix2D p, DenseDoubleMatrix2D q, FastPreferenceData<U, I> data) {
         // TODO: add regularization
         
-        double error = data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
+        return data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
             DoubleMatrix1D pu = p.viewRow(uidx);
             DoubleMatrix1D su = q.zMult(pu, null);
             
@@ -82,7 +82,6 @@ public class HKVFactorizer<U, I> extends ALSFactorizer<U, I> {
             return (err1 + err2) / data.numItems();
         }).sum() / data.numUsers();
 
-        return error;
     }
 
     @Override

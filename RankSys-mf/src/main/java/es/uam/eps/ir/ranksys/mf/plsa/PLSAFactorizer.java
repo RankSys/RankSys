@@ -64,7 +64,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         DenseDoubleMatrix2D pu_z = factorization.getUserMatrix();
         DenseDoubleMatrix2D piz = factorization.getItemMatrix();
 
-        double error = data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
+        return data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
             DoubleMatrix1D pU_z = pu_z.viewRow(uidx);
             DoubleMatrix1D pUi = piz.zMult(pU_z, null);
             return data.getUidxPreferences(uidx).mapToDouble(iv -> {
@@ -72,7 +72,6 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             }).sum();
         }).sum();
 
-        return error;
     }
 
     @Override
@@ -167,7 +166,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         piz.assign(mult(1 / piz.aggregate(plus, identity)));
     }
 
-    private void normalizeQz(double[] qz) {
+    private static void normalizeQz(double[] qz) {
         double norm = 0;
         for (int i = 0; i < qz.length; i++) {
             norm += qz[i];

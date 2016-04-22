@@ -227,15 +227,15 @@ public abstract class AbstractTopN<T> extends AbstractCollection<T> {
         return compare(l, r) < 0 ? l : r;
     }
 
-    private int parent(int i) {
+    private static int parent(int i) {
         return (i - 1) / 2;
     }
 
-    private int left(int i) {
+    private static int left(int i) {
         return (i + 1) * 2 - 1;
     }
 
-    private int right(int i) {
+    private static int right(int i) {
         return (i + 1) * 2;
     }
 
