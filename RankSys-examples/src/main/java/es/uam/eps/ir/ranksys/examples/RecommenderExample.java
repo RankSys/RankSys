@@ -55,6 +55,7 @@ import org.ranksys.formats.index.UsersReader;
 import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
 import org.ranksys.formats.rec.RecommendationFormat;
 import org.ranksys.formats.rec.SimpleRecommendationFormat;
+import org.ranksys.mf.als.RankALSFactorizer;
 
 /**
  * Example main of recommendations.
@@ -163,6 +164,16 @@ public class RecommenderExample {
 
             return new LDARecommender<>(userIndex, itemIndex, topicModel);
         }));
+
+        // ranking matrix factorisation by Takács and Tikk
+        recMap.put("rankals", () -> {
+            int k = 20;
+            int numIter = 10;
+
+            Factorization<Long, Long> factorization = new RankALSFactorizer<Long, Long>(numIter).factorize(k, trainData);
+
+            return new MFRecommender<>(userIndex, itemIndex, factorization);
+        });
 
         ////////////////////////////////
         // GENERATING RECOMMENDATIONS //
