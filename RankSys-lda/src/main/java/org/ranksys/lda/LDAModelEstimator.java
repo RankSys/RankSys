@@ -81,7 +81,7 @@ public class LDAModelEstimator {
 
         @Override
         public Iterator<Instance> iterator() {
-            Iterator<Instance> iterator = preferences.getAllUidx()
+            return preferences.getAllUidx()
                     .mapToObj(preferences::getUidxPreferences)
                     .map(userPreferences -> {
                         FeatureSequence sequence = new FeatureSequence(alphabet);
@@ -92,8 +92,6 @@ public class LDAModelEstimator {
                         return new Instance(sequence, null, null, null);
                     })
                     .iterator();
-
-            return iterator;
         }
 
         @Override
