@@ -119,7 +119,7 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
         if (len == 0) {
             return Stream.empty();
         }
-        IdxPref pref = new IdxPref(-1, 1.0);
+
         int[] idxs = new int[len];
         x_codec.dec(cidxs, idxs, 0, len);
         if (!x_codec.isIntegrated()) {
