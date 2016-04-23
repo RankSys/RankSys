@@ -19,7 +19,6 @@ import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import java.util.Arrays;
-import static java.util.Comparator.comparingInt;
 import org.ranksys.core.util.iterators.ArrayDoubleIterator;
 import org.ranksys.core.util.tuples.Tuple2io;
 import static org.ranksys.core.util.tuples.Tuples.tuple;

@@ -10,7 +10,9 @@ package es.uam.eps.ir.ranksys.fast.feature;
 
 import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.utils.map.Int2ObjectDirectMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -29,8 +31,8 @@ import static org.ranksys.core.util.tuples.Tuples.tuple;
  */
 public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F, V> {
 
-    private final List<List<Tuple2io<V>>> iidxList;
-    private final List<List<Tuple2io<V>>> fidxList;
+    private final Int2ObjectDirectMap<List<Tuple2io<V>>> iidxList;
+    private final Int2ObjectDirectMap<List<Tuple2io<V>>> fidxList;
 
     /**
      * Constructor.
@@ -40,7 +42,7 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
      * @param ii item index
      * @param fi feature index
      */
-    protected SimpleFastFeatureData(List<List<Tuple2io<V>>> iidxList, List<List<Tuple2io<V>>> fidxList, FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
+    protected SimpleFastFeatureData(Int2ObjectDirectMap<List<Tuple2io<V>>> iidxList, Int2ObjectDirectMap<List<Tuple2io<V>>> fidxList, FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
         super(ii, fi);
         this.iidxList = iidxList;
         this.fidxList = fidxList;
@@ -48,93 +50,54 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
 
     @Override
     public Stream<Tuple2io<V>> getIidxFeatures(int iidx) {
-        if (iidxList.get(iidx) == null) {
-            return Stream.empty();
-        }
-        return iidxList.get(iidx).stream();
+        return iidxList.getOrDefault(iidx, Collections.emptyList()).stream();
     }
 
     @Override
     public Stream<Tuple2io<V>> getFidxItems(int fidx) {
-        if (fidxList.get(fidx) == null) {
-            return Stream.empty();
-        }
-        return fidxList.get(fidx).stream();
+        return fidxList.getOrDefault(fidx, Collections.emptyList()).stream();
     }
 
     @Override
     public int numItems(int fidx) {
-        if (fidxList.get(fidx) == null) {
-            return 0;
-        }
-        return fidxList.get(fidx).size();
+        return fidxList.getOrDefault(fidx, Collections.emptyList()).size();
     }
 
     @Override
     public int numFeatures(int iidx) {
-        if (iidxList.get(iidx) == null) {
-            return 0;
-        }
-        return iidxList.get(iidx).size();
+        return iidxList.getOrDefault(iidx, Collections.emptyList()).size();
     }
 
     @Override
     public IntStream getIidxWithFeatures() {
-        return IntStream.range(0, numItems())
-                .filter(iidx -> iidxList.get(iidx) != null);
+        return iidxList.keyStream();
     }
 
     @Override
     public IntStream getFidxWithItems() {
-        return IntStream.range(0, numFeatures())
-                .filter(fidx -> fidxList.get(fidx) != null);
+        return fidxList.keyStream();
     }
 
     @Override
     public int numItemsWithFeatures() {
-        return (int) iidxList.stream()
-                .filter(iv -> iv != null).count();
+        return iidxList.size();
     }
 
     @Override
     public int numFeaturesWithItems() {
-        return (int) fidxList.stream()
-                .filter(fv -> fv != null).count();
+        return fidxList.size();
     }
 
     public static <I, F, V> SimpleFastFeatureData<I, F, V> load(Stream<Tuple3<I, F, V>> tuples, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) {
-
-        List<List<Tuple2io<V>>> iidxList = new ArrayList<>();
-        for (int iidx = 0; iidx < iIndex.numItems(); iidx++) {
-            iidxList.add(null);
-        }
-
-        List<List<Tuple2io<V>>> fidxList = new ArrayList<>();
-        for (int fidx = 0; fidx < fIndex.numFeatures(); fidx++) {
-            fidxList.add(null);
-        }
+        Int2ObjectDirectMap<List<Tuple2io<V>>> iidxList = new Int2ObjectDirectMap<>(0, iIndex.numItems() - 1);
+        Int2ObjectDirectMap<List<Tuple2io<V>>> fidxList = new Int2ObjectDirectMap<>(0, fIndex.numFeatures() - 1);
 
         tuples.forEach(t -> {
             int iidx = iIndex.item2iidx(t.v1);
             int fidx = fIndex.feature2fidx(t.v2);
 
-            if (iidx == -1 || fidx == -1) {
-                return;
-            }
-
-            List<Tuple2io<V>> iList = iidxList.get(iidx);
-            if (iList == null) {
-                iList = new ArrayList<>();
-                iidxList.set(iidx, iList);
-            }
-            iList.add(tuple(fidx, t.v3));
-
-            List<Tuple2io<V>> fList = fidxList.get(fidx);
-            if (fList == null) {
-                fList = new ArrayList<>();
-                fidxList.set(fidx, fList);
-            }
-            fList.add(tuple(iidx, t.v3));
+            iidxList.computeIfAbsent(iidx, iidx_ -> new ArrayList<>()).add(tuple(fidx, t.v3));
+            fidxList.computeIfAbsent(fidx, fidx_ -> new ArrayList<>()).add(tuple(iidx, t.v3));
         });
 
         return new SimpleFastFeatureData<>(iidxList, fidxList, iIndex, fIndex);

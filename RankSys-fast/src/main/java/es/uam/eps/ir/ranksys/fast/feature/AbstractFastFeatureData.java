@@ -11,7 +11,6 @@ package es.uam.eps.ir.ranksys.fast.feature;
 import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import java.util.stream.Stream;
-import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 
 /**
