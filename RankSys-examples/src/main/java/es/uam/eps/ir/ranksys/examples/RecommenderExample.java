@@ -175,7 +175,9 @@ public class RecommenderExample {
 
         recMap.forEach(Unchecked.biConsumer((name, recommender) -> {
             System.out.println("Running " + name);
-            runner.run(recommender.get(), format.getWriter(name));
+            try (RecommendationFormat.Writer<Long, Long> writer = format.getWriter(name)) {
+                runner.run(recommender.get(), writer);
+            }
         }));
     }
 }
