@@ -119,27 +119,23 @@ public class SimplePreferenceData<U, I> implements PreferenceData<U, I>, Seriali
         return itemMap.keySet().stream();
     }
 
+    /**
+     * Loads an instance of the class from a stream of triples.
+     *
+     * @param <U> type of user
+     * @param <I> type of item
+     * @param tuples stream of user-item-value triples
+     * @return a preference data object
+     */
     public static <U, I> SimplePreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples) {
+        AtomicInteger numPreferences = new AtomicInteger(0);
         Map<U, List<IdPref<I>>> userMap = new HashMap<>();
         Map<I, List<IdPref<U>>> itemMap = new HashMap<>();
-        AtomicInteger numPreferences = new AtomicInteger(0);
 
         tuples.forEach(t -> {
             numPreferences.incrementAndGet();
-
-            List<IdPref<I>> uList = userMap.get(t.v1);
-            if (uList == null) {
-                uList = new ArrayList<>();
-                userMap.put(t.v1, uList);
-            }
-            uList.add(new IdPref<>(t.v2, t.v3));
-
-            List<IdPref<U>> iList = itemMap.get(t.v2);
-            if (iList == null) {
-                iList = new ArrayList<>();
-                itemMap.put(t.v2, iList);
-            }
-            iList.add(new IdPref<>(t.v1, t.v3));
+            userMap.computeIfAbsent(t.v1, v1 -> new ArrayList<>()).add(new IdPref<>(t.v2, t.v3));
+            itemMap.computeIfAbsent(t.v2, v2 -> new ArrayList<>()).add(new IdPref<>(t.v1, t.v3));
         });
 
         return new SimplePreferenceData<>(userMap, itemMap, numPreferences.intValue());

@@ -13,35 +13,75 @@ import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 
 /**
+ * Tuple of integer-object.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
+ * @param <T2> type of object.
  */
 public class Tuple2io<T2> implements Comparable<Tuple2io<T2>>, Serializable, Cloneable {
 
+    /**
+     * First value (integer).
+     */
     public final int v1;
+
+    /**
+     * Second value (object).
+     */
     public final T2 v2;
 
+    /**
+     * Constructor from a jOOL tuple
+     *
+     * @param tuple tuple to be copied
+     */
     public Tuple2io(Tuple2<Integer, T2> tuple) {
         this(tuple.v1, tuple.v2);
     }
 
+    /**
+     * Constructor from an integer-object tuple.
+     *
+     * @param tuple tuple to be copied
+     */
     public Tuple2io(Tuple2io<T2> tuple) {
         this(tuple.v1, tuple.v2);
     }
 
+    /**
+     * Constructor from separate integer and object values.
+     *
+     * @param v1 integer value
+     * @param v2 object value
+     */
     public Tuple2io(int v1, T2 v2) {
         this.v1 = v1;
         this.v2 = v2;
     }
 
+    /**
+     * Returns the first element (integer).
+     *
+     * @return first element (integer)
+     */
     public int v1() {
         return v1;
     }
 
+    /**
+     * Returns the second element (object).
+     *
+     * @return second element (object)
+     */
     public T2 v2() {
         return v2;
     }
 
+    /**
+     * Converts the tuple into a jOOL tuple.
+     *
+     * @return jOOL tuple
+     */
     public Tuple2<Integer, T2> asTuple() {
         return Tuple.tuple(v1, v2);
     }

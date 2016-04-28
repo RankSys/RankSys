@@ -42,11 +42,10 @@ public abstract class BayesRuleReranker<U, I> extends PermutationReranker<U, I> 
         }
         topN.sort();
 
-        int[] perm = topN.reverseStream()
+        return topN.reverseStream()
                 .mapToInt(e -> M - e.v1)
                 .toArray();
 
-        return perm;
     }
 
     /**
