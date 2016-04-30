@@ -16,11 +16,11 @@ import org.ranksys.formats.parsing.Parser;
  */
 public class SimpleBinaryPreferencesReader implements PreferencesReader {
 
-    public static <U, I> SimpleBinaryPreferencesReader get() {
-        return new SimpleBinaryPreferencesReader();
+    private SimpleBinaryPreferencesReader() {
     }
 
-    private SimpleBinaryPreferencesReader() {
+    public static <U, I> SimpleBinaryPreferencesReader get() {
+        return new SimpleBinaryPreferencesReader();
     }
 
     @Override

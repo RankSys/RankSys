@@ -46,6 +46,23 @@ import static org.ranksys.core.util.tuples.Tuples.tuple;
 public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPreferenceData<U, I, Cu, Ci> {
 
     /**
+     * Constructor using streams of user and items preferences lists.
+     *
+     * @param ul stream of user preferences lists
+     * @param il stream of item preferences lists
+     * @param users user index
+     * @param items item index
+     * @param u_codec user preferences list CODEC
+     * @param i_codec item preferences list CODEC
+     */
+    public BinaryCODECPreferenceData(Stream<Tuple2io<int[]>> ul, Stream<Tuple2io<int[]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
+        super(users, items, u_codec, i_codec);
+
+        index(ul, u_idxs, u_len, u_codec);
+        index(il, i_idxs, i_len, i_codec);
+    }
+
+    /**
      * Constructor that utilizes other PreferenceData object.
      *
      * @param preferences input preference data to be copied
@@ -73,23 +90,6 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
 
     private static Stream<Tuple2io<int[]>> il(FastPreferenceData<?, ?> preferences) {
         return ul(new TransposedPreferenceData<>(preferences));
-    }
-
-    /**
-     * Constructor using streams of user and items preferences lists.
-     *
-     * @param ul stream of user preferences lists
-     * @param il stream of item preferences lists
-     * @param users user index
-     * @param items item index
-     * @param u_codec user preferences list CODEC
-     * @param i_codec item preferences list CODEC
-     */
-    public BinaryCODECPreferenceData(Stream<Tuple2io<int[]>> ul, Stream<Tuple2io<int[]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
-        super(users, items, u_codec, i_codec);
-
-        index(ul, u_idxs, u_len, u_codec);
-        index(il, i_idxs, i_len, i_codec);
     }
 
     private static <Cx> void index(Stream<Tuple2io<int[]>> lists, Cx[] idxs, int[] lens, CODEC<Cx> x_codec) {

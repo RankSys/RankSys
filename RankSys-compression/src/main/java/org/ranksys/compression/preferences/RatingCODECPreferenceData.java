@@ -67,25 +67,6 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
         this(ul(preferences), il(preferences), users, items, u_codec, i_codec, r_codec);
     }
 
-    private static Stream<Tuple2io<int[][]>> ul(FastPreferenceData<?, ?> preferences) {
-        return preferences.getUidxWithPreferences().mapToObj(k -> {
-            IdxPref[] pairs = preferences.getUidxPreferences(k)
-                    .sorted((p1, p2) -> Integer.compare(p1.v1, p2.v1))
-                    .toArray(n -> new IdxPref[n]);
-            int[] idxs = new int[pairs.length];
-            int[] vs = new int[pairs.length];
-            for (int i = 0; i < pairs.length; i++) {
-                idxs[i] = pairs[i].v1;
-                vs[i] = (int) pairs[i].v2;
-            }
-            return tuple(k, new int[][]{idxs, vs});
-        });
-    }
-
-    private static Stream<Tuple2io<int[][]>> il(FastPreferenceData<?, ?> preferences) {
-        return ul(new TransposedPreferenceData<>(preferences));
-    }
-
     /**
      * Constructor using streams of user and items preferences lists.
      *
@@ -107,6 +88,25 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
 
         index(ul, u_idxs, u_vs, u_len, u_codec, r_codec);
         index(il, i_idxs, i_vs, i_len, i_codec, r_codec);
+    }
+
+    private static Stream<Tuple2io<int[][]>> ul(FastPreferenceData<?, ?> preferences) {
+        return preferences.getUidxWithPreferences().mapToObj(k -> {
+            IdxPref[] pairs = preferences.getUidxPreferences(k)
+                    .sorted((p1, p2) -> Integer.compare(p1.v1, p2.v1))
+                    .toArray(n -> new IdxPref[n]);
+            int[] idxs = new int[pairs.length];
+            int[] vs = new int[pairs.length];
+            for (int i = 0; i < pairs.length; i++) {
+                idxs[i] = pairs[i].v1;
+                vs[i] = (int) pairs[i].v2;
+            }
+            return tuple(k, new int[][]{idxs, vs});
+        });
+    }
+
+    private static Stream<Tuple2io<int[][]>> il(FastPreferenceData<?, ?> preferences) {
+        return ul(new TransposedPreferenceData<>(preferences));
     }
 
     private static <Cx, Cv> void index(Stream<Tuple2io<int[][]>> lists, Cx[] idxs, Cv[] vs, int[] lens, CODEC<Cx> x_codec, CODEC<Cv> r_codec) {

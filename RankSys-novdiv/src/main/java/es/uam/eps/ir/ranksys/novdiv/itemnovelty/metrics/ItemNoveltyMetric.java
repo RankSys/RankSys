@@ -66,7 +66,6 @@ public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetr
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         U u = recommendation.getUser();
-        RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(u);
         ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getModel(u);
         
         if (uinm == null) {
@@ -78,6 +77,7 @@ public abstract class ItemNoveltyMetric<U, I> extends AbstractRecommendationMetr
 
         int rank = 0;
         for (Tuple2od<I> iv : recommendation.getItems()) {
+            RelevanceModel.UserRelevanceModel<U, I> userRelModel = relModel.getModel(u);
             nov += disc.disc(rank) * userRelModel.gain(iv.v1) * uinm.novelty(iv.v1);
             norm += disc.disc(rank);
             rank++;

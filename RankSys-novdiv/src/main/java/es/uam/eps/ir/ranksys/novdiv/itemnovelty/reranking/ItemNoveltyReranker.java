@@ -52,7 +52,6 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
 
     @Override
     public int[] rerankPermutation(Recommendation<U, I> recommendation, int maxLength) {
-        U user = recommendation.getUser();
         List<Tuple2od<I>> items = recommendation.getItems();
         int M = items.size();
         int N = min(maxLength, M);
@@ -61,6 +60,7 @@ public class ItemNoveltyReranker<U, I> extends PermutationReranker<U, I> {
             return getBasePerm(N);
         }
 
+        U user = recommendation.getUser();
         ItemNovelty.UserItemNoveltyModel<U, I> uinm = novelty.getModel(user);
         if (uinm == null) {
             return new int[0];
