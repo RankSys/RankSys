@@ -214,11 +214,12 @@ public abstract class AbstractTopN<T> extends AbstractCollection<T> {
 
     private int minChild(int i) {
         int l = left(i);
-        int r = right(i);
 
         if (l >= capacity) {
             return -1;
         }
+
+        int r = right(i);
 
         if (r >= size) {
             return l;

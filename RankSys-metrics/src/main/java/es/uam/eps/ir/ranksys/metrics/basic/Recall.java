@@ -52,7 +52,6 @@ public class Recall<U, I> extends AbstractRecommendationMetric<U, I> {
     @Override
     public double evaluate(Recommendation<U, I> recommendation) {
         U user = recommendation.getUser();
-        IdealRelevanceModel.UserIdealRelevanceModel<U, I> userRelModel = relModel.getModel(user);
 
         int numberOfAllRelevant = relModel.getModel(user).getRelevantItems().size();
 
@@ -60,6 +59,7 @@ public class Recall<U, I> extends AbstractRecommendationMetric<U, I> {
             return 0.0;
         }
 
+        IdealRelevanceModel.UserIdealRelevanceModel<U, I> userRelModel = relModel.getModel(user);
         return recommendation.getItems().stream()
                 .limit(cutoff)
                 .map(Tuple2od::v1)

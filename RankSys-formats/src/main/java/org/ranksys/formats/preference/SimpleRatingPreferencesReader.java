@@ -17,11 +17,11 @@ import org.ranksys.formats.parsing.Parser;
  */
 public class SimpleRatingPreferencesReader implements PreferencesReader {
 
-    public static <U, I> SimpleRatingPreferencesReader get() {
-        return new SimpleRatingPreferencesReader();
+    private SimpleRatingPreferencesReader() {
     }
 
-    private SimpleRatingPreferencesReader() {
+    public static <U, I> SimpleRatingPreferencesReader get() {
+        return new SimpleRatingPreferencesReader();
     }
 
     @Override

@@ -168,8 +168,7 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
             
             Object2DoubleOpenHashMap<F> probs = new Object2DoubleOpenHashMap<>();
             probs.defaultReturnValue(0.0);
-            
-            int n = recommenderData.numItems(user);
+
             recommenderData.getUserPreferences(user).forEach(pref -> {
                 featureData.getItemFeatures(pref.v1).forEach(feature -> {
                     probs.addTo(feature.v1, 1.0);
@@ -179,7 +178,8 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
             if (probs.isEmpty()) {
                 return globalFeatureProbs;
             }
-            
+
+            int n = recommenderData.numItems(user);
             if (alpha < 1.0) {
                 globalFeatureProbs.object2DoubleEntrySet().forEach(e -> {
                     F f = e.getKey();

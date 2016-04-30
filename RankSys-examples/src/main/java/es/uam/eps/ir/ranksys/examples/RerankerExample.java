@@ -41,15 +41,14 @@ public class RerankerExample {
     public static void main(String[] args) throws Exception {
         String trainDataPath = args[0];
         String featurePath = args[1];
-        String recIn = args[2];
 
         double lambda = 0.5;
         int cutoff = 100;
         PreferenceData<Long, Long> trainData = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(trainDataPath, lp, lp));
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(featurePath, lp, sp));
 
         Map<String, Supplier<Reranker<Long, Long>>> rerankersMap = new HashMap<>();
 
+        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(featurePath, lp, sp));
         rerankersMap.put("MMR", () -> {
             ItemDistanceModel<Long> dist = new JaccardFeatureItemDistanceModel<>(featureData);
             return new MMR<>(lambda, cutoff, dist);
@@ -64,6 +63,7 @@ public class RerankerExample {
 
         rerankersMap.forEach(Unchecked.biConsumer((name, rerankerSupplier) -> {
             System.out.println("Running " + name);
+            String recIn = args[2];
             String recOut = String.format("%s_%s", recIn, name);
             Reranker<Long, Long> reranker = rerankerSupplier.get();
             try (RecommendationFormat.Writer<Long, Long> writer = format.getWriter(recOut)) {

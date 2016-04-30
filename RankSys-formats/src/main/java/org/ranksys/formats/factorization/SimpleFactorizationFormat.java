@@ -25,11 +25,11 @@ import static java.lang.Integer.parseInt;
  */
 public class SimpleFactorizationFormat implements FactorizationFormat {
 
-    public static SimpleFactorizationFormat get() {
-        return new SimpleFactorizationFormat();
+    private SimpleFactorizationFormat() {
     }
 
-    private SimpleFactorizationFormat() {
+    public static SimpleFactorizationFormat get() {
+        return new SimpleFactorizationFormat();
     }
 
     private static void saveDenseDoubleMatrix2D(OutputStream stream, DenseDoubleMatrix2D matrix) throws IOException {

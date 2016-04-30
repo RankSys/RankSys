@@ -73,7 +73,6 @@ public class RecommenderExample {
         FastUserIndex<Long> userIndex = SimpleFastUserIndex.load(UsersReader.read(userPath, lp));
         FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(ItemsReader.read(itemPath, lp));
         FastPreferenceData<Long, Long> trainData = SimpleFastPreferenceData.load(SimpleRatingPreferencesReader.get().read(trainDataPath, lp, lp), userIndex, itemIndex);
-        FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(SimpleRatingPreferencesReader.get().read(testDataPath, lp, lp), userIndex, itemIndex);
 
         //////////////////
         // RECOMMENDERS //
@@ -167,6 +166,7 @@ public class RecommenderExample {
         ////////////////////////////////
         // GENERATING RECOMMENDATIONS //
         ////////////////////////////////
+        FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(SimpleRatingPreferencesReader.get().read(testDataPath, lp, lp), userIndex, itemIndex);
         Set<Long> targetUsers = testData.getUsersWithPreferences().collect(Collectors.toSet());
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
         Function<Long, IntPredicate> filter = FastFilters.notInTrain(trainData);

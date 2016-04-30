@@ -115,8 +115,6 @@ public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U,
             return reader.lines().map(line -> {
                 CharSequence[] toks1 = split(line, '\t');
 
-                U user = uParser.parse(toks1[0]);
-
                 CharSequence[] toks2 = split(toks1[1].subSequence(1, toks1[1].length() - 1), ',');
                 List<Tuple2od<I>> items = Stream.of(toks2).map(is -> {
                     CharSequence[] toks3 = split(is, ':');
@@ -126,7 +124,7 @@ public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U,
 
                     return tuple(i, s);
                 }).collect(toList());
-
+                U user = uParser.parse(toks1[0]);
                 return new Recommendation<U, I>(user, items);
             });
         }

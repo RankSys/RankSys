@@ -16,11 +16,11 @@ import org.ranksys.formats.parsing.Parser;
  */
 public class SimpleFeaturesReader implements FeaturesReader {
 
-    public static <I, F> SimpleFeaturesReader get() {
-        return new SimpleFeaturesReader();
+    private SimpleFeaturesReader() {
     }
 
-    private SimpleFeaturesReader() {
+    public static <I, F> SimpleFeaturesReader get() {
+        return new SimpleFeaturesReader();
     }
 
     @Override
