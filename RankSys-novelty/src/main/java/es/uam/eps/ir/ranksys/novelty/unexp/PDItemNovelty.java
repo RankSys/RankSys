@@ -12,6 +12,7 @@ import es.uam.eps.ir.ranksys.novdiv.itemnovelty.ItemNovelty;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import java.util.function.ToDoubleFunction;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Expected profile distance item novelty.
@@ -63,7 +64,7 @@ public class PDItemNovelty<U, I> extends ItemNovelty<U, I> {
         public double novelty(I i) {
             ToDoubleFunction<I> iDist = dist.dist(i);
             return recommenderData.getUserPreferences(u)
-                    .map(jv -> jv.id)
+                    .map(Tuple2od::v1)
                     .mapToDouble(j -> iDist.applyAsDouble(j))
                     .filter(v -> !Double.isNaN(v))
                     .average().orElse(0.0);

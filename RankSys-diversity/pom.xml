@@ -37,6 +37,12 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>RankSys-formats</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>3.5</version>
@@ -59,6 +65,11 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
             <version>2.4.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool</artifactId>
+            <version>0.9.10</version>
+        </dependency>    
     </dependencies>
 
     <build>

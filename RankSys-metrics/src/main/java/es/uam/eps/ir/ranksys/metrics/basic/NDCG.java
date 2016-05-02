@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.metrics.basic;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
@@ -19,6 +18,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Arrays;
 import java.util.Set;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Normalized Discounted Cumulative Gain metric.
@@ -62,8 +62,8 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         double ndcg = 0.0;
         int rank = 0;
 
-        for (IdDouble<I> pair : recommendation.getItems()) {
-            ndcg += userRelModel.gain(pair.id) * disc.disc(rank);
+        for (Tuple2od<I> pair : recommendation.getItems()) {
+            ndcg += userRelModel.gain(pair.v1) * disc.disc(rank);
 
             rank++;
             if (rank >= cutoff) {
@@ -145,8 +145,8 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
                 gainMap.defaultReturnValue(0.0);
 
                 testData.getUserPreferences(user)
-                        .filter(iv -> iv.v >= threshold)
-                        .forEach(iv -> gainMap.put(iv.id, Math.pow(2, iv.v - threshold + 1.0) - 1.0));
+                        .filter(iv -> iv.v2 >= threshold)
+                        .forEach(iv -> gainMap.put(iv.v1, Math.pow(2, iv.v2 - threshold + 1.0) - 1.0));
             }
 
             /**

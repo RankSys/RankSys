@@ -11,14 +11,18 @@ package es.uam.eps.ir.ranksys.fast.index;
 import es.uam.eps.ir.ranksys.core.index.FeatureIndex;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.jooq.lambda.tuple.Tuple;
+import org.jooq.lambda.tuple.Tuple2;
+import org.ranksys.core.util.tuples.Tuple2id;
+import org.ranksys.core.util.tuples.Tuple2io;
+import org.ranksys.core.util.tuples.Tuple2od;
+import org.ranksys.core.util.tuples.Tuples;
 
 /**
- * Fast version of FeatureIndex, where features are internally represented with 
- * numerical indices from 0 (inclusive) to the number of indexed features
- * (exclusive).
+ * Fast version of FeatureIndex, where features are internally represented with numerical indices from 0 (inclusive) to the number of indexed features (exclusive).
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <F> type of the features
  */
 public interface FastFeatureIndex<F> extends FeatureIndex<F> {
@@ -41,7 +45,7 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
     public default IntStream getAllFidx() {
         return IntStream.range(0, numFeatures());
     }
-    
+
     /**
      * Returns the index assigned to the feature.
      *
@@ -57,4 +61,21 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
      * @return the feature whose index is fidx
      */
     public F fidx2feature(int fidx);
+
+    public default <V> Tuple2io<V> feature2fidx(Tuple2<F, V> tuple) {
+        return Tuples.tuple(feature2fidx(tuple.v1), tuple.v2);
+    }
+
+    public default <V> Tuple2<F, V> fidx2feature(Tuple2io<V> tuple) {
+        return Tuple.tuple(fidx2feature(tuple.v1), tuple.v2);
+    }
+
+    public default Tuple2id feature2fidx(Tuple2od<F> tuple) {
+        return Tuples.tuple(feature2fidx(tuple.v1), tuple.v2);
+    }
+
+    public default Tuple2od<F> fidx2feature(Tuple2id tuple) {
+        return Tuples.tuple(fidx2feature(tuple.v1), tuple.v2);
+    }
+
 }

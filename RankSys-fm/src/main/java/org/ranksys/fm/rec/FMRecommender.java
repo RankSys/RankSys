@@ -8,7 +8,6 @@
 package org.ranksys.fm.rec;
 
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
@@ -17,14 +16,12 @@ import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import static java.lang.Float.NaN;
 import static java.util.Comparator.comparingDouble;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
-import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
-import org.ranksys.javafm.FM;
-import org.ranksys.javafm.instance.FMInstance;
+import org.ranksys.core.util.tuples.Tuple2id;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
+import org.ranksys.fm.PreferenceFM;
 
 /**
  *
@@ -32,13 +29,11 @@ import org.ranksys.javafm.instance.FMInstance;
  */
 public class FMRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
-    private final FM<FMInstance> fm;
-    private final IntFunction<Function<IdxPref, FMInstance>> instanceProvider;
+    private final PreferenceFM fm;
 
-    public FMRecommender(FM<FMInstance> fm, FastUserIndex<U> users, FastItemIndex<I> items, IntFunction<Function<IdxPref, FMInstance>> instanceProvider) {
+    public FMRecommender(PreferenceFM fm, FastUserIndex<U> users, FastItemIndex<I> items) {
         super(users, items);
         this.fm = fm;
-        this.instanceProvider = instanceProvider;
     }
 
     @Override
@@ -48,37 +43,25 @@ public class FMRecommender<U, I> extends AbstractFastRecommender<U, I> {
         }
         IntDoubleTopN topN = new IntDoubleTopN(maxLength);
 
-        Function<IdxPref, FMInstance> uip = instanceProvider.apply(uidx);
         getAllIidx().filter(filter).forEach(iidx -> {
-            FMInstance x = uip.apply(new IdxPref(iidx, NaN));
-            if (x != null) {
-                topN.add(iidx, fm.prediction(x));
-            }
+            topN.add(iidx, fm.predict(uidx, new IdxPref(iidx, NaN)));
         });
 
         topN.sort();
 
-        List<IdxDouble> items = topN.reverseStream()
-                .map(e -> new IdxDouble(e))
-                .collect(Collectors.toList());
+        List<Tuple2id> items = topN.reverseStream()
+                .collect(toList());
 
         return new FastRecommendation(uidx, items);
     }
 
     @Override
     public FastRecommendation getRecommendation(int uidx, IntStream candidates) {
-        Function<IdxPref, FMInstance> uip = instanceProvider.apply(uidx);
-
-        List<IdxDouble> items = candidates
+        List<Tuple2id> items = candidates
                 .mapToObj(iidx -> {
-                    FMInstance x = uip.apply(new IdxPref(iidx, NaN));
-                    if (x != null) {
-                        return new IdxDouble(iidx, fm.prediction(x));
-                    } else {
-                        return new IdxDouble(iidx, NaN);
-                    }
+                    return tuple(iidx, fm.predict(uidx, new IdxPref(iidx, NaN)));
                 })
-                .sorted(comparingDouble((IdxDouble r) -> r.v).reversed())
+                .sorted(comparingDouble(Tuple2id::v2).reversed())
                 .collect(toList());
 
         return new FastRecommendation(uidx, items);

@@ -8,14 +8,16 @@
  */
 package es.uam.eps.ir.ranksys.rec.fast.basic;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
-import static java.util.Collections.sort;
+import static java.lang.Math.min;
 import java.util.List;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
+import static java.util.Comparator.comparingDouble;
+import org.ranksys.core.util.tuples.Tuple2id;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Popularity-based recommender. Non-personalized recommender that returns the
@@ -28,7 +30,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
-    private final List<IdxDouble> popList;
+    private final List<Tuple2id> popList;
 
     /**
      * Constructor.
@@ -39,20 +41,17 @@ public class PopularityRecommender<U, I> extends AbstractFastRecommender<U, I> {
         super(data, data);
 
         popList = data.getIidxWithPreferences()
-                .mapToObj(iidx -> new IdxDouble(iidx, (double) data.numUsers(iidx)))
+                .mapToObj(iidx -> tuple(iidx, (double) data.numUsers(iidx)))
+                .sorted(comparingDouble(Tuple2id::v2).reversed())
                 .collect(toList());
-        sort(popList, (p1, p2) -> Double.compare(p2.v, p1.v));
     }
 
     @Override
     public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
-        if (maxLength == 0) {
-            maxLength = popList.size();
-        }
         
-        List<IdxDouble> items = popList.stream()
-                .filter(is -> filter.test(is.idx))
-                .limit(maxLength)
+        List<Tuple2id> items = popList.stream()
+                .filter(is -> filter.test(is.v1))
+                .limit(min(maxLength, popList.size()))
                 .collect(toList());
         
         return new FastRecommendation(uidx, items);

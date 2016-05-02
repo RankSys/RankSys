@@ -9,15 +9,16 @@
 package es.uam.eps.ir.ranksys.rec.fast;
 
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+import static java.lang.Math.min;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntPredicate;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
+import org.ranksys.core.util.tuples.Tuple2id;
 
 /**
  * Recommender for top-n recommendations. It selects and orders the items whose
@@ -48,11 +49,7 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
 
         Int2DoubleMap scoresMap = getScoresMap(uidx);
 
-        if (maxLength == 0) {
-            maxLength = scoresMap.size();
-        }
-
-        final IntDoubleTopN topN = new IntDoubleTopN(maxLength);
+        final IntDoubleTopN topN = new IntDoubleTopN(min(maxLength, scoresMap.size()));
         scoresMap.int2DoubleEntrySet().forEach(e -> {
             int iidx = e.getIntKey();
             double score = e.getDoubleValue();
@@ -63,9 +60,8 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
 
         topN.sort();
 
-        List<IdxDouble> items = topN.reverseStream()
-                .map(e -> new IdxDouble(e))
-                .collect(Collectors.toList());
+        List<Tuple2id> items = topN.reverseStream()
+                .collect(toList());
 
         return new FastRecommendation(uidx, items);
     }

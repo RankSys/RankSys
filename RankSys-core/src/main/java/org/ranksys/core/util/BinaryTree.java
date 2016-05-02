@@ -8,6 +8,7 @@
 package org.ranksys.core.util;
 
 import static java.lang.Math.max;
+import org.ranksys.core.util.BinaryTree.Node;
 
 /**
  * Binary tree.
@@ -15,17 +16,18 @@ import static java.lang.Math.max;
  * A simple binary tree for different purposes.
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * @param <N> type of node
  */
-public class BinaryTree {
+public class BinaryTree<N extends Node> {
 
-    private final Node rootNode;
+    private final N rootNode;
 
     /**
      * Constructor.
      *
      * @param root root node
      */
-    public BinaryTree(Node root) {
+    public BinaryTree(N root) {
         rootNode = root;
     }
 
@@ -52,7 +54,7 @@ public class BinaryTree {
      *
      * @return the root node
      */
-    public Node getRoot() {
+    public N getRoot() {
         return rootNode;
     }
 
@@ -134,7 +136,12 @@ public class BinaryTree {
             return l == null && r == null;
         }
 
-        private int numNodes() {
+        /**
+         * Computes recursively the number of nodes under the current node, including itself.
+         *
+         * @return number of descendants plus itself
+         */
+        protected int numNodes() {
             int c = 1;
             if (this.l != null) {
                 c += l.numNodes();
@@ -146,7 +153,12 @@ public class BinaryTree {
             return c;
         }
 
-        private int depth() {
+        /**
+         * Computes recursively the depth of the sub-tree whose root is this node.
+         *
+         * @return depth of the sub-tree
+         */
+        protected int depth() {
             if (isLeaf()) {
                 return 1;
             } else {

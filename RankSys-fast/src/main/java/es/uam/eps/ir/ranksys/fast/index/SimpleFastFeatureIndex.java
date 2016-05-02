@@ -8,14 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.fast.index;
 
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
-import es.uam.eps.ir.ranksys.core.util.parsing.Parser;
 import es.uam.eps.ir.ranksys.fast.utils.IdxIndex;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.stream.Stream;
 
 /**
@@ -73,35 +66,15 @@ public class SimpleFastFeatureIndex<F> implements FastFeatureIndex<F> {
     }
 
     /**
-     * Creates a feature index from a file where the first column lists the features.
+     * Creates a feature index from a stream of feature objects.
      *
      * @param <F> type of the features
-     * @param path path of the file
-     * @param fParser feature type parser
+     * @param features stream of feature objects
      * @return a fast feature index
-     * @throws IOException when file does not exist or when IO error
      */
-    public static <F> SimpleFastFeatureIndex<F> load(String path, Parser<F> fParser) throws IOException {
-        return load(new FileInputStream(path), fParser);
-    }
-
-    /**
-     * Creates a feature index from an input stream where the first column lists the features.
-     *
-     * @param <F> type of the features
-     * @param in input stream
-     * @param iParser feature type parser
-     * @return a fast feature index
-     * @throws IOException when IO error
-     */
-    public static <F> SimpleFastFeatureIndex<F> load(InputStream in, Parser<F> iParser) throws IOException {
+    public static <F> SimpleFastFeatureIndex<F> load(Stream<F> features) {
         SimpleFastFeatureIndex<F> featureIndex = new SimpleFastFeatureIndex<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            reader.lines()
-                    .map(line -> iParser.parse(split(line, '\t')[0]))
-                    .sorted()
-                    .forEach(f -> featureIndex.add(f));
-        }
+        features.forEach(featureIndex::add);
         return featureIndex;
     }
 

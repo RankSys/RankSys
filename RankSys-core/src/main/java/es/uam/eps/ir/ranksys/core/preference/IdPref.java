@@ -8,9 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.core.preference;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
-import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import java.io.Serializable;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * A user or item preference.
@@ -19,13 +18,7 @@ import java.io.Serializable;
  *
  * @param <I> type of the user or item
  */
-public class IdPref<I> extends IdDouble<I> implements Serializable {
-
-    /**
-     * Empty constructor.
-     */
-    public IdPref() {
-    }
+public class IdPref<I> extends Tuple2od<I> implements Serializable {
 
     /**
      * Constructor with both values.
@@ -38,19 +31,12 @@ public class IdPref<I> extends IdDouble<I> implements Serializable {
     }
 
     /**
-     * Constructor from a Object2Double entry.
+     * Constructor from a object-double pair.
      *
-     * @param e object-double entry
+     * @param tuple pair of object (id) and double (preference value)
      */
-    public IdPref(Object2DoubleMap.Entry<I> e) {
-        super(e);
-    }
-
-    @Override
-    public IdDouble refill(I id, double v) {
-        this.id = id;
-        this.v = v;
-        return this;
+    public IdPref(Tuple2od<I> tuple) {
+        super(tuple);
     }
 
 }

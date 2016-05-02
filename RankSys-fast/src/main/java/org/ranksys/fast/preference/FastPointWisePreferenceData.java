@@ -32,7 +32,7 @@ public interface FastPointWisePreferenceData<U, I> extends PointWisePreferenceDa
         if (!pref.isPresent()) {
             return Optional.empty();
         } else {
-            return Optional.of(new IdPref<>(i, pref.get().v));
+            return Optional.of(new IdPref<>(i, pref.get().v2));
         }
     }
 

@@ -8,10 +8,11 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import java.util.ArrayList;
 import java.util.List;
+import org.ranksys.core.util.tuples.Tuple2od;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Abstract re-ranker whose output is a permutation of the input
@@ -52,10 +53,10 @@ public abstract class PermutationReranker<U, I> implements Reranker<U, I> {
      * @return re-ranked recommendation according to the permutation
      */
     public static <U, I> Recommendation<U, I> permuteRecommendation(Recommendation<U, I> recommendation, int[] perm) {
-        List<IdDouble<I>> from = recommendation.getItems();
-        List<IdDouble<I>> to = new ArrayList<>();
+        List<Tuple2od<I>> from = recommendation.getItems();
+        List<Tuple2od<I>> to = new ArrayList<>();
         for (int i = 0; i < perm.length; i++) {
-            to.add(new IdDouble<>(from.get(perm[i]).id, (double) (perm.length - i)));
+            to.add(tuple(from.get(perm[i]).v1, (double) (perm.length - i)));
         }
 
         return new Recommendation<>(recommendation.getUser(), to);

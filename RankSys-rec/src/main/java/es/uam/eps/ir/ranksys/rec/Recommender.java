@@ -25,20 +25,38 @@ public interface Recommender<U, I> {
 
     /**
      * Free recommendation. Generate recommendations without any restriction
+     * on the items being recommended.
+     *
+     * @param u user to be issued a recommendation
+     * @return a recommendation list
+     */
+    public Recommendation<U, I> getRecommendation(U u);
+
+    /**
+     * Free recommendation. Generate recommendations without any restriction
      * on the items being recommended, but with a limit on the list size.
      *
      * @param u user to be issued a recommendation
-     * @param maxLength maximum length of recommendation, set to 0 for no limit
+     * @param maxLength maximum length of recommendation
      * @return a recommendation list
      */
     public Recommendation<U, I> getRecommendation(U u, int maxLength);
+
+    /**
+     * Filter recommendation. Recommends only the items that pass the filter.
+     *
+     * @param u user to be issued a recommendation
+     * @param filter filter to decide which items might be recommended
+     * @return a recommendation list
+     */
+    public Recommendation<U, I> getRecommendation(U u, Predicate<I> filter);
 
     /**
      * Filter recommendation. Recommends only the items that pass the filter up
      * to a maximum list size.
      *
      * @param u user to be issued a recommendation
-     * @param maxLength maximum length of recommendation, set to 0 for no limit
+     * @param maxLength maximum length of recommendation
      * @param filter filter to decide which items might be recommended
      * @return a recommendation list
      */

@@ -8,9 +8,9 @@
  */
 package es.uam.eps.ir.ranksys.nn.sim;
 
-import es.uam.eps.ir.ranksys.fast.IdxDouble;
 import java.util.function.IntToDoubleFunction;
 import java.util.stream.Stream;
+import org.ranksys.core.util.tuples.Tuple2id;
 
 /**
  * Generic similarity for fast data. This is the interface that is under the
@@ -46,5 +46,5 @@ public interface Similarity {
      * @param idx index of user/item
      * @return stream of index-similarity pairs
      */
-    public Stream<IdxDouble> similarElems(int idx);
+    public Stream<Tuple2id> similarElems(int idx);
 }

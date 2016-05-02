@@ -51,5 +51,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
             <artifactId>commons-math3</artifactId>
             <version>3.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool</artifactId>
+            <version>0.9.10</version>
+        </dependency>    
     </dependencies>
 </project>

@@ -8,12 +8,12 @@
  */
 package es.uam.eps.ir.ranksys.diversity.distance.reranking;
 
-import es.uam.eps.ir.ranksys.core.IdDouble;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.novdiv.reranking.LambdaReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.function.ToDoubleFunction;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Maximum marginal relevance re-ranker.
@@ -71,18 +71,18 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
             avgDist = new Object2DoubleOpenHashMap<>();
             avgDist.defaultReturnValue(0.0);
             recommendation.getItems().stream().sequential()
-                    .map(iv -> iv.id)
+                    .map(Tuple2od::v1)
                     .forEach(i -> avgDist.put(i, 0.0));
         }
 
         @Override
-        protected double nov(IdDouble<I> itemValue) {
-            return avgDist.getDouble(itemValue.id);
+        protected double nov(Tuple2od<I> itemValue) {
+            return avgDist.getDouble(itemValue.v1);
         }
 
         @Override
-        protected void update(IdDouble<I> bestItemValue) {
-            I bestItem = bestItemValue.id;
+        protected void update(Tuple2od<I> bestItemValue) {
+            I bestItem = bestItemValue.v1;
             ToDoubleFunction<I> bDist = dist.dist(bestItem);
             avgDist.remove(bestItem);
 
