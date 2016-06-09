@@ -137,9 +137,4 @@ public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends Iterator
         return new ArrayIntIterator(idxs);
     }
 
-    @Override
-    public boolean useIteratorsPreferentially() {
-        return true;
-    }
-
 }
