@@ -10,8 +10,6 @@ package es.uam.eps.ir.ranksys.fast.preference;
 
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import it.unimi.dsi.fastutil.doubles.DoubleIterator;
-import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.io.Serializable;
 import java.util.ArrayList;
 import static java.util.Comparator.comparingInt;
@@ -22,8 +20,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple3;
 import org.ranksys.fast.preference.FastPointWisePreferenceData;
-import org.ranksys.core.util.iterators.StreamDoubleIterator;
-import org.ranksys.core.util.iterators.StreamIntIterator;
 
 /**
  * Simple implementation of FastPreferenceData backed by nested lists.
@@ -33,7 +29,7 @@ import org.ranksys.core.util.iterators.StreamIntIterator;
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> implements FastPointWisePreferenceData<U, I>, Serializable {
+public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenceData<U, I> implements FastPointWisePreferenceData<U, I>, Serializable {
 
     private final int numPreferences;
     private final List<List<IdxPref>> uidxList;
@@ -146,31 +142,6 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
         }
 
         return Optional.empty();
-    }
-
-    @Override
-    public IntIterator getUidxIidxs(final int uidx) {
-        return new StreamIntIterator(getUidxPreferences(uidx).mapToInt(IdxPref::v1));
-    }
-
-    @Override
-    public DoubleIterator getUidxVs(final int uidx) {
-        return new StreamDoubleIterator(getUidxPreferences(uidx).mapToDouble(IdxPref::v2));
-    }
-
-    @Override
-    public IntIterator getIidxUidxs(final int iidx) {
-        return new StreamIntIterator(getIidxPreferences(iidx).mapToInt(IdxPref::v1));
-    }
-
-    @Override
-    public DoubleIterator getIidxVs(final int iidx) {
-        return new StreamDoubleIterator(getIidxPreferences(iidx).mapToDouble(IdxPref::v2));
-    }
-
-    @Override
-    public boolean useIteratorsPreferentially() {
-        return false;
     }
 
     public static <U, I> SimpleFastPreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {

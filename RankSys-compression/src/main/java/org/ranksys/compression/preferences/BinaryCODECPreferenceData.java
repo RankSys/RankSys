@@ -8,18 +8,15 @@
 package org.ranksys.compression.preferences;
 
 import org.ranksys.compression.codecs.CODEC;
-import static org.ranksys.compression.util.Delta.atled;
 import static org.ranksys.compression.util.Delta.delta;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
-import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import java.util.Arrays;
-import static java.util.Comparator.comparingInt;
 import org.ranksys.core.util.iterators.ArrayDoubleIterator;
 import org.ranksys.core.util.tuples.Tuple2io;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
@@ -103,29 +100,6 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
             }
             idxs[k] = x_codec.co(_idxs, 0, _idxs.length);
         });
-    }
-
-    @Override
-    public Stream<IdxPref> getUidxPreferences(final int uidx) {
-        return getPreferences(u_idxs[uidx], u_len[uidx], u_codec);
-    }
-
-    @Override
-    public Stream<IdxPref> getIidxPreferences(final int iidx) {
-        return getPreferences(i_idxs[iidx], i_len[iidx], i_codec);
-    }
-
-    private static <Cx> Stream<IdxPref> getPreferences(Cx cidxs, int len, CODEC<Cx> x_codec) {
-        if (len == 0) {
-            return Stream.empty();
-        }
-
-        int[] idxs = new int[len];
-        x_codec.dec(cidxs, idxs, 0, len);
-        if (!x_codec.isIntegrated()) {
-            atled(idxs, 0, len);
-        }
-        return range(0, len).mapToObj(i -> new IdxPref(idxs[i], 1.0));
     }
 
     @Override

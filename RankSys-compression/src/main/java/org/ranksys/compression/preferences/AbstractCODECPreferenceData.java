@@ -9,8 +9,8 @@ package org.ranksys.compression.preferences;
 
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.fast.preference.AbstractFastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.IteratorsAbstractFastPreferenceData;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntIterators;
 import java.util.stream.IntStream;
@@ -39,7 +39,7 @@ import org.ranksys.core.util.iterators.ArrayIntIterator;
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
-public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I> {
+public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends IteratorsAbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I> {
 
     /**
      * CODEC for user preferences.
