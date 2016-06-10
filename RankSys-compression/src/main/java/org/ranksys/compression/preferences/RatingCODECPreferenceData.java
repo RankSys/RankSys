@@ -7,22 +7,26 @@
  */
 package org.ranksys.compression.preferences;
 
-import org.ranksys.compression.codecs.CODEC;
-import static org.ranksys.compression.util.Delta.atled;
-import static org.ranksys.compression.util.Delta.delta;
-import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
+import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
-import static java.util.stream.IntStream.range;
-import java.util.stream.Stream;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.doubles.DoubleIterators;
-import static java.util.Comparator.comparingInt;
-import static java.util.stream.Stream.empty;
+import org.ranksys.compression.codecs.CODEC;
 import org.ranksys.core.util.iterators.ArrayDoubleIterator;
 import org.ranksys.core.util.tuples.Tuple2io;
+
+import java.io.Serializable;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import static java.util.stream.IntStream.range;
+import static java.util.stream.Stream.empty;
+import static org.ranksys.compression.util.Delta.atled;
+import static org.ranksys.compression.util.Delta.delta;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
@@ -37,34 +41,44 @@ import static org.ranksys.core.util.tuples.Tuples.tuple;
  * <br>
  * The search index compression technologies of the ECIR paper by Catena et al. is part of the Terrier IR Platform: <a href="http://terrier.org/docs/v4.0/compression.html">http://terrier.org/docs/v4.0/compression.html</a>.
  *
- * @param <U> type of users
- * @param <I> type of items
+ * @param <U>  type of users
+ * @param <I>  type of items
  * @param <Cu> coding for user identifiers
  * @param <Ci> coding for item identifiers
  * @param <Cv> coding for ratings
- *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPreferenceData<U, I, Cu, Ci> {
 
-    private final CODEC<Cv> r_codec;
+    protected final CODEC<Cv> r_codec;
 
-    private final Cv[] u_vs;
+    protected final Cv[] u_vs;
 
-    private final Cv[] i_vs;
+    protected final Cv[] i_vs;
 
     /**
      * Constructor that utilizes other PreferenceData object.
      *
      * @param preferences input preference data to be copied
-     * @param users user index
-     * @param items item index
-     * @param u_codec user preferences list CODEC
-     * @param i_codec item preferences list CODEC
-     * @param r_codec ratings CODEC
+     * @param users       user index
+     * @param items       item index
+     * @param u_codec     user preferences list CODEC
+     * @param i_codec     item preferences list CODEC
+     * @param r_codec     ratings CODEC
      */
-    public RatingCODECPreferenceData(FastPreferenceData<U, I> preferences, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec) {
-        this(ul(preferences), il(preferences), users, items, u_codec, i_codec, r_codec);
+    public RatingCODECPreferenceData(FastPreferenceData<U, I> preferences,
+                                     FastUserIndex<U> users, FastItemIndex<I> items,
+                                     CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec) {
+        this(preferences, users, items, u_codec, i_codec, r_codec,
+                (Function<IdxPref, IdPref<I>> & Serializable) p -> new IdPref<>(items.iidx2item(p)),
+                (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(users.uidx2user(p)));
+    }
+
+    public RatingCODECPreferenceData(FastPreferenceData<U, I> preferences,
+                                     FastUserIndex<U> users, FastItemIndex<I> items,
+                                     CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec,
+                                     Function<IdxPref, IdPref<I>> uPrefFun, Function<IdxPref, IdPref<U>> iPrefFun) {
+        this(ul(preferences), il(preferences), users, items, u_codec, i_codec, r_codec, uPrefFun, iPrefFun);
     }
 
     private static Stream<Tuple2io<int[][]>> ul(FastPreferenceData<?, ?> preferences) {
@@ -89,21 +103,28 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
     /**
      * Constructor using streams of user and items preferences lists.
      *
-     * @param ul stream of user preferences lists (id-rating)
-     * @param il stream of item preferences lists (id-rating)
-     * @param users user index
-     * @param items item index
+     * @param ul      stream of user preferences lists (id-rating)
+     * @param il      stream of item preferences lists (id-rating)
+     * @param users   user index
+     * @param items   item index
      * @param u_codec user preferences list CODEC
      * @param i_codec item preferences list CODEC
      * @param r_codec ratings CODEC
      */
     @SuppressWarnings("unchecked")
-    public RatingCODECPreferenceData(Stream<Tuple2io<int[][]>> ul, Stream<Tuple2io<int[][]>> il, FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec) {
-        super(users, items, u_codec, i_codec);
+    public RatingCODECPreferenceData(Stream<Tuple2io<int[][]>> ul, Stream<Tuple2io<int[][]>> il,
+                                     FastUserIndex<U> users, FastItemIndex<I> items,
+                                     CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec) {
+        this(ul, il, users, items, u_codec, i_codec, r_codec,
+                (Function<IdxPref, IdPref<I>> & Serializable) p -> new IdPref<>(items.iidx2item(p)),
+                (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(users.uidx2user(p)));
+    }
 
-        this.r_codec = r_codec;
-        this.u_vs = (Cv[]) new Object[users.numUsers()];
-        this.i_vs = (Cv[]) new Object[items.numItems()];
+    public RatingCODECPreferenceData(Stream<Tuple2io<int[][]>> ul, Stream<Tuple2io<int[][]>> il,
+                                     FastUserIndex<U> users, FastItemIndex<I> items,
+                                     CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec,
+                                     Function<IdxPref, IdPref<I>> uPrefFun, Function<IdxPref, IdPref<U>> iPrefFun) {
+        this(users, items, u_codec, i_codec, r_codec, uPrefFun, iPrefFun);
 
         index(ul, u_idxs, u_vs, u_len, u_codec, r_codec);
         index(il, i_idxs, i_vs, i_len, i_codec, r_codec);
@@ -124,13 +145,23 @@ public class RatingCODECPreferenceData<U, I, Cu, Ci, Cv> extends AbstractCODECPr
         });
     }
 
+    protected RatingCODECPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items,
+                                        CODEC<Cu> u_codec, CODEC<Ci> i_codec, CODEC<Cv> r_codec,
+                                        Function<IdxPref, IdPref<I>> uPrefFun, Function<IdxPref, IdPref<U>> iPrefFun) {
+        super(users, items, u_codec, i_codec, uPrefFun, iPrefFun);
+
+        this.r_codec = r_codec;
+        this.u_vs = (Cv[]) new Object[users.numUsers()];
+        this.i_vs = (Cv[]) new Object[items.numItems()];
+    }
+
     @Override
-    public Stream<IdxPref> getUidxPreferences(final int uidx) {
+    public Stream<? extends IdxPref> getUidxPreferences(final int uidx) {
         return getPreferences(u_idxs[uidx], u_vs[uidx], u_len[uidx], u_codec, r_codec);
     }
 
     @Override
-    public Stream<IdxPref> getIidxPreferences(final int iidx) {
+    public Stream<? extends IdxPref> getIidxPreferences(final int iidx) {
         return getPreferences(i_idxs[iidx], i_vs[iidx], i_len[iidx], i_codec, r_codec);
     }
 

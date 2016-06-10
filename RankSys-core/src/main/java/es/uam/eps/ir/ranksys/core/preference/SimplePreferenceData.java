@@ -8,6 +8,10 @@
  */
 package es.uam.eps.ir.ranksys.core.preference;
 
+import org.jooq.lambda.function.Function4;
+import org.jooq.lambda.tuple.Tuple3;
+import org.jooq.lambda.tuple.Tuple4;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import org.jooq.lambda.tuple.Tuple3;
 
 /**
  * Simple map-based preference data
@@ -90,12 +93,12 @@ public class SimplePreferenceData<U, I> implements PreferenceData<U, I>, Seriali
     }
 
     @Override
-    public Stream<IdPref<I>> getUserPreferences(U u) {
+    public Stream<? extends IdPref<I>> getUserPreferences(U u) {
         return userMap.getOrDefault(u, new ArrayList<>()).stream();
     }
 
     @Override
-    public Stream<IdPref<U>> getItemPreferences(I i) {
+    public Stream<? extends IdPref<U>> getItemPreferences(I i) {
         return itemMap.getOrDefault(i, new ArrayList<>()).stream();
     }
 
@@ -119,6 +122,10 @@ public class SimplePreferenceData<U, I> implements PreferenceData<U, I>, Seriali
         return itemMap.keySet().stream();
     }
 
+    public static <U, I> SimplePreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples) {
+        return load(tuples.map(t -> t.concat((Void) null)), (u, i, v, o) -> new IdPref<>(i, v), (u, i, v, o) -> new IdPref<>(u, v));
+    }
+
     /**
      * Loads an instance of the class from a stream of triples.
      *
@@ -127,18 +134,19 @@ public class SimplePreferenceData<U, I> implements PreferenceData<U, I>, Seriali
      * @param tuples stream of user-item-value triples
      * @return a preference data object
      */
-    public static <U, I> SimplePreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples) {
+    public static <U, I, O> SimplePreferenceData<U, I> load(Stream<Tuple4<U, I, Double, O>> tuples,
+                                                            Function4<U, I, Double, O, ? extends IdPref<I>> uPrefFun,
+                                                            Function4<U, I, Double, O, ? extends IdPref<U>> iPrefFun) {
         AtomicInteger numPreferences = new AtomicInteger(0);
         Map<U, List<IdPref<I>>> userMap = new HashMap<>();
         Map<I, List<IdPref<U>>> itemMap = new HashMap<>();
 
         tuples.forEach(t -> {
             numPreferences.incrementAndGet();
-            userMap.computeIfAbsent(t.v1, v1 -> new ArrayList<>()).add(new IdPref<>(t.v2, t.v3));
-            itemMap.computeIfAbsent(t.v2, v2 -> new ArrayList<>()).add(new IdPref<>(t.v1, t.v3));
+            userMap.computeIfAbsent(t.v1, v1 -> new ArrayList<>()).add(uPrefFun.apply(t));
+            itemMap.computeIfAbsent(t.v2, v2 -> new ArrayList<>()).add(iPrefFun.apply(t));
         });
 
         return new SimplePreferenceData<>(userMap, itemMap, numPreferences.intValue());
     }
-
 }
