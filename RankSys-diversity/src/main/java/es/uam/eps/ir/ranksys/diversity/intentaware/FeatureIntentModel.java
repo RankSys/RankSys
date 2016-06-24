@@ -11,13 +11,15 @@ package es.uam.eps.ir.ranksys.diversity.intentaware;
 import es.uam.eps.ir.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import org.jooq.lambda.tuple.Tuple2;
 
 import java.util.Set;
 import java.util.stream.Stream;
-import org.jooq.lambda.tuple.Tuple2;
 
 /**
- * Default feature-based intent-aware model. Features of the items in the user profiles are used as proxies for intents, and the probability of each is proportional to its occurrence in the profiles.
+ * Default feature-based intent-aware model. Features of the items in the user
+ * profiles are used as proxies for intents, and the probability of each is
+ * proportional to its occurrence in the profiles.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
@@ -170,17 +172,6 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         @Override
         public double pf_u(F f) {
             return pfu.getDouble(f);
-        }
-
-        /**
-         * {@inheritDoc}
-         *
-         * @param f features as intent
-         * @return probability of user given an intent
-         */
-        @Override
-        public double pu_f(F f) {
-            return puf.getDouble(f);
         }
     }
 }
