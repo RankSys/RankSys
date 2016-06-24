@@ -9,10 +9,8 @@
 package es.uam.eps.ir.ranksys.rec.runner;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -49,26 +47,6 @@ public abstract class AbstractRecommenderRunner<U, I> implements RecommenderRunn
      * @param consumer recommendation consumer
      */
     protected void run(Function<U, Recommendation<U, I>> recProvider, Consumer<Recommendation<U, I>> consumer) {
-        Map<U, Recommendation<U, I>> pendingRecommendations = new HashMap<>();
-        List<U> usersAux = new ArrayList<>(users);
-
-        users.parallelStream()
-                .map(user -> recProvider.apply(user))
-                .forEachOrdered(recommendation -> {
-                    if (recommendation.getUser().equals(usersAux.get(0))) {
-                        consumer.accept(recommendation);
-                        usersAux.remove(0);
-
-                        while (!usersAux.isEmpty() && pendingRecommendations.containsKey(usersAux.get(0))) {
-                            recommendation = pendingRecommendations.get(usersAux.get(0));
-                            consumer.accept(recommendation);
-                            usersAux.remove(0);
-                        }
-                    } else {
-                        pendingRecommendations.put(recommendation.getUser(), recommendation);
-                    }
-                });
-
-        usersAux.stream().map(pendingRecommendations::get).forEach(consumer);
+        users.parallelStream().forEach(user -> consumer.accept(recProvider.apply(user)));
     }
 }

@@ -1,28 +1,24 @@
 package org.ranksys.formats.rec;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import org.jooq.lambda.Unchecked;
+import org.jooq.lambda.function.Function4;
+import org.jooq.lambda.tuple.Tuple3;
+import org.ranksys.core.util.tuples.Tuple2od;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import static java.util.Spliterator.ORDERED;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import java.util.function.Function;
-import org.jooq.lambda.tuple.Tuple3;
-import static java.util.stream.Collectors.toList;
-import org.ranksys.core.util.tuples.Tuple2od;
+
+import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
+import static java.util.stream.Collectors.toList;
 import static org.jooq.lambda.Seq.seq;
-import org.jooq.lambda.Unchecked;
-import org.jooq.lambda.function.Function4;
 
 /**
  *
@@ -52,7 +48,7 @@ public class TuplesRecommendationFormat<U, I> implements RecommendationFormat<U,
         }
 
         @Override
-        public void write(Recommendation<U, I> recommendation) throws IOException {
+        public synchronized void write(Recommendation<U, I> recommendation) throws IOException {
             U u = recommendation.getUser();
             seq(recommendation.getItems())
                     .zipWithIndex()
