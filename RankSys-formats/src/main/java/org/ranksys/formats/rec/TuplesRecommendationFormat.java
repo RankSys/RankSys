@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import static java.util.Spliterator.ORDERED;
@@ -32,10 +33,16 @@ public class TuplesRecommendationFormat<U, I> implements RecommendationFormat<U,
 
     private final Function4<U, I, Double, Long, String> tupleWriter;
     private final Function<String, Tuple3<U, I, Double>> tupleReader;
+    private final boolean sortByDecreasingScore;
 
     public TuplesRecommendationFormat(Function4<U, I, Double, Long, String> tupleWriter, Function<String, Tuple3<U, I, Double>> tupleReader) {
+        this(tupleWriter, tupleReader, false);
+    }
+
+    public TuplesRecommendationFormat(Function4<U, I, Double, Long, String> tupleWriter, Function<String, Tuple3<U, I, Double>> tupleReader, boolean sortByDecreasingScore) {
         this.tupleWriter = tupleWriter;
         this.tupleReader = tupleReader;
+        this.sortByDecreasingScore = sortByDecreasingScore;
     }
 
     @Override
@@ -95,6 +102,11 @@ public class TuplesRecommendationFormat<U, I> implements RecommendationFormat<U,
                                 .map(Tuple3::skip1)
                                 .map(Tuple2od::new)
                                 .collect(toList());
+
+                        if (sortByDecreasingScore) {
+                            items.sort(Comparator.comparingDouble((Tuple2od<I> r) -> r.v2)
+                                    .reversed());
+                        }
 
                         return new Recommendation<>(user, items);
                     });
