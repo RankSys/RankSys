@@ -14,6 +14,7 @@ import java.util.Arrays;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.ranksys.core.util.iterators.StreamDoubleIterator;
@@ -30,26 +31,26 @@ public class IteratorsAbstractFastPreferenceDataTest {
     public void simpleTest() {
         IteratorsAbstractFastPreferenceData<Integer, Integer> preferences = new MockPreferenceDataTest<>();
 
-        assertEquals(
-                Arrays.asList(
+        Assert.assertArrayEquals(
+                new IdxPref[]{
                         new IdxPref(8, 1.0),
                         new IdxPref(9, 2.0),
                         new IdxPref(11, 3.0),
                         new IdxPref(12, 4.0),
                         new IdxPref(35, 5.0),
                         new IdxPref(45, 6.0)
-                ),
-                preferences.getUidxPreferences(0).collect(toList()));
+                },
+                preferences.getUidxPreferences(0).toArray(n -> new IdxPref[n]));
 
-        assertEquals(
-                Arrays.asList(
+        Assert.assertArrayEquals(
+                new IdxPref[]{
                         new IdxPref(18, 6.0),
                         new IdxPref(20, 5.0),
                         new IdxPref(100, 4.0),
                         new IdxPref(101, 3.0),
                         new IdxPref(102, 2.0)
-                ),
-                preferences.getIidxPreferences(0).collect(toList()));
+                },
+                preferences.getIidxPreferences(0).toArray(n -> new IdxPref[n]));
     }
 
     private static class MockPreferenceDataTest<U, I> extends IteratorsAbstractFastPreferenceData<U, I> {

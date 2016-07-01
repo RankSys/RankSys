@@ -11,7 +11,6 @@ import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import static org.junit.Assert.assertEquals;
