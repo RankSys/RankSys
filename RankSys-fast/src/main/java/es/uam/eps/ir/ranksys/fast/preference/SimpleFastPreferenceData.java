@@ -8,6 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
+import org.ranksys.fast.preference.StreamsAbstractFastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import java.io.Serializable;

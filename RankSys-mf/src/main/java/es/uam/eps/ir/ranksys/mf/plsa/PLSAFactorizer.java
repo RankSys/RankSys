@@ -16,7 +16,7 @@ import static cern.jet.math.Functions.mult;
 import static cern.jet.math.Functions.plus;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
-import es.uam.eps.ir.ranksys.fast.preference.StreamsAbstractFastPreferenceData;
+import org.ranksys.fast.preference.StreamsAbstractFastPreferenceData;
 import es.uam.eps.ir.ranksys.mf.Factorization;
 import es.uam.eps.ir.ranksys.mf.Factorizer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
