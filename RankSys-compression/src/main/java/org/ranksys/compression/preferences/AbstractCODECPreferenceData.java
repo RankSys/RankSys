@@ -10,7 +10,6 @@ package org.ranksys.compression.preferences;
 import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.fast.preference.AbstractFastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import it.unimi.dsi.fastutil.ints.IntIterator;
@@ -25,6 +24,7 @@ import java.util.stream.IntStream;
 import static java.util.stream.IntStream.of;
 import static java.util.stream.IntStream.range;
 import static org.ranksys.compression.util.Delta.atled;
+import org.ranksys.fast.preference.IteratorsAbstractFastPreferenceData;
 
 /**
  * Abstract PreferenceData using compression.
@@ -44,7 +44,7 @@ import static org.ranksys.compression.util.Delta.atled;
  * @param <Ci> coding for item identifiers
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
-public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I> {
+public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends IteratorsAbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I> {
 
     /**
      * CODEC for user preferences.
@@ -92,6 +92,7 @@ public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends Abstract
                 (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(users.uidx2user(p)));
     }
 
+    @SuppressWarnings("unchecked")
     protected AbstractCODECPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items,
                                           CODEC<Cu> u_codec, CODEC<Ci> i_codec,
                                           Function<IdxPref, IdPref<I>> uPrefFun, Function<IdxPref, IdPref<U>> iPrefFun) {
@@ -149,11 +150,6 @@ public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends Abstract
             atled(idxs, 0, len);
         }
         return new ArrayIntIterator(idxs);
-    }
-
-    @Override
-    public boolean useIteratorsPreferentially() {
-        return true;
     }
 
 }
