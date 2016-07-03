@@ -122,8 +122,9 @@ public class SimplePreferenceData<U, I> implements PreferenceData<U, I>, Seriali
         return itemMap.keySet().stream();
     }
 
-    public static <U, I, O> SimplePreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples) {
-        return load(tuples.map((Tuple3<U, I, Double> t) -> t.concat((O) null)), (u, i, v, o) -> new IdPref<>(i, v), (u, i, v, o) -> new IdPref<>(u, v));
+    public static <U, I> SimplePreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples) {
+        return load((Stream<Tuple4<U, I, Double, Void>>) tuples.map(t -> t.concat((Void) null)),
+                (u, i, v, o) -> new IdPref<>(i, v), (u, i, v, o) -> new IdPref<>(u, v));
     }
 
     /**
