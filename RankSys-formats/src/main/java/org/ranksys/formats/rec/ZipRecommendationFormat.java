@@ -24,6 +24,10 @@ import static org.ranksys.formats.parsing.Parsers.pdp;
 public class ZipRecommendationFormat<U, I> extends TuplesRecommendationFormat<U, I> {
 
     public ZipRecommendationFormat(Parser<U> uParser, Parser<I> iParser, boolean ignoreScores) {
+        this(uParser, iParser, ignoreScores, false);
+    }
+
+    public ZipRecommendationFormat(Parser<U> uParser, Parser<I> iParser, boolean ignoreScores, boolean sortByDecreasingScore) {
         super(
                 (u, i, v, r) -> {
                     if (ignoreScores) {
@@ -39,7 +43,8 @@ public class ZipRecommendationFormat<U, I> extends TuplesRecommendationFormat<U,
                     double v = ignoreScores ? NaN : pdp.applyAsDouble(tokens[2]);
 
                     return tuple(u, i, v);
-                }
+                },
+                sortByDecreasingScore
         );
     }
 
