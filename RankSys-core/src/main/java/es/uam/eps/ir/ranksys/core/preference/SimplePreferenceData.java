@@ -123,7 +123,7 @@ public class SimplePreferenceData<U, I> implements PreferenceData<U, I>, Seriali
     }
 
     public static <U, I> SimplePreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples) {
-        return load(tuples.map(t -> t.concat((Void) null)), (u, i, v, o) -> new IdPref<>(i, v), (u, i, v, o) -> new IdPref<>(u, v));
+        return load(tuples.map((Tuple3<U, I, Double> t) -> t.concat((Object) null)), (u, i, v, o) -> new IdPref<>(i, v), (u, i, v, o) -> new IdPref<>(u, v));
     }
 
     /**
