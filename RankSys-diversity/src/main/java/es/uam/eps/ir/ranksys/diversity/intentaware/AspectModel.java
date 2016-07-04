@@ -8,7 +8,9 @@
 package es.uam.eps.ir.ranksys.diversity.intentaware;
 
 import es.uam.eps.ir.ranksys.core.model.UserModel;
+import org.ranksys.core.util.tuples.Tuple2od;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -53,6 +55,11 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
         private IntentModel.UserIntentModel<U, I, F> uim;
 
         /**
+         * Indicates if the model has been initialized.
+         */
+        protected boolean initialized = false;
+
+        /**
          * Constructor taking user intent model.
          *
          * @param user user
@@ -60,6 +67,13 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
         public UserAspectModel(U user) {
             this.uim = intentModel.getModel(user);
         }
+
+        /**
+         * Initialises the model with items.
+         *
+         * @param items list of items with scores
+         */
+        public abstract void initializeWithItems(List<Tuple2od<I>> items);
 
         @Override
         public Set<F> getIntents() {

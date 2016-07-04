@@ -49,7 +49,6 @@ public class RerankerExample {
         int cutoff = 100;
         PreferenceData<Long, Long> trainData = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(trainDataPath, lp, lp));
         FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(featurePath, lp, sp));
-        PreferenceData<Long, Long> aspectScores = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(recIn, lp, lp));
 
         Map<String, Supplier<Reranker<Long, Long>>> rerankersMap = new HashMap<>();
 
@@ -60,7 +59,7 @@ public class RerankerExample {
 
         rerankersMap.put("XQuAD", () -> {
             IntentModel<Long, Long, String> intentModel = new FeatureIntentModel<>(trainData, featureData);
-            AspectModel<Long, Long, String> aspectModel = new ScoresAspectModel<>(intentModel, aspectScores);
+            AspectModel<Long, Long, String> aspectModel = new ScoresAspectModel<>(intentModel);
             return new XQuAD<>(aspectModel, lambda, cutoff, true);
         });
 

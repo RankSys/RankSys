@@ -105,11 +105,6 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         protected final Object2DoubleOpenHashMap<F> pfu;
 
         /**
-         * Map feature to p(u|f)
-         */
-        protected final Object2DoubleOpenHashMap<F> puf;
-
-        /**
          * Constructor.
          *
          * @param user user whose model is created.
@@ -131,11 +126,9 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
                 featureData.getAllFeatures().sequential().forEach(f -> tmpCounts.put(f, 1.0));
             }
 
-            puf = new Object2DoubleOpenHashMap<>();
             pfu = new Object2DoubleOpenHashMap<>();
             tmpCounts.object2DoubleEntrySet().forEach(e -> {
                 F f = e.getKey();
-                puf.put(f, e.getDoubleValue() / featureNorms.getDouble(f));
                 pfu.put(f, e.getDoubleValue() / norm[0]);
             });
         }

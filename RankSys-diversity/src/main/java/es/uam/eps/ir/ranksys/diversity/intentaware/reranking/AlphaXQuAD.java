@@ -72,6 +72,7 @@ public class AlphaXQuAD<U, I, F> extends LambdaReranker<U, I> {
             super(recommendation, maxLength);
 
             this.uam = aspectModel.getModel(recommendation.getUser());
+            this.uam.initializeWithItems(recommendation.getItems());
             this.redundancy = new Object2DoubleOpenHashMap<>();
             this.redundancy.defaultReturnValue(1.0);
         }
