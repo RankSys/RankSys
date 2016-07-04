@@ -102,10 +102,10 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
         /**
          * Returns probability of an item given an aspect
          *
-         * @param i item
+         * @param iv item-value pair
          * @param f aspect
          * @return probability of an item given an aspect
          */
-        public abstract double pi_f(I i, F f);
+        public abstract double pi_f(Tuple2od<I> iv, F f);
     }
 }

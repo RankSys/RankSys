@@ -13,10 +13,8 @@ import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
 import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
 import es.uam.eps.ir.ranksys.diversity.distance.reranking.MMR;
-import es.uam.eps.ir.ranksys.diversity.intentaware.AspectModel;
-import es.uam.eps.ir.ranksys.diversity.intentaware.ScoresAspectModel;
-import es.uam.eps.ir.ranksys.diversity.intentaware.FeatureIntentModel;
-import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
+import es.uam.eps.ir.ranksys.diversity.intentaware.*;
+import es.uam.eps.ir.ranksys.diversity.intentaware.reranking.AlphaXQuAD;
 import es.uam.eps.ir.ranksys.diversity.intentaware.reranking.XQuAD;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.novdiv.distance.JaccardFeatureItemDistanceModel;
@@ -57,10 +55,17 @@ public class RerankerExample {
             return new MMR<>(lambda, cutoff, dist);
         });
 
-        rerankersMap.put("XQuAD", () -> {
+        rerankersMap.put("xQuAD", () -> {
             IntentModel<Long, Long, String> intentModel = new FeatureIntentModel<>(trainData, featureData);
             AspectModel<Long, Long, String> aspectModel = new ScoresAspectModel<>(intentModel);
             return new XQuAD<>(aspectModel, lambda, cutoff, true);
+        });
+
+        rerankersMap.put("RxQuAD", () -> {
+            double alpha = 0.5;
+            IntentModel<Long, Long, String> intentModel = new FeatureIntentModel<>(trainData, featureData);
+            AspectModel<Long, Long, String> aspectModel = new ScoresRelevanceAspectModel<>(intentModel);
+            return new AlphaXQuAD<>(aspectModel, alpha, lambda, cutoff, true);
         });
 
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);
