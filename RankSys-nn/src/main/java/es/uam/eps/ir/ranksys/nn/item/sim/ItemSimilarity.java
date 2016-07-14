@@ -41,7 +41,7 @@ public class ItemSimilarity<I> implements FastItemIndex<I> {
      * @param iIndex fast item index
      * @param sim generic fast similarity
      */
-    protected ItemSimilarity(FastItemIndex<I> iIndex, Similarity sim) {
+    public ItemSimilarity(FastItemIndex<I> iIndex, Similarity sim) {
         this.iIndex = iIndex;
         this.sim = sim;
     }

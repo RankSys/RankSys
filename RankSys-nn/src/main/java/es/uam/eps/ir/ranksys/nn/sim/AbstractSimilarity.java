@@ -12,6 +12,8 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.*;
+import org.jooq.lambda.tuple.Tuple;
+import org.jooq.lambda.tuple.Tuple2;
 import org.ranksys.core.util.tuples.Tuple2id;
 
 import java.util.function.IntToDoubleFunction;
@@ -84,8 +86,9 @@ public abstract class AbstractSimilarity implements Similarity {
         };
     }
 
-    private Int2ObjectMap<Product> getProductMap(int uidx) {
-        Int2ObjectMap<Product> productMap = new Int2ObjectOpenHashMap();
+    private Tuple2<Int2DoubleMap, Int2IntMap> getProductMap(int uidx) {
+        Int2DoubleOpenHashMap pMap = new Int2DoubleOpenHashMap();
+        Int2IntOpenHashMap cMap = new Int2IntOpenHashMap();
 
         if (data.useIteratorsPreferentially()) {
             IntIterator iidxs = data.getUidxIidxs(uidx);
@@ -96,24 +99,29 @@ public abstract class AbstractSimilarity implements Similarity {
                 IntIterator vidxs = data.getIidxUidxs(iidx);
                 DoubleIterator vvs = data.getIidxVs(iidx);
                 while (vidxs.hasNext()) {
-                    productMap.computeIfAbsent(vidxs.nextInt(), _vidx -> new Product()).add(iv * vvs.nextDouble());
+                    int vidx = vidxs.nextInt();
+                    pMap.addTo(vidx, iv * vvs.nextDouble());
+                    cMap.addTo(vidx, 1);
                 }
             }
         } else {
             data.getUidxPreferences(uidx).forEach(ip -> {
                 data.getIidxPreferences(ip.v1).forEach(up -> {
-                    productMap.computeIfAbsent(up.v1, _vidx -> new Product()).add(ip.v2 * up.v2);
+                    pMap.addTo(up.v1, ip.v2 * up.v2);
+                    cMap.addTo(up.v1, 1);
                 });
             });
         }
 
-        productMap.remove(uidx);
+        pMap.remove(uidx);
+        cMap.remove(uidx);
 
-        return productMap;
+        return Tuple.tuple(pMap, cMap);
     }
 
-    private Product[] getProductArray(int uidx) {
-        Product[] productArray = new Product[data.numUsers()];
+    private Tuple2<double[], int[]> getProductArray(int uidx) {
+        double[] pArray = new double[data.numUsers()];
+        int[] cArray = new int[data.numUsers()];
 
         if (data.useIteratorsPreferentially()) {
             IntIterator iidxs = data.getUidxIidxs(uidx);
@@ -124,20 +132,24 @@ public abstract class AbstractSimilarity implements Similarity {
                 IntIterator vidxs = data.getIidxUidxs(iidx);
                 DoubleIterator vvs = data.getIidxVs(iidx);
                 while (vidxs.hasNext()) {
-                    productArray[vidxs.nextInt()].add(iv * vvs.nextDouble());
+                    int vidx = vidxs.nextInt();
+                    pArray[vidx] += iv * vvs.nextDouble();
+                    cArray[vidx] += 1;
                 }
             }
         } else {
             data.getUidxPreferences(uidx).forEach(ip -> {
                 data.getIidxPreferences(ip.v1).forEach(up -> {
-                    productArray[up.v1].add(ip.v2 * up.v2);
+                    pArray[up.v1] += ip.v2 * up.v2;
+                    cArray[up.v1] += 1;
                 });
             });
         }
 
-        productArray[uidx].reset();
+        pArray[uidx] = 0.0;
+        cArray[uidx] = 0;
 
-        return productArray;
+        return Tuple.tuple(pArray, cArray);
     }
 
     private double getNorm2(int uidx) {
@@ -164,22 +176,18 @@ public abstract class AbstractSimilarity implements Similarity {
         if (dense) {
             double norm2A = norm2Array[uidx];
 
-            Product[] productArray = getProductArray(uidx);
-            return range(0, productArray.length)
-                    .filter(vidx -> productArray[vidx].s > 0)
-                    .mapToObj(vidx -> {
-                        Product product = productArray[vidx];
-                        return tuple(vidx, sim(product.v, norm2A, norm2Array[vidx], product.s, sizeA, data.numItems(vidx)));
-                    });
+            Tuple2<double[], int[]> as = getProductArray(uidx);
+            return range(0, as.v1.length)
+                    .filter(vidx -> as.v1[vidx] > 0.0)
+                    .mapToObj(vidx -> tuple(vidx, sim(as.v1[vidx], norm2A, norm2Array[vidx], as.v2[vidx], sizeA, data.numItems(vidx))));
         } else {
             double norm2A = norm2Map.get(uidx);
 
-            Int2ObjectMap<Product> productMap = getProductMap(uidx);
-            return productMap.int2ObjectEntrySet().stream()
+            Tuple2<Int2DoubleMap, Int2IntMap> ms = getProductMap(uidx);
+            return ms.v1.int2DoubleEntrySet().stream()
                     .map(e -> {
                         int vidx = e.getIntKey();
-                        Product product = e.getValue();
-                        return tuple(vidx, sim(product.v, norm2A, norm2Map.get(vidx), product.s, sizeA, data.numItems(vidx)));
+                        return tuple(vidx, sim(e.getDoubleValue(), norm2A, norm2Map.get(vidx), ms.v2.get(vidx), sizeA, data.numItems(vidx)));
                     });
         }
     }
@@ -194,18 +202,4 @@ public abstract class AbstractSimilarity implements Similarity {
      */
     protected abstract double sim(double product, double norm2A, double norm2B, int intersectionSize, int sizeA, int sizeB);
 
-    private static class Product {
-        public double v = 0.0;
-        public int s = 0;
-
-        public void reset() {
-            v = 0.0;
-            s = 0;
-        }
-
-        public void add(double v2) {
-            v += v2;
-            s++;
-        }
-    }
 }

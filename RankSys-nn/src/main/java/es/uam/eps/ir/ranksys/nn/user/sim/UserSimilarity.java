@@ -41,7 +41,7 @@ public class UserSimilarity<U> implements FastUserIndex<U> {
      * @param uIndex fast user index
      * @param sim generic fast similarity
      */
-    protected UserSimilarity(FastUserIndex<U> uIndex, Similarity sim) {
+    public UserSimilarity(FastUserIndex<U> uIndex, Similarity sim) {
         this.uIndex = uIndex;
         this.sim = sim;
     }

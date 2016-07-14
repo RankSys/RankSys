@@ -6,7 +6,7 @@ import static java.lang.Math.pow;
 
 public class Similarities {
 
-    public Similarity ratingJaccard(FastPreferenceData<?, ?> preferences, boolean dense) {
+    public static AbstractSimilarity ratingJaccard(FastPreferenceData<?, ?> preferences, boolean dense) {
         return new AbstractSimilarity(preferences, dense) {
             @Override
             protected double sim(double product, double norm2A, double norm2B, int intersectionSize, int sizeA, int sizeB) {
@@ -15,7 +15,7 @@ public class Similarities {
         };
     }
 
-    public Similarity ratingCosine(FastPreferenceData<?, ?> preferences, boolean dense, double alpha) {
+    public static AbstractSimilarity ratingCosine(FastPreferenceData<?, ?> preferences, boolean dense, double alpha) {
         return new AbstractSimilarity(preferences, dense) {
             @Override
             protected double sim(double product, double norm2A, double norm2B, int intersectionSize, int sizeA, int sizeB) {
@@ -24,7 +24,7 @@ public class Similarities {
         };
     }
 
-    public Similarity binaryJaccard(FastPreferenceData<?, ?> preferences, boolean dense) {
+    public static AbstractSimilarity binaryJaccard(FastPreferenceData<?, ?> preferences, boolean dense) {
         return new AbstractSimilarity(preferences, dense) {
             @Override
             protected double sim(double product, double norm2A, double norm2B, int intersectionSize, int sizeA, int sizeB) {
@@ -33,7 +33,7 @@ public class Similarities {
         };
     }
 
-    public Similarity binaryCosine(FastPreferenceData<?, ?> preferences, boolean dense, double alpha) {
+    public static AbstractSimilarity binaryCosine(FastPreferenceData<?, ?> preferences, boolean dense, double alpha) {
         return new AbstractSimilarity(preferences, dense) {
             @Override
             protected double sim(double product, double norm2A, double norm2B, int intersectionSize, int sizeA, int sizeB) {
@@ -42,7 +42,7 @@ public class Similarities {
         };
     }
 
-    public Similarity significanceWeighting(AbstractSimilarity similarity, int minIntersectionSize) {
+    public static AbstractSimilarity significanceWeighting(AbstractSimilarity similarity, int minIntersectionSize) {
         return new AbstractSimilarity(similarity.data, similarity.dense) {
             @Override
             protected double sim(double product, double norm2A, double norm2B, int intersectionSize, int sizeA, int sizeB) {
