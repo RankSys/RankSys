@@ -21,5 +21,9 @@ public class ItemSimilarities {
     public static <I> ItemSimilarity<I> vectorJaccard(FastPreferenceData<?, I> preferences, boolean dense) {
         return new ItemSimilarity<>(preferences, Similarities.vectorJaccard(new TransposedPreferenceData<>(preferences), dense));
     }
+    
+    public static <I> ItemSimilarity<I> logLikelihood(FastPreferenceData<?, I> preferences, boolean dense) {
+        return new ItemSimilarity<>(preferences, Similarities.logLikelihood(new TransposedPreferenceData<>(preferences), dense));
+    }
 
 }

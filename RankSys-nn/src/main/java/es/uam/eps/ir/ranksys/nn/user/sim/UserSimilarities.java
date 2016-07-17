@@ -20,5 +20,9 @@ public class UserSimilarities {
     public static <U> UserSimilarity<U> vectorJaccard(FastPreferenceData<U, ?> recommenderData, boolean dense) {
         return new UserSimilarity<>(recommenderData, Similarities.vectorJaccard(recommenderData, dense));
     }
+    
+    public static <U> UserSimilarity<U> logLikelihood(FastPreferenceData<U, ?> preferences, boolean dense) {
+        return new UserSimilarity<>(preferences, Similarities.logLikelihood(preferences, dense));
+    }
 
 }

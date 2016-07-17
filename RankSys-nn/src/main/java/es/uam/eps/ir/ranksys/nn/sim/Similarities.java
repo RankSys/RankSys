@@ -10,6 +10,7 @@ package es.uam.eps.ir.ranksys.nn.sim;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
+import static org.apache.mahout.math.stats.LogLikelihood.logLikelihoodRatio;
 
 /**
  *
@@ -49,6 +50,19 @@ public class Similarities {
             @Override
             protected double sim(double product, double norm2A, double norm2B) {
                 return product / (norm2A + norm2B - product);
+            }
+        };
+    }
+
+    public static SetSimilarity logLikelihood(FastPreferenceData<?, ?> preferences, boolean dense) {
+        return new SetSimilarity(preferences, dense) {
+            @Override
+            protected double sim(int intersectionSize, int na, int nb) {
+                double logLikelihood = logLikelihoodRatio((long) intersectionSize,
+                        (long) (nb - intersectionSize),
+                        (long) (na - intersectionSize),
+                        (long) (data.numItems() - na - nb + intersectionSize));
+                return 1.0 - 1.0 / (1.0 + logLikelihood);
             }
         };
     }
