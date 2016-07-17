@@ -12,35 +12,74 @@ import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 
 /**
+ * Tuple of integer-double.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class Tuple2id implements Comparable<Tuple2id>, Serializable, Cloneable {
 
+    /**
+     * First value (integer).
+     */
     public final int v1;
+
+    /**
+     * Second value (double).
+     */
     public final double v2;
     
+    /**
+     * Constructor from a jOOL tuple.
+     *
+     * @param tuple tuple to be copied.
+     */
     public Tuple2id(Tuple2<Integer, Double> tuple) {
         this(tuple.v1, tuple.v2);
     }
 
+    /**
+     * Constructor from an integer-double tuple.
+     *
+     * @param tuple tuple to be copied
+     */
     public Tuple2id(Tuple2id tuple) {
         this(tuple.v1, tuple.v2);
     }
 
+    /**
+     * Constructor from separate integer and double values.
+     *
+     * @param v1 integer value
+     * @param v2 double value
+     */
     public Tuple2id(int v1, double v2) {
         this.v1 = v1;
         this.v2 = v2;
     }
 
+    /**
+     * Returns the first element (integer).
+     *
+     * @return first element (integer).
+     */
     public int v1() {
         return v1;
     }
 
+    /**
+     * Returns the second element (double).
+     *
+     * @return second element (double).
+     */
     public double v2() {
         return v2;
     }
 
+    /**
+     * Converts the tuple into a jOOL tuple.
+     *
+     * @return jOOL tuple
+     */
     public Tuple2<Integer, Double> asTuple() {
         return Tuple.tuple(v1, v2);
     }

@@ -8,3 +8,6 @@ tmp/
 nb-configuration.xml
 */nb-configuration.xml
 */nbproject/
+*.iml
+.idea
+*/*.iml
