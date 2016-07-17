@@ -10,10 +10,12 @@ package es.uam.eps.ir.ranksys.nn.item.neighborhood;
 
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.nn.neighborhood.Neighborhood;
-import java.util.stream.Stream;
-import org.ranksys.core.util.tuples.Tuple2od;
-import static java.util.stream.StreamSupport.stream;
 import org.ranksys.core.util.tuples.Tuple2id;
+import org.ranksys.core.util.tuples.Tuple2od;
+
+import java.util.stream.Stream;
+
+import static java.util.stream.StreamSupport.stream;
 
 /**
  * Item neighborhood. Wraps a generic neighborhood and a fast item index.
@@ -22,7 +24,7 @@ import org.ranksys.core.util.tuples.Tuple2id;
  * 
  * @param <I> type of the items
  */
-public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex<I> {
+public class ItemNeighborhood<I> implements FastItemIndex<I> {
 
     /**
      * Fast item index.
@@ -43,6 +45,10 @@ public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex
     public ItemNeighborhood(FastItemIndex<I> iIndex, Neighborhood neighborhood) {
         this.iIndex = iIndex;
         this.neighborhood = neighborhood;
+    }
+
+    public Neighborhood neighborhood() {
+        return neighborhood;
     }
 
     @Override
@@ -66,7 +72,6 @@ public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex
      * @param idx user/index whose neighborhood is calculated
      * @return stream of user/item-similarity pairs.
      */
-    @Override
     public Stream<Tuple2id> getNeighbors(int idx) {
         return neighborhood.getNeighbors(idx);
     }

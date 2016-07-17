@@ -7,18 +7,24 @@
  */
 package org.ranksys.compression.preferences;
 
+import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.fast.preference.AbstractFastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntIterators;
+import org.ranksys.compression.codecs.CODEC;
+import org.ranksys.core.util.iterators.ArrayIntIterator;
+
+import java.io.Serializable;
+import java.util.function.Function;
 import java.util.stream.IntStream;
+
 import static java.util.stream.IntStream.of;
 import static java.util.stream.IntStream.range;
-import org.ranksys.compression.codecs.CODEC;
 import static org.ranksys.compression.util.Delta.atled;
-import org.ranksys.core.util.iterators.ArrayIntIterator;
+import org.ranksys.fast.preference.IteratorsAbstractFastPreferenceData;
 
 /**
  * Abstract PreferenceData using compression.
@@ -32,14 +38,13 @@ import org.ranksys.core.util.iterators.ArrayIntIterator;
  * <br>
  * The search index compression technologies of the ECIR paper by Catena et al. is part of the Terrier IR Platform: <a href="http://terrier.org/docs/v4.0/compression.html">http://terrier.org/docs/v4.0/compression.html</a>.
  *
- * @param <U> type of users
- * @param <I> type of items
+ * @param <U>  type of users
+ * @param <I>  type of items
  * @param <Cu> coding for user identifiers
  * @param <Ci> coding for item identifiers
- *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
-public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends AbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I> {
+public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends IteratorsAbstractFastPreferenceData<U, I> implements FastPreferenceData<U, I> {
 
     /**
      * CODEC for user preferences.
@@ -74,14 +79,24 @@ public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends Abstract
     /**
      * Constructor.
      *
-     * @param users user index
-     * @param items item index
+     * @param users   user index
+     * @param items   item index
      * @param u_codec user preferences CODEC
      * @param i_codec item preferences CODEC
      */
     @SuppressWarnings("unchecked")
-    public AbstractCODECPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items, CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
-        super(users, items);
+    protected AbstractCODECPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items,
+                                          CODEC<Cu> u_codec, CODEC<Ci> i_codec) {
+        this(users, items, u_codec, i_codec,
+                (Function<IdxPref, IdPref<I>> & Serializable) p -> new IdPref<>(items.iidx2item(p)),
+                (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(users.uidx2user(p)));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected AbstractCODECPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items,
+                                          CODEC<Cu> u_codec, CODEC<Ci> i_codec,
+                                          Function<IdxPref, IdPref<I>> uPrefFun, Function<IdxPref, IdPref<U>> iPrefFun) {
+        super(users, items, uPrefFun, iPrefFun);
         this.u_codec = u_codec;
         this.i_codec = i_codec;
         this.u_idxs = (Cu[]) new Object[users.numUsers()];
@@ -135,11 +150,6 @@ public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends Abstract
             atled(idxs, 0, len);
         }
         return new ArrayIntIterator(idxs);
-    }
-
-    @Override
-    public boolean useIteratorsPreferentially() {
-        return true;
     }
 
 }

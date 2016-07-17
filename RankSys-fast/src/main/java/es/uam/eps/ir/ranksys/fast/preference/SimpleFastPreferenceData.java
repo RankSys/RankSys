@@ -8,34 +8,39 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
+import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import org.ranksys.fast.utils.map.Int2ObjectDirectMap;
-import it.unimi.dsi.fastutil.doubles.DoubleIterator;
-import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import static java.util.Comparator.comparingInt;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import org.jooq.lambda.function.Function4;
 import org.jooq.lambda.tuple.Tuple3;
+import org.jooq.lambda.tuple.Tuple4;
 import org.ranksys.fast.preference.FastPointWisePreferenceData;
-import org.ranksys.core.util.iterators.StreamDoubleIterator;
-import org.ranksys.core.util.iterators.StreamIntIterator;
+import org.ranksys.fast.preference.StreamsAbstractFastPreferenceData;
+import org.ranksys.fast.utils.map.Int2ObjectDirectMap;
 
 /**
  * Simple implementation of FastPreferenceData backed by nested lists.
  *
- * @author Saúl Vargas (saul.vargas@uam.es)
- *
  * @param <U> type of the users
  * @param <I> type of the items
+ * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> implements FastPointWisePreferenceData<U, I>, Serializable {
+
+
+public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenceData<U, I> implements FastPointWisePreferenceData<U, I>, Serializable {
 
     private final int numPreferences;
     private final Int2ObjectDirectMap<List<IdxPref>> uidxList;
@@ -50,8 +55,19 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
      * @param uIndex user index
      * @param iIndex item index
      */
-    protected SimpleFastPreferenceData(int numPreferences, Int2ObjectDirectMap<List<IdxPref>> uidxList, Int2ObjectDirectMap<List<IdxPref>> iidxList, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
-        super(uIndex, iIndex);
+    protected SimpleFastPreferenceData(int numPreferences,
+            Int2ObjectDirectMap<List<IdxPref>> uidxList, Int2ObjectDirectMap<List<IdxPref>> iidxList, 
+            FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
+        this(numPreferences, uidxList, iidxList, uIndex, iIndex,
+                (Function<IdxPref, IdPref<I>> & Serializable) p -> new IdPref<>(iIndex.iidx2item(p)),
+                (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(uIndex.uidx2user(p)));
+    }
+
+    protected SimpleFastPreferenceData(int numPreferences, 
+            Int2ObjectDirectMap<List<IdxPref>> uidxList, Int2ObjectDirectMap<List<IdxPref>> iidxList,
+            FastUserIndex<U> uIndex, FastItemIndex<I> iIndex,
+            Function<IdxPref, IdPref<I>> uPrefFun, Function<IdxPref, IdPref<U>> iPrefFun) {
+        super(uIndex, iIndex, uPrefFun, iPrefFun);
         this.numPreferences = numPreferences;
         this.uidxList = uidxList;
         this.iidxList = iidxList;
@@ -131,45 +147,46 @@ public class SimpleFastPreferenceData<U, I> extends AbstractFastPreferenceData<U
     }
 
     @Override
-    public IntIterator getUidxIidxs(final int uidx) {
-        return new StreamIntIterator(getUidxPreferences(uidx).mapToInt(IdxPref::v1));
-    }
+    public Optional<? extends IdPref<I>> getPreference(U u, I i) {
+        Optional<? extends IdxPref> pref = getPreference(user2uidx(u), item2iidx(i));
 
-    @Override
-    public DoubleIterator getUidxVs(final int uidx) {
-        return new StreamDoubleIterator(getUidxPreferences(uidx).mapToDouble(IdxPref::v2));
-    }
-
-    @Override
-    public IntIterator getIidxUidxs(final int iidx) {
-        return new StreamIntIterator(getIidxPreferences(iidx).mapToInt(IdxPref::v1));
-    }
-
-    @Override
-    public DoubleIterator getIidxVs(final int iidx) {
-        return new StreamDoubleIterator(getIidxPreferences(iidx).mapToDouble(IdxPref::v2));
-    }
-
-    @Override
-    public boolean useIteratorsPreferentially() {
-        return false;
+        if (!pref.isPresent()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(uPrefFun.apply(pref.get()));
+        }
     }
 
     public static <U, I> SimpleFastPreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
+        return load(tuples.map(t -> t.concat((Void) null)),
+                (uidx, iidx, v, o) -> new IdxPref(iidx, v),
+                (uidx, iidx, v, o) -> new IdxPref(uidx, v),
+                uIndex, iIndex,
+                (Function<IdxPref, IdPref<I>> & Serializable) p -> new IdPref<>(iIndex.iidx2item(p)),
+                (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(uIndex.uidx2user(p)));
+    }
+
+    public static <U, I, O> SimpleFastPreferenceData<U, I> load(Stream<Tuple4<U, I, Double, O>> tuples,
+            Function4<Integer, Integer, Double, O, ? extends IdxPref> uIdxPrefFun,
+            Function4<Integer, Integer, Double, O, ? extends IdxPref> iIdxPrefFun,
+            FastUserIndex<U> uIndex, FastItemIndex<I> iIndex,
+            Function<IdxPref, IdPref<I>> uIdPrefFun,
+            Function<IdxPref, IdPref<U>> iIdPrefFun) {
         AtomicInteger numPreferences = new AtomicInteger();
         Int2ObjectDirectMap<List<IdxPref>> uidxList = new Int2ObjectDirectMap<>(0, uIndex.numUsers() - 1);
         Int2ObjectDirectMap<List<IdxPref>> iidxList = new Int2ObjectDirectMap<>(0, iIndex.numItems() - 1);
+        IntFunction<List<IdxPref>> newArray = uidx_ -> new ArrayList<>();
 
         tuples.forEach(t -> {
             int uidx = uIndex.user2uidx(t.v1);
             int iidx = iIndex.item2iidx(t.v2);
 
             numPreferences.incrementAndGet();
-            uidxList.computeIfAbsent(uidx, uidx_ -> new ArrayList<>()).add(new IdxPref(iidx, t.v3));
-            iidxList.computeIfAbsent(iidx, iidx_ -> new ArrayList<>()).add(new IdxPref(uidx, t.v3));
+            uidxList.computeIfAbsent(uidx, newArray).add(uIdxPrefFun.apply(uidx, iidx, t.v3, t.v4));
+            iidxList.computeIfAbsent(iidx, newArray).add(iIdxPrefFun.apply(uidx, iidx, t.v3, t.v4));
         });
 
-        return new SimpleFastPreferenceData<>(numPreferences.intValue(), uidxList, iidxList, uIndex, iIndex);
+        return new SimpleFastPreferenceData<>(numPreferences.intValue(), uidxList, iidxList, uIndex, iIndex, uIdPrefFun, iIdPrefFun);
     }
 
 }

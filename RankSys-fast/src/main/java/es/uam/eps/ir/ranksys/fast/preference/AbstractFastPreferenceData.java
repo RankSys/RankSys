@@ -12,6 +12,7 @@ import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import java.io.Serializable;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -35,15 +36,27 @@ public abstract class AbstractFastPreferenceData<U, I> implements FastPreference
      */
     protected final FastItemIndex<I> ii;
 
+    protected final Function<IdxPref, IdPref<I>> uPrefFun;
+    protected final Function<IdxPref, IdPref<U>> iPrefFun;
+
+    public AbstractFastPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items) {
+        this(users, items,
+                (Function<IdxPref, IdPref<I>> & Serializable) p -> new IdPref<>(items.iidx2item(p)),
+                (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(users.uidx2user(p)));
+    }
+
     /**
      * Constructor.
-     *
-     * @param userIndex user index
+     *  @param userIndex user index
      * @param itemIndex item index
+     * @param uPrefFun
+     * @param iPrefFun
      */
-    public AbstractFastPreferenceData(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex) {
+    public AbstractFastPreferenceData(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex, Function<IdxPref, IdPref<I>> uPrefFun, Function<IdxPref, IdPref<U>> iPrefFun) {
         this.ui = userIndex;
         this.ii = itemIndex;
+        this.uPrefFun = uPrefFun;
+        this.iPrefFun = iPrefFun;
     }
 
     @Override
@@ -108,16 +121,12 @@ public abstract class AbstractFastPreferenceData<U, I> implements FastPreference
 
     @Override
     public Stream<? extends IdPref<I>> getUserPreferences(final U u) {
-        return getUidxPreferences(user2uidx(u))
-                .map(this::iidx2item)
-                .map(IdPref::new);
+        return getUidxPreferences(user2uidx(u)).map(uPrefFun);
     }
 
     @Override
     public Stream<? extends IdPref<U>> getItemPreferences(final I i) {
-        return getIidxPreferences(item2iidx(i))
-                .map(this::uidx2user)
-                .map(IdPref::new);
+        return getIidxPreferences(item2iidx(i)).map(iPrefFun);
     }
 
     @Override

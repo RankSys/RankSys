@@ -9,7 +9,6 @@
 package es.uam.eps.ir.ranksys.examples;
 
 import cc.mallet.topics.ParallelTopicModel;
-import static org.ranksys.formats.parsing.Parsers.lp;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
@@ -22,22 +21,30 @@ import es.uam.eps.ir.ranksys.mf.als.PZTFactorizer;
 import es.uam.eps.ir.ranksys.mf.plsa.PLSAFactorizer;
 import es.uam.eps.ir.ranksys.mf.rec.MFRecommender;
 import es.uam.eps.ir.ranksys.nn.item.ItemNeighborhoodRecommender;
-import es.uam.eps.ir.ranksys.nn.item.neighborhood.CachedItemNeighborhood;
 import es.uam.eps.ir.ranksys.nn.item.neighborhood.ItemNeighborhood;
-import es.uam.eps.ir.ranksys.nn.item.neighborhood.TopKItemNeighborhood;
+import es.uam.eps.ir.ranksys.nn.item.neighborhood.ItemNeighborhoods;
+import es.uam.eps.ir.ranksys.nn.item.sim.ItemSimilarities;
 import es.uam.eps.ir.ranksys.nn.item.sim.ItemSimilarity;
-import es.uam.eps.ir.ranksys.nn.item.sim.VectorCosineItemSimilarity;
 import es.uam.eps.ir.ranksys.nn.user.UserNeighborhoodRecommender;
-import es.uam.eps.ir.ranksys.nn.user.neighborhood.TopKUserNeighborhood;
 import es.uam.eps.ir.ranksys.nn.user.neighborhood.UserNeighborhood;
+import es.uam.eps.ir.ranksys.nn.user.neighborhood.UserNeighborhoods;
+import es.uam.eps.ir.ranksys.nn.user.sim.UserSimilarities;
 import es.uam.eps.ir.ranksys.nn.user.sim.UserSimilarity;
-import es.uam.eps.ir.ranksys.nn.user.sim.VectorCosineUserSimilarity;
 import es.uam.eps.ir.ranksys.rec.Recommender;
 import es.uam.eps.ir.ranksys.rec.fast.basic.PopularityRecommender;
 import es.uam.eps.ir.ranksys.rec.fast.basic.RandomRecommender;
 import es.uam.eps.ir.ranksys.rec.runner.RecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilterRecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilters;
+import org.jooq.lambda.Unchecked;
+import org.ranksys.formats.index.ItemsReader;
+import org.ranksys.formats.index.UsersReader;
+import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
+import org.ranksys.formats.rec.RecommendationFormat;
+import org.ranksys.formats.rec.SimpleRecommendationFormat;
+import org.ranksys.lda.LDAModelEstimator;
+import org.ranksys.lda.LDARecommender;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,14 +54,8 @@ import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import org.jooq.lambda.Unchecked;
-import org.ranksys.lda.LDAModelEstimator;
-import org.ranksys.lda.LDARecommender;
-import org.ranksys.formats.index.ItemsReader;
-import org.ranksys.formats.index.UsersReader;
-import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
-import org.ranksys.formats.rec.RecommendationFormat;
-import org.ranksys.formats.rec.SimpleRecommendationFormat;
+
+import static org.ranksys.formats.parsing.Parsers.lp;
 
 /**
  * Example main of recommendations.
@@ -96,8 +97,8 @@ public class RecommenderExample {
             int k = 100;
             int q = 1;
 
-            UserSimilarity<Long> sim = new VectorCosineUserSimilarity<>(trainData, alpha, true);
-            UserNeighborhood<Long> neighborhood = new TopKUserNeighborhood<>(sim, k);
+            UserSimilarity<Long> sim = UserSimilarities.vectorCosine(trainData, alpha, true);
+            UserNeighborhood<Long> neighborhood = UserNeighborhoods.topK(sim, k);
 
             return new UserNeighborhoodRecommender<>(trainData, neighborhood, q);
         });
@@ -108,9 +109,8 @@ public class RecommenderExample {
             int k = 10;
             int q = 1;
 
-            ItemSimilarity<Long> sim = new VectorCosineItemSimilarity<>(trainData, alpha, true);
-            ItemNeighborhood<Long> neighborhood = new TopKItemNeighborhood<>(sim, k);
-            neighborhood = new CachedItemNeighborhood<>(neighborhood);
+            ItemSimilarity<Long> sim = ItemSimilarities.vectorCosine(trainData, alpha, true);
+            ItemNeighborhood<Long> neighborhood = ItemNeighborhoods.cached(ItemNeighborhoods.topK(sim, k));
 
             return new ItemNeighborhoodRecommender<>(trainData, neighborhood, q);
         });
@@ -175,7 +175,9 @@ public class RecommenderExample {
 
         recMap.forEach(Unchecked.biConsumer((name, recommender) -> {
             System.out.println("Running " + name);
-            runner.run(recommender.get(), format.getWriter(name));
+            try (RecommendationFormat.Writer<Long, Long> writer = format.getWriter(name)) {
+                runner.run(recommender.get(), writer);
+            }
         }));
     }
 }

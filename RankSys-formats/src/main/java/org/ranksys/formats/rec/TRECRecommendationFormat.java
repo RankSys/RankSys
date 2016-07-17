@@ -17,6 +17,10 @@ import static org.ranksys.formats.parsing.Parsers.pdp;
 public class TRECRecommendationFormat<U, I> extends TuplesRecommendationFormat<U, I> {
 
     public TRECRecommendationFormat(Parser<U> uParser, Parser<I> iParser) {
+        this(uParser, iParser, false);
+    }
+
+    public TRECRecommendationFormat(Parser<U> uParser, Parser<I> iParser, boolean sortByDecreasingScore) {
         super(
                 (u, i, v, r) -> {
                     return String.join("\t", u.toString(), "Q0", i.toString(), Long.toString(r + 1), Double.toString(v), "r");
@@ -28,7 +32,8 @@ public class TRECRecommendationFormat<U, I> extends TuplesRecommendationFormat<U
                     double v = pdp.applyAsDouble(tokens[4]);
 
                     return tuple(u, i, v);
-                }
+                },
+                sortByDecreasingScore
         );
     }
 }
