@@ -14,12 +14,16 @@ import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntIterator;
+import java.util.function.BiConsumer;
+import java.util.function.IntFunction;
 import org.ranksys.core.util.tuples.Tuple2id;
 
 import java.util.function.IntToDoubleFunction;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static java.util.stream.IntStream.range;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
+import org.ranksys.fast.utils.map.Int2DoubleDirectMap;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
@@ -32,57 +36,48 @@ public abstract class VectorSimilarity implements Similarity {
     /**
      * User-item preferences.
      */
-    protected final FastPreferenceData<?, ?> data;
+    protected final FastPreferenceData<?, ?> preferences;
 
-    /**
-     * If true, dense vectors are used to calculate similarities.
-     */
-    protected final boolean dense;
-
-    /**
-     * Cached normalization for when dense is false.
-     */
-    protected final Int2DoubleMap norm2Map;
-
-    /**
-     * Cached normalization for when dense is true.
-     */
-    protected final double[] norm2Array;
+    protected final Supplier<? extends Int2DoubleMap> mapSupplier;
+    protected final BiConsumer<Int2DoubleMap, Tuple2id> mapAdder;
+    protected final IntFunction<Int2DoubleMap> intersection;
+    protected final Int2DoubleMap norm;
 
     /**
      * Constructor. Uses maps for internal calculation.
      *
-     * @param data  preference data
+     * @param preferences preference data
      * @param dense true for array-based calculations, false to map-based
      */
-    public VectorSimilarity(FastPreferenceData<?, ?> data, boolean dense) {
-        this.data = data;
-        this.dense = dense;
+    public VectorSimilarity(FastPreferenceData<?, ?> preferences, boolean dense) {
+        this.preferences = preferences;
+
         if (dense) {
-            this.norm2Map = null;
-            this.norm2Array = new double[data.numUsers()];
-            data.getUidxWithPreferences().forEach(idx -> norm2Array[idx] = getNorm2(idx));
+            this.mapSupplier = () -> new Int2DoubleDirectMap();
+            this.mapAdder = (m, t) -> ((Int2DoubleDirectMap) m).addTo(t.v1, t.v2);
+            this.norm = new Int2DoubleDirectMap();
         } else {
-            this.norm2Map = new Int2DoubleOpenHashMap();
-            this.norm2Array = null;
-            norm2Map.defaultReturnValue(0.0);
-            data.getUidxWithPreferences().forEach(idx -> norm2Map.put(idx, getNorm2(idx)));
+            this.mapSupplier = () -> new Int2DoubleOpenHashMap();
+            this.mapAdder = (m, t) -> ((Int2DoubleOpenHashMap) m).addTo(t.v1, t.v2);
+            this.norm = new Int2DoubleOpenHashMap();
         }
+
+        preferences.getUidxWithPreferences().forEach(idx -> norm.put(idx, getNorm2(idx)));
     }
 
     @Override
     public IntToDoubleFunction similarity(int idx1) {
         Int2DoubleOpenHashMap map = new Int2DoubleOpenHashMap();
-        data.getUidxPreferences(idx1).forEach(iv -> map.put(iv.v1, iv.v2));
+        preferences.getUidxPreferences(idx1).forEach(iv -> map.put(iv.v1, iv.v2));
 
-        double norm2A = norm2Map.get(idx1);
+        double norm2A = norm.get(idx1);
 
         return idx2 -> {
-            double product = data.getUidxPreferences(idx2)
+            double product = preferences.getUidxPreferences(idx2)
                     .mapToDouble(iv -> iv.v2 * map.get(iv.v1))
                     .sum();
 
-            return sim(product, norm2A, norm2Map.get(idx2));
+            return sim(product, norm2A, norm.get(idx2));
         };
     }
 
@@ -90,21 +85,21 @@ public abstract class VectorSimilarity implements Similarity {
         Int2DoubleOpenHashMap productMap = new Int2DoubleOpenHashMap();
         productMap.defaultReturnValue(0.0);
 
-        if (data.useIteratorsPreferentially()) {
-            IntIterator iidxs = data.getUidxIidxs(uidx);
-            DoubleIterator ivs = data.getUidxVs(uidx);
+        if (preferences.useIteratorsPreferentially()) {
+            IntIterator iidxs = preferences.getUidxIidxs(uidx);
+            DoubleIterator ivs = preferences.getUidxVs(uidx);
             while (iidxs.hasNext()) {
                 int iidx = iidxs.nextInt();
                 double iv = ivs.nextDouble();
-                IntIterator vidxs = data.getIidxUidxs(iidx);
-                DoubleIterator vvs = data.getIidxVs(iidx);
+                IntIterator vidxs = preferences.getIidxUidxs(iidx);
+                DoubleIterator vvs = preferences.getIidxVs(iidx);
                 while (vidxs.hasNext()) {
                     productMap.addTo(vidxs.nextInt(), iv * vvs.nextDouble());
                 }
             }
         } else {
-            data.getUidxPreferences(uidx).forEach(ip -> {
-                data.getIidxPreferences(ip.v1).forEach(up -> {
+            preferences.getUidxPreferences(uidx).forEach(ip -> {
+                preferences.getIidxPreferences(ip.v1).forEach(up -> {
                     productMap.addTo(up.v1, ip.v2 * up.v2);
                 });
             });
@@ -115,37 +110,9 @@ public abstract class VectorSimilarity implements Similarity {
         return productMap;
     }
 
-    private double[] getProductArray(int uidx) {
-        double[] productArray = new double[data.numUsers()];
-
-        if (data.useIteratorsPreferentially()) {
-            IntIterator iidxs = data.getUidxIidxs(uidx);
-            DoubleIterator ivs = data.getUidxVs(uidx);
-            while (iidxs.hasNext()) {
-                int iidx = iidxs.nextInt();
-                double iv = ivs.nextDouble();
-                IntIterator vidxs = data.getIidxUidxs(iidx);
-                DoubleIterator vvs = data.getIidxVs(iidx);
-                while (vidxs.hasNext()) {
-                    productArray[vidxs.nextInt()] += iv * vvs.nextDouble();
-                }
-            }
-        } else {
-            data.getUidxPreferences(uidx).forEach(ip -> {
-                data.getIidxPreferences(ip.v1).forEach(up -> {
-                    productArray[up.v1] += ip.v2 * up.v2;
-                });
-            });
-        }
-
-        productArray[uidx] = 0.0;
-
-        return productArray;
-    }
-
     private double getNorm2(int uidx) {
-        if (data.useIteratorsPreferentially()) {
-            DoubleIterator ivs = data.getUidxVs(uidx);
+        if (preferences.useIteratorsPreferentially()) {
+            DoubleIterator ivs = preferences.getUidxVs(uidx);
             double sum = 0;
             while (ivs.hasNext()) {
                 double iv = ivs.nextDouble();
@@ -153,7 +120,7 @@ public abstract class VectorSimilarity implements Similarity {
             }
             return sum;
         } else {
-            return data.getUidxPreferences(uidx)
+            return preferences.getUidxPreferences(uidx)
                     .mapToDouble(IdxPref::v2)
                     .map(x -> x * x)
                     .sum();
@@ -162,32 +129,23 @@ public abstract class VectorSimilarity implements Similarity {
 
     @Override
     public Stream<Tuple2id> similarElems(int idx1) {
-        if (dense) {
-            double norm2A = norm2Array[idx1];
+        double norm2A = norm.get(idx1);
 
-            double[] productArray = getProductArray(idx1);
-            return range(0, productArray.length)
-                    .filter(idx2 -> productArray[idx2] != 0.0)
-                    .mapToObj(idx2 -> tuple(idx2, sim(productArray[idx2], norm2A, norm2Array[idx2])));
-        } else {
-            double norm2A = norm2Map.get(idx1);
-
-            return getProductMap(idx1).int2DoubleEntrySet().stream()
-                    .map(e -> {
-                        int idx2 = e.getIntKey();
-                        double product = e.getDoubleValue();
-                        double norm2B = norm2Map.get(idx2);
-                        return tuple(idx2, sim(product, norm2A, norm2B));
-                    });
-        }
+        return getProductMap(idx1).int2DoubleEntrySet().stream()
+                .map(e -> {
+                    int idx2 = e.getIntKey();
+                    double product = e.getDoubleValue();
+                    double norm2B = norm.get(idx2);
+                    return tuple(idx2, sim(product, norm2A, norm2B));
+                });
     }
 
     /**
      * Calculates the similarity value.
      *
      * @param product value of the inner product of vectors
-     * @param norm2A  square of the norm of the first vector
-     * @param norm2B  square of the norm of the second vector
+     * @param norm2A square of the norm of the first vector
+     * @param norm2B square of the norm of the second vector
      * @return similarity value
      */
     protected abstract double sim(double product, double norm2A, double norm2B);

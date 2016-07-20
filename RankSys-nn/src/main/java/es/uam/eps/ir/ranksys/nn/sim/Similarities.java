@@ -61,7 +61,7 @@ public class Similarities {
                 double logLikelihood = logLikelihoodRatio((long) intersectionSize,
                         (long) (nb - intersectionSize),
                         (long) (na - intersectionSize),
-                        (long) (data.numItems() - na - nb + intersectionSize));
+                        (long) (preferences.numItems() - na - nb + intersectionSize));
                 return 1.0 - 1.0 / (1.0 + logLikelihood);
             }
         };

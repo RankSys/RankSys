@@ -15,10 +15,13 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
+import java.util.function.BiConsumer;
+import java.util.function.IntFunction;
 import java.util.function.IntToDoubleFunction;
-import static java.util.stream.IntStream.range;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2id;
+import org.ranksys.fast.utils.map.Int2IntDirectMap;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
@@ -31,46 +34,57 @@ public abstract class SetSimilarity implements Similarity {
     /**
      * User-item preferences.
      */
-    protected final FastPreferenceData<?, ?> data;
+    protected final FastPreferenceData<?, ?> preferences;
 
-    /**
-     * If true dense vectors are used to calculate similarities.
-     */
-    protected final boolean dense;
+    protected final Supplier<? extends Int2IntMap> mapSupplier;
+    protected final BiConsumer<Int2IntMap, Integer> mapAdder;
+    protected final IntFunction<Int2IntMap> intersection;
 
     /**
      * Constructor.
      *
-     * @param data preference data
+     * @param preferences preference data
      * @param dense true for array-based calculations, false to map-based
      */
-    public SetSimilarity(FastPreferenceData<?, ?> data, boolean dense) {
-        this.data = data;
-        this.dense = dense;
+    public SetSimilarity(FastPreferenceData<?, ?> preferences, boolean dense) {
+        this.preferences = preferences;
+
+        if (dense) {
+            this.mapSupplier = () -> new Int2IntDirectMap();
+            this.mapAdder = (m, uidx) -> ((Int2IntDirectMap) m).addTo(uidx, 1);
+        } else {
+            this.mapSupplier = () -> new Int2IntOpenHashMap();
+            this.mapAdder = (m, uidx) -> ((Int2IntOpenHashMap) m).addTo(uidx, 1);
+        }
+
+        if (preferences.useIteratorsPreferentially()) {
+            this.intersection = uidx -> getIteratorsIntersectionMap(uidx);
+        } else {
+            this.intersection = uidx -> getStreamsIntersectionMap(uidx);
+        }
     }
 
     @Override
     public IntToDoubleFunction similarity(int idx1) {
         IntSet set = new IntOpenHashSet();
-        data.getUidxPreferences(idx1).map(IdxPref::v1).forEach(set::add);
+        preferences.getUidxPreferences(idx1).map(IdxPref::v1).forEach(set::add);
 
         return idx2 -> {
-            int coo = (int) data.getUidxPreferences(idx2)
+            int coo = (int) preferences.getUidxPreferences(idx2)
                     .map(IdxPref::v1)
                     .filter(set::contains)
                     .count();
 
-            return sim(coo, set.size(), data.numItems(idx2));
+            return sim(coo, set.size(), preferences.numItems(idx2));
         };
     }
 
-    private Int2IntMap getIntersectionMap(int idx1) {
-        Int2IntOpenHashMap intersectionMap = new Int2IntOpenHashMap();
-        intersectionMap.defaultReturnValue(0);
+    private Int2IntMap getStreamsIntersectionMap(int idx1) {
+        Int2IntMap intersectionMap = mapSupplier.get();
 
-        data.getUidxPreferences(idx1).forEach(ip -> {
-            data.getIidxPreferences(ip.v1).forEach(up -> {
-                intersectionMap.addTo(up.v1, 1);
+        preferences.getUidxPreferences(idx1).forEach(ip -> {
+            preferences.getIidxPreferences(ip.v1).forEach(up -> {
+                mapAdder.accept(intersectionMap, up.v1);
             });
         });
 
@@ -79,29 +93,14 @@ public abstract class SetSimilarity implements Similarity {
         return intersectionMap;
     }
 
-    private int[] getIntersectionArray(int idx1) {
-        int[] intersectionMap = new int[data.numUsers()];
+    private Int2IntMap getIteratorsIntersectionMap(int uidx) {
+        Int2IntMap intersectionMap = mapSupplier.get();
 
-        data.getUidxPreferences(idx1).forEach(ip -> {
-            data.getIidxPreferences(ip.v1).forEach(up -> {
-                intersectionMap[up.v1]++;
-            });
-        });
-
-        intersectionMap[idx1] = 0;
-
-        return intersectionMap;
-    }
-
-    private Int2IntMap getFasterIntersectionMap(int uidx) {
-        Int2IntOpenHashMap intersectionMap = new Int2IntOpenHashMap();
-        intersectionMap.defaultReturnValue(0);
-
-        IntIterator iidxs = data.getUidxIidxs(uidx);
+        IntIterator iidxs = preferences.getUidxIidxs(uidx);
         while (iidxs.hasNext()) {
-            IntIterator vidxs = data.getIidxUidxs(iidxs.nextInt());
+            IntIterator vidxs = preferences.getIidxUidxs(iidxs.nextInt());
             while (vidxs.hasNext()) {
-                intersectionMap.addTo(vidxs.nextInt(), 1);
+                mapAdder.accept(intersectionMap, vidxs.nextInt());
             }
         }
 
@@ -110,57 +109,17 @@ public abstract class SetSimilarity implements Similarity {
         return intersectionMap;
     }
 
-    private int[] getFasterIntersectionArray(int uidx) {
-        int[] intersectionMap = new int[data.numUsers()];
-
-        IntIterator iidxs = data.getUidxIidxs(uidx);
-        while (iidxs.hasNext()) {
-            IntIterator vidxs = data.getIidxUidxs(iidxs.nextInt());
-            while (vidxs.hasNext()) {
-                intersectionMap[vidxs.nextInt()]++;
-            }
-        }
-
-        intersectionMap[uidx] = 0;
-
-        return intersectionMap;
-    }
-
     @Override
     public Stream<Tuple2id> similarElems(int idx1) {
-        int na = data.numItems(idx1);
+        int na = preferences.numItems(idx1);
 
-        if (data.useIteratorsPreferentially()) {
-            if (dense) {
-                int[] intersectionMap = getFasterIntersectionArray(idx1);
-                return range(0, intersectionMap.length)
-                        .filter(i -> intersectionMap[i] != 0)
-                        .mapToObj(i -> tuple(i, sim(intersectionMap[i], na, data.numItems(i))));
-            } else {
-                return getFasterIntersectionMap(idx1).int2IntEntrySet().stream()
-                        .map(e -> {
-                            int idx2 = e.getIntKey();
-                            int coo = e.getIntValue();
-                            int nb = data.numItems(idx2);
-                            return tuple(idx2, sim(coo, na, nb));
-                        });
-            }
-        } else {
-            if (dense) {
-                int[] intersectionMap = getIntersectionArray(idx1);
-                return range(0, intersectionMap.length)
-                        .filter(i -> intersectionMap[i] != 0)
-                        .mapToObj(i -> tuple(i, sim(intersectionMap[i], na, data.numItems(i))));
-            } else {
-                return getIntersectionMap(idx1).int2IntEntrySet().stream()
-                        .map(e -> {
-                            int idx2 = e.getIntKey();
-                            int coo = e.getIntValue();
-                            int nb = data.numItems(idx2);
-                            return tuple(idx2, sim(coo, na, nb));
-                        });
-            }
-        }
+        return intersection.apply(idx1).int2IntEntrySet().stream()
+                .map(e -> {
+                    int idx2 = e.getIntKey();
+                    int coo = e.getIntValue();
+                    int nb = preferences.numItems(idx2);
+                    return tuple(idx2, sim(coo, na, nb));
+                });
     }
 
     /**
