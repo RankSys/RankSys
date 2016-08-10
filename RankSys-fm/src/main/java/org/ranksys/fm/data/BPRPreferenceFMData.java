@@ -10,7 +10,6 @@ package org.ranksys.fm.data;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntArrays;
 import java.util.Random;
 import java.util.function.IntPredicate;
 import org.ranksys.fast.preference.FastPointWisePreferenceData;

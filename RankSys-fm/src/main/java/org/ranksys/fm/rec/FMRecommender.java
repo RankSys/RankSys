@@ -31,7 +31,7 @@ public class FMRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     private final PreferenceFM fm;
 
-    public FMRecommender(PreferenceFM fm, FastUserIndex<U> users, FastItemIndex<I> items) {
+    public FMRecommender(PreferenceFM<U, I> fm, FastUserIndex<U> users, FastItemIndex<I> items) {
         super(users, items);
         this.fm = fm;
     }
