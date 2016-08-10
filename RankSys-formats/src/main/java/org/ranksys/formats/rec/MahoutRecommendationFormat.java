@@ -6,23 +6,18 @@
 package org.ranksys.formats.rec;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-import java.util.stream.Stream;
 import org.jooq.lambda.Unchecked;
 import org.ranksys.core.util.tuples.Tuple2od;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 import org.ranksys.formats.parsing.Parser;
+
+import java.io.*;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 import static org.ranksys.formats.parsing.Parsers.pdp;
 
 /**
@@ -64,7 +59,7 @@ public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U,
         }
 
         @Override
-        public void write(Recommendation<U, I> recommendation) throws IOException {
+        public synchronized void write(Recommendation<U, I> recommendation) throws IOException {
             writer.write(recommendation.getUser() + "\t");
             writer.write(recommendation.getItems().stream()
                     .map(is -> is.v1 + ":" + is.v2)

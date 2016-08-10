@@ -1,28 +1,25 @@
 package org.ranksys.formats.rec;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import static java.util.Spliterator.ORDERED;
-import java.util.function.BiPredicate;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-import java.util.function.Function;
-import org.jooq.lambda.tuple.Tuple3;
-import static java.util.stream.Collectors.toList;
-import org.ranksys.core.util.tuples.Tuple2od;
-import static java.util.Spliterators.spliteratorUnknownSize;
-import static org.jooq.lambda.Seq.seq;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.function.Function4;
+import org.jooq.lambda.tuple.Tuple3;
+import org.ranksys.core.util.tuples.Tuple2od;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import static java.util.Spliterator.ORDERED;
+import static java.util.Spliterators.spliteratorUnknownSize;
+import static java.util.stream.Collectors.toList;
+import static org.jooq.lambda.Seq.seq;
 
 /**
  *
@@ -32,10 +29,16 @@ public class TuplesRecommendationFormat<U, I> implements RecommendationFormat<U,
 
     private final Function4<U, I, Double, Long, String> tupleWriter;
     private final Function<String, Tuple3<U, I, Double>> tupleReader;
+    private final boolean sortByDecreasingScore;
 
     public TuplesRecommendationFormat(Function4<U, I, Double, Long, String> tupleWriter, Function<String, Tuple3<U, I, Double>> tupleReader) {
+        this(tupleWriter, tupleReader, false);
+    }
+
+    public TuplesRecommendationFormat(Function4<U, I, Double, Long, String> tupleWriter, Function<String, Tuple3<U, I, Double>> tupleReader, boolean sortByDecreasingScore) {
         this.tupleWriter = tupleWriter;
         this.tupleReader = tupleReader;
+        this.sortByDecreasingScore = sortByDecreasingScore;
     }
 
     @Override
@@ -52,7 +55,7 @@ public class TuplesRecommendationFormat<U, I> implements RecommendationFormat<U,
         }
 
         @Override
-        public void write(Recommendation<U, I> recommendation) throws IOException {
+        public synchronized void write(Recommendation<U, I> recommendation) throws IOException {
             U u = recommendation.getUser();
             seq(recommendation.getItems())
                     .zipWithIndex()
@@ -95,6 +98,11 @@ public class TuplesRecommendationFormat<U, I> implements RecommendationFormat<U,
                                 .map(Tuple3::skip1)
                                 .map(Tuple2od::new)
                                 .collect(toList());
+
+                        if (sortByDecreasingScore) {
+                            items.sort(Comparator.comparingDouble((Tuple2od<I> r) -> r.v2)
+                                    .reversed());
+                        }
 
                         return new Recommendation<>(user, items);
                     });

@@ -26,16 +26,6 @@ import org.ranksys.core.util.tuples.Tuple2io;
  */
 public interface FastPreferenceSampler<U, I> extends PreferenceSampler<U, I>, FastUserIndex<U>, FastItemIndex<I> {
 
-    @Override
-    public default Stream<Tuple2<U, ? extends IdPref<I>>> sample() {
-        return fastSample().map(pref -> {
-            U u = uidx2user(pref.v1);
-            I i = iidx2item(pref.v2.v1);
-            double v = pref.v2.v2;
-            return Tuple.tuple(u, new IdPref<>(i, v));
-        });
-    }
-
     /**
      * Get a stream of randomly sample user-item fast preferences.
      *
