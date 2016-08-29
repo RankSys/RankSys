@@ -36,10 +36,23 @@ public class OneClassPreferenceFMData implements FMData {
     private final IntArrayList iidxs;
     private final double negativeProp;
 
+    /**
+     * Constructor.
+     *
+     * @param prefs preference data
+     * @param negativeProp proportion of negative instances wrt positive preferences by user
+     */
     public OneClassPreferenceFMData(FastPreferenceData<?, ?> prefs, double negativeProp) {
         this(prefs, negativeProp, new Random());
     }
     
+    /**
+     * Constructor.
+     *
+     * @param prefs preference data
+     * @param negativeProp proportion of negative instances wrt positive preferences by user
+     * @param rnd random number generator
+     */
     public OneClassPreferenceFMData(FastPreferenceData<?, ?> prefs, double negativeProp, Random rnd) {
         this.prefs = prefs;
         this.negativeProp = negativeProp;

@@ -32,10 +32,21 @@ public class BPRPreferenceFMData implements FMData {
     private final IntArrayList uidxs;
     private final IntArrayList iidxs;
 
+    /**
+     * Constructor.
+     *
+     * @param prefs preference data
+     */
     public BPRPreferenceFMData(FastPreferenceData<?, ?> prefs) {
         this(prefs, new Random());
     }
 
+    /**
+     * Constructor.
+     *
+     * @param prefs preference data
+     * @param rnd random number generator
+     */
     public BPRPreferenceFMData(FastPreferenceData<?, ?> prefs, Random rnd) {
         this.prefs = prefs;
         this.rnd = rnd;

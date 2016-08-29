@@ -195,7 +195,7 @@ public class RecommenderExample {
 
             PreferenceFM<Long, Long> prefFm = new PreferenceFM<>(userIndex, itemIndex, fm);
 
-            return new FMRecommender<Long, Long>(prefFm, userIndex, itemIndex);
+            return new FMRecommender<Long, Long>(prefFm);
         }));
 
         // Factorisation machine usinga RMSE-like loss with balanced sampling of negative
@@ -221,7 +221,7 @@ public class RecommenderExample {
 
             PreferenceFM<Long, Long> prefFm = new PreferenceFM<>(userIndex, itemIndex, fm);
 
-            return new FMRecommender<Long, Long>(prefFm, userIndex, itemIndex);
+            return new FMRecommender<Long, Long>(prefFm);
         }));
 
         ////////////////////////////////

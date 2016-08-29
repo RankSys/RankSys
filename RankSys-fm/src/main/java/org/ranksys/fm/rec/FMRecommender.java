@@ -8,8 +8,6 @@
 package org.ranksys.fm.rec;
 
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
@@ -27,13 +25,20 @@ import org.ranksys.fm.PreferenceFM;
  * A recommender using a factorisation machine.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
+ * @param <U> user type
+ * @param <I> item type
  */
 public class FMRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
     private final PreferenceFM fm;
 
-    public FMRecommender(PreferenceFM<U, I> fm, FastUserIndex<U> users, FastItemIndex<I> items) {
-        super(users, items);
+    /**
+     * Constructor.
+     *
+     * @param fm factorisation machine
+     */
+    public FMRecommender(PreferenceFM<U, I> fm) {
+        super(fm, fm);
         this.fm = fm;
     }
 

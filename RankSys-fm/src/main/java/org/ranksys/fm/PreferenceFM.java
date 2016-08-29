@@ -20,6 +20,8 @@ import org.ranksys.javafm.FMInstance;
  * Wraps a factorisation machine to work with RankSys user-preference pairs.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
+ * @param <U> type of users
+ * @param <I> type of items
  */
 public class PreferenceFM<U, I> implements FastUserIndex<U>, FastItemIndex<I> {
 
@@ -30,10 +32,25 @@ public class PreferenceFM<U, I> implements FastUserIndex<U>, FastItemIndex<I> {
     private final FM fm;
     private final Function<IdPref<I>, IdxPref> uPrefFun;
 
+    /**
+     * Constructor with default converter to IdxPref.
+     *
+     * @param users user index
+     * @param items item index
+     * @param fm factorisation machine
+     */
     public PreferenceFM(FastUserIndex<U> users, FastItemIndex<I> items, FM fm) {
         this(users, items, fm, p -> new IdxPref(items.item2iidx(p)));
     }
 
+    /**
+     * Constructor with custom default converter to IdxPref.
+     *
+     * @param users user index
+     * @param items item index
+     * @param fm factorisation machine
+     * @param uPrefFun converter to IdxPref
+     */
     public PreferenceFM(FastUserIndex<U> users, FastItemIndex<I> items, FM fm, Function<IdPref<I>, IdxPref> uPrefFun) {
         this.ui = users;
         this.ii = items;
@@ -41,14 +58,33 @@ public class PreferenceFM<U, I> implements FastUserIndex<U>, FastItemIndex<I> {
         this.uPrefFun = uPrefFun;
     }
 
+    /**
+     * Returns the enclosed factorisation machine.
+     *
+     * @return factorisation machine
+     */
     public FM getFM() {
         return fm;
     }
 
+    /**
+     * Predicts the preference by a user to an item preference.
+     *
+     * @param u user
+     * @param pref preference
+     * @return predicted score
+     */
     public double predict(U u, IdPref<I> pref) {
         return predict(user2uidx(u), uPrefFun.apply(pref));
     }
 
+    /**
+     * Predicts the preference by a user to an item preference (fast version).
+     *
+     * @param uidx user
+     * @param pref preference
+     * @return predicted score
+     */
     public double predict(int uidx, IdxPref pref) {
         return fm.predict(new FMInstance(pref.v2, new int[]{uidx, pref.v1 + numUsers()}, UI_VALUES));
     }
