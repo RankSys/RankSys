@@ -11,6 +11,7 @@ import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import org.ranksys.javafm.FM;
 import org.ranksys.javafm.FMInstance;
@@ -21,14 +22,22 @@ import org.ranksys.javafm.FMInstance;
  */
 public class PreferenceFM<U, I> implements FastUserIndex<U>, FastItemIndex<I> {
 
+    private static final double[] UI_VALUES = {1.0, 1.0};
+
     private final FastUserIndex<U> ui;
     private final FastItemIndex<I> ii;
     private final FM fm;
+    private final Function<IdPref<I>, IdxPref> uPrefFun;
 
     public PreferenceFM(FastUserIndex<U> users, FastItemIndex<I> items, FM fm) {
+        this(users, items, fm, p -> new IdxPref(items.item2iidx(p)));
+    }
+
+    public PreferenceFM(FastUserIndex<U> users, FastItemIndex<I> items, FM fm, Function<IdPref<I>, IdxPref> uPrefFun) {
         this.ui = users;
         this.ii = items;
         this.fm = fm;
+        this.uPrefFun = uPrefFun;
     }
 
     public FM getFM() {
@@ -36,14 +45,11 @@ public class PreferenceFM<U, I> implements FastUserIndex<U>, FastItemIndex<I> {
     }
 
     public double predict(U u, IdPref<I> pref) {
-        return predict(user2uidx(u), new IdxPref(item2iidx(pref.v1), pref.v2));
+        return predict(user2uidx(u), uPrefFun.apply(pref));
     }
 
     public double predict(int uidx, IdxPref pref) {
-        int[] k = {uidx, pref.v1 + numUsers()};
-        double[] v = {1.0, 1.0};
-
-        return fm.predict(new FMInstance(pref.v2, k, v));
+        return fm.predict(new FMInstance(pref.v2, new int[]{uidx, pref.v1 + numUsers()}, UI_VALUES));
     }
 
     @Override

@@ -12,9 +12,11 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
-import static org.jooq.lambda.Seq.seq;
 import org.ranksys.javafm.FMInstance;
 import org.ranksys.javafm.data.FMData;
 
@@ -22,21 +24,23 @@ import org.ranksys.javafm.data.FMData;
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
-public class BPRPreferenceFMData implements FMData {
+public class OneClassPreferenceFMData implements FMData {
 
-    private static final double[] UIJ_VALUES = {1.0, 2.0, 3.0};
+    private static final double[] UI_VALUES = {1.0, 1.0};
 
     private final FastPreferenceData<?, ?> prefs;
     private final Random rnd;
     private final IntArrayList uidxs;
     private final IntArrayList iidxs;
+    private final double negativeProp;
 
-    public BPRPreferenceFMData(FastPreferenceData<?, ?> prefs) {
-        this(prefs, new Random());
+    public OneClassPreferenceFMData(FastPreferenceData<?, ?> prefs, double negativeProp) {
+        this(prefs, negativeProp, new Random());
     }
-
-    public BPRPreferenceFMData(FastPreferenceData<?, ?> prefs, Random rnd) {
+    
+    public OneClassPreferenceFMData(FastPreferenceData<?, ?> prefs, double negativeProp, Random rnd) {
         this.prefs = prefs;
+        this.negativeProp = negativeProp;
         this.rnd = rnd;
 
         this.uidxs = new IntArrayList();
@@ -61,9 +65,8 @@ public class BPRPreferenceFMData implements FMData {
         IntArrays.shuffle(uidxs.elements(), 0, uidxs.size(), rnd);
     }
 
-    private FMInstance getInstance(int uidx, int iidx, int jidx) {
-        int nu = prefs.numUsers();
-        return new FMInstance(1.0, new int[]{uidx, iidx + nu, jidx + nu}, UIJ_VALUES);
+    private FMInstance getInstance(int uidx, int iidx, double v) {
+        return new FMInstance(v, new int[]{uidx, iidx + prefs.numUsers()}, UI_VALUES);
     }
 
     @Override
@@ -73,12 +76,22 @@ public class BPRPreferenceFMData implements FMData {
                     IntSet uidxIidxs = new IntOpenHashSet();
                     prefs.getUidxIidxs(uidx).forEachRemaining(uidxIidxs::add);
 
-                    return seq(rnd.ints(iidxs.size(), 0, iidxs.size()).map(iidxs::getInt))
+                    List<FMInstance> instances = new ArrayList<>();
+
+                    // adding positive examples
+                    uidxIidxs
+                            .forEach(iidx -> instances.add(getInstance(uidx, iidx, 1.0)));
+
+                    // adding negative examples
+                    rnd.ints(iidxs.size(), 0, iidxs.size()).map(iidxs::getInt)
                             .filter(jidx -> !uidxIidxs.contains(jidx))
-                            .limit(uidxIidxs.size())
-                            .zip(uidxIidxs)
-                            .map(t -> getInstance(uidx, t.v2, t.v1))
-                            .shuffle();
+                            .distinct()
+                            .limit((int) (negativeProp * uidxIidxs.size()))
+                            .forEach(jidx -> instances.add(getInstance(uidx, jidx, 0.0)));
+
+                    Collections.shuffle(instances);
+
+                    return instances.stream();
                 });
     }
 
