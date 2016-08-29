@@ -17,6 +17,7 @@ import org.ranksys.javafm.FM;
 import org.ranksys.javafm.FMInstance;
 
 /**
+ * Wraps a factorisation machine to work with RankSys user-preference pairs.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */

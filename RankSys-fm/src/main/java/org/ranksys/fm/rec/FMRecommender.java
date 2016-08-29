@@ -24,6 +24,7 @@ import static org.ranksys.core.util.tuples.Tuples.tuple;
 import org.ranksys.fm.PreferenceFM;
 
 /**
+ * A recommender using a factorisation machine.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */

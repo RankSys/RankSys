@@ -19,6 +19,7 @@ import org.ranksys.javafm.FMInstance;
 import org.ranksys.javafm.data.FMData;
 
 /**
+ * Samples user preferences for a BPR-like loss minimisation.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */

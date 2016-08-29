@@ -21,6 +21,8 @@ import org.ranksys.javafm.FMInstance;
 import org.ranksys.javafm.data.FMData;
 
 /**
+ * Samples user preferences with a number of negative preferences for one class prediction
+ * for collaborative filtering.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
