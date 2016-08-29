@@ -153,7 +153,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         public Stream<F> getItemIntents(I i) {
             return featureData.getItemFeatures(i)
                     .map(Tuple2::v1)
-                    .filter(getIntents()::contains);
+                    .filter(pfu::containsKey);
         }
 
         /**

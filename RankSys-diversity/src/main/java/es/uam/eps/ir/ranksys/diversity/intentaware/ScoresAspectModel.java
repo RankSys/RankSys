@@ -13,12 +13,9 @@ import org.ranksys.core.util.tuples.Tuple2od;
 import java.util.List;
 
 /**
- * Scores-based aspect model. User intents probabilities are taken from the
- * input intent model, item probabilities are proportional to scores they
- * obtained.
+ * Scores-based aspect model. User intents probabilities are taken from the input intent model, item probabilities are proportional to scores they obtained.
  *
- * S. Vargas, P. Castells and D. Vallet. Intent-oriented diversity in
- * Recommender Systems. SIGIR 2011.
+ * S. Vargas, P. Castells and D. Vallet. Intent-oriented diversity in Recommender Systems. SIGIR 2011.
  *
  * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
  *
@@ -61,14 +58,12 @@ public class ScoresAspectModel<U, I, F> extends AspectModel<U, I, F> {
 
         @Override
         public void initializeWithItems(List<Tuple2od<I>> items) {
-            if (!initialized) {
-                items.forEach(iv -> {
-                    getItemIntents(iv.v1).sequential().forEach(f -> {
-                        probNorm.addTo(f, iv.v2);
-                    });
+            probNorm.clear();
+            items.forEach(iv -> {
+                getItemIntents(iv.v1).sequential().forEach(f -> {
+                    probNorm.addTo(f, iv.v2);
                 });
-                initialized = true;
-            }
+            });
         }
 
         @Override

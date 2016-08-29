@@ -13,11 +13,9 @@ import org.ranksys.core.util.tuples.Tuple2od;
 import java.util.List;
 
 /**
- * Relevance-based aspect model for eXplicit Query Aspect Diversification
- * re-ranker.
+ * Relevance-based aspect model for eXplicit Query Aspect Diversification re-ranker.
  *
- * S. Vargas, P. Castells and D. Vallet. Explicit relevance models in
- * intent-oriented Information Retrieval diversification. SIGIR 2012.
+ * S. Vargas, P. Castells and D. Vallet. Explicit relevance models in intent-oriented Information Retrieval diversification. SIGIR 2012.
  *
  * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
  *
@@ -60,16 +58,14 @@ public class ScoresRelevanceAspectModel<U, I, F> extends AspectModel<U, I, F> {
 
         @Override
         public void initializeWithItems(List<Tuple2od<I>> items) {
-            if (!initialized) {
-                items.forEach(iv -> {
-                    getItemIntents(iv.v1).sequential().forEach(f -> {
-                        if (iv.v2 > probNorm.getOrDefault(f, 0.0)) {
-                            probNorm.put(f, iv.v2);
-                        }
-                    });
+            probNorm.clear();
+            items.forEach(iv -> {
+                getItemIntents(iv.v1).sequential().forEach(f -> {
+                    if (iv.v2 > probNorm.getOrDefault(f, 0.0)) {
+                        probNorm.put(f, iv.v2);
+                    }
                 });
-                initialized = true;
-            }
+            });
         }
 
         @Override

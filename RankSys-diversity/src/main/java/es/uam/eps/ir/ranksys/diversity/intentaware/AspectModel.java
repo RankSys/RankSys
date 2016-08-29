@@ -52,12 +52,7 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
     public abstract class UserAspectModel implements IntentModel.UserIntentModel<U, I, F>,
             ItemAspectModel<U, I, F> {
 
-        private IntentModel.UserIntentModel<U, I, F> uim;
-
-        /**
-         * Indicates if the model has been initialized.
-         */
-        protected boolean initialized = false;
+        private final IntentModel.UserIntentModel<U, I, F> uim;
 
         /**
          * Constructor taking user intent model.
