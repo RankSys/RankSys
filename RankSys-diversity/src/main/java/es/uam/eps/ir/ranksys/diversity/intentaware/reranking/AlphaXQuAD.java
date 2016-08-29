@@ -30,6 +30,9 @@ import org.ranksys.core.util.tuples.Tuple2od;
  */
 public class AlphaXQuAD<U, I, F> extends LambdaReranker<U, I> {
 
+    /**
+     * Aspect model used for diversification.
+     */
     protected final AspectModel<U, I, F> aspectModel;
     private final double alpha;
 

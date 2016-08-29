@@ -7,6 +7,6 @@
  */
 
 /**
- * FM-based recommenders.
+ * Write and read format for factorised models.
  */
-package org.ranksys.fm.rec;
+package org.ranksys.formats.factorization;

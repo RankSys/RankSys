@@ -33,6 +33,13 @@ import java.util.stream.Stream;
  */
 public interface RecommendationFormat<U, I> {
 
+    /**
+     * Gets a writer for a file path.
+     *
+     * @param path file path
+     * @return a recommendation writer
+     * @throws IOException if path does not exist or IO error
+     */
     public default Writer<U, I> getWriter(Path path) throws IOException {
         return getWriter(Files.newOutputStream(path));
     }
@@ -95,6 +102,13 @@ public interface RecommendationFormat<U, I> {
 
     }
 
+    /**
+     * Gets a reader for a file path.
+     *
+     * @param path file path
+     * @return a recommendation reader
+     * @throws IOException when IO error
+     */
     public default Reader<U, I> getReader(Path path) throws IOException {
         return getReader(Files.newInputStream(path));
     }

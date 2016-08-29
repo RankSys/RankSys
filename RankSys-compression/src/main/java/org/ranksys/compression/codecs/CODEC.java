@@ -26,7 +26,7 @@ import java.io.Serializable;
  * 
  * @param <T> type of the output of the compression
  * 
- * @author Saúl Vargas (saul.vargas@glasgow.ac.uk)
+ * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public interface CODEC<T> extends Serializable {
 

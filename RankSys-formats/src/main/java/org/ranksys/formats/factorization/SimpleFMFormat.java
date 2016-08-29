@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.ranksys.formats.factorization;
 
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
@@ -19,11 +26,17 @@ import static java.lang.Integer.parseInt;
 import org.ranksys.fm.PreferenceFM;
 
 /**
+ * Factorisation machine format in zip-compressed, human readable files .
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class SimpleFMFormat implements FMFormat {
 
+    /**
+     * Returns an instance of this class.
+     *
+     * @return an instance of SimpleFMFormat
+     */
     public static SimpleFMFormat get() {
         return new SimpleFMFormat();
     }
@@ -60,7 +73,7 @@ public class SimpleFMFormat implements FMFormat {
     }
 
     @Override
-    public <U, I> PreferenceFM load(InputStream in, FastUserIndex<U> users, FastItemIndex<I> items) throws IOException {
+    public <U, I> PreferenceFM<U, I> load(InputStream in, FastUserIndex<U> users, FastItemIndex<I> items) throws IOException {
         int N;
         int K;
         double b;
@@ -87,7 +100,7 @@ public class SimpleFMFormat implements FMFormat {
             zip.closeEntry();
         }
 
-        return new PreferenceFM(users, items, new FM(b, w, m));
+        return new PreferenceFM<>(users, items, new FM(b, w, m));
     }
 
     private void saveVector(OutputStream out, double[] v) throws IOException {

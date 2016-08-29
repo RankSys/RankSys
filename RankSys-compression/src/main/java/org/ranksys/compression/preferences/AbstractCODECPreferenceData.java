@@ -77,7 +77,7 @@ public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends Iterator
     protected final int[] i_len;
 
     /**
-     * Constructor.
+     * Constructor with default IdxPref to IdPref converters.
      *
      * @param users   user index
      * @param items   item index
@@ -92,6 +92,16 @@ public abstract class AbstractCODECPreferenceData<U, I, Cu, Ci> extends Iterator
                 (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(users.uidx2user(p)));
     }
 
+    /**
+     * Constructor with custom IdxPref to IdPref converters.
+     *
+     * @param users   user index
+     * @param items   item index
+     * @param u_codec user preferences CODEC
+     * @param i_codec item preferences CODEC
+     * @param uPrefFun user IdxPref to IdPref converter
+     * @param iPrefFun item IdxPref to IdPref converter
+     */
     @SuppressWarnings("unchecked")
     protected AbstractCODECPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items,
                                           CODEC<Cu> u_codec, CODEC<Ci> i_codec,

@@ -16,11 +16,10 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * Abstract FastFeatureData, implementing the interfaces of FastUserIndex and
- * FastItemIndex by delegating to implementations of these.
+ * Abstract FastFeatureData, implementing the interfaces of FastUserIndex and FastItemIndex by delegating to implementations of these.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
- * 
+ *
  * @param <U> type of the users
  * @param <I> type of the items
  */
@@ -36,9 +35,22 @@ public abstract class AbstractFastPreferenceData<U, I> implements FastPreference
      */
     protected final FastItemIndex<I> ii;
 
+    /**
+     * Converter from IdxPref to IdPref (preference for item).
+     */
     protected final Function<IdxPref, IdPref<I>> uPrefFun;
+
+    /**
+     * Converter from IdxPref to IdPref (preference from user).
+     */
     protected final Function<IdxPref, IdPref<U>> iPrefFun;
 
+    /**
+     * Constructor.
+     *
+     * @param users user index
+     * @param items item index
+     */
     public AbstractFastPreferenceData(FastUserIndex<U> users, FastItemIndex<I> items) {
         this(users, items,
                 (Function<IdxPref, IdPref<I>> & Serializable) p -> new IdPref<>(items.iidx2item(p)),
@@ -47,10 +59,11 @@ public abstract class AbstractFastPreferenceData<U, I> implements FastPreference
 
     /**
      * Constructor.
-     *  @param userIndex user index
+     *
+     * @param userIndex user index
      * @param itemIndex item index
-     * @param uPrefFun
-     * @param iPrefFun
+     * @param uPrefFun converter from IdxPref to IdPref (preference for item).
+     * @param iPrefFun converter from IdxPref to IdPref (preference from user).
      */
     public AbstractFastPreferenceData(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex, Function<IdxPref, IdPref<I>> uPrefFun, Function<IdxPref, IdPref<U>> iPrefFun) {
         this.ui = userIndex;

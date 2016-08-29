@@ -7,6 +7,6 @@
  */
 
 /**
- * FM-based recommenders.
+ * Write and read format for preferences.
  */
-package org.ranksys.fm.rec;
+package org.ranksys.formats.preference;

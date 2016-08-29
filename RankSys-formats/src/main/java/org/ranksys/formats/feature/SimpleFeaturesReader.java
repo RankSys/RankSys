@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.ranksys.formats.feature;
 
 import java.io.BufferedReader;
@@ -11,11 +18,19 @@ import org.jooq.lambda.tuple.Tuple3;
 import org.ranksys.formats.parsing.Parser;
 
 /**
+ * Reads a file of tab-separated item-feat-value triples, one per line.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class SimpleFeaturesReader implements FeaturesReader {
 
+    /**
+     * Returns and instance of this class.
+     *
+     * @param <I> item type
+     * @param <F> feat type
+     * @return an instance of SimpleFeaturesReader
+     */
     public static <I, F> SimpleFeaturesReader get() {
         return new SimpleFeaturesReader();
     }

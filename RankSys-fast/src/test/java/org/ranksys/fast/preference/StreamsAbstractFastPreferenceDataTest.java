@@ -23,6 +23,9 @@ import org.junit.Test;
  */
 public class StreamsAbstractFastPreferenceDataTest {
 
+    /**
+     * Tests main functionalities of the class.
+     */
     @Test
     public void simpleTest() {
         StreamsAbstractFastPreferenceData<Integer, Integer> preferences = new MockPreferenceDataTest<>();

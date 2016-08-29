@@ -26,6 +26,9 @@ import org.junit.Test;
  */
 public class SimpleFastItemIndexTest {
 
+    /**
+     * Tests main functionalities of the class.
+     */
     @Test
     public void test() {
         Random rnd = new Random();

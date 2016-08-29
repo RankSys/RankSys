@@ -24,6 +24,9 @@ import org.ranksys.core.util.iterators.StreamIntIterator;
  */
 public class IteratorsAbstractFastPreferenceDataTest {
 
+    /**
+     * Tests main functionalities of the class.
+     */
     @Test
     public void simpleTest() {
         IteratorsAbstractFastPreferenceData<Integer, Integer> preferences = new MockPreferenceDataTest<>();
