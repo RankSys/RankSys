@@ -8,6 +8,6 @@
  */
 
 /**
- * Example main programs for recommenders, metrics and rerankers.
+ * Implementation of FMData for recommendation tasks.
  */
-package es.uam.eps.ir.ranksys.examples;
+package org.ranksys.fm.data;

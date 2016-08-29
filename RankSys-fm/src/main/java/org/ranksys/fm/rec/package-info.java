@@ -8,6 +8,6 @@
  */
 
 /**
- * Example main programs for recommenders, metrics and rerankers.
+ * FM-based recommenders.
  */
-package es.uam.eps.ir.ranksys.examples;
+package org.ranksys.fm.rec;

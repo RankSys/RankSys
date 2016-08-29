@@ -8,6 +8,6 @@
  */
 
 /**
- * Example main programs for recommenders, metrics and rerankers.
+ * Wrappers for factorisation machines.
  */
-package es.uam.eps.ir.ranksys.examples;
+package org.ranksys.fm;
