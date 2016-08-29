@@ -79,13 +79,5 @@ public abstract class IntentModel<U, I, F> extends UserModel<U> {
          * @return probability of an intent in the model
          */
         public abstract double pf_u(F f);
-
-        /**
-         * Returns the probability of user given an intent.
-         *
-         * @param f intent
-         * @return probability of user given an intent
-         */
-        public abstract double pu_f(F f);
     }
 }
