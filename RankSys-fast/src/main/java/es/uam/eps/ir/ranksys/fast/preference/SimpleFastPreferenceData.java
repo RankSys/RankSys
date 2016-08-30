@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import java.io.Serializable;
@@ -26,6 +25,7 @@ import java.util.stream.Stream;
 import org.jooq.lambda.function.Function4;
 import org.jooq.lambda.tuple.Tuple3;
 import org.jooq.lambda.tuple.Tuple4;
+import org.ranksys.core.preference.IdPref;
 import org.ranksys.fast.preference.FastPointWisePreferenceData;
 import org.ranksys.fast.preference.StreamsAbstractFastPreferenceData;
 

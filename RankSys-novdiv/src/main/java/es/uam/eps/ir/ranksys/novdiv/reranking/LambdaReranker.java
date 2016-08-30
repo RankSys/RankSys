@@ -8,9 +8,9 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.reranking;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import static es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker.getBasePerm;
-import es.uam.eps.ir.ranksys.core.util.Stats;
+import org.ranksys.core.util.Stats;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;

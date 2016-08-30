@@ -8,6 +8,6 @@
  */
 
 /**
- * Generic utilities.
+ * Classes for user models.
  */
-package es.uam.eps.ir.ranksys.core.util;
+package org.ranksys.core.model;

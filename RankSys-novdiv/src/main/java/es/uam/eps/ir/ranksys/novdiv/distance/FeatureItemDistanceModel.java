@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.distance;
 
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.FeatureData;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple2;

@@ -10,4 +10,4 @@
 /**
  * Bounded min-heaps to keep the top-n values.
  */
-package es.uam.eps.ir.ranksys.core.util.topn;
+package org.ranksys.core.util.topn;

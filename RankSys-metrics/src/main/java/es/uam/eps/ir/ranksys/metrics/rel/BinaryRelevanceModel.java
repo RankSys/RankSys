@@ -8,9 +8,9 @@
  */
 package es.uam.eps.ir.ranksys.metrics.rel;
 
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.ranksys.core.preference.PreferenceData;
 import org.ranksys.core.util.tuples.Tuple2od;
 
 /**

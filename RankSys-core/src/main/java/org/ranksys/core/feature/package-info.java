@@ -8,6 +8,6 @@
  */
 
 /**
- * Classes for user models.
+ * Classes for accessing item-feature data.
  */
-package es.uam.eps.ir.ranksys.core.model;
+package org.ranksys.core.feature;

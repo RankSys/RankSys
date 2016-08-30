@@ -8,11 +8,11 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware
 
-import es.uam.eps.ir.ranksys.core.feature.FeatureData
-import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData
-import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData
-import es.uam.eps.ir.ranksys.core.util.FastStringSplitter
+import org.ranksys.core.feature.FeatureData
+import org.ranksys.core.feature.SimpleFeatureData
+import org.ranksys.core.preference.PreferenceData
+import org.ranksys.core.preference.SimplePreferenceData
+import org.ranksys.core.util.FastStringSplitter
 import org.ranksys.formats.feature.SimpleFeaturesReader
 import static org.ranksys.formats.parsing.Parsers.lp
 import static org.ranksys.formats.parsing.Parsers.sp

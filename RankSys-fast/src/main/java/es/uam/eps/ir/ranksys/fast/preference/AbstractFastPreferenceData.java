@@ -8,12 +8,12 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import java.io.Serializable;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import org.ranksys.core.preference.IdPref;
 
 /**
  * Abstract FastFeatureData, implementing the interfaces of FastUserIndex and FastItemIndex by delegating to implementations of these.

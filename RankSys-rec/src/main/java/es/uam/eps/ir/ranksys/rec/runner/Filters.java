@@ -8,12 +8,12 @@
  */
 package es.uam.eps.ir.ranksys.rec.runner;
 
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.FeatureData;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import org.ranksys.core.preference.PreferenceData;
 import org.ranksys.core.util.tuples.Tuple2od;
 
 /**

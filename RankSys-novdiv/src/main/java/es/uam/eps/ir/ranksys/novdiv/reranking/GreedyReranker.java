@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.reranking;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntList;

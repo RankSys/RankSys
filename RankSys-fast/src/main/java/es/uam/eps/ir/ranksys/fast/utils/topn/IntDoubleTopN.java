@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.fast.utils.topn;
 
-import es.uam.eps.ir.ranksys.core.util.topn.AbstractTopN;
+import org.ranksys.core.util.topn.AbstractTopN;
 import org.ranksys.core.util.tuples.Tuple2id;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 

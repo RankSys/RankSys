@@ -8,10 +8,10 @@
  */
 package es.uam.eps.ir.ranksys.metrics.rel;
 
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import org.ranksys.core.preference.PreferenceData;
 
 /**
  * Background discount model: assumes the relevance of unseen items in a test

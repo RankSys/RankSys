@@ -7,10 +7,8 @@
  */
 package es.uam.eps.ir.ranksys.diversity.binom;
 
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
-import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
+import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.SimpleFeatureData;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import java.util.stream.Stream;
@@ -18,6 +16,8 @@ import static org.jooq.lambda.tuple.Tuple.tuple;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import org.ranksys.core.preference.PreferenceData;
+import org.ranksys.core.preference.SimplePreferenceData;
 
 /**
  * Unit test for BinomialModel.

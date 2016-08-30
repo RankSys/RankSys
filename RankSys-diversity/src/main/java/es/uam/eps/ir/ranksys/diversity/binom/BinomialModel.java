@@ -8,15 +8,15 @@
  */
 package es.uam.eps.ir.ranksys.diversity.binom;
 
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import es.uam.eps.ir.ranksys.core.model.UserModel;
+import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.model.UserModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.apache.commons.math3.distribution.BinomialDistribution;
 import org.jooq.lambda.tuple.Tuple2;
+import org.ranksys.core.preference.PreferenceData;
 
 /**
  * Binomial genre diversity model.

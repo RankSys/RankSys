@@ -6,10 +6,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.core.preference;
+package org.ranksys.core.preference;
 
-import es.uam.eps.ir.ranksys.core.index.ItemIndex;
-import es.uam.eps.ir.ranksys.core.index.UserIndex;
+import org.ranksys.core.index.ItemIndex;
+import org.ranksys.core.index.UserIndex;
 import java.util.stream.Stream;
 
 /**

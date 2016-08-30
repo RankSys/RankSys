@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.reranking;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import java.util.ArrayList;
 import java.util.List;
 import org.ranksys.core.util.tuples.Tuple2od;

@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.metrics;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 
 /**
  * System metric: a metric that evaluates recommendations to a community of

@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.distance.metrics;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;

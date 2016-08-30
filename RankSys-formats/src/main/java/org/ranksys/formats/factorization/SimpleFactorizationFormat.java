@@ -23,7 +23,7 @@ import static java.lang.Double.parseDouble;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import static org.ranksys.core.util.FastStringSplitter.split;
 import static java.lang.Integer.parseInt;
 
 /**

@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.reranking;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 
 /**
  * Re-ranker. Changes the position of items in a recommendation list to

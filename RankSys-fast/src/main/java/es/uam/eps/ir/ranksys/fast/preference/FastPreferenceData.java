@@ -10,11 +10,11 @@ package es.uam.eps.ir.ranksys.fast.preference;
 
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.ranksys.core.preference.PreferenceData;
 
 /**
  * Fast version of PreferenceData, where preferences for users and items are

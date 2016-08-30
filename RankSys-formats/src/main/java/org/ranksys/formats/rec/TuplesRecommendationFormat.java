@@ -7,7 +7,7 @@
  */
 package org.ranksys.formats.rec;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.function.Function4;
 import org.jooq.lambda.tuple.Tuple3;

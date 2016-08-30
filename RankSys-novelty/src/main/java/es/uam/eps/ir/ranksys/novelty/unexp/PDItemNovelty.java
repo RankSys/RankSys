@@ -9,9 +9,9 @@
 package es.uam.eps.ir.ranksys.novelty.unexp;
 
 import es.uam.eps.ir.ranksys.novdiv.itemnovelty.ItemNovelty;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import java.util.function.ToDoubleFunction;
+import org.ranksys.core.preference.PreferenceData;
 import org.ranksys.core.util.tuples.Tuple2od;
 
 /**

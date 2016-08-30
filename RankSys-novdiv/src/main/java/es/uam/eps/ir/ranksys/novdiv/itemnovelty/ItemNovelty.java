@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.itemnovelty;
 
-import es.uam.eps.ir.ranksys.core.model.UserModel;
+import org.ranksys.core.model.UserModel;
 import java.util.stream.Stream;
 
 /**

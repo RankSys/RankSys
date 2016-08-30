@@ -7,8 +7,6 @@
  */
 package org.ranksys.core.preference;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import java.util.Optional;
 
 /**

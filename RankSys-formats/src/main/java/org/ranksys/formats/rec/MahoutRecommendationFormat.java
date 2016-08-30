@@ -7,7 +7,7 @@
  */
 package org.ranksys.formats.rec;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import org.jooq.lambda.Unchecked;
 import org.ranksys.core.util.tuples.Tuple2od;
 import org.ranksys.formats.parsing.Parser;
@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import static org.ranksys.core.util.FastStringSplitter.split;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.ranksys.core.util.tuples.Tuples.tuple;

@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.metrics;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 
 /**
  * Recommendation metric: assigns a score for each recommendation list.

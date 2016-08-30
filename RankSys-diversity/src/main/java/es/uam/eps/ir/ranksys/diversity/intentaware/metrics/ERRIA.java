@@ -8,9 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware.metrics;
 
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
-import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
+import org.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel.UserIntentModel;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
@@ -19,6 +17,8 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.DoubleAdder;
+import org.ranksys.core.preference.IdPref;
+import org.ranksys.core.preference.PreferenceData;
 
 /**
  * Intent-Aware Expected Reciprocal Rank metric.

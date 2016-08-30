@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.fast.index;
 
-import es.uam.eps.ir.ranksys.core.index.ItemIndex;
+import org.ranksys.core.index.ItemIndex;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple;

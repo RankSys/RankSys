@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.rec;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 

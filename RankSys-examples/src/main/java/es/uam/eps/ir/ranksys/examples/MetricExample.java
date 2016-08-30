@@ -8,11 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.examples;
 
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
-import es.uam.eps.ir.ranksys.core.preference.ConcatPreferenceData;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
-import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
+import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.SimpleFeatureData;
 import es.uam.eps.ir.ranksys.diversity.distance.metrics.EILD;
 import es.uam.eps.ir.ranksys.diversity.intentaware.FeatureIntentModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
@@ -41,6 +38,9 @@ import es.uam.eps.ir.ranksys.novelty.unexp.metrics.EPD;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.ranksys.core.preference.ConcatPreferenceData;
+import org.ranksys.core.preference.PreferenceData;
+import org.ranksys.core.preference.SimplePreferenceData;
 
 import static org.ranksys.formats.parsing.Parsers.*;
 import org.ranksys.formats.feature.SimpleFeaturesReader;

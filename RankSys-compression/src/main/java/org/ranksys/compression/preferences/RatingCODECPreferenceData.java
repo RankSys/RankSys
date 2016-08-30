@@ -7,7 +7,6 @@
  */
 package org.ranksys.compression.preferences;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
@@ -20,6 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import org.ranksys.compression.codecs.CODEC;
 import static org.ranksys.compression.util.Delta.delta;
+import org.ranksys.core.preference.IdPref;
 import org.ranksys.core.util.iterators.ArrayDoubleIterator;
 import org.ranksys.core.util.tuples.Tuple2io;
 import static org.ranksys.core.util.tuples.Tuples.tuple;

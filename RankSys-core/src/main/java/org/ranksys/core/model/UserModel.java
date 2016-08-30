@@ -6,9 +6,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.core.model;
+package org.ranksys.core.model;
 
-import es.uam.eps.ir.ranksys.core.util.Lazy;
+import org.ranksys.core.util.Lazy;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

@@ -7,14 +7,11 @@
  */
 package org.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import org.ranksys.core.preference.PreferenceSampler;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import java.util.stream.Stream;
-import org.jooq.lambda.tuple.Tuple;
-import org.jooq.lambda.tuple.Tuple2;
 import org.ranksys.core.util.tuples.Tuple2io;
 
 /**

@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.novdiv.distance;
 
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.FeatureData;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.concurrent.atomic.DoubleAdder;

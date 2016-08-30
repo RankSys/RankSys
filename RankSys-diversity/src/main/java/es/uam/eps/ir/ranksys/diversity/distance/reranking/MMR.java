@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.distance.reranking;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
 import es.uam.eps.ir.ranksys.novdiv.reranking.LambdaReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;

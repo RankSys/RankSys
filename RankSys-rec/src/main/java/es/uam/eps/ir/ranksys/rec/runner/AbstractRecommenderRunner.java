@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.rec.runner;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 
 import java.util.List;
 import java.util.function.Consumer;

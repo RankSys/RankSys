@@ -8,7 +8,6 @@
  */
 package es.uam.eps.ir.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.util.Optional;
@@ -16,6 +15,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.jooq.lambda.function.Function2;
+import org.ranksys.core.preference.IdPref;
 import org.ranksys.fast.preference.FastPointWisePreferenceData;
 
 /**

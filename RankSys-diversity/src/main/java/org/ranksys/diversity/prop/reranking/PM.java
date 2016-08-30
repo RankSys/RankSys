@@ -7,8 +7,8 @@
  */
 package org.ranksys.diversity.prop.reranking;
 
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
 import es.uam.eps.ir.ranksys.novdiv.reranking.GreedyReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;

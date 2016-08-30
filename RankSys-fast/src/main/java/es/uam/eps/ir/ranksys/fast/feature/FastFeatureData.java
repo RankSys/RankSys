@@ -10,7 +10,7 @@ package es.uam.eps.ir.ranksys.fast.feature;
 
 import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.FeatureData;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2io;

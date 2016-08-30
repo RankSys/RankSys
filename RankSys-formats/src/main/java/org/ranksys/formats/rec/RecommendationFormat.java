@@ -8,7 +8,7 @@
  */
 package org.ranksys.formats.rec;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;

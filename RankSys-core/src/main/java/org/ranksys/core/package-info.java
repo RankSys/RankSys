@@ -8,6 +8,6 @@
  */
 
 /**
- * Indexes for users, items and features.
+ * Core interfaces and classes in RankSys.
  */
-package es.uam.eps.ir.ranksys.core.index;
+package org.ranksys.core;

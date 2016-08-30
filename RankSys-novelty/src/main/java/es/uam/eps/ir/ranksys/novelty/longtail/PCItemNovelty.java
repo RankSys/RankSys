@@ -9,9 +9,9 @@
 package es.uam.eps.ir.ranksys.novelty.longtail;
 
 import es.uam.eps.ir.ranksys.novdiv.itemnovelty.ItemNovelty;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import org.ranksys.core.preference.PreferenceData;
 
 /**
  * Popularity complement item novelty model.

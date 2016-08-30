@@ -7,12 +7,12 @@
  */
 package org.ranksys.fm;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import org.ranksys.core.preference.IdPref;
 import org.ranksys.javafm.FM;
 import org.ranksys.javafm.FMInstance;
 

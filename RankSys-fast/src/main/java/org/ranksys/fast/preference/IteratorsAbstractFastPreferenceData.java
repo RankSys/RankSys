@@ -7,7 +7,6 @@
  */
 package org.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.AbstractFastPreferenceData;
@@ -17,6 +16,7 @@ import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.util.function.Function;
 import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
+import org.ranksys.core.preference.IdPref;
 
 /**
  * Extends AbstractFastPreferenceData and implements the data access stream-based methods using the iterator-based ones. Avoids duplicating code where iterator-based methods are preferred.

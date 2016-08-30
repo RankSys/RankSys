@@ -7,7 +7,7 @@
  */
 package org.ranksys.formats.rec;
 
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import static org.ranksys.core.util.FastStringSplitter.split;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

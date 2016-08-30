@@ -8,13 +8,13 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware;
 
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
+import org.ranksys.core.feature.FeatureData;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import org.jooq.lambda.tuple.Tuple2;
 
 import java.util.Set;
 import java.util.stream.Stream;
+import org.ranksys.core.preference.PreferenceData;
 
 /**
  * Default feature-based intent-aware model. Features of the items in the user

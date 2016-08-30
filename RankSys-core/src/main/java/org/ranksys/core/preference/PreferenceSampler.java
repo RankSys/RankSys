@@ -7,9 +7,8 @@
  */
 package org.ranksys.core.preference;
 
-import es.uam.eps.ir.ranksys.core.index.ItemIndex;
-import es.uam.eps.ir.ranksys.core.index.UserIndex;
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
+import org.ranksys.core.index.ItemIndex;
+import org.ranksys.core.index.UserIndex;
 import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple2;
 

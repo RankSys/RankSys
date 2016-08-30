@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
 import es.uam.eps.ir.ranksys.metrics.SystemMetric;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;

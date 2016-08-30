@@ -7,7 +7,7 @@
  */
 package org.ranksys.formats.rec;
 
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import static org.ranksys.core.util.FastStringSplitter.split;
 import org.ranksys.formats.parsing.Parser;
 import static org.jooq.lambda.tuple.Tuple.tuple;
 import static org.ranksys.formats.parsing.Parsers.pdp;

@@ -8,10 +8,10 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware.metrics;
 
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.core.model.UserModel;
-import es.uam.eps.ir.ranksys.core.model.UserModel.Model;
+import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.Recommendation;
+import org.ranksys.core.model.UserModel;
+import org.ranksys.core.model.UserModel.Model;
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
 import es.uam.eps.ir.ranksys.metrics.rank.LogarithmicDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;

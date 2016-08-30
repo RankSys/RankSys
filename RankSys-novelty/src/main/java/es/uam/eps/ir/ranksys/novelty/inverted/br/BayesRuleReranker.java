@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.novelty.inverted.br;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker;
 import static java.lang.Math.min;

@@ -7,7 +7,6 @@
  */
 package org.ranksys.compression.preferences;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
@@ -24,6 +23,7 @@ import java.util.stream.IntStream;
 import static java.util.stream.IntStream.of;
 import static java.util.stream.IntStream.range;
 import static org.ranksys.compression.util.Delta.atled;
+import org.ranksys.core.preference.IdPref;
 import org.ranksys.fast.preference.IteratorsAbstractFastPreferenceData;
 
 /**

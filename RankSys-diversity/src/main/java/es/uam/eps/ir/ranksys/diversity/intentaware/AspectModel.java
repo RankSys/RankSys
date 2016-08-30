@@ -7,7 +7,7 @@
  */
 package es.uam.eps.ir.ranksys.diversity.intentaware;
 
-import es.uam.eps.ir.ranksys.core.model.UserModel;
+import org.ranksys.core.model.UserModel;
 import org.ranksys.core.util.tuples.Tuple2od;
 
 import java.util.List;

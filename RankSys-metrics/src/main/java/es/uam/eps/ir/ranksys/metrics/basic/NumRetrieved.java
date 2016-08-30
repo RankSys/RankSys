@@ -9,7 +9,7 @@
 package es.uam.eps.ir.ranksys.metrics.basic;
 
 import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
-import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.Recommendation;
 
 /**
  * Number of recommended items.

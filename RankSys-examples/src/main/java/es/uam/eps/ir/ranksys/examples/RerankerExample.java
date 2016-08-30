@@ -8,10 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.examples;
 
-import es.uam.eps.ir.ranksys.core.feature.FeatureData;
-import es.uam.eps.ir.ranksys.core.feature.SimpleFeatureData;
-import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
-import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
+import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.SimpleFeatureData;
 import es.uam.eps.ir.ranksys.diversity.distance.reranking.MMR;
 import es.uam.eps.ir.ranksys.diversity.intentaware.*;
 import es.uam.eps.ir.ranksys.diversity.intentaware.reranking.AlphaXQuAD;
@@ -23,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 import org.jooq.lambda.Unchecked;
+import org.ranksys.core.preference.PreferenceData;
+import org.ranksys.core.preference.SimplePreferenceData;
 import org.ranksys.formats.feature.SimpleFeaturesReader;
 import static org.ranksys.formats.parsing.Parsers.lp;
 import static org.ranksys.formats.parsing.Parsers.sp;
