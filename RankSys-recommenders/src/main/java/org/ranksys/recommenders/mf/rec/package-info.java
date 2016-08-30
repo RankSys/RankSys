@@ -8,6 +8,6 @@
  */
 
 /**
- * Probabilistic latent semantic analysis.
+ * Matrix factorization recommenders.
  */
-package org.ranksys.mf.plsa;
+package org.ranksys.recommenders.mf.rec;

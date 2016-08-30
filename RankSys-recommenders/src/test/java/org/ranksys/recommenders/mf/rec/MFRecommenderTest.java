@@ -5,14 +5,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.mf.rec;
+package org.ranksys.recommenders.mf.rec;
 
+import org.ranksys.recommenders.mf.rec.MFRecommender;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import org.ranksys.core.index.fast.FastItemIndex;
 import org.ranksys.core.index.fast.FastUserIndex;
 import org.ranksys.core.index.fast.SimpleFastItemIndex;
 import org.ranksys.core.index.fast.SimpleFastUserIndex;
-import org.ranksys.mf.Factorization;
+import org.ranksys.recommenders.mf.Factorization;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.IntPredicate;

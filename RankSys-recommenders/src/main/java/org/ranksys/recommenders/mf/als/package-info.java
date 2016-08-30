@@ -10,4 +10,4 @@
 /**
  * Alternating least-squares factorization.
  */
-package org.ranksys.mf.als;
+package org.ranksys.recommenders.mf.als;

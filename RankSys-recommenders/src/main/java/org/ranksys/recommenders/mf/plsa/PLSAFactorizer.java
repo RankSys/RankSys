@@ -6,7 +6,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.mf.plsa;
+package org.ranksys.recommenders.mf.plsa;
 
 import cern.colt.function.DoubleFunction;
 import cern.colt.matrix.DoubleMatrix1D;
@@ -17,8 +17,8 @@ import static cern.jet.math.Functions.plus;
 import org.ranksys.core.preference.fast.FastPreferenceData;
 import org.ranksys.core.preference.fast.IdxPref;
 import org.ranksys.core.preference.fast.StreamsAbstractFastPreferenceData;
-import org.ranksys.mf.Factorization;
-import org.ranksys.mf.Factorizer;
+import org.ranksys.recommenders.mf.Factorization;
+import org.ranksys.recommenders.mf.Factorizer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;

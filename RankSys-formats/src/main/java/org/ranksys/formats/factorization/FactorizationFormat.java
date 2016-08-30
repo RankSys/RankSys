@@ -9,7 +9,7 @@ package org.ranksys.formats.factorization;
 
 import org.ranksys.core.index.fast.FastItemIndex;
 import org.ranksys.core.index.fast.FastUserIndex;
-import org.ranksys.mf.Factorization;
+import org.ranksys.recommenders.mf.Factorization;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
