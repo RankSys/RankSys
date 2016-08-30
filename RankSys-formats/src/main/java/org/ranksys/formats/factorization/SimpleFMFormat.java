@@ -23,7 +23,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import org.ranksys.javafm.FM;
 import static java.lang.Integer.parseInt;
-import org.ranksys.fm.PreferenceFM;
+import org.ranksys.recommenders.fm.PreferenceFM;
 
 /**
  * Factorisation machine format in zip-compressed, human readable files .

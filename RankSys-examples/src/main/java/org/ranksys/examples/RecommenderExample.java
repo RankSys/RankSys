@@ -35,9 +35,9 @@ import org.ranksys.recommenders.nn.user.sim.VectorCosineUserSimilarity;
 import org.ranksys.recommenders.Recommender;
 import org.ranksys.recommenders.basic.PopularityRecommender;
 import org.ranksys.recommenders.basic.RandomRecommender;
-import org.ranksys.rec.runner.RecommenderRunner;
-import org.ranksys.rec.runner.fast.FastFilterRecommenderRunner;
-import org.ranksys.rec.runner.fast.FastFilters;
+import org.ranksys.evaluation.runner.RecommenderRunner;
+import org.ranksys.evaluation.runner.fast.FastFilterRecommenderRunner;
+import org.ranksys.evaluation.runner.fast.FastFilters;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -50,10 +50,10 @@ import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.jooq.lambda.Unchecked;
-import org.ranksys.fm.PreferenceFM;
-import org.ranksys.fm.data.BPRPreferenceFMData;
-import org.ranksys.fm.data.OneClassPreferenceFMData;
-import org.ranksys.fm.rec.FMRecommender;
+import org.ranksys.recommenders.fm.PreferenceFM;
+import org.ranksys.recommenders.fm.data.BPRPreferenceFMData;
+import org.ranksys.recommenders.fm.data.OneClassPreferenceFMData;
+import org.ranksys.recommenders.fm.rec.FMRecommender;
 import org.ranksys.formats.index.ItemsReader;
 import org.ranksys.formats.index.UsersReader;
 import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
@@ -64,8 +64,8 @@ import org.ranksys.javafm.data.FMData;
 import org.ranksys.javafm.learner.gd.BPR;
 import static org.ranksys.javafm.learner.gd.PointWiseError.rmse;
 import org.ranksys.javafm.learner.gd.PointWiseGradientDescent;
-import org.ranksys.lda.LDAModelEstimator;
-import org.ranksys.lda.LDARecommender;
+import org.ranksys.recommenders.lda.LDAModelEstimator;
+import org.ranksys.recommenders.lda.LDARecommender;
 
 /**
  * Example main of recommendations.

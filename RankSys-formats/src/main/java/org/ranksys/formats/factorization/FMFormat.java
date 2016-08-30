@@ -12,7 +12,7 @@ import org.ranksys.core.index.fast.FastUserIndex;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.ranksys.fm.PreferenceFM;
+import org.ranksys.recommenders.fm.PreferenceFM;
 
 /**
  * Factorisation machine format for reading and writing from files.

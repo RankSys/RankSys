@@ -25,14 +25,12 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <modules>
         <module>RankSys-core</module>
         <module>RankSys-metrics</module>
-        <module>RankSys-rec</module>
-        <module>RankSys-lda</module>
-        <module>RankSys-fm</module>
-        <module>RankSys-novdiv</module>
-        <module>RankSys-compression</module>
-        <module>RankSys-formats</module>
-        <module>RankSys-examples</module>
         <module>RankSys-recommenders</module>
+        <module>RankSys-novdiv</module>
+        <module>RankSys-formats</module>
+        <module>RankSys-evaluation</module>
+        <module>RankSys-compression</module>
+        <module>RankSys-examples</module>
     </modules>
     
     <build>

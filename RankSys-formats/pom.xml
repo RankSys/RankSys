@@ -27,11 +27,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-fm</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>colt</groupId>
             <artifactId>colt</artifactId>
             <version>1.2.0</version>

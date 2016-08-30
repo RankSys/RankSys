@@ -38,7 +38,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-rec</artifactId>
+            <artifactId>RankSys-evaluation</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -48,22 +48,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-nn</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-mf</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-compression</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-lda</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
