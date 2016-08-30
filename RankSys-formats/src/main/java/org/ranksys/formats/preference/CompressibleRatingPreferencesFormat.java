@@ -7,8 +7,8 @@
  */
 package org.ranksys.formats.preference;
 
-import org.ranksys.fast.preference.FastPreferenceData;
-import org.ranksys.fast.preference.TransposedPreferenceData;
+import org.ranksys.core.preference.fast.FastPreferenceData;
+import org.ranksys.core.preference.fast.TransposedPreferenceData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;

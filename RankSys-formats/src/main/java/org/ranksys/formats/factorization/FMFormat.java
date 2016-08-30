@@ -7,8 +7,8 @@
  */
 package org.ranksys.formats.factorization;
 
-import org.ranksys.fast.index.FastItemIndex;
-import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.core.index.fast.FastItemIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -8,7 +8,7 @@
  */
 package org.ranksys.nn.sim;
 
-import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.core.preference.fast.FastPreferenceData;
 
 /**
  * Vector Jaccard similarity.

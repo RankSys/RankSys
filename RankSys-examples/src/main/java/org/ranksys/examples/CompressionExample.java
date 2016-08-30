@@ -7,12 +7,12 @@
  */
 package org.ranksys.examples;
 
-import org.ranksys.fast.index.FastItemIndex;
-import org.ranksys.fast.index.FastUserIndex;
-import org.ranksys.fast.index.SimpleFastItemIndex;
-import org.ranksys.fast.index.SimpleFastUserIndex;
-import org.ranksys.fast.preference.FastPreferenceData;
-import org.ranksys.fast.preference.SimpleFastPreferenceData;
+import org.ranksys.core.index.fast.FastItemIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
+import org.ranksys.core.index.fast.SimpleFastItemIndex;
+import org.ranksys.core.index.fast.SimpleFastUserIndex;
+import org.ranksys.core.preference.fast.FastPreferenceData;
+import org.ranksys.core.preference.fast.SimpleFastPreferenceData;
 import java.io.IOException;
 import org.ranksys.compression.codecs.CODEC;
 import org.ranksys.compression.codecs.dsi.FixedLengthBitStreamCODEC;

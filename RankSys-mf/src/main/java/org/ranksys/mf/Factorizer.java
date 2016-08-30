@@ -8,7 +8,7 @@
  */
 package org.ranksys.mf;
 
-import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.core.preference.fast.FastPreferenceData;
 
 /**
  * Factorizer. Abstract class for matrix factorization algorithms.

@@ -24,7 +24,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
     <modules>
         <module>RankSys-core</module>
-        <module>RankSys-fast</module>
         <module>RankSys-metrics</module>
         <module>RankSys-rec</module>
         <module>RankSys-nn</module>

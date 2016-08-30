@@ -7,7 +7,7 @@
  */
 package org.ranksys.fm.data;
 
-import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.core.preference.fast.FastPreferenceData;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;

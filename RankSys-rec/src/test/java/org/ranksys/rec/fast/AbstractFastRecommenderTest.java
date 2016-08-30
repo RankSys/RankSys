@@ -7,11 +7,11 @@
  */
 package org.ranksys.rec.fast;
 
-import org.ranksys.fast.FastRecommendation;
-import org.ranksys.fast.index.FastItemIndex;
-import org.ranksys.fast.index.FastUserIndex;
-import org.ranksys.fast.index.SimpleFastItemIndex;
-import org.ranksys.fast.index.SimpleFastUserIndex;
+import org.ranksys.core.fast.FastRecommendation;
+import org.ranksys.core.index.fast.FastItemIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
+import org.ranksys.core.index.fast.SimpleFastItemIndex;
+import org.ranksys.core.index.fast.SimpleFastUserIndex;
 import static java.lang.Math.min;
 import java.util.Arrays;
 import static java.util.Collections.emptyList;

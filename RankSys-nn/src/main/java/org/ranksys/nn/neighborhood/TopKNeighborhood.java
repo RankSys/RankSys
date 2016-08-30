@@ -8,7 +8,7 @@
  */
 package org.ranksys.nn.neighborhood;
 
-import org.ranksys.fast.utils.topn.IntDoubleTopN;
+import org.ranksys.core.util.topn.IntDoubleTopN;
 import org.ranksys.nn.sim.Similarity;
 import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2id;

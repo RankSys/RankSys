@@ -11,8 +11,8 @@ package org.ranksys.mf;
 import cern.colt.function.DoubleFunction;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import org.ranksys.fast.index.FastUserIndex;
-import org.ranksys.fast.index.FastItemIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
+import org.ranksys.core.index.fast.FastItemIndex;
 
 /**
  * Matrix factorization.

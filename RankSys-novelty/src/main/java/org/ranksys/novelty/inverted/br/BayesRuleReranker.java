@@ -9,7 +9,7 @@
 package org.ranksys.novelty.inverted.br;
 
 import org.ranksys.core.Recommendation;
-import org.ranksys.fast.utils.topn.IntDoubleTopN;
+import org.ranksys.core.util.topn.IntDoubleTopN;
 import org.ranksys.novdiv.reranking.PermutationReranker;
 import static java.lang.Math.min;
 import java.util.List;

@@ -10,7 +10,7 @@ package org.ranksys.mf.als;
 
 import cern.colt.function.DoubleFunction;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.core.preference.fast.FastPreferenceData;
 import org.ranksys.mf.Factorization;
 import org.ranksys.mf.Factorizer;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;

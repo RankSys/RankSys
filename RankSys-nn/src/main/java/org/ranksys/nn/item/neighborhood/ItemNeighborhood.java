@@ -8,7 +8,7 @@
  */
 package org.ranksys.nn.item.neighborhood;
 
-import org.ranksys.fast.index.FastItemIndex;
+import org.ranksys.core.index.fast.FastItemIndex;
 import org.ranksys.nn.neighborhood.Neighborhood;
 import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2od;

@@ -9,9 +9,9 @@
 package org.ranksys.novdiv.reranking;
 
 import org.ranksys.core.Recommendation;
-import org.ranksys.fast.FastRecommendation;
-import org.ranksys.fast.index.FastItemIndex;
-import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.core.fast.FastRecommendation;
+import org.ranksys.core.index.fast.FastItemIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
 import org.ranksys.rec.fast.AbstractFastRecommender;
 import org.ranksys.rec.fast.FastRecommender;
 import static java.lang.Math.min;

@@ -8,7 +8,7 @@
  */
 package org.ranksys.nn.user.sim;
 
-import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.core.preference.fast.FastPreferenceData;
 import org.ranksys.nn.sim.VectorCosineSimilarity;
 
 /**

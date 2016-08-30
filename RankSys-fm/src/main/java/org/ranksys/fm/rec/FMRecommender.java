@@ -7,9 +7,9 @@
  */
 package org.ranksys.fm.rec;
 
-import org.ranksys.fast.FastRecommendation;
-import org.ranksys.fast.preference.IdxPref;
-import org.ranksys.fast.utils.topn.IntDoubleTopN;
+import org.ranksys.core.fast.FastRecommendation;
+import org.ranksys.core.preference.fast.IdxPref;
+import org.ranksys.core.util.topn.IntDoubleTopN;
 import org.ranksys.rec.fast.AbstractFastRecommender;
 import static java.lang.Float.NaN;
 import static java.util.Comparator.comparingDouble;

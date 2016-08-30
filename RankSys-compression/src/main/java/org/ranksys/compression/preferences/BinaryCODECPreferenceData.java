@@ -7,11 +7,11 @@
  */
 package org.ranksys.compression.preferences;
 
-import org.ranksys.fast.index.FastItemIndex;
-import org.ranksys.fast.index.FastUserIndex;
-import org.ranksys.fast.preference.FastPreferenceData;
-import org.ranksys.fast.preference.IdxPref;
-import org.ranksys.fast.preference.TransposedPreferenceData;
+import org.ranksys.core.index.fast.FastItemIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
+import org.ranksys.core.preference.fast.FastPreferenceData;
+import org.ranksys.core.preference.fast.IdxPref;
+import org.ranksys.core.preference.fast.TransposedPreferenceData;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import java.io.Serializable;
 import java.util.Arrays;

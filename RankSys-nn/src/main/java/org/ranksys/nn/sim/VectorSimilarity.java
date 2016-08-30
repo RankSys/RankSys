@@ -8,8 +8,8 @@
  */
 package org.ranksys.nn.sim;
 
-import org.ranksys.fast.preference.FastPreferenceData;
-import org.ranksys.fast.preference.IdxPref;
+import org.ranksys.core.preference.fast.FastPreferenceData;
+import org.ranksys.core.preference.fast.IdxPref;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;

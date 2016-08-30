@@ -9,9 +9,9 @@
 package org.ranksys.rec.fast;
 
 import org.ranksys.rec.Recommender;
-import org.ranksys.fast.FastRecommendation;
-import org.ranksys.fast.index.FastItemIndex;
-import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.core.fast.FastRecommendation;
+import org.ranksys.core.index.fast.FastItemIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 

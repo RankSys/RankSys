@@ -10,10 +10,10 @@ package org.ranksys.mf.rec;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import org.ranksys.fast.FastRecommendation;
-import org.ranksys.fast.index.FastItemIndex;
-import org.ranksys.fast.index.FastUserIndex;
-import org.ranksys.fast.utils.topn.IntDoubleTopN;
+import org.ranksys.core.fast.FastRecommendation;
+import org.ranksys.core.index.fast.FastItemIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
+import org.ranksys.core.util.topn.IntDoubleTopN;
 import org.ranksys.rec.fast.AbstractFastRecommender;
 import org.ranksys.mf.Factorization;
 import static java.lang.Math.min;

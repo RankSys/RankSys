@@ -8,7 +8,7 @@
  */
 package org.ranksys.nn.user.neighborhood;
 
-import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
 import org.ranksys.nn.neighborhood.CachedNeighborhood;
 import java.util.stream.Stream;
 import static org.jooq.lambda.tuple.Tuple.tuple;

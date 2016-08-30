@@ -8,10 +8,10 @@
  */
 package org.ranksys.rec.fast;
 
-import org.ranksys.fast.utils.topn.IntDoubleTopN;
-import org.ranksys.fast.FastRecommendation;
-import org.ranksys.fast.index.FastItemIndex;
-import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.core.util.topn.IntDoubleTopN;
+import org.ranksys.core.fast.FastRecommendation;
+import org.ranksys.core.index.fast.FastItemIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import static java.lang.Math.min;
 import java.util.ArrayList;

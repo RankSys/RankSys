@@ -8,7 +8,7 @@
  */
 package org.ranksys.nn.item;
 
-import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.core.preference.fast.FastPreferenceData;
 import org.ranksys.rec.fast.FastRankingRecommender;
 import org.ranksys.nn.item.neighborhood.ItemNeighborhood;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;

@@ -11,7 +11,7 @@ package org.ranksys.novdiv.itemnovelty.reranking;
 import org.ranksys.core.Recommendation;
 import org.ranksys.novdiv.itemnovelty.ItemNovelty;
 import org.ranksys.core.util.Stats;
-import org.ranksys.fast.utils.topn.IntDoubleTopN;
+import org.ranksys.core.util.topn.IntDoubleTopN;
 import org.ranksys.novdiv.reranking.PermutationReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;

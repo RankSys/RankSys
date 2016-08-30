@@ -13,7 +13,7 @@ import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureSequence;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.core.preference.fast.FastPreferenceData;
 import java.io.IOException;
 import java.util.Iterator;
 import static java.util.stream.IntStream.range;

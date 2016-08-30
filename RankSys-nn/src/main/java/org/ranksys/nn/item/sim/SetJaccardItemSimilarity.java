@@ -8,8 +8,8 @@
  */
 package org.ranksys.nn.item.sim;
 
-import org.ranksys.fast.preference.FastPreferenceData;
-import org.ranksys.fast.preference.TransposedPreferenceData;
+import org.ranksys.core.preference.fast.FastPreferenceData;
+import org.ranksys.core.preference.fast.TransposedPreferenceData;
 import org.ranksys.nn.sim.SetJaccardSimilarity;
 
 /**

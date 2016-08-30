@@ -7,9 +7,9 @@
  */
 package org.ranksys.fm;
 
-import org.ranksys.fast.index.FastItemIndex;
-import org.ranksys.fast.index.FastUserIndex;
-import org.ranksys.fast.preference.IdxPref;
+import org.ranksys.core.index.fast.FastItemIndex;
+import org.ranksys.core.index.fast.FastUserIndex;
+import org.ranksys.core.preference.fast.IdxPref;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import org.ranksys.core.preference.IdPref;

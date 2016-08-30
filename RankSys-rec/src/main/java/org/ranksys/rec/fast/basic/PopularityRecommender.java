@@ -8,8 +8,8 @@
  */
 package org.ranksys.rec.fast.basic;
 
-import org.ranksys.fast.preference.FastPreferenceData;
-import org.ranksys.fast.FastRecommendation;
+import org.ranksys.core.preference.fast.FastPreferenceData;
+import org.ranksys.core.fast.FastRecommendation;
 import org.ranksys.rec.fast.AbstractFastRecommender;
 import static java.lang.Math.min;
 import java.util.List;
