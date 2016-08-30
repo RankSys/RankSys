@@ -29,12 +29,12 @@ import org.ranksys.metrics.rel.BinaryRelevanceModel;
 import org.ranksys.metrics.rel.NoRelevanceModel;
 import org.ranksys.novdiv.distance.CosineFeatureItemDistanceModel;
 import org.ranksys.novdiv.distance.ItemDistanceModel;
-import org.ranksys.novelty.longtail.FDItemNovelty;
-import org.ranksys.novelty.longtail.PCItemNovelty;
-import org.ranksys.novelty.longtail.metrics.EFD;
-import org.ranksys.novelty.longtail.metrics.EPC;
-import org.ranksys.novelty.unexp.PDItemNovelty;
-import org.ranksys.novelty.unexp.metrics.EPD;
+import org.ranksys.novdiv.longtail.FDItemNovelty;
+import org.ranksys.novdiv.longtail.PCItemNovelty;
+import org.ranksys.novdiv.longtail.metrics.EFD;
+import org.ranksys.novdiv.longtail.metrics.EPC;
+import org.ranksys.novdiv.unexp.PDItemNovelty;
+import org.ranksys.novdiv.unexp.metrics.EPD;
 
 import java.util.HashMap;
 import java.util.Map;
