@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.novelty.inverted.neighborhood;
 
-import es.uam.eps.ir.ranksys.nn.item.neighborhood.ItemNeighborhood;
+import org.ranksys.nn.item.neighborhood.ItemNeighborhood;
 
 /**
  * Inverted item neighborhood. See {@link InvertedNeighborhood}

@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.novelty.inverted.neighborhood;
 
-import es.uam.eps.ir.ranksys.nn.user.neighborhood.UserNeighborhood;
+import org.ranksys.nn.user.neighborhood.UserNeighborhood;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 

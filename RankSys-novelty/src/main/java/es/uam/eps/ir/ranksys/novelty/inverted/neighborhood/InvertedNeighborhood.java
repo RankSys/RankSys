@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.novelty.inverted.neighborhood;
 
-import es.uam.eps.ir.ranksys.nn.neighborhood.Neighborhood;
+import org.ranksys.nn.neighborhood.Neighborhood;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import java.util.function.IntPredicate;
