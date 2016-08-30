@@ -8,6 +8,6 @@
  */
 
 /**
- * Example main programs for compression.
+ * Example main programs for recommenders, metrics, rerankers and compression.
  */
 package org.ranksys.examples;
