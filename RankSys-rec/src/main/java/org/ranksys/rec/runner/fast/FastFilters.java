@@ -6,7 +6,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.rec.runner.fast;
+package org.ranksys.rec.runner.fast;
 
 import org.ranksys.fast.preference.FastPreferenceData;
 import org.ranksys.fast.feature.FastFeatureData;

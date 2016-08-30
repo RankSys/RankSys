@@ -6,11 +6,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.rec.fast.basic;
+package org.ranksys.rec.fast.basic;
 
 import org.ranksys.fast.preference.FastPreferenceData;
 import org.ranksys.fast.FastRecommendation;
-import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
+import org.ranksys.rec.fast.AbstractFastRecommender;
 import static java.lang.Math.min;
 import java.util.List;
 import java.util.function.IntPredicate;

@@ -7,7 +7,6 @@
  */
 package org.ranksys.rec.fast;
 
-import es.uam.eps.ir.ranksys.rec.fast.FastRankingRecommender;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import java.util.Map.Entry;

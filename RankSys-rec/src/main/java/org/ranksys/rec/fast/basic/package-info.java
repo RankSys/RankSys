@@ -8,6 +8,6 @@
  */
 
 /**
- * Base classes and interfaces for recommendation algorithms.
+ * Basic recommendation algorithms.
  */
-package es.uam.eps.ir.ranksys.rec;
+package org.ranksys.rec.fast.basic;

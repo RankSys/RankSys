@@ -10,4 +10,4 @@
 /**
  * Fast recommender runners.
  */
-package es.uam.eps.ir.ranksys.rec.runner.fast;
+package org.ranksys.rec.runner.fast;

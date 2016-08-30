@@ -8,6 +8,6 @@
  */
 
 /**
- * Recommender runners.
+ * Base classes and interfaces for recommendation algorithms.
  */
-package es.uam.eps.ir.ranksys.rec.runner;
+package org.ranksys.rec;

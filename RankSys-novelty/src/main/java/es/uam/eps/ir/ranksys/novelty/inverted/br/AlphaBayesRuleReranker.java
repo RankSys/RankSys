@@ -9,7 +9,7 @@
 package es.uam.eps.ir.ranksys.novelty.inverted.br;
 
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.rec.Recommender;
+import org.ranksys.rec.Recommender;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import static java.lang.Math.pow;

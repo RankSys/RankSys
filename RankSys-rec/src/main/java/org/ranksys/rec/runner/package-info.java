@@ -8,6 +8,6 @@
  */
 
 /**
- * Fast version of base classes and interfaces for recommendation algorithms.
+ * Recommender runners.
  */
-package es.uam.eps.ir.ranksys.rec.fast;
+package org.ranksys.rec.runner;

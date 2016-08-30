@@ -12,7 +12,7 @@ import org.ranksys.fast.FastRecommendation;
 import org.ranksys.fast.index.FastItemIndex;
 import org.ranksys.fast.index.FastUserIndex;
 import org.ranksys.fast.utils.topn.IntDoubleTopN;
-import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
+import org.ranksys.rec.fast.AbstractFastRecommender;
 import static java.lang.Math.min;
 import java.util.List;
 import java.util.function.IntPredicate;
