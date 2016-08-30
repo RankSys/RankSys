@@ -10,4 +10,4 @@
 /**
  * Alternating least-squares factorization.
  */
-package es.uam.eps.ir.ranksys.mf.als;
+package org.ranksys.mf.als;

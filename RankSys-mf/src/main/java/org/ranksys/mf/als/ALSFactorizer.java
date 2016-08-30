@@ -6,13 +6,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.mf.als;
+package org.ranksys.mf.als;
 
 import cern.colt.function.DoubleFunction;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import org.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.mf.Factorization;
-import es.uam.eps.ir.ranksys.mf.Factorizer;
+import org.ranksys.mf.Factorization;
+import org.ranksys.mf.Factorizer;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import static java.lang.Math.sqrt;

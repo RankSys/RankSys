@@ -8,6 +8,6 @@
  */
 
 /**
- * Matrix factorization base classes.
+ * Probabilistic latent semantic analysis.
  */
-package es.uam.eps.ir.ranksys.mf;
+package org.ranksys.mf.plsa;

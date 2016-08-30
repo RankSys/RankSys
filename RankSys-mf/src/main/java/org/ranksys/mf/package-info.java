@@ -8,6 +8,6 @@
  */
 
 /**
- * Matrix factorization recommenders.
+ * Matrix factorization base classes.
  */
-package es.uam.eps.ir.ranksys.mf.rec;
+package org.ranksys.mf;

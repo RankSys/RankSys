@@ -6,7 +6,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.mf.rec;
+package org.ranksys.mf.rec;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
@@ -15,7 +15,7 @@ import org.ranksys.fast.index.FastItemIndex;
 import org.ranksys.fast.index.FastUserIndex;
 import org.ranksys.fast.utils.topn.IntDoubleTopN;
 import org.ranksys.rec.fast.AbstractFastRecommender;
-import es.uam.eps.ir.ranksys.mf.Factorization;
+import org.ranksys.mf.Factorization;
 import static java.lang.Math.min;
 import java.util.ArrayList;
 import static java.util.Comparator.comparingDouble;

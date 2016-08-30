@@ -10,7 +10,7 @@ package org.ranksys.formats.factorization;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import org.ranksys.fast.index.FastItemIndex;
 import org.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.mf.Factorization;
+import org.ranksys.mf.Factorization;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
