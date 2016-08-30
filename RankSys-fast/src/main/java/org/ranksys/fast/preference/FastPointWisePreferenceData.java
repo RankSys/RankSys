@@ -7,8 +7,6 @@
  */
 package org.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import org.ranksys.core.preference.PointWisePreferenceData;
 
 import java.util.Optional;

@@ -8,10 +8,10 @@
  */
 package es.uam.eps.ir.ranksys.rec.runner.fast;
 
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.fast.feature.FastFeatureData;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
+import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.fast.feature.FastFeatureData;
+import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.preference.IdxPref;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.Function;

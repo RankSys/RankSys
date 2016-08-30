@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.nn.neighborhood;
 
-import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
+import org.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2id;

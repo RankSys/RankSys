@@ -11,8 +11,8 @@ package es.uam.eps.ir.ranksys.mf;
 import cern.colt.function.DoubleFunction;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.index.FastItemIndex;
 
 /**
  * Matrix factorization.

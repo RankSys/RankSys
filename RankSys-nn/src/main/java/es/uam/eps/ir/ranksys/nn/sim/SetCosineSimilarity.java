@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.nn.sim;
 
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.fast.preference.FastPreferenceData;
 import static java.lang.Math.pow;
 
 /**

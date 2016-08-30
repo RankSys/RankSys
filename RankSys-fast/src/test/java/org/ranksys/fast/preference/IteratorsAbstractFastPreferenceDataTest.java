@@ -7,7 +7,6 @@
  */
 package org.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.util.stream.DoubleStream;

@@ -8,10 +8,10 @@
 package es.uam.eps.ir.ranksys.mf.rec;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.SimpleFastUserIndex;
+import org.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.index.SimpleFastItemIndex;
+import org.ranksys.fast.index.SimpleFastUserIndex;
 import es.uam.eps.ir.ranksys.mf.Factorization;
 import java.util.Arrays;
 import java.util.List;

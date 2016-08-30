@@ -7,8 +7,8 @@
  */
 package org.ranksys.formats.factorization;
 
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.index.FastUserIndex;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;

@@ -7,9 +7,9 @@
  */
 package org.ranksys.formats.preference;
 
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
-import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
+import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.fast.preference.IdxPref;
+import org.ranksys.fast.preference.TransposedPreferenceData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;

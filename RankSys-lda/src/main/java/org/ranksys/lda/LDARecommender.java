@@ -8,10 +8,10 @@
 package org.ranksys.lda;
 
 import cc.mallet.topics.ParallelTopicModel;
-import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
+import org.ranksys.fast.FastRecommendation;
+import org.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
 import static java.lang.Math.min;
 import java.util.List;

@@ -10,9 +10,9 @@ package es.uam.eps.ir.ranksys.rec.fast;
 
 import es.uam.eps.ir.ranksys.rec.AbstractRecommender;
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.FastRecommendation;
+import org.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.index.FastUserIndex;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.function.IntPredicate;

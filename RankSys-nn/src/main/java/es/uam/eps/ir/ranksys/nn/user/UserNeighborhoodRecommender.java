@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.nn.user;
 
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.rec.fast.FastRankingRecommender;
 import es.uam.eps.ir.ranksys.nn.user.neighborhood.UserNeighborhood;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;

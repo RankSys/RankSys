@@ -7,7 +7,6 @@
  */
 package org.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

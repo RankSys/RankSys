@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.nn.item.sim;
 
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.nn.sim.Similarity;
 import java.util.function.IntToDoubleFunction;
 import java.util.function.ToDoubleFunction;

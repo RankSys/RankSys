@@ -14,8 +14,8 @@ import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import cern.colt.matrix.linalg.LUDecompositionQuick;
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
+import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.fast.preference.TransposedPreferenceData;
 import java.util.function.DoubleUnaryOperator;
 
 /**

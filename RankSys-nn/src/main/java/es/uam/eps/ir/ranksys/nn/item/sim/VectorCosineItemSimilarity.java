@@ -8,8 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.nn.item.sim;
 
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
+import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.fast.preference.TransposedPreferenceData;
 import es.uam.eps.ir.ranksys.nn.sim.VectorCosineSimilarity;
 
 /**

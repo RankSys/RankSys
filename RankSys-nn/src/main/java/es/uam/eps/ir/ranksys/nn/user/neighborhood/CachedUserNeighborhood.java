@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.nn.user.neighborhood;
 
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.nn.neighborhood.CachedNeighborhood;
 import java.util.stream.Stream;
 import static org.jooq.lambda.tuple.Tuple.tuple;

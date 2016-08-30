@@ -8,7 +8,7 @@
 package org.ranksys.novdiv.reranking;
 
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
+import org.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker;
 import static java.lang.Math.log;
 import static java.lang.Math.min;

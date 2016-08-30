@@ -7,10 +7,10 @@
  */
 package org.ranksys.compression.preferences;
 
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
-import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
+import org.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.fast.preference.IdxPref;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntIterators;
 import org.ranksys.compression.codecs.CODEC;

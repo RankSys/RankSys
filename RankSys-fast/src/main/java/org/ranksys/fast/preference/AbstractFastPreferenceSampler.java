@@ -7,8 +7,8 @@
  */
 package org.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.index.FastUserIndex;
 
 /**
  * Abstract fast preference sampler, implementing methods from

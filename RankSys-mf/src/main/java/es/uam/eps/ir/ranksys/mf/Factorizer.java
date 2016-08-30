@@ -8,7 +8,7 @@
  */
 package es.uam.eps.ir.ranksys.mf;
 
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import org.ranksys.fast.preference.FastPreferenceData;
 
 /**
  * Factorizer. Abstract class for matrix factorization algorithms.

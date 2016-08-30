@@ -7,11 +7,11 @@
  */
 package es.uam.eps.ir.ranksys.rec.fast;
 
-import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
-import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.SimpleFastUserIndex;
+import org.ranksys.fast.FastRecommendation;
+import org.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.index.SimpleFastItemIndex;
+import org.ranksys.fast.index.SimpleFastUserIndex;
 import static java.lang.Math.min;
 import java.util.Arrays;
 import static java.util.Collections.emptyList;

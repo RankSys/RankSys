@@ -9,9 +9,9 @@
 package es.uam.eps.ir.ranksys.rec.fast;
 
 import es.uam.eps.ir.ranksys.rec.Recommender;
-import es.uam.eps.ir.ranksys.fast.FastRecommendation;
-import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
-import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
+import org.ranksys.fast.FastRecommendation;
+import org.ranksys.fast.index.FastItemIndex;
+import org.ranksys.fast.index.FastUserIndex;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 
