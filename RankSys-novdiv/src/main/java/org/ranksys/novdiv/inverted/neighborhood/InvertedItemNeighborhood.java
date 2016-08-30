@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.inverted.neighborhood;
 
-import org.ranksys.nn.item.neighborhood.ItemNeighborhood;
+import org.ranksys.recommenders.nn.item.neighborhood.ItemNeighborhood;
 
 /**
  * Inverted item neighborhood. See {@link InvertedNeighborhood}

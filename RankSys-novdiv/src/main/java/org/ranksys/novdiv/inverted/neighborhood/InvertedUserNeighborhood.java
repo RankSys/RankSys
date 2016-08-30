@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.inverted.neighborhood;
 
-import org.ranksys.nn.user.neighborhood.UserNeighborhood;
+import org.ranksys.recommenders.nn.user.neighborhood.UserNeighborhood;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 

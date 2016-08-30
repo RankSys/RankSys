@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.inverted.neighborhood;
 
-import org.ranksys.nn.neighborhood.Neighborhood;
+import org.ranksys.recommenders.nn.neighborhood.Neighborhood;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import java.util.function.IntPredicate;
