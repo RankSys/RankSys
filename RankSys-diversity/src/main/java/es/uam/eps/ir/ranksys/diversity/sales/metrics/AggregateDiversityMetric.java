@@ -8,8 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
-import es.uam.eps.ir.ranksys.metrics.rank.NoDiscountModel;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
+import org.ranksys.metrics.rank.NoDiscountModel;
+import org.ranksys.metrics.rel.RelevanceModel;
 
 /**
  * Aggregate diversity. It is actually a rank-unaware version of {@link EIURD}

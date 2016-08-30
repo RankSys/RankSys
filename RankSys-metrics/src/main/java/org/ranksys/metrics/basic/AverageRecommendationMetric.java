@@ -6,12 +6,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.metrics.basic;
+package org.ranksys.metrics.basic;
 
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
-import es.uam.eps.ir.ranksys.metrics.RecommendationMetric;
-import es.uam.eps.ir.ranksys.metrics.SystemMetric;
+import org.ranksys.metrics.AbstractSystemMetric;
+import org.ranksys.metrics.RecommendationMetric;
+import org.ranksys.metrics.SystemMetric;
 
 /**
  * Average of a recommendation metric: system metric based on the arithmetic mean of a recommendation metric for a set of users' recommendations.

@@ -6,13 +6,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.metrics.basic;
+package org.ranksys.metrics.basic;
 
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
-import es.uam.eps.ir.ranksys.metrics.rank.LogarithmicDiscountModel;
-import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
-import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
+import org.ranksys.metrics.AbstractRecommendationMetric;
+import org.ranksys.metrics.rank.LogarithmicDiscountModel;
+import org.ranksys.metrics.rank.RankingDiscountModel;
+import org.ranksys.metrics.rel.IdealRelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.Arrays;

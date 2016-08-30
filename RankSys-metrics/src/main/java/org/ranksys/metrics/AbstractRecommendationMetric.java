@@ -6,19 +6,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.metrics.rank;
+package org.ranksys.metrics;
 
 /**
- * Logarithmic discount: disc(k) = 1 / log_2(k + 2).
+ * Abstract recommendation metric. Future common functionalities for 
+ * recommendation metrics will be implemented here.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * 
+ * @param <U> type of the users
+ * @param <I> type of the items
  */
-public class LogarithmicDiscountModel implements RankingDiscountModel{
-
-    @Override
-    public double disc(int k) {
-        return 1 / Math.log(k + 2.0) * Math.log(2.0);
-    }
-    
+public abstract class AbstractRecommendationMetric<U, I> implements RecommendationMetric<U, I> {
 }

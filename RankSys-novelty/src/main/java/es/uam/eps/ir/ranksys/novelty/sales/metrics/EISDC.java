@@ -8,8 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.novelty.sales.metrics;
 
-import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
+import org.ranksys.metrics.rank.RankingDiscountModel;
+import org.ranksys.metrics.rel.RelevanceModel;
 import es.uam.eps.ir.ranksys.novdiv.itemnovelty.metrics.ItemNoveltyMetric;
 import es.uam.eps.ir.ranksys.novelty.sales.ISDCItemNovelty;
 

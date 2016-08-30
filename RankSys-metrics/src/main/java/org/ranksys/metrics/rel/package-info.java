@@ -10,4 +10,4 @@
 /**
  * Relevance models.
  */
-package es.uam.eps.ir.ranksys.metrics.rel;
+package org.ranksys.metrics.rel;

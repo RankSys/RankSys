@@ -8,8 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
-import es.uam.eps.ir.ranksys.metrics.rank.NoDiscountModel;
-import es.uam.eps.ir.ranksys.metrics.rel.NoRelevanceModel;
+import org.ranksys.metrics.rank.NoDiscountModel;
+import org.ranksys.metrics.rel.NoRelevanceModel;
 
 /**
  * Entropy sales diversity metric. It is actually a relevance and rank-unaware 

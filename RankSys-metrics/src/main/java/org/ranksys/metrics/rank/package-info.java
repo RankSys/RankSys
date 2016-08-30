@@ -8,6 +8,6 @@
  */
 
 /**
- * Interfaces and abstract classes for metrics.
+ * Ranking discount models.
  */
-package es.uam.eps.ir.ranksys.metrics;
+package org.ranksys.metrics.rank;

@@ -10,8 +10,8 @@ package es.uam.eps.ir.ranksys.diversity.other.metrics;
 
 import org.ranksys.core.feature.FeatureData;
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
+import org.ranksys.metrics.AbstractRecommendationMetric;
+import org.ranksys.metrics.rel.RelevanceModel;
 import java.util.HashSet;
 import java.util.Set;
 import static java.util.stream.Collectors.toList;

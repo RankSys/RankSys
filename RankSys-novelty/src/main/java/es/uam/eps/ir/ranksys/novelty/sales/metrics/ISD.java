@@ -8,8 +8,8 @@
  */
 package es.uam.eps.ir.ranksys.novelty.sales.metrics;
 
-import es.uam.eps.ir.ranksys.metrics.rank.NoDiscountModel;
-import es.uam.eps.ir.ranksys.metrics.rel.NoRelevanceModel;
+import org.ranksys.metrics.rank.NoDiscountModel;
+import org.ranksys.metrics.rel.NoRelevanceModel;
 import es.uam.eps.ir.ranksys.novelty.sales.ISDCItemNovelty;
 import java.util.List;
 import java.util.function.Function;

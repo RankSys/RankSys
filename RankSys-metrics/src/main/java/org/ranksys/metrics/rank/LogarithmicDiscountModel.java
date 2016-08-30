@@ -6,25 +6,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.metrics.rank;
+package org.ranksys.metrics.rank;
 
 /**
- * Reciprocal discount: disc(k) = 1 / (k + 1).
+ * Logarithmic discount: disc(k) = 1 / log_2(k + 2).
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
  */
-public class ReciprocalDiscountModel implements RankingDiscountModel {
+public class LogarithmicDiscountModel implements RankingDiscountModel{
 
-    /**
-     * Discount to be applied at a given position.
-     *
-     * @param k position in the recommendation list starting from 0
-     * @return discount to be applied for the given rank position
-     */
     @Override
     public double disc(int k) {
-        return 1 / (k + 1.0);
+        return 1 / Math.log(k + 2.0) * Math.log(2.0);
     }
-
+    
 }

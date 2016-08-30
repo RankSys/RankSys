@@ -6,8 +6,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+package org.ranksys.metrics.rank;
 
 /**
- * Implementations of basic, common metrics.
+ * No discount: disc(k) = 1.
+ *
+ * @author Saúl Vargas (saul.vargas@uam.es)
+ * @author Pablo Castells (pablo.castells@uam.es)
  */
-package es.uam.eps.ir.ranksys.metrics.basic;
+public class NoDiscountModel implements RankingDiscountModel {
+
+    @Override
+    public double disc(int k) {
+        return 1.0;
+    }
+
+}

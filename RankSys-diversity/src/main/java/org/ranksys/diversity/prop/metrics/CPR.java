@@ -10,9 +10,9 @@ package org.ranksys.diversity.prop.metrics;
 import org.ranksys.core.feature.FeatureData;
 import org.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
-import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
-import es.uam.eps.ir.ranksys.metrics.rel.NoRelevanceModel;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
+import org.ranksys.metrics.AbstractRecommendationMetric;
+import org.ranksys.metrics.rel.NoRelevanceModel;
+import org.ranksys.metrics.rel.RelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.ranksys.core.util.tuples.Tuple2od;
 

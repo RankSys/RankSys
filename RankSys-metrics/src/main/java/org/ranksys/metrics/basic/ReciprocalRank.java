@@ -6,11 +6,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.metrics.basic;
+package org.ranksys.metrics.basic;
 
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
+import org.ranksys.metrics.AbstractRecommendationMetric;
+import org.ranksys.metrics.rel.RelevanceModel;
 import java.util.List;
 import static java.util.stream.IntStream.range;
 import org.ranksys.core.util.tuples.Tuple2od;

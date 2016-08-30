@@ -9,7 +9,7 @@
 package es.uam.eps.ir.ranksys.novelty.temporal;
 
 import es.uam.eps.ir.ranksys.novdiv.itemnovelty.ItemNovelty;
-import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
+import org.ranksys.metrics.rank.RankingDiscountModel;
 import java.util.List;
 import java.util.function.Function;
 

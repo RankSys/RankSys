@@ -10,7 +10,7 @@ package es.uam.eps.ir.ranksys.diversity.binom.metrics;
 
 import org.ranksys.core.feature.FeatureData;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
+import org.ranksys.metrics.rel.RelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 /**

@@ -6,9 +6,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package es.uam.eps.ir.ranksys.metrics.rel;
+package org.ranksys.metrics.rel;
 
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
+import org.ranksys.metrics.rel.RelevanceModel.UserRelevanceModel;
 
 /**
  * Relevance model in which every item is judged as relevant.

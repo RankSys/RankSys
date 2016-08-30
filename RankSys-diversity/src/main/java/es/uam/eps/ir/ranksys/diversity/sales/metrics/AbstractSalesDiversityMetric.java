@@ -9,10 +9,10 @@
 package es.uam.eps.ir.ranksys.diversity.sales.metrics;
 
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.metrics.AbstractSystemMetric;
-import es.uam.eps.ir.ranksys.metrics.SystemMetric;
-import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
-import es.uam.eps.ir.ranksys.metrics.rel.RelevanceModel;
+import org.ranksys.metrics.AbstractSystemMetric;
+import org.ranksys.metrics.SystemMetric;
+import org.ranksys.metrics.rank.RankingDiscountModel;
+import org.ranksys.metrics.rel.RelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.List;
 import java.util.stream.IntStream;
