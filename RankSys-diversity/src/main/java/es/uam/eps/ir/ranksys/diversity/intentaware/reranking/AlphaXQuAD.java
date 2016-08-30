@@ -10,7 +10,7 @@ package es.uam.eps.ir.ranksys.diversity.intentaware.reranking;
 
 import org.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.intentaware.AspectModel;
-import es.uam.eps.ir.ranksys.novdiv.reranking.LambdaReranker;
+import org.ranksys.novdiv.reranking.LambdaReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import org.ranksys.core.util.tuples.Tuple2od;
 

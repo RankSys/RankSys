@@ -9,8 +9,8 @@
 package es.uam.eps.ir.ranksys.diversity.distance.reranking;
 
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.novdiv.distance.ItemDistanceModel;
-import es.uam.eps.ir.ranksys.novdiv.reranking.LambdaReranker;
+import org.ranksys.novdiv.distance.ItemDistanceModel;
+import org.ranksys.novdiv.reranking.LambdaReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.function.ToDoubleFunction;
 import org.ranksys.core.util.tuples.Tuple2od;

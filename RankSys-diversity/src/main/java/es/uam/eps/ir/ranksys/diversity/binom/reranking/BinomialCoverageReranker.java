@@ -11,7 +11,7 @@ package es.uam.eps.ir.ranksys.diversity.binom.reranking;
 import org.ranksys.core.feature.FeatureData;
 import org.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
-import es.uam.eps.ir.ranksys.novdiv.reranking.LambdaReranker;
+import org.ranksys.novdiv.reranking.LambdaReranker;
 import java.util.HashSet;
 import java.util.Set;
 import org.jooq.lambda.tuple.Tuple2;
