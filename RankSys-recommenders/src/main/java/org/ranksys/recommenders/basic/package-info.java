@@ -8,6 +8,6 @@
  */
 
 /**
- * Base classes and interfaces for recommendation algorithms.
+ * Basic recommendation algorithms.
  */
-package org.ranksys.rec;
+package org.ranksys.recommenders.basic;

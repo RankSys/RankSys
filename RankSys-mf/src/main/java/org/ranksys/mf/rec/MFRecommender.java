@@ -14,7 +14,7 @@ import org.ranksys.core.fast.FastRecommendation;
 import org.ranksys.core.index.fast.FastItemIndex;
 import org.ranksys.core.index.fast.FastUserIndex;
 import org.ranksys.core.util.topn.IntDoubleTopN;
-import org.ranksys.rec.fast.AbstractFastRecommender;
+import org.ranksys.recommenders.fast.AbstractFastRecommender;
 import org.ranksys.mf.Factorization;
 import static java.lang.Math.min;
 import java.util.ArrayList;

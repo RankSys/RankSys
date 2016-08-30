@@ -6,9 +6,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.rec.fast;
+package org.ranksys.recommenders.fast;
 
-import org.ranksys.rec.AbstractRecommender;
+import org.ranksys.recommenders.AbstractRecommender;
 import org.ranksys.core.Recommendation;
 import org.ranksys.core.fast.FastRecommendation;
 import org.ranksys.core.index.fast.FastItemIndex;

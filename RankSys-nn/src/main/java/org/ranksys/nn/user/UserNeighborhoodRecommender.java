@@ -9,7 +9,7 @@
 package org.ranksys.nn.user;
 
 import org.ranksys.core.preference.fast.FastPreferenceData;
-import org.ranksys.rec.fast.FastRankingRecommender;
+import org.ranksys.recommenders.fast.FastRankingRecommender;
 import org.ranksys.nn.user.neighborhood.UserNeighborhood;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;

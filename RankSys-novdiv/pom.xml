@@ -28,17 +28,12 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-fast</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-metrics</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>RankSys-rec</artifactId>
+            <artifactId>RankSys-recommenders</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

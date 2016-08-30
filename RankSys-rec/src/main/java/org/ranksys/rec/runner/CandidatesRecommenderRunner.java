@@ -9,7 +9,7 @@
 package org.ranksys.rec.runner;
 
 import org.ranksys.core.Recommendation;
-import org.ranksys.rec.Recommender;
+import org.ranksys.recommenders.Recommender;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;

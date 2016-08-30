@@ -8,6 +8,6 @@
  */
 
 /**
- * Fast version of base classes and interfaces for recommendation algorithms.
+ * Base classes and interfaces for recommendation algorithms.
  */
-package org.ranksys.rec.fast;
+package org.ranksys.recommenders;

@@ -9,7 +9,7 @@
 package org.ranksys.novdiv.inverted.br;
 
 import org.ranksys.core.Recommendation;
-import org.ranksys.rec.Recommender;
+import org.ranksys.recommenders.Recommender;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import static java.lang.Math.pow;
