@@ -8,12 +8,16 @@
  */
 package es.uam.eps.ir.ranksys.examples;
 
+import org.ranksys.diversity.intentaware.ScoresAspectModel;
+import org.ranksys.diversity.intentaware.FeatureIntentModel;
+import org.ranksys.diversity.intentaware.AspectModel;
+import org.ranksys.diversity.intentaware.IntentModel;
+import org.ranksys.diversity.intentaware.ScoresRelevanceAspectModel;
 import org.ranksys.core.feature.FeatureData;
 import org.ranksys.core.feature.SimpleFeatureData;
-import es.uam.eps.ir.ranksys.diversity.distance.reranking.MMR;
-import es.uam.eps.ir.ranksys.diversity.intentaware.*;
-import es.uam.eps.ir.ranksys.diversity.intentaware.reranking.AlphaXQuAD;
-import es.uam.eps.ir.ranksys.diversity.intentaware.reranking.XQuAD;
+import org.ranksys.diversity.distance.reranking.MMR;
+import org.ranksys.diversity.intentaware.reranking.AlphaXQuAD;
+import org.ranksys.diversity.intentaware.reranking.XQuAD;
 import org.ranksys.novdiv.distance.ItemDistanceModel;
 import org.ranksys.novdiv.distance.JaccardFeatureItemDistanceModel;
 import org.ranksys.novdiv.reranking.Reranker;

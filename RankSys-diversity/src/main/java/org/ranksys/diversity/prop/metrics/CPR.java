@@ -9,7 +9,7 @@ package org.ranksys.diversity.prop.metrics;
 
 import org.ranksys.core.feature.FeatureData;
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
+import org.ranksys.diversity.binom.BinomialModel;
 import org.ranksys.metrics.AbstractRecommendationMetric;
 import org.ranksys.metrics.rel.NoRelevanceModel;
 import org.ranksys.metrics.rel.RelevanceModel;

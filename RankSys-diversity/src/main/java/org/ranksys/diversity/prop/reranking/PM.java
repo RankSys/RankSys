@@ -9,7 +9,7 @@ package org.ranksys.diversity.prop.reranking;
 
 import org.ranksys.core.feature.FeatureData;
 import org.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.diversity.binom.BinomialModel;
+import org.ranksys.diversity.binom.BinomialModel;
 import org.ranksys.novdiv.reranking.GreedyReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import org.jooq.lambda.tuple.Tuple2;
