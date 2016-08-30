@@ -31,7 +31,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         <module>RankSys-lda</module>
         <module>RankSys-fm</module>
         <module>RankSys-novdiv</module>
-        <module>RankSys-diversity</module>
         <module>RankSys-compression</module>
         <module>RankSys-formats</module>
         <module>RankSys-examples</module>
