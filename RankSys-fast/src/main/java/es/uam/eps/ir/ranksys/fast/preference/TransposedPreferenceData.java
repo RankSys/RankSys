@@ -14,6 +14,8 @@ import it.unimi.dsi.fastutil.ints.IntIterator;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import org.jooq.lambda.function.Function2;
 import org.ranksys.fast.preference.FastPointWisePreferenceData;
 
 /**
@@ -26,18 +28,32 @@ import org.ranksys.fast.preference.FastPointWisePreferenceData;
  */
 public class TransposedPreferenceData<I, U> implements FastPreferenceData<I, U>, FastPointWisePreferenceData<I, U> {
 
-    /**
-     * The original preferences.
-     */
-    protected final FastPreferenceData<U, I> d;
+    private final FastPreferenceData<U, I> d;
+    private final Function2<U, IdPref<I>, IdPref<U>> idPrefFun;
+    private final Function2<Integer, IdxPref, IdxPref> idxPrefFun;
 
     /**
-     * Constructor.
+     * Constructor with default converters between IdxPref and IdPref.
      *
      * @param recommenderData preference data to be transposed
      */
     public TransposedPreferenceData(FastPreferenceData<U, I> recommenderData) {
+        this(recommenderData, (u, p) -> new IdPref<>(u, p.v2), (uidx, p) -> new IdxPref(uidx, p.v2));
+    }
+
+    /**
+     * Constructor with custom converters between IdxPref and IdPref.
+     *
+     * @param recommenderData preference data to be transposed
+     * @param idPrefFun converter from item IdPref to user IdPref
+     * @param idxPrefFun converter from item IdxPref to item IdxPref
+     */
+    public TransposedPreferenceData(FastPreferenceData<U, I> recommenderData,
+                                    Function2<U, IdPref<I>, IdPref<U>> idPrefFun,
+                                    Function2<Integer, IdxPref, IdxPref> idxPrefFun) {
         this.d = recommenderData;
+        this.idPrefFun = idPrefFun;
+        this.idxPrefFun = idxPrefFun;
     }
 
     @Override
@@ -189,7 +205,7 @@ public class TransposedPreferenceData<I, U> implements FastPreferenceData<I, U>,
     public Optional<IdxPref> getPreference(int uidx, int iidx) {
         Optional<? extends IdxPref> pref = ((FastPointWisePreferenceData<U, I>) d).getPreference(iidx, uidx);
         if (pref.isPresent()) {
-            return Optional.of(new IdxPref(iidx, pref.get().v2));
+            return Optional.of(idxPrefFun.apply(iidx, pref.get()));
         } else {
             return Optional.empty();
         }
@@ -199,7 +215,7 @@ public class TransposedPreferenceData<I, U> implements FastPreferenceData<I, U>,
     public Optional<IdPref<U>> getPreference(I u, U i) {
         Optional<? extends IdPref<I>> pref = ((FastPointWisePreferenceData<U, I>) d).getPreference(i, u);
         if (pref.isPresent()) {
-            return Optional.of(new IdPref<>(i, pref.get().v2));
+            return Optional.of(idPrefFun.apply(i, pref.get()));
         } else {
             return Optional.empty();
         }

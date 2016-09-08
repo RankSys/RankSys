@@ -62,18 +62,44 @@ public interface FastUserIndex<U> extends UserIndex<U> {
      */
     public U uidx2user(int uidx);
 
+    /**
+     * Applies FastUserIndex::user2uidx to the first element of the tuple.
+     *
+     * @param <V> type of value
+     * @param tuple user-value tuple
+     * @return uidx-value tuple
+     */
     public default <V> Tuple2io<V> user2uidx(Tuple2<U, V> tuple) {
         return Tuples.tuple(user2uidx(tuple.v1), tuple.v2);
     }
 
+    /**
+     * Applies FastUserIndex::uidx2user to the first element of the tuple.
+     *
+     * @param <V> type of value
+     * @param tuple uidx-value tuple
+     * @return user-value tuple
+     */
     public default <V> Tuple2<U, V> uidx2user(Tuple2io<V> tuple) {
         return Tuple.tuple(uidx2user(tuple.v1), tuple.v2);
     }
 
+    /**
+     * Applies FastUserIndex::user2uidx to the first element of the tuple.
+     *
+     * @param tuple user-double tuple
+     * @return uidx-double tuple
+     */
     public default Tuple2id user2uidx(Tuple2od<U> tuple) {
         return Tuples.tuple(user2uidx(tuple.v1), tuple.v2);
     }
 
+    /**
+     * Applies FastUserIndex::uidx2user to the first element of the tuple.
+     *
+     * @param tuple uidx-double tuple
+     * @return user-double tuple
+     */
     public default Tuple2od<U> uidx2user(Tuple2id tuple) {
         return Tuples.tuple(uidx2user(tuple.v1), tuple.v2);
     }

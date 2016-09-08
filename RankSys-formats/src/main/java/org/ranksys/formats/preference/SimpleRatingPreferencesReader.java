@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.ranksys.formats.preference;
 
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
@@ -12,11 +19,19 @@ import org.jooq.lambda.tuple.Tuple3;
 import org.ranksys.formats.parsing.Parser;
 
 /**
+ * Reads a file of tab-separated user-item-rating triples, one per line.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class SimpleRatingPreferencesReader implements PreferencesReader {
 
+    /**
+     * Returns and instance of this class.
+     *
+     * @param <U> user type
+     * @param <I> item type
+     * @return an instance of SimpleRatingPreferencesReader
+     */
     public static <U, I> SimpleRatingPreferencesReader get() {
         return new SimpleRatingPreferencesReader();
     }

@@ -14,15 +14,13 @@ import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import static cern.jet.math.Functions.identity;
 import static cern.jet.math.Functions.mult;
 import static cern.jet.math.Functions.plus;
-import es.uam.eps.ir.ranksys.fast.preference.AbstractFastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
+import org.ranksys.fast.preference.StreamsAbstractFastPreferenceData;
 import es.uam.eps.ir.ranksys.mf.Factorization;
 import es.uam.eps.ir.ranksys.mf.Factorizer;
-import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -64,7 +62,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         DenseDoubleMatrix2D pu_z = factorization.getUserMatrix();
         DenseDoubleMatrix2D piz = factorization.getItemMatrix();
 
-        double error = data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
+        return data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
             DoubleMatrix1D pU_z = pu_z.viewRow(uidx);
             DoubleMatrix1D pUi = piz.zMult(pU_z, null);
             return data.getUidxPreferences(uidx).mapToDouble(iv -> {
@@ -72,7 +70,6 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             }).sum();
         }).sum();
 
-        return error;
     }
 
     @Override
@@ -167,7 +164,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         piz.assign(mult(1 / piz.aggregate(plus, identity)));
     }
 
-    private void normalizeQz(double[] qz) {
+    private static void normalizeQz(double[] qz) {
         double norm = 0;
         for (int i = 0; i < qz.length; i++) {
             norm += qz[i];
@@ -177,7 +174,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         }
     }
 
-    private static class PLSAPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> {
+    private static class PLSAPreferenceData<U, I> extends StreamsAbstractFastPreferenceData<U, I> {
 
         private final FastPreferenceData<U, I> data;
         private final Long2ObjectOpenHashMap<double[]> qz;
@@ -232,31 +229,6 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         public Stream<IdxPref> getIidxPreferences(int iidx) {
             return data.getIidxPreferences(iidx)
                     .map(pref -> new PLSAIdxPref(pref.v1, pref.v2, getQz(pref.v1, iidx)));
-        }
-
-        @Override
-        public IntIterator getUidxIidxs(int uidx) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public DoubleIterator getUidxVs(int uidx) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public IntIterator getIidxUidxs(int iidx) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public DoubleIterator getIidxVs(int iidx) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean useIteratorsPreferentially() {
-            return false;
         }
 
         @Override

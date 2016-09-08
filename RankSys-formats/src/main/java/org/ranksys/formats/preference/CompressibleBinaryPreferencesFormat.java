@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.ranksys.formats.preference;
 
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
@@ -22,11 +29,17 @@ import org.ranksys.core.util.tuples.Tuple2io;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
+ * Compression-ready format for binary preference data.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class CompressibleBinaryPreferencesFormat {
 
+    /**
+     * Gets an instance of this class.
+     *
+     * @return instance of this class
+     */
     public static CompressibleBinaryPreferencesFormat get() {
         return new CompressibleBinaryPreferencesFormat();
     }
@@ -40,7 +53,7 @@ public class CompressibleBinaryPreferencesFormat {
      * @throws FileNotFoundException one of the files could not be created
      * @throws IOException other IO error
      */
-    public <U, I> void write(FastPreferenceData<?, ?> prefData, String up, String ip) throws FileNotFoundException, IOException {
+    public void write(FastPreferenceData<?, ?> prefData, String up, String ip) throws FileNotFoundException, IOException {
         write(prefData, new FileOutputStream(up), new FileOutputStream(ip));
     }
 
@@ -52,7 +65,7 @@ public class CompressibleBinaryPreferencesFormat {
      * @param io stream of user preferences
      * @throws IOException when IO error
      */
-    public <U, I> void write(FastPreferenceData<?, ?> prefData, OutputStream uo, OutputStream io) throws IOException {
+    public void write(FastPreferenceData<?, ?> prefData, OutputStream uo, OutputStream io) throws IOException {
         BiConsumer<FastPreferenceData<?, ?>, OutputStream> saver = Unchecked.biConsumer((prefs, os) -> {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
                 prefs.getUidxWithPreferences().forEach(Unchecked.intConsumer(uidx -> {
@@ -72,10 +85,23 @@ public class CompressibleBinaryPreferencesFormat {
         saver.accept(new TransposedPreferenceData<>(prefData), io);
     }
 
+    /**
+     * Reads a file that complies with this format.
+     *
+     * @param in path to file
+     * @return stream of user/item to preferences
+     * @throws FileNotFoundException when file does not exist
+     */
     public Stream<Tuple2io<int[]>> read(String in) throws FileNotFoundException {
         return read(new FileInputStream(in));
     }
 
+    /**
+     * Reads an input stream that complies with this format.
+     *
+     * @param in input stream
+     * @return stream of user/item to preferences
+     */
     public Stream<Tuple2io<int[]>> read(InputStream in) {
         return new BufferedReader(new InputStreamReader(in)).lines().map(line -> {
             String[] tokens = line.split("\t");

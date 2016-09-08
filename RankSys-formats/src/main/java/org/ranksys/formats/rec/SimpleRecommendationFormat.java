@@ -30,7 +30,19 @@ public class SimpleRecommendationFormat<U, I> extends TuplesRecommendationFormat
      * @param iParser item type parser
      */
     public SimpleRecommendationFormat(Parser<U> uParser, Parser<I> iParser) {
-        super((u, i, v, r) -> String.join("\t", u.toString(), i.toString(), Double.toString(v)),
+        this(uParser, iParser, false);
+    }
+    
+    /**
+     * Constructor.
+     *
+     * @param uParser user type parser
+     * @param iParser item type parser
+     * @param sortByDecreasingScore sort read tuples by decreasing score?
+     */
+    public SimpleRecommendationFormat(Parser<U> uParser, Parser<I> iParser, boolean sortByDecreasingScore) {
+        super(
+                (u, i, v, r) -> String.join("\t", u.toString(), i.toString(), Double.toString(v)),
                 line -> {
                     CharSequence[] tokens = split(line, '\t', 4);
                     U u = uParser.parse(tokens[0]);
@@ -38,6 +50,8 @@ public class SimpleRecommendationFormat<U, I> extends TuplesRecommendationFormat
                     double v = pdp.applyAsDouble(tokens[2]);
 
                     return tuple(u, i, v);
-                });
+                },
+                sortByDecreasingScore
+        );
     }
 }

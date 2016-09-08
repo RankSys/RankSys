@@ -19,7 +19,7 @@ import org.ranksys.compression.codecs.AbstractCODEC;
  * 
  * Check https://github.com/lemire/JavaFastPFOR
  *
- * @author Saúl Vargas (saul.vargas@glasgow.ac.uk)
+ * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class LemireCODEC extends AbstractCODEC<int[]> {
 

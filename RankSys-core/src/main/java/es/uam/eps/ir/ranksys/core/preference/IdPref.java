@@ -30,6 +30,11 @@ public class IdPref<I> extends Tuple2od<I> implements Serializable {
         super(id, v);
     }
 
+    /**
+     * Constructor from a object-double pair.
+     *
+     * @param tuple pair of object (id) and double (preference value)
+     */
     public IdPref(Tuple2od<I> tuple) {
         super(tuple);
     }
