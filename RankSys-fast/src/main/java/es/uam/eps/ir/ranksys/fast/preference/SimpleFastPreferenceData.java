@@ -36,11 +36,11 @@ import org.ranksys.fast.preference.StreamsAbstractFastPreferenceData;
  * @param <I> type of the items
  * @author Saúl Vargas (saul.vargas@uam.es)
  */
-public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenceData<U, I> implements FastPointWisePreferenceData<U, I>, Serializable {
+public class SimpleFastPreferenceData<U, I, P extends IdxPref> extends StreamsAbstractFastPreferenceData<U, I> implements FastPointWisePreferenceData<U, I>, Serializable {
 
     private final int numPreferences;
-    private final List<List<IdxPref>> uidxList;
-    private final List<List<IdxPref>> iidxList;
+    private final List<List<P>> uidxList;
+    private final List<List<P>> iidxList;
 
     /**
      * Constructor with default IdxPref to IdPref converter.
@@ -51,11 +51,12 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
      * @param uIndex user index
      * @param iIndex item index
      */
-    protected SimpleFastPreferenceData(int numPreferences, List<List<IdxPref>> uidxList, List<List<IdxPref>> iidxList,
+    protected SimpleFastPreferenceData(int numPreferences,
+            List<List<P>> uidxList, List<List<P>> iidxList,
             FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
         this(numPreferences, uidxList, iidxList, uIndex, iIndex,
-                (Function<IdxPref, IdPref<I>> & Serializable) p -> new IdPref<>(iIndex.iidx2item(p)),
-                (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(uIndex.uidx2user(p)));
+                (Function<P, IdPref<I>> & Serializable) p -> new IdPref<>(iIndex.iidx2item(p)),
+                (Function<P, IdPref<U>> & Serializable) p -> new IdPref<>(uIndex.uidx2user(p)));
     }
 
     /**
@@ -69,10 +70,11 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
      * @param uPrefFun user IdxPref to IdPref converter
      * @param iPrefFun item IdxPref to IdPref converter
      */
-    protected SimpleFastPreferenceData(int numPreferences, List<List<IdxPref>> uidxList, List<List<IdxPref>> iidxList,
+    protected SimpleFastPreferenceData(int numPreferences,
+            List<List<P>> uidxList, List<List<P>> iidxList,
             FastUserIndex<U> uIndex, FastItemIndex<I> iIndex,
-            Function<IdxPref, IdPref<I>> uPrefFun, Function<IdxPref, IdPref<U>> iPrefFun) {
-        super(uIndex, iIndex, uPrefFun, iPrefFun);
+            Function<P, IdPref<I>> uPrefFun, Function<P, IdPref<U>> iPrefFun) {
+        super(uIndex, iIndex, p -> uPrefFun.apply((P) p), p -> iPrefFun.apply((P) p));
         this.numPreferences = numPreferences;
         this.uidxList = uidxList;
         this.iidxList = iidxList;
@@ -102,7 +104,7 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
     }
 
     @Override
-    public Stream<IdxPref> getUidxPreferences(int uidx) {
+    public Stream<P> getUidxPreferences(int uidx) {
         if (uidxList.get(uidx) == null) {
             return Stream.empty();
         } else {
@@ -111,7 +113,7 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
     }
 
     @Override
-    public Stream<IdxPref> getIidxPreferences(int iidx) {
+    public Stream<P> getIidxPreferences(int iidx) {
         if (iidxList.get(iidx) == null) {
             return Stream.empty();
         } else {
@@ -149,15 +151,15 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
     }
 
     @Override
-    public Optional<IdxPref> getPreference(int uidx, int iidx) {
-        List<IdxPref> uList = uidxList.get(uidx);
+    public Optional<P> getPreference(int uidx, int iidx) {
+        List<P> uList = uidxList.get(uidx);
 
         int low = 0;
         int high = uList.size() - 1;
 
         while (low <= high) {
             int mid = (low + high) >>> 1;
-            IdxPref p = uList.get(mid);
+            P p = uList.get(mid);
             int cmp = Integer.compare(p.v1, iidx);
             if (cmp < 0) {
                 low = mid + 1;
@@ -173,7 +175,7 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
 
     @Override
     public Optional<? extends IdPref<I>> getPreference(U u, I i) {
-        Optional<? extends IdxPref> pref = getPreference(user2uidx(u), item2iidx(i));
+        Optional<P> pref = getPreference(user2uidx(u), item2iidx(i));
 
         if (!pref.isPresent()) {
             return Optional.empty();
@@ -192,13 +194,13 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
      * @param iIndex item index
      * @return an instance of SimpleFastPreferenceData containing the data from the input stream
      */
-    public static <U, I> SimpleFastPreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
+    public static <U, I, P extends IdxPref> SimpleFastPreferenceData<U, I, P> load(Stream<Tuple3<U, I, Double>> tuples, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) {
         return load(tuples.map(t -> t.concat((Void) null)),
-                (uidx, iidx, v, o) -> new IdxPref(iidx, v),
-                (uidx, iidx, v, o) -> new IdxPref(uidx, v),
+                (uidx, iidx, v, o) -> (P) new IdxPref(iidx, v),
+                (uidx, iidx, v, o) -> (P) new IdxPref(uidx, v),
                 uIndex, iIndex,
-                (Function<IdxPref, IdPref<I>> & Serializable) p -> new IdPref<>(iIndex.iidx2item(p)),
-                (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(uIndex.uidx2user(p)));
+                (Function<P, IdPref<I>> & Serializable) p -> new IdPref<>(iIndex.iidx2item(p)),
+                (Function<P, IdPref<U>> & Serializable) p -> new IdPref<>(uIndex.uidx2user(p)));
     }
 
     /**
@@ -216,20 +218,20 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
      * @param iIdPrefFun item IdxPref to IdPref converter
      * @return an instance of SimpleFastPreferenceData containing the data from the input stream
      */
-    public static <U, I, O> SimpleFastPreferenceData<U, I> load(Stream<Tuple4<U, I, Double, O>> tuples,
-            Function4<Integer, Integer, Double, O, ? extends IdxPref> uIdxPrefFun,
-            Function4<Integer, Integer, Double, O, ? extends IdxPref> iIdxPrefFun,
+    public static <U, I, O, P extends IdxPref> SimpleFastPreferenceData<U, I, P> load(Stream<Tuple4<U, I, Double, O>> tuples,
+            Function4<Integer, Integer, Double, O, P> uIdxPrefFun,
+            Function4<Integer, Integer, Double, O, P> iIdxPrefFun,
             FastUserIndex<U> uIndex, FastItemIndex<I> iIndex,
-            Function<IdxPref, IdPref<I>> uIdPrefFun,
-            Function<IdxPref, IdPref<U>> iIdPrefFun) {
+            Function<P, IdPref<I>> uIdPrefFun,
+            Function<P, IdPref<U>> iIdPrefFun) {
         AtomicInteger numPreferences = new AtomicInteger();
 
-        List<List<IdxPref>> uidxList = new ArrayList<>();
+        List<List<P>> uidxList = new ArrayList<>();
         for (int uidx = 0; uidx < uIndex.numUsers(); uidx++) {
             uidxList.add(null);
         }
 
-        List<List<IdxPref>> iidxList = new ArrayList<>();
+        List<List<P>> iidxList = new ArrayList<>();
         for (int iidx = 0; iidx < iIndex.numItems(); iidx++) {
             iidxList.add(null);
         }
@@ -240,14 +242,14 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
 
             numPreferences.incrementAndGet();
 
-            List<IdxPref> uList = uidxList.get(uidx);
+            List<P> uList = uidxList.get(uidx);
             if (uList == null) {
                 uList = new ArrayList<>();
                 uidxList.set(uidx, uList);
             }
             uList.add(uIdxPrefFun.apply(uidx, iidx, t.v3, t.v4));
 
-            List<IdxPref> iList = iidxList.get(iidx);
+            List<P> iList = iidxList.get(iidx);
             if (iList == null) {
                 iList = new ArrayList<>();
                 iidxList.set(iidx, iList);

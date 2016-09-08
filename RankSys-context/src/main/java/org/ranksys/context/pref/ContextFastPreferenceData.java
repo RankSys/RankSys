@@ -26,24 +26,13 @@ import org.ranksys.fast.preference.FastPointWisePreferenceData;
 public interface ContextFastPreferenceData<U, I, C> extends ContextPreferenceData<U, I, C>, FastPointWisePreferenceData<U, I> {
 
     @Override
-    public Stream<IdxPrefCtx<C>> getUidxPreferences(int uidx);
+    public Stream<? extends IdxPrefCtx<C>> getUidxPreferences(int uidx);
 
     @Override
-    public Stream<IdxPrefCtx<C>> getIidxPreferences(int iidx);
+    public Stream<? extends IdxPrefCtx<C>> getIidxPreferences(int iidx);
 
     @Override
-    public default Optional<IdPrefCtx<I, C>> getPreference(U u, I i) {
-        Optional<IdxPrefCtx<C>> pref = getPreference(user2uidx(u), item2iidx(i));
-
-        if (pref.isPresent()) {
-            return Optional.of(new IdPrefCtx<>(i, pref.get().v2, pref.get().cs));
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<IdxPrefCtx<C>> getPreference(int uidx, int iidx);
+    public Optional<? extends IdxPrefCtx<C>> getPreference(int uidx, int iidx);
     
     /**
      * A fast context-aware preference.

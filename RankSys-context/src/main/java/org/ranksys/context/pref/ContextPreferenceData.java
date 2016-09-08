@@ -26,13 +26,13 @@ import org.ranksys.core.preference.PointWisePreferenceData;
 public interface ContextPreferenceData<U, I, C> extends PointWisePreferenceData<U, I> {
 
     @Override
-    public Stream<IdPrefCtx<I, C>> getUserPreferences(U u);
+    public Stream<? extends IdPrefCtx<I, C>> getUserPreferences(U u);
 
     @Override
-    public Stream<IdPrefCtx<U, C>> getItemPreferences(I i);
+    public Stream<? extends IdPrefCtx<U, C>> getItemPreferences(I i);
 
     @Override
-    public Optional<IdPrefCtx<I, C>> getPreference(U u, I i);
+    public Optional<? extends IdPrefCtx<I, C>> getPreference(U u, I i);
 
     /**
      * Returns the dimensionality of the context.

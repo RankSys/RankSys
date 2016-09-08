@@ -33,13 +33,6 @@ public interface ContextRecommender<U, I, C> extends Recommender<Tuple2<U, C>, I
         return new ContextRecommendation<>(u, c, items);
     }
 
-    /**
-     * Free recommendation. Generate recommendations without any restriction on the items being recommended, but with a limit on the list size.
-     *
-     * @param u user to be issued a recommendation
-     * @param maxLength maximum length of recommendation, set to 0 for no limit
-     * @return a recommendation list
-     */
     public default ContextRecommendation<U, I, C> getRecommendation(U u, C c, int maxLength) {
         List<Tuple2od<I>> items = getRecommendation(tuple(u, c), maxLength).getItems();
         return new ContextRecommendation<>(u, c, items);
@@ -50,26 +43,11 @@ public interface ContextRecommender<U, I, C> extends Recommender<Tuple2<U, C>, I
         return new ContextRecommendation<>(u, c, items);
     }
 
-    /**
-     * Filter recommendation. Recommends only the items that pass the filter up to a maximum list size.
-     *
-     * @param u user to be issued a recommendation
-     * @param maxLength maximum length of recommendation, set to 0 for no limit
-     * @param filter filter to decide which items might be recommended
-     * @return a recommendation list
-     */
     public default ContextRecommendation<U, I, C> getRecommendation(U u, C c, int maxLength, Predicate<I> filter) {
         List<Tuple2od<I>> items = getRecommendation(tuple(u, c), maxLength, filter).getItems();
         return new ContextRecommendation<>(u, c, items);
     }
 
-    /**
-     * Candidates ranking. Create a list that may contain only the items in the candidates set.
-     *
-     * @param u user to be issued a recommendation
-     * @param candidates candidate items to be included in the recommendation
-     * @return a recommendation list
-     */
     public default ContextRecommendation<U, I, C> getRecommendation(U u, C c, Stream<I> candidates) {
         List<Tuple2od<I>> items = getRecommendation(tuple(u, c), candidates).getItems();
         return new ContextRecommendation<>(u, c, items);
