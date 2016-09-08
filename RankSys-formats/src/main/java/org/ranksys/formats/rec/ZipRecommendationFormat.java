@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package org.ranksys.formats.rec;
 
@@ -18,12 +20,34 @@ import org.ranksys.formats.parsing.Parser;
 import static org.ranksys.formats.parsing.Parsers.pdp;
 
 /**
+ * Format similar to SimpleRecommendationFormat, but files are zipped and scores can be omitted when writing and reading for higher performance when they are not needed and only order matters.
  *
- * @author saul
+ * @author Saúl Vargas (Saul@VargasSandoval.es)
+ * @param <U> user type
+ * @param <I> item type
  */
 public class ZipRecommendationFormat<U, I> extends TuplesRecommendationFormat<U, I> {
 
+    /**
+     * Constructor.
+     *
+     * @param uParser user parser
+     * @param iParser item parser
+     * @param ignoreScores should scores be read or written?
+     */
     public ZipRecommendationFormat(Parser<U> uParser, Parser<I> iParser, boolean ignoreScores) {
+        this(uParser, iParser, ignoreScores, false);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param uParser user parser
+     * @param iParser item parser
+     * @param ignoreScores should scores be read or written?
+     * @param sortByDecreasingScore sort read tuples by decreasing score?
+     */
+    public ZipRecommendationFormat(Parser<U> uParser, Parser<I> iParser, boolean ignoreScores, boolean sortByDecreasingScore) {
         super(
                 (u, i, v, r) -> {
                     if (ignoreScores) {
@@ -39,7 +63,8 @@ public class ZipRecommendationFormat<U, I> extends TuplesRecommendationFormat<U,
                     double v = ignoreScores ? NaN : pdp.applyAsDouble(tokens[2]);
 
                     return tuple(u, i, v);
-                }
+                },
+                sortByDecreasingScore
         );
     }
 

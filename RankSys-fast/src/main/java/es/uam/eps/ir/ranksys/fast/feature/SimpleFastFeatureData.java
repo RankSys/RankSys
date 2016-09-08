@@ -102,6 +102,17 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
                 .filter(fv -> fv != null).count();
     }
 
+    /**
+     * Loads a SimpleFastFeatureData by processing a stream of item-feature-value triples.
+     *
+     * @param <I> type of items
+     * @param <F> type of feats
+     * @param <V> type of value
+     * @param tuples item-feature-value triples
+     * @param iIndex item index
+     * @param fIndex feat index
+     * @return a SimpleFastFeatureData containing the information from the input triples
+     */
     public static <I, F, V> SimpleFastFeatureData<I, F, V> load(Stream<Tuple3<I, F, V>> tuples, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) {
 
         List<List<Tuple2io<V>>> iidxList = new ArrayList<>();

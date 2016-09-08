@@ -7,11 +7,11 @@
  */
 package org.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
-import java.util.Optional;
 import org.ranksys.core.preference.PointWisePreferenceData;
+
+import java.util.Optional;
 
 /**
  * Fast point-wise preference data.
@@ -24,17 +24,6 @@ import org.ranksys.core.preference.PointWisePreferenceData;
  * @param <I> type of the items
  */
 public interface FastPointWisePreferenceData<U, I> extends PointWisePreferenceData<U, I>, FastPreferenceData<U, I> {
-
-    @Override
-    public default Optional<? extends IdPref<I>> getPreference(U u, I i) {
-        Optional<? extends IdxPref> pref = getPreference(user2uidx(u), item2iidx(i));
-
-        if (!pref.isPresent()) {
-            return Optional.empty();
-        } else {
-            return Optional.of(new IdPref<>(i, pref.get().v2));
-        }
-    }
 
     /**
      * Get preference of a user for an item.

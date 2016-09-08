@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -31,6 +33,17 @@ import java.util.stream.Stream;
  */
 public interface RecommendationFormat<U, I> {
 
+    /**
+     * Gets a writer for a file path.
+     *
+     * @param path file path
+     * @return a recommendation writer
+     * @throws IOException if path does not exist or IO error
+     */
+    public default Writer<U, I> getWriter(Path path) throws IOException {
+        return getWriter(Files.newOutputStream(path));
+    }
+    
     /**
      * Gets a writer for a file path.
      *
@@ -89,6 +102,17 @@ public interface RecommendationFormat<U, I> {
 
     }
 
+    /**
+     * Gets a reader for a file path.
+     *
+     * @param path file path
+     * @return a recommendation reader
+     * @throws IOException when IO error
+     */
+    public default Reader<U, I> getReader(Path path) throws IOException {
+        return getReader(Files.newInputStream(path));
+    }
+    
     /**
      * Gets a reader for a file path.
      *

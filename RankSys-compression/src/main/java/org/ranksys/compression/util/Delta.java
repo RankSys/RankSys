@@ -14,7 +14,7 @@ package org.ranksys.compression.util;
  * b[0] = a[0] + 1
  * b[n] = a[n] - a[n - 1] for i &ge; 0
  *
- * @author Saúl Vargas (saul.vargas@glasgow.ac.uk)
+ * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class Delta {
 

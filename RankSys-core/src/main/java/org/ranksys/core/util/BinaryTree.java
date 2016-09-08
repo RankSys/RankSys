@@ -16,6 +16,7 @@ import org.ranksys.core.util.BinaryTree.Node;
  * A simple binary tree for different purposes.
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * @param <N> type of node
  */
 public class BinaryTree<N extends Node> {
 
@@ -135,6 +136,11 @@ public class BinaryTree<N extends Node> {
             return l == null && r == null;
         }
 
+        /**
+         * Computes recursively the number of nodes under the current node, including itself.
+         *
+         * @return number of descendants plus itself
+         */
         protected int numNodes() {
             int c = 1;
             if (this.l != null) {
@@ -147,6 +153,11 @@ public class BinaryTree<N extends Node> {
             return c;
         }
 
+        /**
+         * Computes recursively the depth of the sub-tree whose root is this node.
+         *
+         * @return depth of the sub-tree
+         */
         protected int depth() {
             if (isLeaf()) {
                 return 1;

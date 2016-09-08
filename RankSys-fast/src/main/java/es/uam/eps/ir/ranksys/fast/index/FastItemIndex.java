@@ -62,18 +62,44 @@ public interface FastItemIndex<I> extends ItemIndex<I> {
      */
     public I iidx2item(int iidx);
 
+    /**
+     * Applies FastItemIndex::item2iidx to the first element of the tuple.
+     *
+     * @param <V> type of value
+     * @param tuple item-value tuple
+     * @return iidx-value tuple
+     */
     public default <V> Tuple2io<V> item2iidx(Tuple2<I, V> tuple) {
         return Tuples.tuple(item2iidx(tuple.v1), tuple.v2);
     }
 
+    /**
+     * Applies FastItemIndex::iidx2item to the first element of the tuple.
+     *
+     * @param <V> type of value
+     * @param tuple iidx-value tuple
+     * @return item-value tuple
+     */
     public default <V> Tuple2<I, V> iidx2item(Tuple2io<V> tuple) {
         return Tuple.tuple(iidx2item(tuple.v1), tuple.v2);
     }
 
+    /**
+     * Applies FastItemIndex::item2iidx to the first element of the tuple.
+     *
+     * @param tuple item-double tuple
+     * @return iidx-double tuple
+     */
     public default Tuple2id item2iidx(Tuple2od<I> tuple) {
         return Tuples.tuple(item2iidx(tuple.v1), tuple.v2);
     }
 
+    /**
+     * Applies FastItemIndex::iidx2item to the first element of the tuple.
+     *
+     * @param tuple iidx-double tuple
+     * @return item-double tuple
+     */
     public default Tuple2od<I> iidx2item(Tuple2id tuple) {
         return Tuples.tuple(iidx2item(tuple.v1), tuple.v2);
     }

@@ -113,24 +113,22 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
         return featMap.keySet().stream();
     }
 
+    /**
+     * Loads an instance of the class from a stream of triples.
+     *
+     * @param <I> type of item
+     * @param <F> type of feat
+     * @param <V> type of value
+     * @param tuples stream of item-feat-value triples
+     * @return a feature data object
+     */
     public static <I, F, V> SimpleFeatureData<I, F, V> load(Stream<Tuple3<I, F, V>> tuples) {
         Map<I, List<Tuple2<F, V>>> itemMap = new HashMap<>();
         Map<F, List<Tuple2<I, V>>> featMap = new HashMap<>();
 
         tuples.forEach(t -> {
-            List<Tuple2<F, V>> iList = itemMap.get(t.v1);
-            if (iList == null) {
-                iList = new ArrayList<>();
-                itemMap.put(t.v1, iList);
-            }
-            iList.add(tuple(t.v2, t.v3));
-
-            List<Tuple2<I, V>> fList = featMap.get(t.v2);
-            if (fList == null) {
-                fList = new ArrayList<>();
-                featMap.put(t.v2, fList);
-            }
-            fList.add(tuple(t.v1, t.v3));
+            itemMap.computeIfAbsent(t.v1, v1 -> new ArrayList<>()).add(tuple(t.v2, t.v3));
+            featMap.computeIfAbsent(t.v2, v2 -> new ArrayList<>()).add(tuple(t.v1, t.v3));
         });
 
         return new SimpleFeatureData<>(itemMap, featMap);
