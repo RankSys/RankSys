@@ -25,7 +25,7 @@ import org.ranksys.compression.codecs.AbstractCODEC;
 /**
  * FastPFOR coding (with Variable Byte as fallback).
  *
- * @author Saúl Vargas (saul.vargas@glasgow.ac.uk)
+ * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  */
 public class FastPFORVBCODEC extends AbstractCODEC<int[]> {
 

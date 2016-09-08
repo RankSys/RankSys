@@ -38,6 +38,9 @@ public class AbstractFastRecommenderTest {
     private final List<Tuple2id> recs;
     private final FastRecommender<String, String> recommender;
 
+    /**
+     * Constructor that initialises some mock data.
+     */
     public AbstractFastRecommenderTest() {
         FastUserIndex<String> uIndex = new SimpleFastUserIndex<String>() {
             {
@@ -84,6 +87,9 @@ public class AbstractFastRecommenderTest {
         };
     }
 
+    /**
+     * Filters that the conversion from item ids to iidxs is correct.
+     */
     @Test
     public void testSubclass() {
         int maxLength = Integer.MAX_VALUE;
@@ -98,6 +104,9 @@ public class AbstractFastRecommenderTest {
         assertEquals(emptyList(), result1);
     }
 
+    /**
+     * Test filter recommendation method.
+     */
     @Test
     public void testFilter() {
         int maxLength = Integer.MAX_VALUE;
@@ -114,6 +123,9 @@ public class AbstractFastRecommenderTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test the maxLenght parameter in filter recommendation method.
+     */
     @Test
     public void testMaxLength() {
         int maxLength = 2;
@@ -129,6 +141,9 @@ public class AbstractFastRecommenderTest {
         assertEquals(expected, result);
     }
     
+    /**
+     * Test the fast free recommendation method.
+     */
     @Test
     public void testFastFree() {
         int maxLength = Integer.MAX_VALUE;
@@ -147,6 +162,9 @@ public class AbstractFastRecommenderTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test the fast candidates recommendation method.
+     */
     @Test
     public void testFastCandidates() {
         IntStream candidates = IntStream.of(1, 3, 5);
@@ -162,6 +180,9 @@ public class AbstractFastRecommenderTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test the standard filter recommendation method.
+     */
     @Test
     public void testStdFilter() {
         int maxLength = Integer.MAX_VALUE;
@@ -181,6 +202,9 @@ public class AbstractFastRecommenderTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Tests the standard free recommendation method.
+     */
     @Test
     public void testStdFree() {
         int maxLength = Integer.MAX_VALUE;
@@ -199,6 +223,9 @@ public class AbstractFastRecommenderTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test the standard candidates recommendation method.
+     */
     @Test
     public void testStdCandidates() {
         Stream<String> candidates = Stream.of("1", "3", "5");

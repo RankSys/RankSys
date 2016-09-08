@@ -21,6 +21,9 @@ import static java.util.stream.IntStream.range;
  */
 public class Parsers {
 
+    /**
+     * Parse to int.
+     */
     public static final ToIntFunction<CharSequence> pip = from -> {
         int n = from.charAt(0) == '-' ? 1 : 0;
         int m = from.charAt(0) == '-' ? -1 : 1;
@@ -34,6 +37,9 @@ public class Parsers {
      */
     public static Parser<Integer> ip = from -> pip.applyAsInt(from);
     
+    /**
+     * Parse to long.
+     */
     public static final ToLongFunction<CharSequence> plp = from -> {
         int n = from.charAt(0) == '-' ? 1 : 0;
         int m = from.charAt(0) == '-' ? -1 : 1;
@@ -57,6 +63,9 @@ public class Parsers {
      */
     public static Parser<Float> fp = from -> Float.parseFloat(from.toString());
 
+    /**
+     * Parse to double.
+     */
     public static ToDoubleFunction<CharSequence> pdp = from -> parseDouble(from.toString());
     
     /**

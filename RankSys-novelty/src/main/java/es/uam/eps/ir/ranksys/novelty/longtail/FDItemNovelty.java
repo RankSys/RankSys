@@ -60,13 +60,13 @@ public class FDItemNovelty<U, I> extends ItemNovelty<U, I> {
 
         public UserFDItemNoveltyModel(PreferenceData<U, I> recommenderData) {
             IntSummaryStatistics stats = recommenderData.getItemsWithPreferences().mapToInt(i -> recommenderData.numUsers(i)).summaryStatistics();
-            long norm = stats.getSum();
+            double norm = stats.getSum();
             double maxNov = -log(stats.getMin() / norm) / log(2);
 
             itemNovelty = new Object2DoubleOpenHashMap<>();
             itemNovelty.defaultReturnValue(maxNov);
             recommenderData.getItemsWithPreferences().forEach(i -> {
-                itemNovelty.put(i, -log(recommenderData.numUsers(i) / (double) norm) / log(2));
+                itemNovelty.put(i, -log(recommenderData.numUsers(i) / norm) / log(2));
             });
         }
 

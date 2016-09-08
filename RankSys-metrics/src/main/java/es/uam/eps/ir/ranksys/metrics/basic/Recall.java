@@ -18,7 +18,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
  *
  * @param <U> type of the users
  * @param <I> type of the items
- * @author Jacek Wasilewski (jacek.wasilewski@insightcentre.org)
+ * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
  */
 public class Recall<U, I> extends AbstractRecommendationMetric<U, I> {
 

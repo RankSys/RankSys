@@ -39,8 +39,10 @@ import es.uam.eps.ir.ranksys.rec.runner.RecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilterRecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilters;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.DoubleUnaryOperator;
 import java.util.function.Function;
@@ -48,13 +50,22 @@ import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.jooq.lambda.Unchecked;
-import org.ranksys.lda.LDAModelEstimator;
-import org.ranksys.lda.LDARecommender;
+import org.ranksys.fm.PreferenceFM;
+import org.ranksys.fm.data.BPRPreferenceFMData;
+import org.ranksys.fm.data.OneClassPreferenceFMData;
+import org.ranksys.fm.rec.FMRecommender;
 import org.ranksys.formats.index.ItemsReader;
 import org.ranksys.formats.index.UsersReader;
 import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
 import org.ranksys.formats.rec.RecommendationFormat;
 import org.ranksys.formats.rec.SimpleRecommendationFormat;
+import org.ranksys.javafm.FM;
+import org.ranksys.javafm.data.FMData;
+import org.ranksys.javafm.learner.gd.BPR;
+import static org.ranksys.javafm.learner.gd.PointWiseError.rmse;
+import org.ranksys.javafm.learner.gd.PointWiseGradientDescent;
+import org.ranksys.lda.LDAModelEstimator;
+import org.ranksys.lda.LDARecommender;
 
 /**
  * Example main of recommendations.
@@ -152,7 +163,7 @@ public class RecommenderExample {
         });
 
         // LDA topic modelling by Blei et al. 2003
-        recMap.put("lda", Unchecked.supplier(()-> {
+        recMap.put("lda", Unchecked.supplier(() -> {
             int k = 50;
             double alpha = 1.0;
             double beta = 0.01;
@@ -162,6 +173,55 @@ public class RecommenderExample {
             ParallelTopicModel topicModel = LDAModelEstimator.estimate(trainData, k, alpha, beta, numIter, burninPeriod);
 
             return new LDARecommender<>(userIndex, itemIndex, topicModel);
+        }));
+
+        // Factorisation machine using a BRP-like loss
+        recMap.put("fm-bpr", Unchecked.supplier(() -> {
+            BPRPreferenceFMData fmTrain = new BPRPreferenceFMData(trainData);
+            BPRPreferenceFMData fmTest = new BPRPreferenceFMData(testData);
+
+            double learnRate = 0.01;
+            int numIter = 200;
+            double sdev = 0.1;
+            double[] regW = new double[fmTrain.numFeatures()];
+            Arrays.fill(regW, 0.01);
+            double[] regM = new double[fmTrain.numFeatures()];
+            Arrays.fill(regM, 0.01);
+            int K = 100;
+
+            FM fm = new FM(fmTrain.numFeatures(), K, new Random(), sdev);
+
+            new BPR(learnRate, numIter, regW, regM).learn(fm, fmTrain, fmTest);
+
+            PreferenceFM<Long, Long> prefFm = new PreferenceFM<>(userIndex, itemIndex, fm);
+
+            return new FMRecommender<Long, Long>(prefFm);
+        }));
+
+        // Factorisation machine usinga RMSE-like loss with balanced sampling of negative
+        // instances
+        recMap.put("fm-rmse", Unchecked.supplier(() -> {
+            double negativeProp = 2.0;
+            FMData fmTrain = new OneClassPreferenceFMData(trainData, negativeProp);
+            FMData fmTest = new OneClassPreferenceFMData(testData, negativeProp);
+
+            double learnRate = 0.01;
+            int numIter = 50;
+            double sdev = 0.1;
+            double regB = 0.01;
+            double[] regW = new double[fmTrain.numFeatures()];
+            Arrays.fill(regW, 0.01);
+            double[] regM = new double[fmTrain.numFeatures()];
+            Arrays.fill(regM, 0.01);
+            int K = 100;
+
+            FM fm = new FM(fmTrain.numFeatures(), K, new Random(), sdev);
+
+            new PointWiseGradientDescent(learnRate, numIter, rmse(), regB, regW, regM).learn(fm, fmTrain, fmTest);
+
+            PreferenceFM<Long, Long> prefFm = new PreferenceFM<>(userIndex, itemIndex, fm);
+
+            return new FMRecommender<Long, Long>(prefFm);
         }));
 
         ////////////////////////////////
@@ -175,7 +235,9 @@ public class RecommenderExample {
 
         recMap.forEach(Unchecked.biConsumer((name, recommender) -> {
             System.out.println("Running " + name);
-            runner.run(recommender.get(), format.getWriter(name));
+            try (RecommendationFormat.Writer<Long, Long> writer = format.getWriter(name)) {
+                runner.run(recommender.get(), writer);
+            }
         }));
     }
 }

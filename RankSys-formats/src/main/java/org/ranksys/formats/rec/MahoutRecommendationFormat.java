@@ -1,39 +1,46 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package org.ranksys.formats.rec;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-import java.util.stream.Stream;
 import org.jooq.lambda.Unchecked;
 import org.ranksys.core.util.tuples.Tuple2od;
-import static org.ranksys.core.util.tuples.Tuples.tuple;
 import org.ranksys.formats.parsing.Parser;
+
+import java.io.*;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+import static org.ranksys.core.util.tuples.Tuples.tuple;
 import static org.ranksys.formats.parsing.Parsers.pdp;
 
 /**
+ * Reader for Mahout-like recommendations. Path must be a directory.
  *
- * @author saul
+ * @param <U> user type
+ * @param <I> item type
+ * 
+ * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U, I> {
 
     private final Parser<U> uParser;
     private final Parser<I> iParser;
 
+    /**
+     * Constructor.
+     *
+     * @param uParser user parser
+     * @param iParser item parser
+     */
     public MahoutRecommendationFormat(Parser<U> uParser, Parser<I> iParser) {
         this.uParser = uParser;
         this.iParser = iParser;
@@ -64,7 +71,7 @@ public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U,
         }
 
         @Override
-        public void write(Recommendation<U, I> recommendation) throws IOException {
+        public synchronized void write(Recommendation<U, I> recommendation) throws IOException {
             writer.write(recommendation.getUser() + "\t");
             writer.write(recommendation.getItems().stream()
                     .map(is -> is.v1 + ":" + is.v2)

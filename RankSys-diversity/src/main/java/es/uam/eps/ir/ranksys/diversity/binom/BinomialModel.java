@@ -75,7 +75,7 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
 
     @Override
     public UserBinomialModel get(U u) {
-        return new UserBinomialModel(u, alpha);
+        return new UserBinomialModel(u);
     }
 
     @SuppressWarnings("unchecked")
@@ -108,7 +108,7 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
         private final U user;
         private final Object2DoubleMap<F> featureProbs;
 
-        private UserBinomialModel(U user, double alpha) {
+        private UserBinomialModel(U user) {
             this.user = user;
             this.featureProbs = getUserFeatureProbs();
         }
@@ -179,12 +179,14 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
             if (probs.isEmpty()) {
                 return globalFeatureProbs;
             }
+
+            probs.replaceAll((f, c) -> c / n);
             
             if (alpha < 1.0) {
                 globalFeatureProbs.object2DoubleEntrySet().forEach(e -> {
                     F f = e.getKey();
                     double p = e.getDoubleValue();
-                    probs.put(f, alpha * probs.getDouble(f) / n + (1 - alpha) * p);
+                    probs.put(f, alpha * probs.getDouble(f) + (1 - alpha) * p);
                 });
             }
             

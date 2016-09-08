@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.ranksys.formats.factorization;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
@@ -20,11 +27,17 @@ import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import static java.lang.Integer.parseInt;
 
 /**
+ * Zip-compressed, human readable matrix factorisation format.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class SimpleFactorizationFormat implements FactorizationFormat {
 
+    /**
+     * Returns an instance of this class.
+     *
+     * @return an instance of SimpleFactorizationFormat
+     */
     public static SimpleFactorizationFormat get() {
         return new SimpleFactorizationFormat();
     }

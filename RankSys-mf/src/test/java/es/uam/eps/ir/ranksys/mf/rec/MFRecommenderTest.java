@@ -23,6 +23,7 @@ import org.ranksys.core.util.tuples.Tuple2id;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
+ * Test for MFRecommender.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
@@ -30,6 +31,9 @@ public class MFRecommenderTest {
 
     private final MFRecommender<String, String> recommender;
 
+    /**
+     * Constructor that initialises some mock data.
+     */
     public MFRecommenderTest() {
         FastUserIndex<String> uIndex = new SimpleFastUserIndex<String>() {
             {
@@ -65,6 +69,9 @@ public class MFRecommenderTest {
         recommender = new MFRecommender<>(uIndex, iIndex, factorization);
     }
 
+    /**
+     * Tests the filter recommendation method.
+     */
     @Test
     public void testFilter() {
         int maxLength = 2;
@@ -80,6 +87,9 @@ public class MFRecommenderTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Tests the candidates recommendation method.
+     */
     @Test
     public void testCandidates() {
         IntStream candidates = IntStream.of(1, 3, 5);

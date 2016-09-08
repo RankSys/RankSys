@@ -29,6 +29,11 @@ public class IdxPref extends Tuple2id implements Serializable {
         super(idx, v);
     }
 
+    /**
+     * Constructor from tuple
+     *
+     * @param tuple index-double tuple
+     */
     public IdxPref(Tuple2id tuple) {
         super(tuple);
     }
