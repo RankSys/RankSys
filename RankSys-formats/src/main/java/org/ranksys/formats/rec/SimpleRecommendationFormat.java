@@ -23,14 +23,22 @@ import static org.jooq.lambda.tuple.Tuple.tuple;
  */
 public class SimpleRecommendationFormat<U, I> extends TuplesRecommendationFormat<U, I> {
 
-    public SimpleRecommendationFormat(Parser<U> uParser, Parser<I> iParser) {
-        this(uParser, iParser, false);
-    }
     /**
      * Constructor.
      *
      * @param uParser user type parser
      * @param iParser item type parser
+     */
+    public SimpleRecommendationFormat(Parser<U> uParser, Parser<I> iParser) {
+        this(uParser, iParser, false);
+    }
+    
+    /**
+     * Constructor.
+     *
+     * @param uParser user type parser
+     * @param iParser item type parser
+     * @param sortByDecreasingScore sort read tuples by decreasing score?
      */
     public SimpleRecommendationFormat(Parser<U> uParser, Parser<I> iParser, boolean sortByDecreasingScore) {
         super(

@@ -14,7 +14,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <parent>
         <groupId>org.ranksys</groupId>
         <artifactId>RankSys</artifactId>
-        <version>loglikelihood-sim-SNAPSHOT</version>
+        <version>refactoring-nn-fast-SNAPSHOT</version>
     </parent>
 
     <artifactId>RankSys-rec</artifactId>

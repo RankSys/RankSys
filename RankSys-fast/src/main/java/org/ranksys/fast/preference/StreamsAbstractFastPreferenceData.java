@@ -24,13 +24,29 @@ import org.ranksys.core.util.iterators.StreamIntIterator;
  * are preferred.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
+ * @param <U> user type
+ * @param <I> item type
  */
 public abstract class StreamsAbstractFastPreferenceData<U, I> extends AbstractFastPreferenceData<U, I> {
 
+    /**
+     * Constructor with default IdxPref to IdPref converter.
+     *
+     * @param userIndex user index
+     * @param itemIndex item index
+     */
     public StreamsAbstractFastPreferenceData(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex) {
         super(userIndex, itemIndex);
     }
 
+    /**
+     * Constructor with custom IdxPref to IdPref converter.
+     *
+     * @param userIndex user index
+     * @param itemIndex item index
+     * @param uPrefFun user IdxPref to IdPref converter
+     * @param iPrefFun item IdxPref to IdPref converter
+     */
     public StreamsAbstractFastPreferenceData(FastUserIndex<U> userIndex, FastItemIndex<I> itemIndex, Function<IdxPref, IdPref<I>> uPrefFun, Function<IdxPref, IdPref<U>> iPrefFun) {
         super(userIndex, itemIndex, uPrefFun, iPrefFun);
     }

@@ -21,7 +21,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
  * 
  * Dang, V., Croft, W. B. (2012). Diversity by Proportionality: An Election-based Approach to Search Result Diversification. In Proceedings of the 35th International ACM SIGIR Conference on Research and Development in Information Retrieval (pp. 65–74). New York, NY, USA: ACM. doi:10.1145/2348283.2348296
  *
- * @author Saúl Vargas (saul.vargas@mendeley.com)
+ * @author Saúl Vargas (Saul.Vargas@mendeley.com)
  *
  * @param <U> type of user
  * @param <I> type of item

@@ -28,24 +28,25 @@ import org.ranksys.fast.preference.FastPointWisePreferenceData;
  */
 public class TransposedPreferenceData<I, U> implements FastPreferenceData<I, U>, FastPointWisePreferenceData<I, U> {
 
+    private final FastPreferenceData<U, I> d;
+    private final Function2<U, IdPref<I>, IdPref<U>> idPrefFun;
+    private final Function2<Integer, IdxPref, IdxPref> idxPrefFun;
+
     /**
-     * The original preferences.
+     * Constructor with default converters between IdxPref and IdPref.
+     *
+     * @param recommenderData preference data to be transposed
      */
-    protected final FastPreferenceData<U, I> d;
-
-    protected final Function2<U, IdPref<I>, IdPref<U>> idPrefFun;
-    protected final Function2<Integer, IdxPref, IdxPref> idxPrefFun;
-
     public TransposedPreferenceData(FastPreferenceData<U, I> recommenderData) {
         this(recommenderData, (u, p) -> new IdPref<>(u, p.v2), (uidx, p) -> new IdxPref(uidx, p.v2));
     }
 
     /**
-     * Constructor.
+     * Constructor with custom converters between IdxPref and IdPref.
      *
      * @param recommenderData preference data to be transposed
-     * @param idPrefFun
-     * @param idxPrefFun
+     * @param idPrefFun converter from item IdPref to user IdPref
+     * @param idxPrefFun converter from item IdxPref to item IdxPref
      */
     public TransposedPreferenceData(FastPreferenceData<U, I> recommenderData,
                                     Function2<U, IdPref<I>, IdPref<U>> idPrefFun,

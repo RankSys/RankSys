@@ -62,18 +62,44 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
      */
     public F fidx2feature(int fidx);
 
+    /**
+     * Applies FastFeatureIndex::feature2fidx to the first element of the tuple.
+     *
+     * @param <V> type of value
+     * @param tuple feature-value tuple
+     * @return fidx-value tuple
+     */
     public default <V> Tuple2io<V> feature2fidx(Tuple2<F, V> tuple) {
         return Tuples.tuple(feature2fidx(tuple.v1), tuple.v2);
     }
 
+    /**
+     * Applies FastFeatureIndex::fidx2feature to the first element of the tuple.
+     *
+     * @param <V> type of value
+     * @param tuple fidx-value tuple
+     * @return feature-value tuple
+     */
     public default <V> Tuple2<F, V> fidx2feature(Tuple2io<V> tuple) {
         return Tuple.tuple(fidx2feature(tuple.v1), tuple.v2);
     }
 
+    /**
+     * Applies FastFeatureIndex::feature2fidx to the first element of the tuple.
+     *
+     * @param tuple feature-double tuple
+     * @return fidx-double tuple
+     */
     public default Tuple2id feature2fidx(Tuple2od<F> tuple) {
         return Tuples.tuple(feature2fidx(tuple.v1), tuple.v2);
     }
 
+    /**
+     * Applies FastFeatureIndex::fidx2feature to the first element of the tuple.
+     *
+     * @param tuple fidx-double tuple
+     * @return feature-double tuple
+     */
     public default Tuple2od<F> fidx2feature(Tuple2id tuple) {
         return Tuples.tuple(fidx2feature(tuple.v1), tuple.v2);
     }

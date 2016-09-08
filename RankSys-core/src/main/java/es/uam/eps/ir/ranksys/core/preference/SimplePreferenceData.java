@@ -122,17 +122,28 @@ public class SimplePreferenceData<U, I> implements PreferenceData<U, I>, Seriali
         return itemMap.keySet().stream();
     }
 
+    /**
+     * Loads a SimplePreferenceData from a stream of user-item-value triples.
+     *
+     * @param <U> user type
+     * @param <I> item type
+     * @param tuples user-item-value triples
+     * @return instance of SimplePreferenceData containing the information in the input
+     */
     public static <U, I> SimplePreferenceData<U, I> load(Stream<Tuple3<U, I, Double>> tuples) {
         return load((Stream<Tuple4<U, I, Double, Void>>) tuples.map(t -> t.concat((Void) null)),
                 (u, i, v, o) -> new IdPref<>(i, v), (u, i, v, o) -> new IdPref<>(u, v));
     }
 
     /**
-     * Loads an instance of the class from a stream of triples.
+     * Loads an instance of the class from a stream of tuples possibly containing extra information.
      *
      * @param <U> type of user
      * @param <I> type of item
+     * @param <O> type of additional information
      * @param tuples stream of user-item-value triples
+     * @param uPrefFun creator of preference objects
+     * @param iPrefFun creator of preference objects
      * @return a preference data object
      */
     public static <U, I, O> SimplePreferenceData<U, I> load(Stream<Tuple4<U, I, Double, O>> tuples,

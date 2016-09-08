@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package org.ranksys.formats.rec;
 
@@ -22,14 +24,24 @@ import static org.ranksys.core.util.tuples.Tuples.tuple;
 import static org.ranksys.formats.parsing.Parsers.pdp;
 
 /**
+ * Reader for Mahout-like recommendations. Path must be a directory.
  *
- * @author saul
+ * @param <U> user type
+ * @param <I> item type
+ * 
+ * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U, I> {
 
     private final Parser<U> uParser;
     private final Parser<I> iParser;
 
+    /**
+     * Constructor.
+     *
+     * @param uParser user parser
+     * @param iParser item parser
+     */
     public MahoutRecommendationFormat(Parser<U> uParser, Parser<I> iParser) {
         this.uParser = uParser;
         this.iParser = iParser;

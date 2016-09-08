@@ -29,6 +29,9 @@ public class BinomialModelTest {
     private FeatureData<Integer, Integer, Double> featureData;
     private PreferenceData<Integer, Integer> preferences;
 
+    /**
+     * Loads some mock data for test.
+     */
     @Before
     public void loadData() {
         featureData = SimpleFeatureData.load(Stream.of(
@@ -46,6 +49,9 @@ public class BinomialModelTest {
         ));
     }
     
+    /**
+     * Tests the global probability method (BinomialModel::p).
+     */
     @Test
     public void testGlobalModel() {
         Int2DoubleMap expectedGlobalP = new Int2DoubleOpenHashMap();
@@ -58,6 +64,9 @@ public class BinomialModelTest {
         expectedGlobalP.forEach((f, p) -> assertEquals((double) p, bm.p(f), 0.0001));
     }
     
+    /**
+     * Tests the local (user) probability method with alpha = 0.0.
+     */
     @Test
     public void testLocalModelAlpha00() {
         Int2DoubleMap expectedLocalP = new Int2DoubleOpenHashMap();
@@ -67,6 +76,9 @@ public class BinomialModelTest {
         checkLocalModel(0.0, expectedLocalP);
     }
     
+    /**
+     * Tests the local (user) probability method with alpha = 0.5.
+     */
     @Test
     public void testLocalModelAlpha05() {
         Int2DoubleMap expectedLocalP = new Int2DoubleOpenHashMap();
@@ -76,6 +88,9 @@ public class BinomialModelTest {
         checkLocalModel(0.5, expectedLocalP);
     }
     
+    /**
+     * Tests the local (user) probability method with alpha = 1.0.
+     */
     @Test
     public void testLocalModelAlpha10() {
         Int2DoubleMap expectedLocalP = new Int2DoubleOpenHashMap();
@@ -84,7 +99,7 @@ public class BinomialModelTest {
         checkLocalModel(1.0, expectedLocalP);
     }
     
-    public void checkLocalModel(double alpha, Int2DoubleMap expectedLocalP) {
+    private void checkLocalModel(double alpha, Int2DoubleMap expectedLocalP) {
         BinomialModel<Integer, Integer, Integer> bm = new BinomialModel<>(false, Stream.empty(), preferences, featureData, alpha);
         BinomialModel<Integer, Integer, Integer>.UserBinomialModel ubm = bm.getModel(1);
         

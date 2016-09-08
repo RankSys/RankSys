@@ -46,7 +46,8 @@ import static org.ranksys.core.util.tuples.Tuples.tuple;
 public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPreferenceData<U, I, Cu, Ci> {
 
     /**
-     * Constructor that utilizes other PreferenceData object.
+     * Constructor that utilizes other PreferenceData object with default IdxPref to IdPref
+     * converters.
      *
      * @param preferences input preference data to be copied
      * @param users       user index
@@ -60,6 +61,17 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
                 (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(users.uidx2user(p)));
     }
 
+    /**
+     * Constructor that utilizes other PreferenceData object with custom IdxPref to IdPref converters.
+     *
+     * @param preferences input preference data to be copied
+     * @param users   user index
+     * @param items   item index
+     * @param u_codec     user preferences list CODEC
+     * @param i_codec     item preferences list CODEC
+     * @param uPrefFun user IdxPref to IdPref converter
+     * @param iPrefFun item IdxPref to IdPref converter
+     */
     public BinaryCODECPreferenceData(FastPreferenceData<U, I> preferences,
                                      FastUserIndex<U> users, FastItemIndex<I> items,
                                      CODEC<Cu> u_codec, CODEC<Ci> i_codec,
@@ -85,7 +97,8 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
     }
 
     /**
-     * Constructor using streams of user and items preferences lists.
+     * Constructor using streams of user and items preferences lists with default IdxPref to IdPref
+     * converters.
      *
      * @param ul      stream of user preferences lists
      * @param il      stream of item preferences lists
@@ -102,6 +115,18 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
                 (Function<IdxPref, IdPref<U>> & Serializable) p -> new IdPref<>(users.uidx2user(p)));
     }
 
+    /**
+     * Constructor using streams of user and items preferences lists with custom IdxPref to IdPref converters.
+     *
+     * @param ul      stream of user preferences lists
+     * @param il      stream of item preferences lists
+     * @param users   user index
+     * @param items   item index
+     * @param u_codec user preferences list CODEC
+     * @param i_codec item preferences list CODEC
+     * @param uPrefFun user IdxPref to IdPref converter
+     * @param iPrefFun item IdxPref to IdPref converter
+     */
     public BinaryCODECPreferenceData(Stream<Tuple2io<int[]>> ul, Stream<Tuple2io<int[]>> il,
                                      FastUserIndex<U> users, FastItemIndex<I> items,
                                      CODEC<Cu> u_codec, CODEC<Ci> i_codec,
