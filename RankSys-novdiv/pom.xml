@@ -14,7 +14,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <parent>
         <groupId>org.ranksys</groupId>
         <artifactId>RankSys</artifactId>
-        <version>refactoring-nn-fast-SNAPSHOT</version>
+        <version>fm-refactoring-SNAPSHOT</version>
     </parent>
 
     <artifactId>RankSys-novdiv</artifactId>
