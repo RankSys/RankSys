@@ -8,9 +8,8 @@
 package es.uam.eps.ir.ranksys.diversity.intentaware;
 
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
-import org.ranksys.core.util.tuples.Tuple2od;
-
 import java.util.List;
+import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Scores-based aspect model. User intents probabilities are taken from the input intent model, item probabilities are proportional to scores they obtained.
@@ -44,8 +43,6 @@ public class ScoresAspectModel<U, I, F> extends AspectModel<U, I, F> {
      */
     public class ScoresUserAspectModel extends UserAspectModel {
 
-        private final Object2DoubleOpenHashMap<F> probNorm;
-
         /**
          * Constructor.
          *
@@ -53,22 +50,19 @@ public class ScoresAspectModel<U, I, F> extends AspectModel<U, I, F> {
          */
         public ScoresUserAspectModel(U user) {
             super(user);
-            this.probNorm = new Object2DoubleOpenHashMap<>();
         }
 
         @Override
-        public void initializeWithItems(List<Tuple2od<I>> items) {
+        public ItemAspectModel<U, I, F> getItemAspectModel(List<Tuple2od<I>> items) {
+            Object2DoubleOpenHashMap<F> probNorm = new Object2DoubleOpenHashMap<>();
             probNorm.clear();
             items.forEach(iv -> {
                 getItemIntents(iv.v1).sequential().forEach(f -> {
                     probNorm.addTo(f, iv.v2);
                 });
             });
-        }
 
-        @Override
-        public double pi_f(Tuple2od<I> iv, F f) {
-            return iv.v2 / probNorm.getDouble(f);
+            return (iv, f) -> iv.v2 / probNorm.getDouble(f);
         }
     }
 }
