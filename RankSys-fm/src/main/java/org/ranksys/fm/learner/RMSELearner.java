@@ -13,7 +13,7 @@ import org.ranksys.javafm.learner.gd.PointWiseGradientDescent;
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
-public class RMSEFMLearner<U, I> extends PreferenceFMLearner<U, I> {
+public class RMSELearner<U, I> extends PreferenceFMLearner<U, I> {
 
     private final double learnRate;
     private final int numIter;
@@ -22,7 +22,7 @@ public class RMSEFMLearner<U, I> extends PreferenceFMLearner<U, I> {
     private final double[] regM;
     private final double negativeProp;
 
-    public RMSEFMLearner(double learnRate, int numIter, double regB, double regW, double regM, double negativeProp, FastUserIndex<U> users, FastItemIndex<I> items) {
+    public RMSELearner(double learnRate, int numIter, double regB, double regW, double regM, double negativeProp, FastUserIndex<U> users, FastItemIndex<I> items) {
         super(users, items);
         this.learnRate = learnRate;
         this.numIter = numIter;

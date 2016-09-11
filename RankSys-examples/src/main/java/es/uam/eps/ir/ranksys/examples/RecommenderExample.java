@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 import org.jooq.lambda.Unchecked;
 import org.ranksys.fm.PreferenceFM;
 import org.ranksys.fm.learner.BPRLearner;
-import org.ranksys.fm.learner.RMSEFMLearner;
+import org.ranksys.fm.learner.RMSELearner;
 import org.ranksys.fm.rec.FMRecommender;
 import org.ranksys.formats.index.ItemsReader;
 import org.ranksys.formats.index.UsersReader;
@@ -192,7 +192,7 @@ public class RecommenderExample {
             int K = 100;
             double sdev = 0.1;
             
-            PreferenceFM<Long, Long> prefFm = new RMSEFMLearner<>(learnRate, numIter, regB, regW, regM, negativeProp, userIndex, itemIndex).learn(trainData, testData, K, sdev);
+            PreferenceFM<Long, Long> prefFm = new RMSELearner<>(learnRate, numIter, regB, regW, regM, negativeProp, userIndex, itemIndex).learn(trainData, testData, K, sdev);
 
             return new FMRecommender<Long, Long>(prefFm);
         }));
