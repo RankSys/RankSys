@@ -5,21 +5,22 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.db;
+package org.ranksys.fast.preference;
 
+import es.uam.eps.ir.ranksys.fast.preference.SQLPreferenceData;
 import com.zaxxer.hikari.HikariDataSource;
 import static java.lang.Double.parseDouble;
-import static java.util.stream.Stream.of;
 import org.jooq.SQLDialect;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+import static java.util.stream.Stream.of;
 
 /**
  * A test for SQLPreferenceData.
  *
  * @author Saúl Vargas (Saul.Vargas@mendeley.com)
  */
-public class TestSQLPreferenceData {
+public class SQLPreferenceDataTest {
 
     /**
      * Test with toy data.
@@ -70,7 +71,7 @@ public class TestSQLPreferenceData {
                 if (!prefs.containsItem(pref[1])) {
                     assertTrue(prefs.addItem(pref[1]));
                 }
-                assertTrue(prefs.addPref(pref[0], pref[1], parseDouble(pref[2])));
+                assertTrue(prefs.addPref(pref[0], pref[1], parseDouble(pref[2]), null));
             }
             
             assertTrue(prefs.numPreferences() == numPreferences);

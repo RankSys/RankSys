@@ -28,7 +28,7 @@ public interface MutablePreferenceData<U, I> extends PreferenceData<U, I>, Mutab
      * @param v value
      * @return true if preference was added, false otherwise
      */
-    public boolean addPref(U u, I i, double v);
+    public <O> boolean addPref(U u, I i, double v, O other);
     
     /**
      * Removes preference.

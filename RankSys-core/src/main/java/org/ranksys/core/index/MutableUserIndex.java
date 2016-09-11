@@ -18,13 +18,6 @@ import es.uam.eps.ir.ranksys.core.index.UserIndex;
 public interface MutableUserIndex<U> extends UserIndex<U> {
 
     /**
-     * Adds user with an automatically generated id.
-     *
-     * @return the id of the user created
-     */
-    public U addUser();
-
-    /**
      * Add user with specified id.
      *
      * @param u id of the user

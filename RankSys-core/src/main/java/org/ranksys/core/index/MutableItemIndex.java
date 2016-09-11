@@ -18,13 +18,6 @@ import es.uam.eps.ir.ranksys.core.index.ItemIndex;
 public interface MutableItemIndex<I> extends ItemIndex<I> {
 
     /**
-     * Adds item with an automatically generated id.
-     *
-     * @return the id of the item created
-     */
-    public I addItem();
-
-    /**
      * Add item with specified id.
      *
      * @param i id of the item

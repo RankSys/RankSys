@@ -5,15 +5,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.db;
+package es.uam.eps.ir.ranksys.fast.preference;
 
 import es.uam.eps.ir.ranksys.core.preference.IdPref;
-import org.ranksys.core.preference.MutablePreferenceData;
-import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
-import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.IntIterator;
-import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.sql.DataSource;
@@ -24,6 +20,7 @@ import org.jooq.SQLDialect;
 import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.DSL;
+import org.ranksys.core.preference.MutablePreferenceData;
 import static org.jooq.impl.DSL.constraint;
 import static org.jooq.impl.DSL.name;
 import static org.jooq.impl.DSL.val;
@@ -302,13 +299,6 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
     }
 
     @Override
-    public String addUser() {
-        String u = UUID.randomUUID().toString();
-        addUser(u);
-        return u;
-    }
-
-    @Override
     public boolean addUser(String u) {
         return dsl
                 .insertInto(USERS, UIDX, USER_ID)
@@ -322,13 +312,6 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .delete(USERS)
                 .where(USER_ID.eq(u))
                 .execute() == 1;
-    }
-
-    @Override
-    public String addItem() {
-        String i = UUID.randomUUID().toString();
-        addItem(i);
-        return i;
     }
 
     @Override
@@ -348,7 +331,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
     }
 
     @Override
-    public boolean addPref(String u, String i, double v) {
+    public boolean addPref(String u, String i, double v, Object n) {
         return dsl
                 .insertInto(DATA, UIDX, IIDX, V)
                 .values(user2uidx(u), item2iidx(i), v)
