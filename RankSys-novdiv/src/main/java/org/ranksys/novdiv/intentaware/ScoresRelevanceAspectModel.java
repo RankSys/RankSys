@@ -44,8 +44,6 @@ public class ScoresRelevanceAspectModel<U, I, F> extends AspectModel<U, I, F> {
      */
     public class ScoresUserRelevanceAspectModel extends UserAspectModel {
 
-        private final Object2DoubleOpenHashMap<F> probNorm;
-
         /**
          * Constructor.
          *
@@ -53,24 +51,20 @@ public class ScoresRelevanceAspectModel<U, I, F> extends AspectModel<U, I, F> {
          */
         public ScoresUserRelevanceAspectModel(U user) {
             super(user);
-            this.probNorm = new Object2DoubleOpenHashMap<>();
         }
 
         @Override
-        public void initializeWithItems(List<Tuple2od<I>> items) {
-            probNorm.clear();
+        public ItemAspectModel<I, F> getItemAspectModel(List<Tuple2od<I>> items) {
+            Object2DoubleOpenHashMap<F> probNorm = new Object2DoubleOpenHashMap<>();
             items.forEach(iv -> {
-                getItemIntents(iv.v1).sequential().forEach(f -> {
+                getItemIntents(iv.v1).forEach(f -> {
                     if (iv.v2 > probNorm.getOrDefault(f, 0.0)) {
                         probNorm.put(f, iv.v2);
                     }
                 });
             });
-        }
 
-        @Override
-        public double pi_f(Tuple2od<I> iv, F f) {
-            return (Math.pow(2, iv.v2 / probNorm.getDouble(f)) - 1) / 2.0;
+            return (iv, f) -> (Math.pow(2, iv.v2 / probNorm.getDouble(f)) - 1) / 2.0;
         }
     }
 }

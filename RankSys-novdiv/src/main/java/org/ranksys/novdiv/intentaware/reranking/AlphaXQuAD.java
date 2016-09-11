@@ -8,11 +8,12 @@
  */
 package org.ranksys.novdiv.intentaware.reranking;
 
-import org.ranksys.core.Recommendation;
-import org.ranksys.novdiv.intentaware.AspectModel;
-import org.ranksys.novdiv.reranking.LambdaReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import org.ranksys.core.Recommendation;
 import org.ranksys.core.util.tuples.Tuple2od;
+import org.ranksys.novdiv.intentaware.AspectModel;
+import org.ranksys.novdiv.intentaware.AspectModel.ItemAspectModel;
+import org.ranksys.novdiv.reranking.LambdaReranker;
 
 /**
  * eXplicit Query Aspect Diversification re-ranker with parametrised tolerance
@@ -63,6 +64,7 @@ public class AlphaXQuAD<U, I, F> extends LambdaReranker<U, I> {
     protected class UserAlphaXQuAD extends LambdaUserReranker {
 
         private final AspectModel<U, I, F>.UserAspectModel uam;
+        private final ItemAspectModel<I, F> iam;
         private final Object2DoubleOpenHashMap<F> redundancy;
 
         /**
@@ -75,7 +77,7 @@ public class AlphaXQuAD<U, I, F> extends LambdaReranker<U, I> {
             super(recommendation, maxLength);
 
             this.uam = aspectModel.getModel(recommendation.getUser());
-            this.uam.initializeWithItems(recommendation.getItems());
+            this.iam = uam.getItemAspectModel(recommendation.getItems());
             this.redundancy = new Object2DoubleOpenHashMap<>();
             this.redundancy.defaultReturnValue(1.0);
         }
@@ -84,15 +86,16 @@ public class AlphaXQuAD<U, I, F> extends LambdaReranker<U, I> {
         protected double nov(Tuple2od<I> iv) {
             return uam.getItemIntents(iv.v1)
                     .mapToDouble(f -> {
-                        return uam.pf_u(f) * uam.pi_f(iv, f) * redundancy.getDouble(f);
-                    }).sum();
+                        return uam.pf_u(f) * iam.pi_f(iv, f) * redundancy.getDouble(f);
+                    })
+                    .sum();
         }
 
         @Override
         protected void update(Tuple2od<I> biv) {
             uam.getItemIntents(biv.v1).sequential()
                     .forEach(f -> {
-                        redundancy.put(f, redundancy.getDouble(f) * (1 - alpha * uam.pi_f(biv, f)));
+                        redundancy.put(f, redundancy.getDouble(f) * (1 - alpha * iam.pi_f(biv, f)));
                     });
         }
 
