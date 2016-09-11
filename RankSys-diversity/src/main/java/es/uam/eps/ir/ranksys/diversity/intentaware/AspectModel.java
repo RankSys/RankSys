@@ -67,7 +67,7 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
          *
          * @param items list of items with scores
          */
-        public abstract ItemAspectModel<U, I, F> getItemAspectModel(List<Tuple2od<I>> items);
+        public abstract ItemAspectModel<I, F> getItemAspectModel(List<Tuple2od<I>> items);
 
         @Override
         public Set<F> getIntents() {
@@ -88,11 +88,10 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
     /**
      * Item aspect model for {@link AspectModel}.
      *
-     * @param <U> user type
      * @param <I> item type
      * @param <F> aspect type
      */
-    public interface ItemAspectModel<U, I, F> extends Model<U> {
+    public interface ItemAspectModel<I, F> {
         /**
          * Returns probability of an item given an aspect
          *

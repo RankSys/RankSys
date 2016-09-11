@@ -64,7 +64,7 @@ public class AlphaXQuAD<U, I, F> extends LambdaReranker<U, I> {
     protected class UserAlphaXQuAD extends LambdaUserReranker {
 
         private final AspectModel<U, I, F>.UserAspectModel uam;
-        private final ItemAspectModel<U, I, F> iam;
+        private final ItemAspectModel<I, F> iam;
         private final Object2DoubleOpenHashMap<F> redundancy;
 
         /**
@@ -87,7 +87,8 @@ public class AlphaXQuAD<U, I, F> extends LambdaReranker<U, I> {
             return uam.getItemIntents(iv.v1)
                     .mapToDouble(f -> {
                         return uam.pf_u(f) * iam.pi_f(iv, f) * redundancy.getDouble(f);
-                    }).sum();
+                    })
+                    .sum();
         }
 
         @Override
