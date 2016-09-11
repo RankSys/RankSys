@@ -10,11 +10,11 @@ package es.uam.eps.ir.ranksys.nn.item.sim;
 
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.nn.sim.Similarity;
-import java.util.function.IntToDoubleFunction;
-import java.util.function.ToDoubleFunction;
-import java.util.stream.Stream;
 import org.ranksys.core.util.tuples.Tuple2id;
 import org.ranksys.core.util.tuples.Tuple2od;
+
+import java.util.function.ToDoubleFunction;
+import java.util.stream.Stream;
 
 /**
  * Item similarity. It wraps a generic fast similarity and a fast item index.
@@ -23,7 +23,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
  * 
  * @param <I> type of the items
  */
-public abstract class ItemSimilarity<I> implements Similarity, FastItemIndex<I> {
+public class ItemSimilarity<I> implements FastItemIndex<I> {
 
     /**
      * Fast item index.
@@ -41,9 +41,13 @@ public abstract class ItemSimilarity<I> implements Similarity, FastItemIndex<I> 
      * @param iIndex fast item index
      * @param sim generic fast similarity
      */
-    protected ItemSimilarity(FastItemIndex<I> iIndex, Similarity sim) {
+    public ItemSimilarity(FastItemIndex<I> iIndex, Similarity sim) {
         this.iIndex = iIndex;
         this.sim = sim;
+    }
+
+    public Similarity similarity() {
+        return sim;
     }
 
     @Override
@@ -103,18 +107,4 @@ public abstract class ItemSimilarity<I> implements Similarity, FastItemIndex<I> 
         return sim.similarElems(iidx);
     }
 
-    @Override
-    public IntToDoubleFunction similarity(int idx1) {
-        return sim.similarity(idx1);
-    }
-
-    @Override
-    public double similarity(int idx1, int idx2) {
-        return sim.similarity(idx1, idx2);
-    }
-
-    @Override
-    public Stream<Tuple2id> similarElems(int idx) {
-        return sim.similarElems(idx);
-    }
 }

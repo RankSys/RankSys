@@ -9,7 +9,6 @@
 package es.uam.eps.ir.ranksys.examples;
 
 import cc.mallet.topics.ParallelTopicModel;
-import static org.ranksys.formats.parsing.Parsers.lp;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
 import es.uam.eps.ir.ranksys.fast.index.SimpleFastItemIndex;
@@ -22,16 +21,15 @@ import es.uam.eps.ir.ranksys.mf.als.PZTFactorizer;
 import es.uam.eps.ir.ranksys.mf.plsa.PLSAFactorizer;
 import es.uam.eps.ir.ranksys.mf.rec.MFRecommender;
 import es.uam.eps.ir.ranksys.nn.item.ItemNeighborhoodRecommender;
-import es.uam.eps.ir.ranksys.nn.item.neighborhood.CachedItemNeighborhood;
 import es.uam.eps.ir.ranksys.nn.item.neighborhood.ItemNeighborhood;
-import es.uam.eps.ir.ranksys.nn.item.neighborhood.TopKItemNeighborhood;
+import es.uam.eps.ir.ranksys.nn.item.neighborhood.ItemNeighborhoods;
+import es.uam.eps.ir.ranksys.nn.item.sim.ItemSimilarities;
 import es.uam.eps.ir.ranksys.nn.item.sim.ItemSimilarity;
-import es.uam.eps.ir.ranksys.nn.item.sim.VectorCosineItemSimilarity;
 import es.uam.eps.ir.ranksys.nn.user.UserNeighborhoodRecommender;
-import es.uam.eps.ir.ranksys.nn.user.neighborhood.TopKUserNeighborhood;
 import es.uam.eps.ir.ranksys.nn.user.neighborhood.UserNeighborhood;
+import es.uam.eps.ir.ranksys.nn.user.neighborhood.UserNeighborhoods;
+import es.uam.eps.ir.ranksys.nn.user.sim.UserSimilarities;
 import es.uam.eps.ir.ranksys.nn.user.sim.UserSimilarity;
-import es.uam.eps.ir.ranksys.nn.user.sim.VectorCosineUserSimilarity;
 import es.uam.eps.ir.ranksys.rec.Recommender;
 import es.uam.eps.ir.ranksys.rec.fast.basic.PopularityRecommender;
 import es.uam.eps.ir.ranksys.rec.fast.basic.RandomRecommender;
@@ -39,10 +37,8 @@ import es.uam.eps.ir.ranksys.rec.runner.RecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilterRecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilters;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.function.DoubleUnaryOperator;
 import java.util.function.Function;
@@ -51,19 +47,15 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.jooq.lambda.Unchecked;
 import org.ranksys.fm.PreferenceFM;
-import org.ranksys.fm.data.BPRPreferenceFMData;
-import org.ranksys.fm.data.OneClassPreferenceFMData;
+import org.ranksys.fm.learner.BPRLearner;
+import org.ranksys.fm.learner.RMSELearner;
 import org.ranksys.fm.rec.FMRecommender;
 import org.ranksys.formats.index.ItemsReader;
 import org.ranksys.formats.index.UsersReader;
+import static org.ranksys.formats.parsing.Parsers.lp;
 import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
 import org.ranksys.formats.rec.RecommendationFormat;
 import org.ranksys.formats.rec.SimpleRecommendationFormat;
-import org.ranksys.javafm.FM;
-import org.ranksys.javafm.data.FMData;
-import org.ranksys.javafm.learner.gd.BPR;
-import static org.ranksys.javafm.learner.gd.PointWiseError.rmse;
-import org.ranksys.javafm.learner.gd.PointWiseGradientDescent;
 import org.ranksys.lda.LDAModelEstimator;
 import org.ranksys.lda.LDARecommender;
 
@@ -103,25 +95,22 @@ public class RecommenderExample {
 
         // user-based nearest neighbors
         recMap.put("ub", () -> {
-            double alpha = 0.5;
             int k = 100;
             int q = 1;
 
-            UserSimilarity<Long> sim = new VectorCosineUserSimilarity<>(trainData, alpha, true);
-            UserNeighborhood<Long> neighborhood = new TopKUserNeighborhood<>(sim, k);
+            UserSimilarity<Long> sim = UserSimilarities.vectorCosine(trainData, true);
+            UserNeighborhood<Long> neighborhood = UserNeighborhoods.topK(sim, k);
 
             return new UserNeighborhoodRecommender<>(trainData, neighborhood, q);
         });
 
         // item-based nearest neighbors
         recMap.put("ib", () -> {
-            double alpha = 0.5;
             int k = 10;
             int q = 1;
 
-            ItemSimilarity<Long> sim = new VectorCosineItemSimilarity<>(trainData, alpha, true);
-            ItemNeighborhood<Long> neighborhood = new TopKItemNeighborhood<>(sim, k);
-            neighborhood = new CachedItemNeighborhood<>(neighborhood);
+            ItemSimilarity<Long> sim = ItemSimilarities.vectorCosine(trainData, true);
+            ItemNeighborhood<Long> neighborhood = ItemNeighborhoods.cached(ItemNeighborhoods.topK(sim, k));
 
             return new ItemNeighborhoodRecommender<>(trainData, neighborhood, q);
         });
@@ -177,23 +166,15 @@ public class RecommenderExample {
 
         // Factorisation machine using a BRP-like loss
         recMap.put("fm-bpr", Unchecked.supplier(() -> {
-            BPRPreferenceFMData fmTrain = new BPRPreferenceFMData(trainData);
-            BPRPreferenceFMData fmTest = new BPRPreferenceFMData(testData);
 
             double learnRate = 0.01;
             int numIter = 200;
-            double sdev = 0.1;
-            double[] regW = new double[fmTrain.numFeatures()];
-            Arrays.fill(regW, 0.01);
-            double[] regM = new double[fmTrain.numFeatures()];
-            Arrays.fill(regM, 0.01);
+            double regW = 0.01;
+            double regM = 0.01;
             int K = 100;
+            double sdev = 0.1;
 
-            FM fm = new FM(fmTrain.numFeatures(), K, new Random(), sdev);
-
-            new BPR(learnRate, numIter, regW, regM).learn(fm, fmTrain, fmTest);
-
-            PreferenceFM<Long, Long> prefFm = new PreferenceFM<>(userIndex, itemIndex, fm);
+            PreferenceFM<Long, Long> prefFm = new BPRLearner<>(learnRate, numIter, regW, regM, userIndex, itemIndex).learn(trainData, testData, K, sdev);
 
             return new FMRecommender<Long, Long>(prefFm);
         }));
@@ -201,25 +182,17 @@ public class RecommenderExample {
         // Factorisation machine usinga RMSE-like loss with balanced sampling of negative
         // instances
         recMap.put("fm-rmse", Unchecked.supplier(() -> {
-            double negativeProp = 2.0;
-            FMData fmTrain = new OneClassPreferenceFMData(trainData, negativeProp);
-            FMData fmTest = new OneClassPreferenceFMData(testData, negativeProp);
 
             double learnRate = 0.01;
             int numIter = 50;
-            double sdev = 0.1;
             double regB = 0.01;
-            double[] regW = new double[fmTrain.numFeatures()];
-            Arrays.fill(regW, 0.01);
-            double[] regM = new double[fmTrain.numFeatures()];
-            Arrays.fill(regM, 0.01);
+            double regW = 0.01;
+            double regM = 0.01;
+            double negativeProp = 2.0;
             int K = 100;
-
-            FM fm = new FM(fmTrain.numFeatures(), K, new Random(), sdev);
-
-            new PointWiseGradientDescent(learnRate, numIter, rmse(), regB, regW, regM).learn(fm, fmTrain, fmTest);
-
-            PreferenceFM<Long, Long> prefFm = new PreferenceFM<>(userIndex, itemIndex, fm);
+            double sdev = 0.1;
+            
+            PreferenceFM<Long, Long> prefFm = new RMSELearner<>(learnRate, numIter, regB, regW, regM, negativeProp, userIndex, itemIndex).learn(trainData, testData, K, sdev);
 
             return new FMRecommender<Long, Long>(prefFm);
         }));

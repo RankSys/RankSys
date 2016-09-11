@@ -42,6 +42,11 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
             <version>7.0.6</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-math</artifactId>
+            <version>0.8</version>
+        </dependency>
+        <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jool</artifactId>
             <version>0.9.10</version>
