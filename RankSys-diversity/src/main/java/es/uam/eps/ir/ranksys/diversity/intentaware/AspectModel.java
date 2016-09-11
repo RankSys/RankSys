@@ -8,9 +8,9 @@
 package es.uam.eps.ir.ranksys.diversity.intentaware;
 
 import es.uam.eps.ir.ranksys.core.model.UserModel;
+import java.util.List;
 import org.ranksys.core.util.tuples.Tuple2od;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -49,8 +49,7 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
     /**
      * User aspect model for {@link AspectModel}.
      */
-    public abstract class UserAspectModel implements IntentModel.UserIntentModel<U, I, F>,
-            ItemAspectModel<U, I, F> {
+    public abstract class UserAspectModel implements IntentModel.UserIntentModel<U, I, F> {
 
         private final IntentModel.UserIntentModel<U, I, F> uim;
 
@@ -64,11 +63,11 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
         }
 
         /**
-         * Initialises the model with items.
+         * Returns an item aspect model from a list of scored items.
          *
          * @param items list of items with scores
          */
-        public abstract void initializeWithItems(List<Tuple2od<I>> items);
+        public abstract ItemAspectModel<I, F> getItemAspectModel(List<Tuple2od<I>> items);
 
         @Override
         public Set<F> getIntents() {
@@ -89,11 +88,10 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
     /**
      * Item aspect model for {@link AspectModel}.
      *
-     * @param <U> user type
      * @param <I> item type
      * @param <F> aspect type
      */
-    public interface ItemAspectModel<U, I, F> extends Model<U> {
+    public interface ItemAspectModel<I, F> {
         /**
          * Returns probability of an item given an aspect
          *
