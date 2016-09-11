@@ -1,8 +1,8 @@
 package org.ranksys.metrics.basic;
 
-import es.uam.eps.ir.ranksys.core.Recommendation;
-import es.uam.eps.ir.ranksys.metrics.AbstractRecommendationMetric;
-import es.uam.eps.ir.ranksys.metrics.RecommendationMetric;
+import org.ranksys.core.Recommendation;
+import org.ranksys.metrics.AbstractRecommendationMetric;
+import org.ranksys.metrics.RecommendationMetric;
 
 // TODO: more than two metrics
 public class HarmonicMean<U, I> extends AbstractRecommendationMetric<U,I> {
