@@ -10,7 +10,7 @@ public class ItemSimilarities {
         return new ItemSimilarity<>(preferences, Similarities.setCosine(new TransposedPreferenceData<>(preferences), dense, alpha));
     }
 
-    public static <I> ItemSimilarity<I> vectorCosine(FastPreferenceData<?, I> preferences, double alpha, boolean dense) {
+    public static <I> ItemSimilarity<I> vectorCosine(FastPreferenceData<?, I> preferences, boolean dense) {
         return new ItemSimilarity<>(preferences, Similarities.vectorCosine(new TransposedPreferenceData<>(preferences), dense));
     }
 

@@ -102,11 +102,10 @@ public class RecommenderExample {
 
         // user-based nearest neighbors
         recMap.put("ub", () -> {
-            double alpha = 0.5;
             int k = 100;
             int q = 1;
 
-            UserSimilarity<Long> sim = UserSimilarities.vectorCosine(trainData, alpha, true);
+            UserSimilarity<Long> sim = UserSimilarities.vectorCosine(trainData, true);
             UserNeighborhood<Long> neighborhood = UserNeighborhoods.topK(sim, k);
 
             return new UserNeighborhoodRecommender<>(trainData, neighborhood, q);
@@ -114,11 +113,10 @@ public class RecommenderExample {
 
         // item-based nearest neighbors
         recMap.put("ib", () -> {
-            double alpha = 0.5;
             int k = 10;
             int q = 1;
 
-            ItemSimilarity<Long> sim = ItemSimilarities.vectorCosine(trainData, alpha, true);
+            ItemSimilarity<Long> sim = ItemSimilarities.vectorCosine(trainData, true);
             ItemNeighborhood<Long> neighborhood = ItemNeighborhoods.cached(ItemNeighborhoods.topK(sim, k));
 
             return new ItemNeighborhoodRecommender<>(trainData, neighborhood, q);

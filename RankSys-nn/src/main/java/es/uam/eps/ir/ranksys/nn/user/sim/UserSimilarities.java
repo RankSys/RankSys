@@ -9,7 +9,7 @@ public class UserSimilarities {
         return new UserSimilarity<>(recommenderData, Similarities.setCosine(recommenderData, dense, alpha));
     }
 
-    public static <U> UserSimilarity<U> vectorCosine(FastPreferenceData<U, ?> recommenderData, double alpha, boolean dense) {
+    public static <U> UserSimilarity<U> vectorCosine(FastPreferenceData<U, ?> recommenderData, boolean dense) {
         return new UserSimilarity<>(recommenderData, Similarities.vectorCosine(recommenderData, dense));
     }
 
