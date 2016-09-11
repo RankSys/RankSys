@@ -28,7 +28,7 @@ public class InvertedItemNeighborhood<I> extends ItemNeighborhood<I> {
      * @param neighborhood original neighborhood to be inverted
      */
     public InvertedItemNeighborhood(ItemNeighborhood<I> neighborhood) {
-        super(neighborhood, new InvertedNeighborhood(neighborhood.numItems(), neighborhood, iidx -> true));
+        super(neighborhood, new InvertedNeighborhood(neighborhood.numItems(), neighborhood.neighborhood(), iidx -> true));
     }
     
 }

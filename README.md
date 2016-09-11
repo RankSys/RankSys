@@ -19,7 +19,7 @@ The publicly available version of this framework (0.4.3) includes implementation
  * RankSys-rec: support for generating recommendation lists.
  * RankSys-nn: nearest neighbors recommendation algorithms.
  * RankSys-mf: matrix factorization recommendation algorithms.
- * RankSys-mf: factorisation machines for recommendation tasks using [JavaFM](https://github.com/RankSys/JavaFM).
+ * RankSys-fm: factorisation machines for recommendation tasks using [JavaFM](https://github.com/RankSys/JavaFM).
  * RankSys-lda: Latent Dirichlet Allocation for collaborative filtering recommendation algorithms.
  * RankSys-novdiv: common resources for novelty and diversity metrics and enhancement techniques.
  * RankSys-novelty: novelty metrics and enhancement techniques.

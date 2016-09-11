@@ -31,7 +31,7 @@ public class InvertedUserNeighborhood<U> extends UserNeighborhood<U> {
      * @param filter determines which users require inverted neighborhoods
      */
     public InvertedUserNeighborhood(UserNeighborhood<U> neighborhood, Predicate<U> filter) {
-        super(neighborhood, new InvertedNeighborhood(neighborhood.numUsers(), neighborhood, uidx -> filter.test(neighborhood.uidx2user(uidx))));
+        super(neighborhood, new InvertedNeighborhood(neighborhood.numUsers(), neighborhood.neighborhood(), uidx -> filter.test(neighborhood.uidx2user(uidx))));
     }
     
     /**
@@ -41,6 +41,6 @@ public class InvertedUserNeighborhood<U> extends UserNeighborhood<U> {
      * @param filter determines which users require inverted neighborhoods
      */
     public InvertedUserNeighborhood(UserNeighborhood<U> neighborhood, IntPredicate filter) {
-        super(neighborhood, new InvertedNeighborhood(neighborhood.numUsers(), neighborhood, filter));
+        super(neighborhood, new InvertedNeighborhood(neighborhood.numUsers(), neighborhood.neighborhood(), filter));
     }
 }

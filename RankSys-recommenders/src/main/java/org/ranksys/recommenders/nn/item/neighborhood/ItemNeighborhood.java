@@ -8,12 +8,11 @@
  */
 package org.ranksys.recommenders.nn.item.neighborhood;
 
-import org.ranksys.core.index.fast.FastItemIndex;
-import org.ranksys.recommenders.nn.neighborhood.Neighborhood;
 import java.util.stream.Stream;
-import org.ranksys.core.util.tuples.Tuple2od;
-import static java.util.stream.StreamSupport.stream;
+import org.ranksys.core.index.fast.FastItemIndex;
 import org.ranksys.core.util.tuples.Tuple2id;
+import org.ranksys.core.util.tuples.Tuple2od;
+import org.ranksys.recommenders.nn.neighborhood.Neighborhood;
 
 /**
  * Item neighborhood. Wraps a generic neighborhood and a fast item index.
@@ -22,7 +21,7 @@ import org.ranksys.core.util.tuples.Tuple2id;
  * 
  * @param <I> type of the items
  */
-public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex<I> {
+public class ItemNeighborhood<I> implements FastItemIndex<I> {
 
     /**
      * Fast item index.
@@ -43,6 +42,10 @@ public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex
     public ItemNeighborhood(FastItemIndex<I> iIndex, Neighborhood neighborhood) {
         this.iIndex = iIndex;
         this.neighborhood = neighborhood;
+    }
+
+    public Neighborhood neighborhood() {
+        return neighborhood;
     }
 
     @Override
@@ -66,7 +69,6 @@ public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex
      * @param idx user/index whose neighborhood is calculated
      * @return stream of user/item-similarity pairs.
      */
-    @Override
     public Stream<Tuple2id> getNeighbors(int idx) {
         return neighborhood.getNeighbors(idx);
     }
@@ -78,7 +80,7 @@ public abstract class ItemNeighborhood<I> implements Neighborhood, FastItemIndex
      * @return a stream of item-score pairs
      */
     public Stream<Tuple2od<I>> getNeighbors(I i) {
-        return stream(getNeighbors(item2iidx(i)).spliterator(), false)
+        return getNeighbors(item2iidx(i))
                 .map(this::iidx2item);
     }
 }

@@ -13,6 +13,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
 import org.ranksys.formats.parsing.Parser;
 
 import java.io.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -125,6 +126,9 @@ public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U,
                 U user = uParser.parse(toks1[0]);
 
                 CharSequence[] toks2 = split(toks1[1].subSequence(1, toks1[1].length() - 1), ',');
+                if (toks2[0].length() == 0) {
+                    return new Recommendation<U, I>(user, Collections.emptyList());
+                }
                 List<Tuple2od<I>> items = Stream.of(toks2).map(is -> {
                     CharSequence[] toks3 = split(is, ':');
 

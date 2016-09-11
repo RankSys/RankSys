@@ -62,5 +62,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
             <artifactId>JavaFM</artifactId>
             <version>c4a00a0004</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-math</artifactId>
+            <version>0.8</version>
+        </dependency>    
     </dependencies>
 </project>
