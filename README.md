@@ -2,7 +2,7 @@
 
 ## [Team](https://github.com/RankSys/RankSys/wiki/Team) || [References](https://github.com/RankSys/RankSys/wiki/References) || [Javadoc](http://ranksys.org/javadoc/) || [Wiki](https://github.com/RankSys/RankSys/wiki/) || [Twitter](https://twitter.com/ranksys)
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.ranksys/RankSys/badge.svg)](http://search.maven.org/#artifactdetails|org.ranksys|RankSys|0.4.3|jar)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.ranksys/RankSys/badge.png)](http://search.maven.org/#artifactdetails|org.ranksys|RankSys|0.4.3|jar)
 [![Build Status](https://travis-ci.org/RankSys/RankSys.svg?branch=master)](https://travis-ci.org/RankSys/RankSys)
 [![GitHub license](https://img.shields.io/github/license/ranksys/RankSys.svg)](https://www.mozilla.org/en-US/MPL/)
 
