@@ -2,7 +2,7 @@
 
 ## [Team](https://github.com/RankSys/RankSys/wiki/Team) || [References](https://github.com/RankSys/RankSys/wiki/References) || [Javadoc](http://ranksys.org/javadoc/) || [Wiki](https://github.com/RankSys/RankSys/wiki/) || [Twitter](https://twitter.com/ranksys)
 
-[![Release](https://jitpack.io/v/org.ranksys/RankSys.svg)](https://jitpack.io/#org.ranksys/RankSys)
+[![Maven Central](https://img.shields.io/maven-central/v/org.apache.maven/apache-maven.svg?maxAge=2592000)](http://search.maven.org/#artifactdetails|org.ranksys|RankSys|0.4.3|jar)
 [![Build Status](https://travis-ci.org/RankSys/RankSys.svg?branch=master)](https://travis-ci.org/RankSys/RankSys)
 [![GitHub license](https://img.shields.io/github/license/ranksys/RankSys.svg)](https://www.mozilla.org/en-US/MPL/)
 
@@ -29,14 +29,7 @@ The publicly available version of this framework (0.4.3) includes implementation
 
 ## Maven
 
-If you want to include RankSys in an existing Maven project, first include the following repository:
-~~~
-<repository>
- <id>jitpack.io</id>
- <url>https://jitpack.io</url>
-</repository>
-~~~
-If you want to include the whole framework, include the following dependency:
+If you want to use the whole framework, include the following dependency:
 ~~~
 <dependency>
     <groupId>org.ranksys</groupId>
@@ -47,7 +40,7 @@ If you want to include the whole framework, include the following dependency:
 Alternatively, include in your project dependencies only the modules of RankSys that you require:
 ~~~
 <dependency>
-    <groupId>org.ranksys.RankSys</groupId>
+    <groupId>org.ranksys</groupId>
     <artifactId>RankSys-MODULENAME</artifactId>
     <version>0.4.3</version>
 </dependency>
