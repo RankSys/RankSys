@@ -27,6 +27,11 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>RankSys-diversity</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-mf</artifactId>
             <version>${project.version}</version>
         </dependency>
