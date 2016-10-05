@@ -10,6 +10,7 @@ package es.uam.eps.ir.ranksys.mf.plsa;
 
 import cern.colt.function.DoubleFunction;
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import static cern.jet.math.Functions.identity;
 import static cern.jet.math.Functions.mult;
@@ -92,11 +93,8 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
 
         PLSAPreferenceData<U, I> plsaData = new PLSAPreferenceData<>(data, pu_z.columns());
 
-        for (int z = 0; z < pu_z.columns(); z++) {
-            final DoubleMatrix1D pu_Z = pu_z.viewColumn(z);
-            pu_Z.assign(mult(1 / pu_Z.aggregate(plus, identity)));
-        }
-        piz.assign(mult(1 / piz.aggregate(plus, identity)));
+        normalizePuz(pu_z);
+        normalizePiz(piz);
 
         for (int t = 1; t <= numIter; t++) {
             long time0 = System.nanoTime();
@@ -112,7 +110,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         }
     }
 
-    private void expectation(final DenseDoubleMatrix2D pz_u, final DenseDoubleMatrix2D piz, PLSAPreferenceData<U, I> qzData) {
+    protected void expectation(final DenseDoubleMatrix2D pz_u, final DenseDoubleMatrix2D piz, PLSAPreferenceData<U, I> qzData) {
         qzData.getUidxWithPreferences().parallel().forEach(uidx -> {
             qzData.getUidxPreferences(uidx).forEach(iqz -> {
                 int iidx = iqz.v1;
@@ -125,7 +123,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         });
     }
 
-    private void maximization(DenseDoubleMatrix2D pu_z, final DenseDoubleMatrix2D piz, final PLSAPreferenceData<U, I> qzData) {
+    protected void maximization(DenseDoubleMatrix2D pu_z, final DenseDoubleMatrix2D piz, final PLSAPreferenceData<U, I> qzData) {
         Int2ObjectMap<Lock> lockMap = new Int2ObjectOpenHashMap<>();
         qzData.getIidxWithPreferences().forEach(iidx -> lockMap.put(iidx, new ReentrantLock()));
 
@@ -157,10 +155,18 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             });
         });
 
+        normalizePuz(pu_z);
+        normalizePiz(piz);
+    }
+
+    protected void normalizePuz(DoubleMatrix2D pu_z) {
         for (int z = 0; z < pu_z.columns(); z++) {
-            final DoubleMatrix1D pZ_u = pu_z.viewColumn(z);
-            pZ_u.assign(mult(1 / pZ_u.aggregate(plus, identity)));
+            final DoubleMatrix1D pu_Z = pu_z.viewColumn(z);
+            pu_Z.assign(mult(1 / pu_Z.aggregate(plus, identity)));
         }
+    }
+
+    protected void normalizePiz(DoubleMatrix2D piz) {
         piz.assign(mult(1 / piz.aggregate(plus, identity)));
     }
 
@@ -174,7 +180,7 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         }
     }
 
-    private static class PLSAPreferenceData<U, I> extends StreamsAbstractFastPreferenceData<U, I> {
+    protected static class PLSAPreferenceData<U, I> extends StreamsAbstractFastPreferenceData<U, I> {
 
         private final FastPreferenceData<U, I> data;
         private final Long2ObjectOpenHashMap<double[]> qz;

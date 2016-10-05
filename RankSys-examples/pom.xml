@@ -91,5 +91,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
             <artifactId>RankSys-formats</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>RankSys-cplsa</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
