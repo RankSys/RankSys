@@ -44,6 +44,7 @@ public class PLSAIAFactorizationModelFactory<U, I> extends IAFactorizationModelF
             super(numIter);
         }
 
+        @Override
         protected void normalizePuz(DoubleMatrix2D pu_z) {
             for (int u = 0; u < pu_z.rows(); u++) {
                 DoubleMatrix1D tmp = pu_z.viewRow(u);
@@ -54,6 +55,7 @@ public class PLSAIAFactorizationModelFactory<U, I> extends IAFactorizationModelF
             }
         }
 
+        @Override
         protected void normalizePiz(DoubleMatrix2D piz) {
             for (int i = 0; i < piz.columns(); i++) {
                 DoubleMatrix1D tmp = piz.viewColumn(i);
@@ -79,14 +81,13 @@ public class PLSAIAFactorizationModelFactory<U, I> extends IAFactorizationModelF
             private final Set<Integer> nonZeroFactors;
 
             public PLSAUserIntentModel(DoubleMatrix1D userVector) {
-                Set<Integer> nonZeroFactors = new HashSet<>();
+                this.nonZeroFactors = new HashSet<>();
                 for (int i = 0; i < userVector.size(); i++) {
                     if (userVector.getQuick(i) > 0) {
                         nonZeroFactors.add(i);
                     }
                 }
                 this.userVector = userVector;
-                this.nonZeroFactors = nonZeroFactors;
             }
 
             @Override

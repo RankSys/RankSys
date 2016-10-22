@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 
 public class ExplicitFactorization<U, I, F> extends Factorization<U, I> {
 
-    public ExplicitFactorization(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, FastFeatureData<I, F, ?> featureData, DoubleFunction initFunction) {
+    public ExplicitFactorization(FastUserIndex<U> uIndex, FastItemIndex<I> iIndex, 
+            FastFeatureData<I, F, ?> featureData, DoubleFunction initFunction) {
         super(uIndex, iIndex, featureData.numFeatures(), initFunction);
         iIndex.getAllIidx().forEach(iidx -> {
             Set<Integer> itemFidxs = featureData.getIidxFeatures(iidx)

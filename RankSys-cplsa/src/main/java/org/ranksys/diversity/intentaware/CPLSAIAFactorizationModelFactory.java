@@ -48,6 +48,7 @@ public class CPLSAIAFactorizationModelFactory<U, I, F> extends IAFactorizationMo
             super(numIter, featureData);
         }
 
+        @Override
         protected void normalizePuz(DoubleMatrix2D pu_z) {
             for (int u = 0; u < pu_z.rows(); u++) {
                 DoubleMatrix1D tmp = pu_z.viewRow(u);
@@ -58,6 +59,7 @@ public class CPLSAIAFactorizationModelFactory<U, I, F> extends IAFactorizationMo
             }
         }
 
+        @Override
         protected void normalizePiz(DoubleMatrix2D piz) {
             for (int i = 0; i < piz.columns(); i++) {
                 DoubleMatrix1D tmp = piz.viewColumn(i);
@@ -83,14 +85,16 @@ public class CPLSAIAFactorizationModelFactory<U, I, F> extends IAFactorizationMo
             private final Set<F> nonZeroFactors;
 
             public FactorizationUserIntentModel(DoubleMatrix1D userVector) {
-                Set<Integer> nonZeroFactors = new HashSet<>();
+                Set<Integer> nonZeroFidx = new HashSet<>();
                 for (int i = 0; i < userVector.size(); i++) {
                     if (userVector.getQuick(i) > 0) {
-                        nonZeroFactors.add(i);
+                        nonZeroFidx.add(i);
                     }
                 }
                 this.userVector = userVector;
-                this.nonZeroFactors = nonZeroFactors.stream().map(featureData::fidx2feature).collect(Collectors.toSet());
+                this.nonZeroFactors = nonZeroFidx.stream()
+                        .map(featureData::fidx2feature)
+                        .collect(Collectors.toSet());
             }
 
             @Override
