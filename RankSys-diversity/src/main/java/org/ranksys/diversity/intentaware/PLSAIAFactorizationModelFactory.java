@@ -1,7 +1,15 @@
+/*
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.ranksys.diversity.intentaware;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
+import cern.jet.math.Functions;
 import es.uam.eps.ir.ranksys.diversity.intentaware.AspectModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
@@ -13,15 +21,25 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static cern.jet.math.Functions.identity;
-import static cern.jet.math.Functions.mult;
-import static cern.jet.math.Functions.plus;
-
+/**
+ * PLSA aspect and intent models factory. It learns PLSA model which then is used to create aspect and intent model.
+ *
+ * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
+ *
+ * @param <U> user type
+ * @param <I> item type
+ */
 public class PLSAIAFactorizationModelFactory<U, I> extends IAFactorizationModelFactory<U, I, Integer> {
 
     private final PLSAIntentModel intentModel;
     private final PLSAAspectModel aspectModel;
 
+    /**
+     * Creates the PLSA models factory. When called, factorizes data using PLSA.
+     *
+     * @param numIter number of expectation-maximization steps
+     * @param data    training data
+     */
     public PLSAIAFactorizationModelFactory(int numIter, int k, FastPreferenceData<U, I> data) {
         super(new NormalizedPLSAFactorizer<U, I>(numIter).factorize(k, data));
         this.intentModel = new PLSAIntentModel();
@@ -48,9 +66,9 @@ public class PLSAIAFactorizationModelFactory<U, I> extends IAFactorizationModelF
         protected void normalizePuz(DoubleMatrix2D pu_z) {
             for (int u = 0; u < pu_z.rows(); u++) {
                 DoubleMatrix1D tmp = pu_z.viewRow(u);
-                double norm = tmp.aggregate(plus, identity);
+                double norm = tmp.aggregate(Functions.plus, Functions.identity);
                 if (norm != 0.0) {
-                    tmp.assign(mult(1 / norm));
+                    tmp.assign(Functions.mult(1 / norm));
                 }
             }
         }
@@ -59,9 +77,9 @@ public class PLSAIAFactorizationModelFactory<U, I> extends IAFactorizationModelF
         protected void normalizePiz(DoubleMatrix2D piz) {
             for (int i = 0; i < piz.columns(); i++) {
                 DoubleMatrix1D tmp = piz.viewColumn(i);
-                double norm = tmp.aggregate(plus, identity);
+                double norm = tmp.aggregate(Functions.plus, Functions.identity);
                 if (norm != 0.0) {
-                    tmp.assign(mult(1 / norm));
+                    tmp.assign(Functions.mult(1 / norm));
                 }
             }
         }

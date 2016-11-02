@@ -1,7 +1,15 @@
+/*
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.ranksys.diversity.intentaware;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
+import cern.jet.math.Functions;
 import es.uam.eps.ir.ranksys.diversity.intentaware.AspectModel;
 import es.uam.eps.ir.ranksys.diversity.intentaware.IntentModel;
 import es.uam.eps.ir.ranksys.fast.feature.FastFeatureData;
@@ -15,16 +23,30 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static cern.jet.math.Functions.identity;
-import static cern.jet.math.Functions.mult;
-import static cern.jet.math.Functions.plus;
-
+/**
+ * CPLSA aspect and intent models factory. It learns CPLSA model which then is used to create aspect and intent model.
+ *
+ * J. Wasilewski, N. Hurley. Intent-Aware Diversification Using a Constrained PLSA. RecSys 2016.
+ *
+ * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
+ *
+ * @param <U> user type
+ * @param <I> item type
+ * @param <F> aspect type
+ */
 public class CPLSAIAFactorizationModelFactory<U, I, F> extends IAFactorizationModelFactory<U, I, F> {
 
     private final CPLSAIntentModel intentModel;
     private final CPLSAAspectModel aspectModel;
     private final FastFeatureData<I, F, ?> featureData;
 
+    /**
+     * Creates the CPLSA models factory. When called, factorizes data using CPLSA.
+     *
+     * @param numIter number of expectation-maximization steps
+     * @param data training data
+     * @param featureData aspects data
+     */
     public CPLSAIAFactorizationModelFactory(int numIter, FastPreferenceData<U, I> data, FastFeatureData<I, F, ?> featureData) {
         super(new NormalizedCPLSAFactorizer<U, I, F>(numIter, featureData).factorize(data));
         this.featureData = featureData;
@@ -44,7 +66,7 @@ public class CPLSAIAFactorizationModelFactory<U, I, F> extends IAFactorizationMo
 
     private static class NormalizedCPLSAFactorizer<U, I, F> extends CPLSAFactorizer<U, I, F> {
 
-        NormalizedCPLSAFactorizer(int numIter, FastFeatureData<I, F, ?> featureData) {
+        public NormalizedCPLSAFactorizer(int numIter, FastFeatureData<I, F, ?> featureData) {
             super(numIter, featureData);
         }
 
@@ -52,9 +74,9 @@ public class CPLSAIAFactorizationModelFactory<U, I, F> extends IAFactorizationMo
         protected void normalizePuz(DoubleMatrix2D pu_z) {
             for (int u = 0; u < pu_z.rows(); u++) {
                 DoubleMatrix1D tmp = pu_z.viewRow(u);
-                double norm = tmp.aggregate(plus, identity);
+                double norm = tmp.aggregate(Functions.plus, Functions.identity);
                 if (norm != 0.0) {
-                    tmp.assign(mult(1 / norm));
+                    tmp.assign(Functions.mult(1 / norm));
                 }
             }
         }
@@ -63,9 +85,9 @@ public class CPLSAIAFactorizationModelFactory<U, I, F> extends IAFactorizationMo
         protected void normalizePiz(DoubleMatrix2D piz) {
             for (int i = 0; i < piz.columns(); i++) {
                 DoubleMatrix1D tmp = piz.viewColumn(i);
-                double norm = tmp.aggregate(plus, identity);
+                double norm = tmp.aggregate(Functions.plus, Functions.identity);
                 if (norm != 0.0) {
-                    tmp.assign(mult(1 / norm));
+                    tmp.assign(Functions.mult(1 / norm));
                 }
             }
         }

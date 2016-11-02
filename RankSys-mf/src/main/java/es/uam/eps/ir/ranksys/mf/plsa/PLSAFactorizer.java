@@ -110,6 +110,13 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         }
     }
 
+    /**
+     * Expectation step of the EM algorithm.
+     *
+     * @param pz_u matrix of p(z|u)
+     * @param piz matrix of p(i|z)
+     * @param qzData PLSA preference data (variational probability Q(z))
+     */
     protected void expectation(final DenseDoubleMatrix2D pz_u, final DenseDoubleMatrix2D piz, PLSAPreferenceData<U, I> qzData) {
         qzData.getUidxWithPreferences().parallel().forEach(uidx -> {
             qzData.getUidxPreferences(uidx).forEach(iqz -> {
@@ -123,6 +130,13 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         });
     }
 
+    /**
+     * Maximization step of the EM algorithm.
+     *
+     * @param pu_z matrix of p(z|u)
+     * @param piz matrix of p(i|z)
+     * @param qzData PLSA preference data (variational probability Q(z))
+     */
     protected void maximization(DenseDoubleMatrix2D pu_z, final DenseDoubleMatrix2D piz, final PLSAPreferenceData<U, I> qzData) {
         Int2ObjectMap<Lock> lockMap = new Int2ObjectOpenHashMap<>();
         qzData.getIidxWithPreferences().forEach(iidx -> lockMap.put(iidx, new ReentrantLock()));
@@ -159,6 +173,11 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         normalizePiz(piz);
     }
 
+    /**
+     * Normalizes matrix of p(z|u) such that \forall_z: \sum_u p(z|u) = 1.
+     *
+     * @param pu_z normalized matrix of p(z|u)
+     */
     protected void normalizePuz(DoubleMatrix2D pu_z) {
         for (int z = 0; z < pu_z.columns(); z++) {
             final DoubleMatrix1D pu_Z = pu_z.viewColumn(z);
@@ -166,6 +185,11 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         }
     }
 
+    /**
+     * Normalizes matrix of p(i|z) such that \sum_{i, z} p(i|z) = 1.
+     *
+     * @param piz normalized matrix of p(i|z)
+     */
     protected void normalizePiz(DoubleMatrix2D piz) {
         piz.assign(mult(1 / piz.aggregate(plus, identity)));
     }
@@ -180,11 +204,23 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         }
     }
 
+    /**
+     * PLSA preference data (variational probability Q(z))
+     *
+     * @param <U> user type
+     * @param <I> item type
+     */
     protected static class PLSAPreferenceData<U, I> extends StreamsAbstractFastPreferenceData<U, I> {
 
         private final FastPreferenceData<U, I> data;
         private final Long2ObjectOpenHashMap<double[]> qz;
 
+        /**
+         * Constructor.
+         *
+         * @param data preference data
+         * @param K number of aspects
+         */
         public PLSAPreferenceData(FastPreferenceData<U, I> data, int K) {
             super(data, data);
             this.data = data;
@@ -242,10 +278,23 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
             return data.numPreferences();
         }
 
+        /**
+         * PLSA preference data by index.
+         */
         public class PLSAIdxPref extends IdxPref {
 
+            /**
+             * Variational probabilities Q(z)
+             */
             public double[] qz;
 
+            /**
+             * Constructor.
+             *
+             * @param idx index
+             * @param value value
+             * @param qz variational probabilities values
+             */
             public PLSAIdxPref(int idx, double value, double[] qz) {
                 super(idx, value);
                 this.qz = qz;

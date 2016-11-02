@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.ranksys.examples;
 
 import es.uam.eps.ir.ranksys.fast.feature.FastFeatureData;
@@ -29,6 +36,11 @@ import java.util.stream.Collectors;
 import static org.ranksys.formats.parsing.Parsers.lp;
 import static org.ranksys.formats.parsing.Parsers.sp;
 
+/**
+ * Example of CPLSA factorizer usage as a recommender.
+ *
+ * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
+ */
 public class CPLSARecommenderExample {
 
     public static void main(String[] args) throws IOException {
