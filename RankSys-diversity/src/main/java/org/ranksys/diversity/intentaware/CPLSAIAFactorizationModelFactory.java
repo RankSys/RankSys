@@ -70,6 +70,11 @@ public class CPLSAIAFactorizationModelFactory<U, I, F> extends IAFactorizationMo
             super(numIter, featureData);
         }
 
+        /**
+         * Normalizes matrix of p(z|u) such that \forall_u: \sum_z p(z|u) = 1.
+         *
+         * @param pu_z normalized matrix of p(z|u)
+         */
         @Override
         protected void normalizePuz(DoubleMatrix2D pu_z) {
             for (int u = 0; u < pu_z.rows(); u++) {
@@ -81,6 +86,11 @@ public class CPLSAIAFactorizationModelFactory<U, I, F> extends IAFactorizationMo
             }
         }
 
+        /**
+         * Normalizes matrix of p(i|z) such that \forall_z: \sum_i p(i|z) = 1.
+         *
+         * @param piz normalized matrix of p(i|z)
+         */
         @Override
         protected void normalizePiz(DoubleMatrix2D piz) {
             for (int i = 0; i < piz.columns(); i++) {
