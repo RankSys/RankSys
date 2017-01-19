@@ -50,6 +50,11 @@ public class AveragePrecision<U, I> extends AbstractRecommendationMetric<U, I> {
     public double evaluate(Recommendation<U, I> recommendation) {
         UserIdealRelevanceModel<U, I> userRelModel = relModel.getModel(recommendation.getUser());
 
+        int nRelItems = min(cutoff, userRelModel.getRelevantItems().size());
+        if (nRelItems == 0) {
+            return 0.0;
+        }
+
         double ap = 0;
         int relCount = 0;
         int rank = 0;
@@ -65,6 +70,6 @@ public class AveragePrecision<U, I> extends AbstractRecommendationMetric<U, I> {
             }
         }
 
-        return ap / (double) min(cutoff, userRelModel.getRelevantItems().size());
+        return ap / nRelItems;
     }
 }
