@@ -123,23 +123,26 @@ public class ICDFactorizer<U, I> extends Factorizer<U, I> {
 
             double[] dL_ddL = {0.0, 0.0};
             data.getUidxPreferences(uidx).forEach(pref -> {
-                int iidx = pref.v1;
-                DoubleMatrix1D qi = q.viewRow(iidx);
+                DoubleMatrix1D qi = q.viewRow(pref.v1);
                 double qik = qi.getQuick(k);
                 double rui = pref.v2;
                 double cui = confidence.applyAsDouble(rui);
                 double sui = pu.zDotProduct(qi);
 
+                // rescaling
+                rui *= cui / (cui - c0);
+                cui -= c0;
+
                 dL_ddL[0] += cui * (sui - rui) * qik;
                 dL_ddL[1] += cui * qik * qik;
             });
 
-            double dL = 2 * dL_ddL[0] + 2 * lambda * puk;
-            double ddL = 2 * dL_ddL[1] + 2 * lambda;
-            double dR = 2 * Ji.zDotProduct(pu);
-            double ddR = 2 * Ji.getQuick(k);
+            double dL = dL_ddL[0] + lambda * puk;
+            double ddL = dL_ddL[1] + lambda;
+            double dR = Ji.zDotProduct(pu);
+            double ddR = Ji.getQuick(k);
 
-            p.setQuick(uidx, k, puk - (dL + c0 * dR) / (ddL + c0 * ddR));
+            pu.setQuick(k, puk - (dL + c0 * dR) / (ddL + c0 * ddR));
         });
     }
 
