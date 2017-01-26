@@ -8,18 +8,20 @@
  */
 package es.uam.eps.ir.ranksys.rec.fast;
 
-import es.uam.eps.ir.ranksys.rec.AbstractRecommender;
 import es.uam.eps.ir.ranksys.core.Recommendation;
 import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastUserIndex;
+import es.uam.eps.ir.ranksys.rec.AbstractRecommender;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
+
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
-import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Abstract (fast) recommender. It implements the free and candidate-based recommendation methods as variants of the filter recommendation.
@@ -132,8 +134,8 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
     @Override
     public FastRecommendation getRecommendation(int uidx, IntStream candidates) {
         IntSet set = new IntOpenHashSet();
-        candidates.forEach(iidx -> set.add(iidx));
+        candidates.forEach(set::add);
 
-        return getRecommendation(uidx, item -> set.contains(item));
+        return getRecommendation(uidx, set::contains);
     }
 }

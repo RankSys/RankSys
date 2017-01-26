@@ -9,13 +9,15 @@
 package es.uam.eps.ir.ranksys.rec;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
+import org.ranksys.core.util.tuples.Tuple2od;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.ranksys.core.util.tuples.Tuple2od;
+
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
@@ -48,9 +50,9 @@ public abstract class AbstractRecommender<U, I> implements Recommender<U, I> {
 
     @Override
     public Recommendation<U, I> getRecommendation(U u, Stream<I> candidates) {
-        Set<I> set = candidates.collect(Collectors.toCollection(() -> new HashSet<>()));
+        Set<I> set = candidates.collect(Collectors.toCollection(HashSet::new));
 
-        List<Tuple2od<I>> items = getRecommendation(u, item -> set.contains(item)).getItems();
+        List<Tuple2od<I>> items = getRecommendation(u, set::contains).getItems();
         items.stream().map(Tuple2od::v1).forEach(set::remove);
         set.stream().sorted().forEach(i -> items.add(tuple(i, Double.NaN)));
         

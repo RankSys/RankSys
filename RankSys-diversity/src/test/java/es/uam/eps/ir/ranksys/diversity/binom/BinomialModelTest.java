@@ -13,11 +13,13 @@ import es.uam.eps.ir.ranksys.core.preference.PreferenceData;
 import es.uam.eps.ir.ranksys.core.preference.SimplePreferenceData;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
-import java.util.stream.Stream;
-import static org.jooq.lambda.tuple.Tuple.tuple;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.stream.Stream;
+
+import static org.jooq.lambda.tuple.Tuple.tuple;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit test for BinomialModel.
@@ -61,7 +63,7 @@ public class BinomialModelTest {
         BinomialModel<Integer, Integer, Integer> bm = new BinomialModel<>(false, Stream.empty(), preferences, featureData, 0.0);
         
         assertEquals(expectedGlobalP.keySet(), bm.getFeatures());
-        expectedGlobalP.forEach((f, p) -> assertEquals((double) p, bm.p(f), 0.0001));
+        expectedGlobalP.forEach((f, p) -> assertEquals(p, bm.p(f), 0.0001));
     }
     
     /**
@@ -104,7 +106,7 @@ public class BinomialModelTest {
         BinomialModel<Integer, Integer, Integer>.UserBinomialModel ubm = bm.getModel(1);
         
         assertEquals(expectedLocalP.keySet(), ubm.getFeatures());
-        expectedLocalP.forEach((f, p) -> assertEquals((double) p, ubm.p(f), 0.0001));
+        expectedLocalP.forEach((f, p) -> assertEquals(p, ubm.p(f), 0.0001));
     }
 
 }

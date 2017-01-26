@@ -16,9 +16,10 @@ import es.uam.eps.ir.ranksys.metrics.rank.RankingDiscountModel;
 import es.uam.eps.ir.ranksys.metrics.rel.IdealRelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import org.ranksys.core.util.tuples.Tuple2od;
+
 import java.util.Arrays;
 import java.util.Set;
-import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Normalized Discounted Cumulative Gain metric.
@@ -117,8 +118,6 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
         }
 
         /**
-         * {@inheritDoc}
-         *
          * @param user input user
          * @return ndcg relevance model for input user
          */
@@ -150,7 +149,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
             }
 
             /**
-             * {@inheritDoc}
+             *
              *
              * @return set of relevant items
              */
@@ -160,7 +159,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
             }
 
             /**
-             * {@inheritDoc}
+             *
              *
              * @param item input item
              * @return true is item is relevant, false otherwise
@@ -171,7 +170,7 @@ public class NDCG<U, I> extends AbstractRecommendationMetric<U, I> {
             }
 
             /**
-             * {@inheritDoc}
+             *
              *
              * @param item input item
              * @return relevance gain of the input item

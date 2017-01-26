@@ -12,12 +12,14 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.EigenvalueDecomposition;
-import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
-import static java.lang.Math.sqrt;
+
 import java.util.function.DoubleUnaryOperator;
 import java.util.stream.Stream;
+
+import static java.lang.Math.sqrt;
 
 /**
  * Fast ALS-based factorization of Pilászy, Zibriczky and Tikk.
@@ -126,7 +128,7 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
     }
 
     private static <O> void prepareRR1(int L, DoubleMatrix1D w, DoubleMatrix2D gt, DoubleMatrix2D q, int N, Stream<? extends IdxPref> prefs, DoubleUnaryOperator confidence, double lambda) {
-        int K = (int) w.size();
+        int K = w.size();
 
         double[][] x = new double[K + N][K];
         double[] y = new double[K + N];

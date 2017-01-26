@@ -143,7 +143,7 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
                 testData.getUserPreferences(user)
                         .filter(iv -> iv.v2 >= threshold)
-                        .forEach(iv -> gainMap.put(iv.v1, (Math.pow(2, iv.v2) - 1) / (double) Math.pow(2, maxPreference)));
+                        .forEach(iv -> gainMap.put(iv.v1, (Math.pow(2, iv.v2) - 1) / Math.pow(2, maxPreference)));
             }
 
             @Override

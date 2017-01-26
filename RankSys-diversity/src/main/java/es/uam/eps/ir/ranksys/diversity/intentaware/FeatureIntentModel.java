@@ -84,7 +84,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
     }
 
     /**
-     * {@inheritDoc}
+     *
      *
      * @param user target user
      * @return intent model for user
@@ -134,7 +134,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         }
 
         /**
-         * {@inheritDoc}
+         *
          *
          * @return set of features as intents
          */
@@ -144,7 +144,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         }
 
         /**
-         * {@inheritDoc}
+         *
          *
          * @param i target item
          * @return features as items covered by the item
@@ -157,7 +157,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         }
 
         /**
-         * {@inheritDoc}
+         *
          *
          * @param f feature as intent
          * @return probability of the feature-intent

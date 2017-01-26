@@ -16,7 +16,7 @@ import java.util.Map.Entry;
  * Ensemble of recommenders, performs a linear combination of the scores
  * given by several recommenders.
  * 
- * TO DO: add normalization of scores prior to aggregation.
+ * TODO: add normalization of scores prior to aggregation.
  *
  * @author Saúl Vargas (Saul.Vargas@glasgow.ac.uk)
  * @param <U> user type
@@ -51,9 +51,8 @@ public class FastEnsembleRecommender<U, I> extends FastRankingRecommender<U, I> 
         Int2DoubleOpenHashMap scoresMap = new Int2DoubleOpenHashMap();
         for (Entry<FastRankingRecommender<U, I>, Double> rw : recommenders) {
             double w = rw.getValue();
-            rw.getKey().getScoresMap(uidx).int2DoubleEntrySet().forEach(e -> {
-                scoresMap.addTo(e.getIntKey(), w * e.getDoubleValue());
-            });
+            rw.getKey().getScoresMap(uidx).int2DoubleEntrySet()
+                    .forEach(e -> scoresMap.addTo(e.getIntKey(), w * e.getDoubleValue()));
         }
         
         return scoresMap;

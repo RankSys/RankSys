@@ -7,10 +7,11 @@
  */
 package org.ranksys.core.util.tuples;
 
-import java.io.Serializable;
-import java.util.Objects;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Tuple of object-double.
@@ -123,10 +124,7 @@ public class Tuple2od<T1> implements Comparable<Tuple2od<T1>>, Serializable, Clo
             return false;
         }
         final Tuple2od<?> other = (Tuple2od<?>) obj;
-        if (Double.doubleToLongBits(this.v2) != Double.doubleToLongBits(other.v2)) {
-            return false;
-        }
-        return Objects.equals(this.v1, other.v1);
+        return Double.doubleToLongBits(this.v2) == Double.doubleToLongBits(other.v2) && Objects.equals(this.v1, other.v1);
     }
 
     

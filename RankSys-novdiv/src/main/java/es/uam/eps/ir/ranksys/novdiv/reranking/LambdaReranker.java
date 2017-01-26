@@ -9,14 +9,15 @@
 package es.uam.eps.ir.ranksys.novdiv.reranking;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
-import static es.uam.eps.ir.ranksys.novdiv.reranking.PermutationReranker.getBasePerm;
 import es.uam.eps.ir.ranksys.core.util.Stats;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
-import java.util.List;
-import static java.lang.Math.min;
 import org.ranksys.core.util.tuples.Tuple2od;
+
+import java.util.List;
+
+import static java.lang.Math.min;
 
 /**
  * Linear combination re-ranker that combines the original score of the input 
@@ -68,12 +69,12 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
     }
 
     @Override
-    protected abstract GreedyUserReranker<U, I> getUserReranker(Recommendation<U, I> recommendation, int maxLength);
+    protected abstract GreedyUserReranker getUserReranker(Recommendation<U, I> recommendation, int maxLength);
 
     /**
      * User re-ranker for {@link LambdaReranker}.
      */
-    protected abstract class LambdaUserReranker extends GreedyUserReranker<U, I> {
+    protected abstract class LambdaUserReranker extends GreedyUserReranker {
 
         /**
          * Statistics about relevance scores.

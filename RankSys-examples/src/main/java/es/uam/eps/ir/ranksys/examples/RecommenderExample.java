@@ -36,6 +36,19 @@ import es.uam.eps.ir.ranksys.rec.fast.basic.RandomRecommender;
 import es.uam.eps.ir.ranksys.rec.runner.RecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilterRecommenderRunner;
 import es.uam.eps.ir.ranksys.rec.runner.fast.FastFilters;
+import org.jooq.lambda.Unchecked;
+import org.ranksys.fm.PreferenceFM;
+import org.ranksys.fm.learner.BPRLearner;
+import org.ranksys.fm.learner.RMSELearner;
+import org.ranksys.fm.rec.FMRecommender;
+import org.ranksys.formats.index.ItemsReader;
+import org.ranksys.formats.index.UsersReader;
+import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
+import org.ranksys.formats.rec.RecommendationFormat;
+import org.ranksys.formats.rec.SimpleRecommendationFormat;
+import org.ranksys.lda.LDAModelEstimator;
+import org.ranksys.lda.LDARecommender;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,19 +58,8 @@ import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import org.jooq.lambda.Unchecked;
-import org.ranksys.fm.PreferenceFM;
-import org.ranksys.fm.learner.BPRLearner;
-import org.ranksys.fm.learner.RMSELearner;
-import org.ranksys.fm.rec.FMRecommender;
-import org.ranksys.formats.index.ItemsReader;
-import org.ranksys.formats.index.UsersReader;
+
 import static org.ranksys.formats.parsing.Parsers.lp;
-import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
-import org.ranksys.formats.rec.RecommendationFormat;
-import org.ranksys.formats.rec.SimpleRecommendationFormat;
-import org.ranksys.lda.LDAModelEstimator;
-import org.ranksys.lda.LDARecommender;
 
 /**
  * Example main of recommendations.
@@ -176,7 +178,7 @@ public class RecommenderExample {
 
             PreferenceFM<Long, Long> prefFm = new BPRLearner<>(learnRate, numIter, regW, regM, userIndex, itemIndex).learn(trainData, testData, K, sdev);
 
-            return new FMRecommender<Long, Long>(prefFm);
+            return new FMRecommender<>(prefFm);
         }));
 
         // Factorisation machine usinga RMSE-like loss with balanced sampling of negative
@@ -194,7 +196,7 @@ public class RecommenderExample {
             
             PreferenceFM<Long, Long> prefFm = new RMSELearner<>(learnRate, numIter, regB, regW, regM, negativeProp, userIndex, itemIndex).learn(trainData, testData, K, sdev);
 
-            return new FMRecommender<Long, Long>(prefFm);
+            return new FMRecommender<>(prefFm);
         }));
 
         ////////////////////////////////

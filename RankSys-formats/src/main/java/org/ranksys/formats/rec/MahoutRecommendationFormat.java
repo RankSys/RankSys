@@ -138,7 +138,7 @@ public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U,
                     return tuple(i, s);
                 }).collect(toList());
 
-                return new Recommendation<U, I>(user, items);
+                return new Recommendation<>(user, items);
             });
         }
     }

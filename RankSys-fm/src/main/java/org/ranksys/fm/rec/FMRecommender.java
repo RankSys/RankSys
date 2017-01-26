@@ -11,15 +11,17 @@ import es.uam.eps.ir.ranksys.fast.FastRecommendation;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.utils.topn.IntDoubleTopN;
 import es.uam.eps.ir.ranksys.rec.fast.AbstractFastRecommender;
-import static java.lang.Float.NaN;
-import static java.util.Comparator.comparingDouble;
+import org.ranksys.core.util.tuples.Tuple2id;
+import org.ranksys.fm.PreferenceFM;
+
 import java.util.List;
 import java.util.function.IntPredicate;
-import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
-import org.ranksys.core.util.tuples.Tuple2id;
+
+import static java.lang.Float.NaN;
+import static java.util.Comparator.comparingDouble;
+import static java.util.stream.Collectors.toList;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
-import org.ranksys.fm.PreferenceFM;
 
 /**
  * A recommender using a factorisation machine.
@@ -49,9 +51,9 @@ public class FMRecommender<U, I> extends AbstractFastRecommender<U, I> {
         }
         IntDoubleTopN topN = new IntDoubleTopN(maxLength);
 
-        getAllIidx().filter(filter).forEach(iidx -> {
-            topN.add(iidx, fm.predict(uidx, new IdxPref(iidx, NaN)));
-        });
+        getAllIidx()
+                .filter(filter)
+                .forEach(iidx -> topN.add(iidx, fm.predict(uidx, new IdxPref(iidx, NaN))));
 
         topN.sort();
 
@@ -64,9 +66,7 @@ public class FMRecommender<U, I> extends AbstractFastRecommender<U, I> {
     @Override
     public FastRecommendation getRecommendation(int uidx, IntStream candidates) {
         List<Tuple2id> items = candidates
-                .mapToObj(iidx -> {
-                    return tuple(iidx, fm.predict(uidx, new IdxPref(iidx, NaN)));
-                })
+                .mapToObj(iidx -> tuple(iidx, fm.predict(uidx, new IdxPref(iidx, NaN))))
                 .sorted(comparingDouble(Tuple2id::v2).reversed())
                 .collect(toList());
 

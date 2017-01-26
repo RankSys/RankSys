@@ -7,10 +7,11 @@
  */
 package org.ranksys.core.util.tuples;
 
-import java.io.Serializable;
-import java.util.Objects;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Tuple of integer-object.
@@ -123,10 +124,7 @@ public class Tuple2io<T2> implements Comparable<Tuple2io<T2>>, Serializable, Clo
             return false;
         }
         final Tuple2io<?> other = (Tuple2io<?>) obj;
-        if (this.v1 != other.v1) {
-            return false;
-        }
-        return Objects.equals(this.v2, other.v2);
+        return this.v1 == other.v1 && Objects.equals(this.v2, other.v2);
     }
 
 

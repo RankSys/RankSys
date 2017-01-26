@@ -9,14 +9,15 @@
 package es.uam.eps.ir.ranksys.fast.index;
 
 import es.uam.eps.ir.ranksys.core.index.FeatureIndex;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 import org.ranksys.core.util.tuples.Tuple2id;
 import org.ranksys.core.util.tuples.Tuple2io;
 import org.ranksys.core.util.tuples.Tuple2od;
 import org.ranksys.core.util.tuples.Tuples;
+
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Fast version of FeatureIndex, where features are internally represented with numerical indices from 0 (inclusive) to the number of indexed features (exclusive).
@@ -34,7 +35,7 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
 
     @Override
     public default Stream<F> getAllFeatures() {
-        return IntStream.range(0, numFeatures()).mapToObj(fidx -> fidx2feature(fidx));
+        return IntStream.range(0, numFeatures()).mapToObj(this::fidx2feature);
     }
 
     /**

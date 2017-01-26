@@ -9,22 +9,16 @@ package org.ranksys.formats.preference;
 
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.stream.Stream;
-import java.util.function.BiConsumer;
 import org.jooq.lambda.Unchecked;
+import org.ranksys.core.util.tuples.Tuple2io;
+
+import java.io.*;
+import java.util.Comparator;
+import java.util.function.BiConsumer;
+import java.util.stream.Stream;
+
 import static java.lang.Integer.parseInt;
 import static java.util.stream.Collectors.joining;
-import org.ranksys.core.util.tuples.Tuple2io;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
@@ -69,7 +63,7 @@ public class CompressibleRatingPreferencesFormat {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
                 prefs.getUidxWithPreferences().forEach(Unchecked.intConsumer(uidx -> {
                     String a = prefs.getUidxPreferences(uidx)
-                            .sorted((p1, p2) -> Integer.compare(p1.v1, p2.v1))
+                            .sorted(Comparator.comparingInt(p -> p.v1))
                             .map(p -> p.v1 + "\t" + (int) p.v2)
                             .collect(joining("\t"));
 

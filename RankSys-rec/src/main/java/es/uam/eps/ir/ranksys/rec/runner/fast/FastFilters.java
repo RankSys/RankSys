@@ -67,8 +67,8 @@ public class FastFilters {
      */
     public static <U, I, F> Function<U, IntPredicate> withFeatures(FastFeatureData<I, F, ?> featureData) {
         IntSet itemsWithFeatures = new IntOpenHashSet();
-        featureData.getIidxWithFeatures().forEach(iidx -> itemsWithFeatures.add(iidx));
-        return user -> iidx -> itemsWithFeatures.contains(iidx);
+        featureData.getIidxWithFeatures().forEach(itemsWithFeatures::add);
+        return user -> itemsWithFeatures::contains;
     }
     
     /**

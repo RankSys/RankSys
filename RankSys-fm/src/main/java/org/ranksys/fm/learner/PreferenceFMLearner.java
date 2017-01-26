@@ -78,9 +78,7 @@ public abstract class PreferenceFMLearner<U, I> {
 
         getLearner().learn(fm, fmTrain);
 
-        PreferenceFM<U, I> prefFm = new PreferenceFM<>(users, items, fm);
-
-        return prefFm;
+        return new PreferenceFM<>(users, items, fm);
     }
 
     /**
@@ -99,9 +97,7 @@ public abstract class PreferenceFMLearner<U, I> {
 
         getLearner().learn(fm, fmTrain, fmTest);
 
-        PreferenceFM<U, I> prefFm = new PreferenceFM<>(users, items, fm);
-
-        return prefFm;
+        return new PreferenceFM<>(users, items, fm);
     }
 
     protected double[] vectorise(double v) {
@@ -110,7 +106,4 @@ public abstract class PreferenceFMLearner<U, I> {
 
         return a;
     }
-
-    ;
-
 }

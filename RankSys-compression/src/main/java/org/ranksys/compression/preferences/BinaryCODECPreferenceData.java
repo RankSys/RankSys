@@ -14,15 +14,17 @@ import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.function.Function;
-import java.util.stream.Stream;
 import org.ranksys.compression.codecs.CODEC;
-import static org.ranksys.compression.util.Delta.delta;
 import org.ranksys.core.util.iterators.ArrayDoubleIterator;
 import org.ranksys.core.util.tuples.Tuple2io;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import static org.ranksys.compression.util.Delta.delta;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
@@ -82,7 +84,7 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
     private static Stream<Tuple2io<int[]>> ul(FastPreferenceData<?, ?> preferences) {
         return preferences.getUidxWithPreferences().mapToObj(k -> {
             IdxPref[] pairs = preferences.getUidxPreferences(k)
-                    .sorted((p1, p2) -> Integer.compare(p1.v1, p2.v1))
+                    .sorted(Comparator.comparingInt(p -> p.v1))
                     .toArray(n -> new IdxPref[n]);
             int[] idxs = new int[pairs.length];
             for (int i = 0; i < pairs.length; i++) {

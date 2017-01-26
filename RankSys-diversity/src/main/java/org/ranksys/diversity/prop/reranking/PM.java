@@ -15,6 +15,8 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import org.jooq.lambda.tuple.Tuple2;
 import org.ranksys.core.util.tuples.Tuple2od;
 
+import java.util.Comparator;
+
 /**
  * Proportionality re-ranking method.
  * <br>
@@ -49,22 +51,17 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
     }
 
     @Override
-    protected GreedyUserReranker<U, I> getUserReranker(Recommendation<U, I> recommendation, int maxLength) {
+    protected GreedyUserReranker getUserReranker(Recommendation<U, I> recommendation, int maxLength) {
         return new UserPM(recommendation, maxLength);
     }
 
-    private class UserPM extends GreedyUserReranker<U, I> {
+    private class UserPM extends GreedyUserReranker {
 
         private final BinomialModel<U, I, F>.UserBinomialModel ubm;
         private final Object2DoubleOpenHashMap<F> featureCount;
         private final Object2DoubleOpenHashMap<Object> probNorm;
         private F lcf;
 
-        /**
-         *
-         * @param recommendation
-         * @param maxLength
-         */
         public UserPM(Recommendation<U, I> recommendation, int maxLength) {
             super(recommendation, maxLength);
 
@@ -81,7 +78,7 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
         }
 
         private F getLcf() {
-            return ubm.getFeatures().stream().max((F f1, F f2) -> Double.compare(quotient(f1), quotient(f2))).get();
+            return ubm.getFeatures().stream().max(Comparator.comparingDouble(this::quotient)).get();
         }
 
         private double quotient(F f) {

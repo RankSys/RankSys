@@ -75,9 +75,7 @@ public class CPLSAFactorizer<U, I, F> extends PLSAFactorizer<U, I> {
                         .collect(Collectors.toSet());
                 featureData.getAllFidx()
                         .filter(f -> !itemFidxs.contains(f))
-                        .forEach(fidx -> {
-                            this.itemMatrix.setQuick(iidx, fidx, 0.0);
-                        });
+                        .forEach(fidx -> this.itemMatrix.setQuick(iidx, fidx, 0.0));
             });
         }
     }

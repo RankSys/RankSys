@@ -13,11 +13,13 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
+import org.ranksys.core.util.tuples.Tuple2od;
+
 import java.util.List;
 import java.util.stream.IntStream;
+
 import static java.lang.Double.isNaN;
 import static java.lang.Math.min;
-import org.ranksys.core.util.tuples.Tuple2od;
 
 /**
  * Greedy re-ranking. Greedily selects items from an input recommendation
@@ -67,15 +69,12 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
      * @param maxLength maximum length of the resulting re-ranked recommendation
      * @return the {@link GreedyUserReranker} that does the re-ranking
      */
-    protected abstract GreedyUserReranker<U, I> getUserReranker(Recommendation<U, I> recommendation, int maxLength);
+    protected abstract GreedyUserReranker getUserReranker(Recommendation<U, I> recommendation, int maxLength);
 
     /**
      * Re-ranker of a single recommendation.
-     *
-     * @param <U> type of the users
-     * @param <I> type of the items
      */
-    protected abstract class GreedyUserReranker<U, I> {
+    protected abstract class GreedyUserReranker {
 
         /**
          * input recommendation

@@ -9,14 +9,12 @@ package org.ranksys.core.util.sampling;
 
 import org.ranksys.core.util.BinaryTree;
 import org.ranksys.core.util.BinaryTree.Node;
-import static java.lang.Math.min;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
+
+import java.util.*;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
+
+import static java.lang.Math.min;
 
 /**
  * Weighted sampling with and without replacement.
@@ -27,7 +25,7 @@ import java.util.stream.Stream;
 public class WeightedSampling<T> {
 
     private final Random rnd;
-    private final BinaryTree<EVNode<T>> tree;
+    private final BinaryTree<EVNode> tree;
     private final boolean withReplacement;
     private int n;
 
@@ -66,23 +64,23 @@ public class WeightedSampling<T> {
         this.rnd = rnd;
         this.withReplacement = withReplacement;
 
-        Queue<EVNode<T>> queue = new LinkedList<>();
+        Queue<EVNode> queue = new LinkedList<>();
         elems.forEach(elem -> {
-            EVNode<T> node = new EVNode<>(elem, value.applyAsDouble(elem));
+            EVNode node = new EVNode(elem, value.applyAsDouble(elem));
             queue.add(node);
         });
         this.n = queue.size();
 
         while (queue.size() > 1) {
-            EVNode<T> l = queue.poll();
-            EVNode<T> r = queue.poll();
-            EVNode<T> p = new EVNode<>(null, l.value + r.value);
+            EVNode l = queue.poll();
+            EVNode r = queue.poll();
+            EVNode p = new EVNode(null, l.value + r.value);
             p.setLeftChild(l);
             p.setRightChild(r);
             queue.add(p);
         }
 
-        EVNode<T> root = queue.poll();
+        EVNode root = queue.poll();
         this.tree = new BinaryTree<>(root);
     }
 
@@ -112,11 +110,11 @@ public class WeightedSampling<T> {
      */
     public T sample() {
         double v = rnd.nextDouble() * tree.getRoot().value;
-        EVNode<T> node = binSearch(v);
+        EVNode node = binSearch(v);
 
         if (!withReplacement) {
             double value = node.value;
-            EVNode<T> parent = node.getParent();
+            EVNode parent = node.getParent();
             if (parent.getLeftChild() == node) {
                 parent.setLeftChild(null);
             } else {
@@ -124,7 +122,7 @@ public class WeightedSampling<T> {
             }
             while (parent != null) {
                 parent.value -= value;
-                parent = (EVNode<T>) parent.getParent();
+                parent = parent.getParent();
             }
             n--;
         }
@@ -132,13 +130,13 @@ public class WeightedSampling<T> {
         return node.elem;
     }
 
-    private EVNode<T> binSearch(double v) {
+    private EVNode binSearch(double v) {
         return binSearch(tree.getRoot(), v);
     }
 
-    private EVNode<T> binSearch(EVNode<T> node, double v) {
-        EVNode<T> l = node.getLeftChild();
-        EVNode<T> r = node.getRightChild();
+    private EVNode binSearch(EVNode node, double v) {
+        EVNode l = node.getLeftChild();
+        EVNode r = node.getRightChild();
         if (l == null && r == null) {
             return node;
         } else if (l == null) {
@@ -152,7 +150,7 @@ public class WeightedSampling<T> {
         }
     }
 
-    private class EVNode<T> extends Node {
+    private class EVNode extends Node {
 
         private final T elem;
         private double value;
@@ -164,20 +162,20 @@ public class WeightedSampling<T> {
 
         @Override
         @SuppressWarnings("unchecked")
-        public EVNode<T> getParent() {
-            return (EVNode<T>) super.getParent();
+        public EVNode getParent() {
+            return (EVNode) super.getParent();
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        public EVNode<T> getLeftChild() {
-            return (EVNode<T>) super.getLeftChild();
+        public EVNode getLeftChild() {
+            return (EVNode) super.getLeftChild();
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        public EVNode<T> getRightChild() {
-            return (EVNode<T>) super.getRightChild();
+        public EVNode getRightChild() {
+            return (EVNode) super.getRightChild();
         }
 
     }
