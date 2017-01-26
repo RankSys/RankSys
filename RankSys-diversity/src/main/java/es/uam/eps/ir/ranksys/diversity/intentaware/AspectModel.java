@@ -8,9 +8,9 @@
 package es.uam.eps.ir.ranksys.diversity.intentaware;
 
 import es.uam.eps.ir.ranksys.core.model.UserModel;
-import java.util.List;
 import org.ranksys.core.util.tuples.Tuple2od;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -18,11 +18,10 @@ import java.util.stream.Stream;
  * Aspect model for the intent-aware diversification framework. User intents
  * are taken from the intent model.
  *
- * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
- *
  * @param <U> user type
  * @param <I> item type
  * @param <F> aspect type
+ * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
  */
 public abstract class AspectModel<U, I, F> extends UserModel<U> {
 
@@ -66,6 +65,7 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
          * Returns an item aspect model from a list of scored items.
          *
          * @param items list of items with scores
+         * @return an item aspect model for the list scored items supplied
          */
         public abstract ItemAspectModel<I, F> getItemAspectModel(List<Tuple2od<I>> items);
 
@@ -96,7 +96,7 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
          * Returns probability of an item given an aspect
          *
          * @param iv item-value pair
-         * @param f aspect
+         * @param f  aspect
          * @return probability of an item given an aspect
          */
         public abstract double pi_f(Tuple2od<I> iv, F f);

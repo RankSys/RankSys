@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2016 RankSys http://ranksys.org
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -7,6 +7,6 @@
  */
 
 /**
- * Intent-aware model.
+ * Preference FM learners.
  */
-package org.ranksys.diversity.intentaware;
+package org.ranksys.fm.learner;

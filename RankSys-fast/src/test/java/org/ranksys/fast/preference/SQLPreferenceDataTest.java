@@ -7,18 +7,19 @@
  */
 package org.ranksys.fast.preference;
 
-import es.uam.eps.ir.ranksys.fast.preference.SQLPreferenceData;
 import com.zaxxer.hikari.HikariDataSource;
-import static java.lang.Double.parseDouble;
+import es.uam.eps.ir.ranksys.fast.preference.SQLPreferenceData;
 import org.jooq.SQLDialect;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+
+import static java.lang.Double.parseDouble;
 import static java.util.stream.Stream.of;
+import static org.junit.Assert.assertTrue;
 
 /**
  * A test for SQLPreferenceData.
  *
- * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class SQLPreferenceDataTest {
 

@@ -10,15 +10,15 @@ package org.ranksys.core.index;
 import es.uam.eps.ir.ranksys.core.index.ItemIndex;
 
 /**
- * Mutable item index.
+ * Mutable item index. You can add and remove items.
  *
- * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * @author Saúl Vargas (Saul@VargasSandoval.es)
  * @param <I> item type
  */
 public interface MutableItemIndex<I> extends ItemIndex<I> {
 
     /**
-     * Add item with specified id.
+     * Adds item.
      *
      * @param i id of the item
      * @return true if new item was added, false otherwise
@@ -26,7 +26,7 @@ public interface MutableItemIndex<I> extends ItemIndex<I> {
     public boolean addItem(I i);
 
     /**
-     * Removes item
+     * Removes item.
      *
      * @param i id of the item
      * @return true if item was removed, false otherwise

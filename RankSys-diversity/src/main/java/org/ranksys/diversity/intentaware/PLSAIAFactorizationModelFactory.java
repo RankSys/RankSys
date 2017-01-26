@@ -24,10 +24,9 @@ import java.util.stream.Stream;
 /**
  * PLSA aspect and intent models factory. It learns PLSA model which then is used to create aspect and intent model.
  *
- * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
- *
  * @param <U> user type
  * @param <I> item type
+ * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
  */
 public class PLSAIAFactorizationModelFactory<U, I> extends IAFactorizationModelFactory<U, I, Integer> {
 
@@ -38,6 +37,7 @@ public class PLSAIAFactorizationModelFactory<U, I> extends IAFactorizationModelF
      * Creates the PLSA models factory. When called, factorizes data using PLSA.
      *
      * @param numIter number of expectation-maximization steps
+     * @param k       number of factors in the PLSA model
      * @param data    training data
      */
     public PLSAIAFactorizationModelFactory(int numIter, int k, FastPreferenceData<U, I> data) {

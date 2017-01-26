@@ -10,15 +10,15 @@ package org.ranksys.core.index;
 import es.uam.eps.ir.ranksys.core.index.UserIndex;
 
 /**
- * Mutable user index.
+ * Mutable user index. You can add and remove users.
  *
- * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * @author Saúl Vargas (Saul@VargasSandoval.es)
  * @param <U> user type
  */
 public interface MutableUserIndex<U> extends UserIndex<U> {
 
     /**
-     * Add user with specified id.
+     * Adds user.
      *
      * @param u id of the user
      * @return true if new user was added, false otherwise
@@ -26,7 +26,7 @@ public interface MutableUserIndex<U> extends UserIndex<U> {
     public boolean addUser(U u);
 
     /**
-     * Removes user
+     * Removes user.
      *
      * @param u id of the user
      * @return true if user was removed, false otherwise

@@ -8,16 +8,26 @@
 package es.uam.eps.ir.ranksys.nn.sim;
 
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import static org.apache.mahout.math.stats.LogLikelihood.logLikelihoodRatio;
 
 /**
+ * Static methods from constructing similarities.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class Similarities {
 
+    /**
+     * Set cosine similarity.
+     *
+     * @param preferences preference data
+     * @param dense       true for array-based calculations, false to map-based
+     * @param alpha       asymmetry factor, set to 0.5 to standard cosine.
+     * @return similarity
+     */
     public static SetSimilarity setCosine(FastPreferenceData<?, ?> preferences, boolean dense, double alpha) {
         return new SetSimilarity(preferences, dense) {
             @Override
@@ -27,6 +37,13 @@ public class Similarities {
         };
     }
 
+    /**
+     * Set Jaccard similarity.
+     *
+     * @param preferences preference data
+     * @param dense       true for array-based calculations, false to map-based
+     * @return similarity
+     */
     public static SetSimilarity setJaccard(FastPreferenceData<?, ?> preferences, boolean dense) {
         return new SetSimilarity(preferences, dense) {
             @Override
@@ -36,6 +53,13 @@ public class Similarities {
         };
     }
 
+    /**
+     * Vector cosine similarity.
+     *
+     * @param preferences preference data
+     * @param dense       true for array-based calculations, false to map-based
+     * @return similarity
+     */
     public static VectorSimilarity vectorCosine(FastPreferenceData<?, ?> preferences, boolean dense) {
         return new VectorSimilarity(preferences, dense) {
             @Override
@@ -45,6 +69,13 @@ public class Similarities {
         };
     }
 
+    /**
+     * Vector Jaccard similarity.
+     *
+     * @param preferences preference data
+     * @param dense       true for array-based calculations, false to map-based
+     * @return similarity
+     */
     public static VectorSimilarity vectorJaccard(FastPreferenceData<?, ?> preferences, boolean dense) {
         return new VectorSimilarity(preferences, dense) {
             @Override
@@ -54,6 +85,13 @@ public class Similarities {
         };
     }
 
+    /**
+     * Log likelihood similarity.
+     *
+     * @param preferences preference data
+     * @param dense       true for array-based calculations, false to map-based
+     * @return similarity
+     */
     public static SetSimilarity logLikelihood(FastPreferenceData<?, ?> preferences, boolean dense) {
         return new SetSimilarity(preferences, dense) {
             @Override

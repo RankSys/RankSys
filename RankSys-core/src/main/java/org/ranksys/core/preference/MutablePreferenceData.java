@@ -14,22 +14,24 @@ import org.ranksys.core.index.MutableUserIndex;
 /**
  * Mutable preference data. Preferences can be added or removed.
  *
- * @author Saúl Vargas (Saul.Vargas@mendeley.com)
  * @param <U> user type
  * @param <I> item type
+ * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public interface MutablePreferenceData<U, I> extends PreferenceData<U, I>, MutableUserIndex<U>, MutableItemIndex<I> {
 
     /**
      * Adds preference.
      *
-     * @param u user
-     * @param i item
-     * @param v value
+     * @param u     user
+     * @param i     item
+     * @param v     value
+     * @param other additional information (e.g. timestamp, context)
+     * @param <O>   type of additional information (e.g. timestamp, context)
      * @return true if preference was added, false otherwise
      */
     public <O> boolean addPref(U u, I i, double v, O other);
-    
+
     /**
      * Removes preference.
      *

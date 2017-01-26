@@ -10,27 +10,22 @@ package es.uam.eps.ir.ranksys.fast.preference;
 import es.uam.eps.ir.ranksys.core.preference.IdPref;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.IntIterator;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-import javax.sql.DataSource;
-import org.jooq.DSLContext;
-import org.jooq.Field;
-import org.jooq.Record;
-import org.jooq.SQLDialect;
-import org.jooq.Sequence;
-import org.jooq.Table;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.ranksys.core.preference.MutablePreferenceData;
-import static org.jooq.impl.DSL.constraint;
-import static org.jooq.impl.DSL.name;
-import static org.jooq.impl.DSL.val;
 import org.ranksys.core.util.iterators.StreamDoubleIterator;
 import org.ranksys.core.util.iterators.StreamIntIterator;
+
+import javax.sql.DataSource;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import static org.jooq.impl.DSL.*;
 
 /**
  * SQL-backed preference data.
  *
- * @author Saúl Vargas (Saul.Vargas@mendeley.com)
+ * @author Saúl Vargas (Saul@VargasSandoval.es)
  */
 public class SQLPreferenceData implements FastPreferenceData<String, String>, MutablePreferenceData<String, String> {
 

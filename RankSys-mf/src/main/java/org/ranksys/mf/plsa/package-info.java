@@ -7,6 +7,6 @@
  */
 
 /**
- * Intent-aware model.
+ * Probabilistic latent semantic analysis.
  */
-package org.ranksys.diversity.intentaware;
+package org.ranksys.mf.plsa;

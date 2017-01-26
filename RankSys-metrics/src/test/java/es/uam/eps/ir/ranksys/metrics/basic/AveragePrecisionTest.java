@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2016 RankSys http://ranksys.org
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package es.uam.eps.ir.ranksys.metrics.basic;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
@@ -14,6 +21,9 @@ import java.util.stream.Stream;
 
 import static org.jooq.lambda.tuple.Tuple.tuple;
 
+/**
+ * Unit tests for AveragePrecision
+ */
 public class AveragePrecisionTest {
 
     private final PreferenceData<String, String> prefs = SimplePreferenceData.load(Stream.of(
