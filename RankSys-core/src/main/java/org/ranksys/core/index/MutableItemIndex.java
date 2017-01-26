@@ -23,7 +23,7 @@ public interface MutableItemIndex<I> extends ItemIndex<I> {
      * @param i id of the item
      * @return true if new item was added, false otherwise
      */
-    public boolean addItem(I i);
+    boolean addItem(I i);
 
     /**
      * Removes item.
@@ -31,5 +31,5 @@ public interface MutableItemIndex<I> extends ItemIndex<I> {
      * @param i id of the item
      * @return true if item was removed, false otherwise
      */
-    public boolean removeItem(I i);
+    boolean removeItem(I i);
 }

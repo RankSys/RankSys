@@ -86,14 +86,10 @@ public class RecommenderExample {
         Map<String, Supplier<Recommender<Long, Long>>> recMap = new HashMap<>();
 
         // random recommendation
-        recMap.put("rnd", () -> {
-            return new RandomRecommender<>(trainData, trainData);
-        });
+        recMap.put("rnd", () -> new RandomRecommender<>(trainData, trainData));
 
         // most-popular recommendation
-        recMap.put("pop", () -> {
-            return new PopularityRecommender<>(trainData);
-        });
+        recMap.put("pop", () -> new PopularityRecommender<>(trainData));
 
         // user-based nearest neighbors
         recMap.put("ub", () -> {

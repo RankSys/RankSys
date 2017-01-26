@@ -105,8 +105,8 @@ public class SimpleFMFormat implements FMFormat {
 
     private void saveVector(OutputStream out, double[] v) throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
-        for (int j = 0; j < v.length; j++) {
-            writer.write(Double.toString(v[j]));
+        for (double x : v) {
+            writer.write(Double.toString(x));
             writer.newLine();
         }
         writer.flush();

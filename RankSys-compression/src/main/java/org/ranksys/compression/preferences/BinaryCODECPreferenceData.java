@@ -85,7 +85,7 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
         return preferences.getUidxWithPreferences().mapToObj(k -> {
             IdxPref[] pairs = preferences.getUidxPreferences(k)
                     .sorted(Comparator.comparingInt(p -> p.v1))
-                    .toArray(n -> new IdxPref[n]);
+                    .toArray(IdxPref[]::new);
             int[] idxs = new int[pairs.length];
             for (int i = 0; i < pairs.length; i++) {
                 idxs[i] = pairs[i].v1;

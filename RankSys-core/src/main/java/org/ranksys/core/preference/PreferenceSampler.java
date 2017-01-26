@@ -27,5 +27,5 @@ public interface PreferenceSampler<U, I> extends UserIndex<U>, ItemIndex<I>{
      *
      * @return stream of user-item preferences
      */
-    public Stream<Tuple2<U, ? extends IdPref<I>>> sample();
+    Stream<Tuple2<U, ? extends IdPref<I>>> sample();
 }

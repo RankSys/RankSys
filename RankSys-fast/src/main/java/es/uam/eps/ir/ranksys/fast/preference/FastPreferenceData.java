@@ -33,7 +33,7 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @param iidx item index
      * @return number of users who have a preference for the item
      */
-    public int numUsers(int iidx);
+    int numUsers(int iidx);
 
     /**
      * Returns the number of items for which the user has preference for.
@@ -41,21 +41,21 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @param uidx user index
      * @return number of items for which the user has preference for
      */
-    public int numItems(int uidx);
+    int numItems(int uidx);
     
     /**
      * Returns a stream of user indexes who have preferences for items.
      *
      * @return a stream of user indexes who have preferences for items
      */
-    public IntStream getUidxWithPreferences();
+    IntStream getUidxWithPreferences();
     
     /**
      * Returns a stream of item indexes for which users have preferences.
      *
      * @return a stream of item indexes for which users have preferences
      */
-    public IntStream getIidxWithPreferences();
+    IntStream getIidxWithPreferences();
     
     /**
      * Gets the preferences of a user.
@@ -63,7 +63,7 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @param uidx user index
      * @return preferences of the user
      */
-    public Stream<? extends IdxPref> getUidxPreferences(int uidx);
+    Stream<? extends IdxPref> getUidxPreferences(int uidx);
     
     /**
      * Gets the preferences of an item.
@@ -71,7 +71,7 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @param iidx item index
      * @return preferences of the item
      */
-    public Stream<? extends IdxPref> getIidxPreferences(int iidx);
+    Stream<? extends IdxPref> getIidxPreferences(int iidx);
     
     
     /**
@@ -80,7 +80,7 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @param uidx user index
      * @return iterator of the idxs of the items
      */
-    public IntIterator getUidxIidxs(final int uidx);
+    IntIterator getUidxIidxs(final int uidx);
 
     /**
      * Returns the item values of the preferences of a user.
@@ -88,7 +88,7 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @param uidx user index
      * @return iterator of the values of the items
      */
-    public DoubleIterator getUidxVs(final int uidx);
+    DoubleIterator getUidxVs(final int uidx);
 
     /**
      * Returns the user idxs of the preferences for an item.
@@ -96,7 +96,7 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @param iidx item index
      * @return iterator of the idxs of the users.
      */
-    public IntIterator getIidxUidxs(final int iidx);
+    IntIterator getIidxUidxs(final int iidx);
 
     /**
      * Returns the user values of the preferences for an item.
@@ -104,7 +104,7 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * @param iidx item index
      * @return iterator of the values of the users
      */
-    public DoubleIterator getIidxVs(final int iidx);
+    DoubleIterator getIidxVs(final int iidx);
 
     /**
      * Use methods returning IntIterator or DoubleIterator over streams of
@@ -112,5 +112,5 @@ public interface FastPreferenceData<U, I> extends PreferenceData<U, I>, FastUser
      * 
      * @return yes/no
      */
-    public boolean useIteratorsPreferentially();
+    boolean useIteratorsPreferentially();
 }

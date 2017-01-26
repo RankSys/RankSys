@@ -41,21 +41,17 @@ public class SimpleFastItemIndexTest {
 
         assertEquals(itemIndex.numItems(), N);
 
-        rnd.ints(1000, 0, N).forEach(iidx -> {
-            assertTrue(itemIndex.iidx2item(iidx).equals(items.get(iidx)));
-        });
+        rnd.ints(1000, 0, N)
+                .forEach(iidx -> assertTrue(itemIndex.iidx2item(iidx).equals(items.get(iidx))));
 
-        rnd.ints(1000, 0, N).mapToObj(Integer::toString).forEach(item -> {
-            assertTrue(itemIndex.item2iidx(item) == items.indexOf(item));
-        });
+        rnd.ints(1000, 0, N).mapToObj(Integer::toString)
+                .forEach(item -> assertTrue(itemIndex.item2iidx(item) == items.indexOf(item)));
 
-        rnd.ints(1000, 0, N).mapToObj(Integer::toString).forEach(item -> {
-            assertTrue(itemIndex.containsItem(item));
-        });
+        rnd.ints(1000, 0, N).mapToObj(Integer::toString)
+                .forEach(item -> assertTrue(itemIndex.containsItem(item)));
 
-        rnd.ints(1000, N, 2 * N).mapToObj(Integer::toString).forEach(item -> {
-            assertFalse(itemIndex.containsItem(item));
-        });
+        rnd.ints(1000, N, 2 * N).mapToObj(Integer::toString)
+                .forEach(item -> assertFalse(itemIndex.containsItem(item)));
 
         assertEquals(itemIndex.getAllItems().collect(toSet()), new HashSet<>(items));
     }

@@ -41,21 +41,17 @@ public class SimpleFastFeatureIndexTest {
 
         assertEquals(featureIndex.numFeatures(), N);
 
-        rnd.ints(1000, 0, N).forEach(fidx -> {
-            assertTrue(featureIndex.fidx2feature(fidx).equals(features.get(fidx)));
-        });
+        rnd.ints(1000, 0, N)
+                .forEach(fidx -> assertTrue(featureIndex.fidx2feature(fidx).equals(features.get(fidx))));
 
-        rnd.ints(1000, 0, N).mapToObj(Integer::toString).forEach(feature -> {
-            assertTrue(featureIndex.feature2fidx(feature) == features.indexOf(feature));
-        });
+        rnd.ints(1000, 0, N).mapToObj(Integer::toString)
+                .forEach(feature -> assertTrue(featureIndex.feature2fidx(feature) == features.indexOf(feature)));
 
-        rnd.ints(1000, 0, N).mapToObj(Integer::toString).forEach(feature -> {
-            assertTrue(featureIndex.containsFeature(feature));
-        });
+        rnd.ints(1000, 0, N).mapToObj(Integer::toString)
+                .forEach(feature -> assertTrue(featureIndex.containsFeature(feature)));
 
-        rnd.ints(1000, N, 2 * N).mapToObj(Integer::toString).forEach(feature -> {
-            assertFalse(featureIndex.containsFeature(feature));
-        });
+        rnd.ints(1000, N, 2 * N).mapToObj(Integer::toString)
+                .forEach(feature -> assertFalse(featureIndex.containsFeature(feature)));
 
         assertEquals(featureIndex.getAllFeatures().collect(toSet()), new HashSet<>(features));
     }

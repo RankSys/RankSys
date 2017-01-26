@@ -25,20 +25,20 @@ public interface FeatureIndex<F> {
      * @param f feature
      * @return true if the index contains the feature, false otherwise
      */
-    public boolean containsFeature(F f);
+    boolean containsFeature(F f);
 
     /**
      * Counts the number of indexed features.
      *
      * @return the total number of features
      */
-    public int numFeatures();
+    int numFeatures();
 
     /**
      * Retrieves a stream of the indexed features.
      *
      * @return a stream of all the features
      */
-    public Stream<F> getAllFeatures();
+    Stream<F> getAllFeatures();
 
 }

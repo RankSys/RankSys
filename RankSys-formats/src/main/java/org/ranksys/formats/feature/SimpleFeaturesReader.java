@@ -44,7 +44,7 @@ public class SimpleFeaturesReader implements FeaturesReader {
     }
 
     @Override
-    public <I, F> Stream<Tuple3<I, F, Double>> read(InputStream in, Parser<I> ip, Parser<F> fp) throws IOException {
+    public <I, F> Stream<Tuple3<I, F, Double>> read(InputStream in, Parser<I> ip, Parser<F> fp) {
         return new BufferedReader(new InputStreamReader(in)).lines().map(line -> {
             String[] tokens = line.split("\t", 3);
             I item = ip.parse(tokens[0]);

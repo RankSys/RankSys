@@ -27,5 +27,5 @@ public interface RecommendationMetric<U, I> {
      * @param recommendation recommendation list
      * @return score of the metric to the recommendation
      */
-    public double evaluate(Recommendation<U, I> recommendation);
+    double evaluate(Recommendation<U, I> recommendation);
 }

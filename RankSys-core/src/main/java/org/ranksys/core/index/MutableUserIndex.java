@@ -23,7 +23,7 @@ public interface MutableUserIndex<U> extends UserIndex<U> {
      * @param u id of the user
      * @return true if new user was added, false otherwise
      */
-    public boolean addUser(U u);
+    boolean addUser(U u);
 
     /**
      * Removes user.
@@ -31,5 +31,5 @@ public interface MutableUserIndex<U> extends UserIndex<U> {
      * @param u id of the user
      * @return true if user was removed, false otherwise
      */
-    public boolean removeUser(U u);
+    boolean removeUser(U u);
 }

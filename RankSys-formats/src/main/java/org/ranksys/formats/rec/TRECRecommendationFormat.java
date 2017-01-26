@@ -41,9 +41,7 @@ public class TRECRecommendationFormat<U, I> extends TuplesRecommendationFormat<U
      */
     public TRECRecommendationFormat(Parser<U> uParser, Parser<I> iParser, boolean sortByDecreasingScore) {
         super(
-                (u, i, v, r) -> {
-                    return String.join("\t", u.toString(), "Q0", i.toString(), Long.toString(r + 1), Double.toString(v), "r");
-                },
+                (u, i, v, r) -> String.join("\t", u.toString(), "Q0", i.toString(), Long.toString(r + 1), Double.toString(v), "r"),
                 line -> {
                     CharSequence[] tokens = split(line, '\t', 6);
                     U u = uParser.parse(tokens[0]);

@@ -35,7 +35,7 @@ public class Parsers {
     /**
      * Parse to Integer.
      */
-    public static Parser<Integer> ip = from -> pip.applyAsInt(from);
+    public static Parser<Integer> ip = pip::applyAsInt;
     
     /**
      * Parse to long.
@@ -51,22 +51,22 @@ public class Parsers {
     /**
      * Parse to Long.
      */
-    public static Parser<Long> lp = from -> plp.applyAsLong(from);
+    public final static Parser<Long> lp = plp::applyAsLong;
 
     /**
      * Parse to String.
      */
-    public static Parser<String> sp = from -> from.toString();
+    public final static Parser<String> sp = CharSequence::toString;
 
     /**
      * Parse to Float.
      */
-    public static Parser<Float> fp = from -> Float.parseFloat(from.toString());
+    public final static Parser<Float> fp = from -> Float.parseFloat(from.toString());
 
     /**
      * Parse to double.
      */
-    public static ToDoubleFunction<CharSequence> pdp = from -> parseDouble(from.toString());
+    public final static ToDoubleFunction<CharSequence> pdp = from -> parseDouble(from.toString());
     
     /**
      * Parse to Double.

@@ -40,9 +40,8 @@ public class FeatsReader {
      * @param in input stream to read from
      * @param fp feat parser
      * @return stream of feats
-     * @throws IOException when I/O problems
      */
-    public static <F> Stream<F> read(InputStream in, Parser<F> fp) throws IOException {
+    public static <F> Stream<F> read(InputStream in, Parser<F> fp) {
         return Utils.readElemens(in, fp);
     }
 }

@@ -32,7 +32,7 @@ public interface FeaturesReader {
      * @return stream of item-feature-value triples
      * @throws IOException when I/O problems
      */
-    public default <I, F> Stream<Tuple3<I, F, Double>> read(String in, Parser<I> ip, Parser<F> fp) throws IOException {
+    default <I, F> Stream<Tuple3<I, F, Double>> read(String in, Parser<I> ip, Parser<F> fp) throws IOException {
         return read(new FileInputStream(in), ip, fp);
 
     }
@@ -46,8 +46,7 @@ public interface FeaturesReader {
      * @param ip item parser
      * @param fp feat parser
      * @return stream of item-feature-value triples
-     * @throws IOException when I/O problems
      */
-    public <I, F> Stream<Tuple3<I, F, Double>> read(InputStream in, Parser<I> ip, Parser<F> fp) throws IOException;
+    <I, F> Stream<Tuple3<I, F, Double>> read(InputStream in, Parser<I> ip, Parser<F> fp);
 
 }

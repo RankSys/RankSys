@@ -112,14 +112,14 @@ public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U,
         }
 
         @Override
-        public Stream<Recommendation<U, I>> readAll() throws IOException {
+        public Stream<Recommendation<U, I>> readAll() {
             return Stream.of(new File(path).listFiles((dir, name) -> name.startsWith("part-")))
                     .map(Unchecked.function(file -> new BufferedReader(new FileReader(file))))
                     .map(Unchecked.function(this::loadPart))
                     .reduce(Stream.empty(), Stream::concat);
         }
 
-        private Stream<Recommendation<U, I>> loadPart(BufferedReader reader) throws IOException {
+        private Stream<Recommendation<U, I>> loadPart(BufferedReader reader) {
             return reader.lines().map(line -> {
                 CharSequence[] toks1 = split(line, '\t');
 

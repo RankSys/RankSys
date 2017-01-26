@@ -25,5 +25,5 @@ public interface Neighborhood {
      * @param idx user/index whose neighborhood is calculated
      * @return stream of user/item-similarity pairs.
      */
-    public Stream<Tuple2id> getNeighbors(int idx);
+    Stream<Tuple2id> getNeighbors(int idx);
 }

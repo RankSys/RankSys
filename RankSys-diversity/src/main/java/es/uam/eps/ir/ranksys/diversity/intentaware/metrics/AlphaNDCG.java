@@ -116,9 +116,8 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
             for (I i : candidates) {
                 double gain = featureData.getItemFeatures(i)
                         .map(Tuple2::v1)
-                        .mapToDouble(f -> {
-                            return Math.pow(1 - alpha, redundancy.getInt(f));
-                        }).sum();
+                        .mapToDouble(f -> Math.pow(1 - alpha, redundancy.getInt(f)))
+                        .sum();
                 if (gain > bg) {
                     bg = gain;
                     bi = i;

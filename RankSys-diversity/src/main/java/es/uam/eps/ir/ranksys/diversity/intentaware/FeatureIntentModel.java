@@ -21,12 +21,11 @@ import java.util.stream.Stream;
  * profiles are used as proxies for intents, and the probability of each is
  * proportional to its occurrence in the profiles.
  *
- * @author Saúl Vargas (saul.vargas@uam.es)
- * @author Pablo Castells (pablo.castells@uam.es)
- *
  * @param <U> type of the users
  * @param <I> type of the items
  * @param <F> type of the features
+ * @author Saúl Vargas (saul.vargas@uam.es)
+ * @author Pablo Castells (pablo.castells@uam.es)
  */
 public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
 
@@ -49,7 +48,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
      * Constructor that caches user intent-aware models.
      *
      * @param targetUsers user whose intent-aware models are cached
-     * @param totalData preference data
+     * @param totalData   preference data
      * @param featureData feature data
      */
     public FeatureIntentModel(Stream<U> targetUsers, PreferenceData<U, I> totalData, FeatureData<I, F, ?> featureData) {
@@ -62,7 +61,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
     /**
      * Constructor that does not cache user intent-aware models.
      *
-     * @param totalData preference data
+     * @param totalData   preference data
      * @param featureData feature data
      */
     public FeatureIntentModel(PreferenceData<U, I> totalData, FeatureData<I, F, ?> featureData) {
@@ -84,8 +83,6 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
     }
 
     /**
-     *
-     *
      * @param user target user
      * @return intent model for user
      */
@@ -114,12 +111,12 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
             tmpCounts.defaultReturnValue(0.0);
 
             int[] norm = {0};
-            totalData.getUserPreferences(user).forEach(iv -> {
-                featureData.getItemFeatures(iv.v1).forEach(fv -> {
-                    tmpCounts.addTo(fv.v1, 1.0);
-                    norm[0]++;
-                });
-            });
+            totalData.getUserPreferences(user)
+                    .forEach(iv -> featureData.getItemFeatures(iv.v1)
+                            .forEach(fv -> {
+                                tmpCounts.addTo(fv.v1, 1.0);
+                                norm[0]++;
+                            }));
 
             if (norm[0] == 0) {
                 norm[0] = featureData.numFeatures();
@@ -134,8 +131,6 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         }
 
         /**
-         *
-         *
          * @return set of features as intents
          */
         @Override
@@ -144,8 +139,6 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         }
 
         /**
-         *
-         *
          * @param i target item
          * @return features as items covered by the item
          */
@@ -157,8 +150,6 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
         }
 
         /**
-         *
-         *
          * @param f feature as intent
          * @return probability of the feature-intent
          */

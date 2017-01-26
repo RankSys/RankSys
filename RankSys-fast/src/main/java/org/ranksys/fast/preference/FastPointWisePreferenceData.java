@@ -32,5 +32,5 @@ public interface FastPointWisePreferenceData<U, I> extends PointWisePreferenceDa
      * @param iidx item idx
      * @return optional preference for item if it exists
      */
-    public Optional<? extends IdxPref> getPreference(int uidx, int iidx);
+    Optional<? extends IdxPref> getPreference(int uidx, int iidx);
 }

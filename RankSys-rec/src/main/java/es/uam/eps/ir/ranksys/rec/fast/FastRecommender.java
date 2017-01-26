@@ -33,7 +33,7 @@ public interface FastRecommender<U, I> extends Recommender<U, I>, FastUserIndex<
      * @param uidx index of the user to be issued a recommendation
      * @return a (fast) recommendation list
      */
-    public FastRecommendation getRecommendation(int uidx);
+    FastRecommendation getRecommendation(int uidx);
 
     /**
      * Free recommendation. Generate recommendations without any restriction
@@ -43,7 +43,7 @@ public interface FastRecommender<U, I> extends Recommender<U, I>, FastUserIndex<
      * @param maxLength maximum length of recommendation
      * @return a (fast) recommendation list
      */
-    public FastRecommendation getRecommendation(int uidx, int maxLength);
+    FastRecommendation getRecommendation(int uidx, int maxLength);
 
     /**
      * Filter recommendation. Recommends only the items that pass the filter.
@@ -52,7 +52,7 @@ public interface FastRecommender<U, I> extends Recommender<U, I>, FastUserIndex<
      * @param filter (fast) filter to decide which items might be recommended
      * @return a (fast) recommendation list
      */
-    public FastRecommendation getRecommendation(int uidx, IntPredicate filter);
+    FastRecommendation getRecommendation(int uidx, IntPredicate filter);
 
     /**
      * Filter recommendation. Recommends only the items that pass the filter up
@@ -63,7 +63,7 @@ public interface FastRecommender<U, I> extends Recommender<U, I>, FastUserIndex<
      * @param filter (fast) filter to decide which items might be recommended
      * @return a (fast) recommendation list
      */
-    public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter);
+    FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter);
 
     /**
      * Candidates ranking. Create a list that may contain only the items
@@ -73,6 +73,6 @@ public interface FastRecommender<U, I> extends Recommender<U, I>, FastUserIndex<
      * @param candidates candidate items to be included in the recommendation
      * @return a recommendation list
      */
-    public FastRecommendation getRecommendation(int uidx, IntStream candidates);
+    FastRecommendation getRecommendation(int uidx, IntStream candidates);
 
 }

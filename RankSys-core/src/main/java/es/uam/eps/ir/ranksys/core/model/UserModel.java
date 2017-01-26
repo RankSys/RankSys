@@ -35,7 +35,7 @@ public abstract class UserModel<U> {
     public UserModel(boolean caching, Stream<U> users) {
         this.caching = caching;
         if (caching) {
-            this.lazyUserMap = new Lazy<>(() -> users.parallel().collect(Collectors.toMap(u -> u, u -> get(u))));
+            this.lazyUserMap = new Lazy<>(() -> users.parallel().collect(Collectors.toMap(u -> u, this::get)));
         } else {
             this.lazyUserMap = null;
         }

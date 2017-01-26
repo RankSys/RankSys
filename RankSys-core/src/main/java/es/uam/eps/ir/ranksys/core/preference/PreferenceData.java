@@ -27,14 +27,14 @@ public interface PreferenceData<U, I> extends UserIndex<U>, ItemIndex<I> {
      *
      * @return number of users with preferences
      */
-    public int numUsersWithPreferences();
+    int numUsersWithPreferences();
 
     /**
      * Returns the number of items with preferences.
      *
      * @return number of items with preferences
      */
-    public int numItemsWithPreferences();
+    int numItemsWithPreferences();
 
     /**
      * Returns the number of users with preference for item i
@@ -42,7 +42,7 @@ public interface PreferenceData<U, I> extends UserIndex<U>, ItemIndex<I> {
      * @param i item
      * @return number of users with preferences for item i
      */
-    public int numUsers(I i);
+    int numUsers(I i);
 
     /**
      * Returns the number of items with preference for user u
@@ -50,28 +50,28 @@ public interface PreferenceData<U, I> extends UserIndex<U>, ItemIndex<I> {
      * @param u user
      * @return number of items with preferences for user u
      */
-    public int numItems(U u);
+    int numItems(U u);
 
     /**
      * Returns the total number of preferences
      *
      * @return total number of preferences
      */
-    public int numPreferences();
+    int numPreferences();
 
     /**
      * Returns a stream of the users with preferences
      *
      * @return stream of users with preferences
      */
-    public Stream<U> getUsersWithPreferences();
+    Stream<U> getUsersWithPreferences();
 
     /**
      * Returns a stream of the items with preferences
      *
      * @return stream of items with preferences
      */
-    public Stream<I> getItemsWithPreferences();
+    Stream<I> getItemsWithPreferences();
 
     /**
      * Returns a stream of the preferences of the user
@@ -79,7 +79,7 @@ public interface PreferenceData<U, I> extends UserIndex<U>, ItemIndex<I> {
      * @param u user
      * @return stream of preferences
      */
-    public Stream<? extends IdPref<I>> getUserPreferences(U u);
+    Stream<? extends IdPref<I>> getUserPreferences(U u);
 
     /**
      * Returns a stream of the preferences of the item
@@ -87,5 +87,5 @@ public interface PreferenceData<U, I> extends UserIndex<U>, ItemIndex<I> {
      * @param i item
      * @return stream of preferences
      */
-    public Stream<? extends IdPref<U>> getItemPreferences(I i);
+    Stream<? extends IdPref<U>> getItemPreferences(I i);
 }

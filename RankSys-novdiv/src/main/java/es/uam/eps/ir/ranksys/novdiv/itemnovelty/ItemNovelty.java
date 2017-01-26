@@ -77,6 +77,6 @@ public abstract class ItemNovelty<U, I> extends UserModel<U> {
          * @param i item
          * @return novelty of the item
          */
-        public double novelty(I i);
+        double novelty(I i);
     }
 }

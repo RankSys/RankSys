@@ -43,10 +43,9 @@ public class CompressibleRatingPreferencesFormat {
      * @param prefData preferences
      * @param up path to user preferences file
      * @param ip path to item preferences file
-     * @throws FileNotFoundException one of the files could not be created
      * @throws IOException other IO error
      */
-    public void write(FastPreferenceData<?, ?> prefData, String up, String ip) throws FileNotFoundException, IOException {
+    public void write(FastPreferenceData<?, ?> prefData, String up, String ip) throws IOException {
         CompressibleRatingPreferencesFormat.this.write(prefData, new FileOutputStream(up), new FileOutputStream(ip));
     }
 
@@ -56,9 +55,8 @@ public class CompressibleRatingPreferencesFormat {
      * @param prefData preferences
      * @param uo stream of user preferences
      * @param io stream of user preferences
-     * @throws IOException when IO error
      */
-    public void write(FastPreferenceData<?, ?> prefData, OutputStream uo, OutputStream io) throws IOException {
+    public void write(FastPreferenceData<?, ?> prefData, OutputStream uo, OutputStream io) {
         BiConsumer<FastPreferenceData<?, ?>, OutputStream> saver = Unchecked.biConsumer((prefs, os) -> {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
                 prefs.getUidxWithPreferences().forEach(Unchecked.intConsumer(uidx -> {

@@ -32,7 +32,7 @@ public interface PreferencesReader {
      * @return stream of user-item-value triples
      * @throws IOException when I/O problems
      */
-    public default <U, I> Stream<Tuple3<U, I, Double>> read(String in, Parser<U> up, Parser<I> ip) throws IOException {
+    default <U, I> Stream<Tuple3<U, I, Double>> read(String in, Parser<U> up, Parser<I> ip) throws IOException {
         return read(new FileInputStream(in), up, ip);
     }
 
@@ -45,8 +45,7 @@ public interface PreferencesReader {
      * @param up user parser
      * @param ip item parser
      * @return stream of user-item-value triples
-     * @throws IOException when I/O problems
      */
-    public <U, I> Stream<Tuple3<U, I, Double>> read(InputStream in, Parser<U> up, Parser<I> ip) throws IOException;
+    <U, I> Stream<Tuple3<U, I, Double>> read(InputStream in, Parser<U> up, Parser<I> ip);
 
 }

@@ -28,25 +28,25 @@ import static spock.util.matcher.HamcrestMatchers.closeTo
 
 class UserIntentModelSpec extends Specification {
 
-    private static final double DELTA = 1e-8;
+    private static final double DELTA = 1e-8
 
-    private IntentModel<Long, Long, String> intentModel;
+    private IntentModel<Long, Long, String> intentModel
 
     void setup() {
-        InputStream ratings = UserIntentModelSpec.class.getResourceAsStream("/intent_ratings");
-        InputStream features = UserIntentModelSpec.class.getResourceAsStream("/intent_features");
+        InputStream ratings = UserIntentModelSpec.class.getResourceAsStream("/intent_ratings")
+        InputStream features = UserIntentModelSpec.class.getResourceAsStream("/intent_features")
 
-        PreferenceData trainData = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(ratings, lp, lp));
+        PreferenceData trainData = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(ratings, lp, lp))
         
-        FeatureData featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(features, lp, sp));
+        FeatureData featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(features, lp, sp))
         
-        intentModel = new FeatureIntentModel(trainData.getUsersWithPreferences(), trainData, featureData);
+        intentModel = new FeatureIntentModel(trainData.getUsersWithPreferences(), trainData, featureData)
     }
 
     def "check number of user's intents"() {
         when:
-        IntentModel.UserIntentModel uim = intentModel.getModel(userId);
-        Set intents = uim.getIntents();
+        IntentModel.UserIntentModel uim = intentModel.getModel(userId)
+        Set intents = uim.getIntents()
 
         then:
         intents.size() == nIntents
@@ -59,8 +59,8 @@ class UserIntentModelSpec extends Specification {
 
     def "check user's intents"() {
         when:
-        IntentModel.UserIntentModel uim = intentModel.getModel(userId);
-        Set intents = uim.getIntents();
+        IntentModel.UserIntentModel uim = intentModel.getModel(userId)
+        Set intents = uim.getIntents()
 
         then:
         intents.contains(intent) == contains
@@ -81,8 +81,8 @@ class UserIntentModelSpec extends Specification {
 
     def "check user's item intents"() {
         when:
-        IntentModel.UserIntentModel uim = intentModel.getModel(userId);
-        Set itemIntents = uim.getItemIntents(itemId).collect(Collectors.toSet());
+        IntentModel.UserIntentModel uim = intentModel.getModel(userId)
+        Set itemIntents = uim.getItemIntents(itemId).collect(Collectors.toSet())
 
         then:
         itemIntents.size() == nIntents
@@ -101,7 +101,7 @@ class UserIntentModelSpec extends Specification {
 
     def "check user's intent probabilities"() {
         when:
-        IntentModel.UserIntentModel uim = intentModel.getModel(userId);
+        IntentModel.UserIntentModel uim = intentModel.getModel(userId)
 
         then:
         that uim.pf_u(intent), closeTo(p, DELTA)

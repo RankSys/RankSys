@@ -25,19 +25,19 @@ public interface ItemIndex<I> {
      * @param i item
      * @return true if the index contains the item, false otherwise
      */
-    public boolean containsItem(I i);
+    boolean containsItem(I i);
     
     /**
      * Counts the number of indexed items.
      *
      * @return the total number of item
      */
-    public int numItems();
+    int numItems();
     
     /**
      * Retrieves a stream of the indexed items.
      *
      * @return a stream of all the items
      */
-    public Stream<I> getAllItems();
+    Stream<I> getAllItems();
 }

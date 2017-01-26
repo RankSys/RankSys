@@ -26,7 +26,7 @@ public interface Similarity {
      * @param idx index of the user/item
      * @return function that returns the similarity with the index
      */
-    public IntToDoubleFunction similarity(int idx);
+    IntToDoubleFunction similarity(int idx);
     
     /**
      * Returns the similarity between two users/items. 
@@ -35,7 +35,7 @@ public interface Similarity {
      * @param idx2 index of user/item
      * @return similarity between the pair
      */
-    public default double similarity(int idx1, int idx2) {
+    default double similarity(int idx1, int idx2) {
         return similarity(idx1).applyAsDouble(idx2);
     }
     
@@ -46,5 +46,5 @@ public interface Similarity {
      * @param idx index of user/item
      * @return stream of index-similarity pairs
      */
-    public Stream<Tuple2id> similarElems(int idx);
+    Stream<Tuple2id> similarElems(int idx);
 }

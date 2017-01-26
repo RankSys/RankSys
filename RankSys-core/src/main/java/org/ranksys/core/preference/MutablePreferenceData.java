@@ -30,7 +30,7 @@ public interface MutablePreferenceData<U, I> extends PreferenceData<U, I>, Mutab
      * @param <O>   type of additional information (e.g. timestamp, context)
      * @return true if preference was added, false otherwise
      */
-    public <O> boolean addPref(U u, I i, double v, O other);
+    <O> boolean addPref(U u, I i, double v, O other);
 
     /**
      * Removes preference.
@@ -39,5 +39,5 @@ public interface MutablePreferenceData<U, I> extends PreferenceData<U, I>, Mutab
      * @param i item
      * @return true if preference was removed, false otherwise
      */
-    public boolean removePref(U u, I i);
+    boolean removePref(U u, I i);
 }

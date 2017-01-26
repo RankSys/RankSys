@@ -13,24 +13,24 @@ import es.uam.eps.ir.ranksys.rec.fast.FastRankingRecommender;
 import es.uam.eps.ir.ranksys.nn.item.neighborhood.ItemNeighborhood;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
+
 import static java.lang.Math.pow;
 
 /**
  * Item-based nearest neighbors recommender.
- * 
+ * <p>
  * F. Aiolli. Efficient Top-N Recommendation for Very Large Scale Binary Rated
  * Datasets. RecSys 2013.
- * 
- * P. Cremonesi, Y. Koren, and R. Turrin. Performance of 
+ * <p>
+ * P. Cremonesi, Y. Koren, and R. Turrin. Performance of
  * recommender algorithms on top-N recommendation tasks. RecSys 2010.
- * 
+ * <p>
  * B. Sarwar, G. Karypis, J. Konstan, and J. Riedl. Item-based collaborative
  * filtering recommendation algorithms. WWW 2001.
  *
- * @author Saúl Vargas (saul.vargas@uam.es)
- * 
  * @param <U> type of the users
  * @param <I> type of the items
+ * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U, I> {
 
@@ -52,9 +52,9 @@ public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
     /**
      * Constructor.
      *
-     * @param data preference data
+     * @param data         preference data
      * @param neighborhood item neighborhood
-     * @param q exponent of the similarity
+     * @param q            exponent of the similarity
      */
     public ItemNeighborhoodRecommender(FastPreferenceData<U, I> data, ItemNeighborhood<I> neighborhood, int q) {
         super(data, data);
@@ -73,12 +73,12 @@ public class ItemNeighborhoodRecommender<U, I> extends FastRankingRecommender<U,
     public Int2DoubleMap getScoresMap(int uidx) {
         Int2DoubleOpenHashMap scoresMap = new Int2DoubleOpenHashMap();
         scoresMap.defaultReturnValue(0.0);
-        data.getUidxPreferences(uidx).forEach(jp -> {
-            neighborhood.getNeighbors(jp.v1).forEach(is -> {
-                double w = pow(is.v2, q);
-                scoresMap.addTo(is.v1, w * jp.v2);
-            });
-        });
+        data.getUidxPreferences(uidx)
+                .forEach(jp -> neighborhood.getNeighbors(jp.v1)
+                        .forEach(is -> {
+                            double w = pow(is.v2, q);
+                            scoresMap.addTo(is.v1, w * jp.v2);
+                        }));
 
         return scoresMap;
     }

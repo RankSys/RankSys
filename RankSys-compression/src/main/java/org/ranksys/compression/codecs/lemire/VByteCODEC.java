@@ -23,7 +23,7 @@ public class VByteCODEC extends LemireCODEC {
      * Constructor.
      */
     public VByteCODEC() {
-        super((Supplier<IntegerCODEC> & Serializable) () -> new VariableByte());
+        super((Supplier<IntegerCODEC> & Serializable) VariableByte::new);
     }
 
 }

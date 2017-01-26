@@ -108,7 +108,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
 
             IntList perm = new IntArrayList();
             IntLinkedOpenHashSet remainingI = new IntLinkedOpenHashSet();
-            IntStream.range(0, list.size()).forEach(i -> remainingI.add(i));
+            IntStream.range(0, list.size()).forEach(remainingI::add);
 
             while (!remainingI.isEmpty() && perm.size() < min(maxLength, cutoff)) {
                 int bestI = selectItem(remainingI, list);

@@ -113,11 +113,11 @@ public class ERRIA<U, I, F> extends AbstractRecommendationMetric<U, I> {
             this.testData = testData;
             this.threshold = threshold;
 
-            this.maxPreference = testData.getUsersWithPreferences().mapToDouble(u -> {
-                return testData.getUserPreferences(u)
-                        .mapToDouble(IdPref::v2)
-                        .max().orElse(Double.NEGATIVE_INFINITY);
-            }).max().orElse(Double.NEGATIVE_INFINITY);
+            this.maxPreference = testData.getUsersWithPreferences()
+                    .mapToDouble(u -> testData.getUserPreferences(u)
+                            .mapToDouble(IdPref::v2)
+                            .max().orElse(Double.NEGATIVE_INFINITY))
+                    .max().orElse(Double.NEGATIVE_INFINITY);
         }
 
         @Override

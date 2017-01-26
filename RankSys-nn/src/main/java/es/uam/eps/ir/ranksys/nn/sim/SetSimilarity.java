@@ -68,11 +68,9 @@ public abstract class SetSimilarity implements Similarity {
         Int2IntOpenHashMap intersectionMap = new Int2IntOpenHashMap();
         intersectionMap.defaultReturnValue(0);
 
-        data.getUidxPreferences(idx1).forEach(ip -> {
-            data.getIidxPreferences(ip.v1).forEach(up -> {
-                intersectionMap.addTo(up.v1, 1);
-            });
-        });
+        data.getUidxPreferences(idx1)
+                .forEach(ip -> data.getIidxPreferences(ip.v1)
+                        .forEach(up -> intersectionMap.addTo(up.v1, 1)));
 
         intersectionMap.remove(idx1);
 
@@ -82,11 +80,9 @@ public abstract class SetSimilarity implements Similarity {
     private int[] getIntersectionArray(int idx1) {
         int[] intersectionMap = new int[data.numUsers()];
 
-        data.getUidxPreferences(idx1).forEach(ip -> {
-            data.getIidxPreferences(ip.v1).forEach(up -> {
-                intersectionMap[up.v1]++;
-            });
-        });
+        data.getUidxPreferences(idx1)
+                .forEach(ip -> data.getIidxPreferences(ip.v1)
+                        .forEach(up -> intersectionMap[up.v1]++));
 
         intersectionMap[idx1] = 0;
 

@@ -62,7 +62,7 @@ public class BinomialNonRedundancy<U, I, F> extends BinomialMetric<U, I, F> {
         }
         
         double nonRedundancy = ubm.getFeatures().stream().
-                filter(f -> count.containsKey(f)).
+                filter(count::containsKey).
                 mapToDouble(f -> ubm.patience(count.getInt(f), f, nrel)).
                 reduce(1.0, (p, q) -> p * q);
         nonRedundancy = Math.pow(nonRedundancy, 1.0 / (double) count.size());

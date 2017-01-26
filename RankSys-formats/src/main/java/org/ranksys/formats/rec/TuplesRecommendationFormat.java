@@ -80,9 +80,8 @@ public class TuplesRecommendationFormat<U, I> implements RecommendationFormat<U,
          * Constructor.
          *
          * @param out output stream where recommendations are written
-         * @throws IOException when I/O problems
          */
-        public Writer(OutputStream out) throws IOException {
+        public Writer(OutputStream out) {
             this.writer = new BufferedWriter(new OutputStreamWriter(out));
         }
 
@@ -127,7 +126,7 @@ public class TuplesRecommendationFormat<U, I> implements RecommendationFormat<U,
         }
 
         @Override
-        public Stream<Recommendation<U, I>> readAll() throws IOException {
+        public Stream<Recommendation<U, I>> readAll() {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in), 128 * 1024);
 
             return groupAdjacent(reader.lines().map(tupleReader), (t1, t2) -> t1.v1.equals(t2.v1))
@@ -153,8 +152,8 @@ public class TuplesRecommendationFormat<U, I> implements RecommendationFormat<U,
     private static <T> Stream<List<T>> groupAdjacent(Stream<T> tuples, BiPredicate<T, T> adjacent) {
         return StreamSupport.stream(spliteratorUnknownSize(new Iterator<List<T>>() {
 
-            Iterator<T> it = tuples.iterator();
-            List<T> nextList = new ArrayList<>();
+            private final Iterator<T> it = tuples.iterator();
+            private List<T> nextList = new ArrayList<>();
 
             @Override
             public boolean hasNext() {

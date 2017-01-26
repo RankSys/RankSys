@@ -63,7 +63,7 @@ public class Filters {
      */
     public static <U, I, F> Function<U, Predicate<I>> withFeatures(FeatureData<I, F, ?> featureData) {
         Set<I> itemsWithFeatures = featureData.getItemsWithFeatures().collect(Collectors.toSet());
-        return user -> item -> itemsWithFeatures.contains(item);
+        return user -> itemsWithFeatures::contains;
     }
 
     /**

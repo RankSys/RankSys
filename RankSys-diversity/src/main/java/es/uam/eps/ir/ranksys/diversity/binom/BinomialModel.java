@@ -170,11 +170,9 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
             probs.defaultReturnValue(0.0);
             
             int n = recommenderData.numItems(user);
-            recommenderData.getUserPreferences(user).forEach(pref -> {
-                featureData.getItemFeatures(pref.v1).forEach(feature -> {
-                    probs.addTo(feature.v1, 1.0);
-                });
-            });
+            recommenderData.getUserPreferences(user)
+                    .forEach(pref -> featureData.getItemFeatures(pref.v1)
+                            .forEach(feature -> probs.addTo(feature.v1, 1.0)));
 
             if (probs.isEmpty()) {
                 return globalFeatureProbs;

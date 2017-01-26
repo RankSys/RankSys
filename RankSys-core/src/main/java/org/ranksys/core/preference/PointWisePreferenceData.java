@@ -30,5 +30,5 @@ public interface PointWisePreferenceData<U, I> extends PreferenceData<U, I> {
      * @param i item
      * @return optional preference for item if it exists
      */
-    public Optional<? extends IdPref<I>> getPreference(U u, I i);
+    Optional<? extends IdPref<I>> getPreference(U u, I i);
 }

@@ -23,7 +23,7 @@ public class IntegratedVByteCODEC extends LemireCODEC {
      * Constructor.
      */
     public IntegratedVByteCODEC() {
-        super((Supplier<IntegerCODEC> & Serializable) () -> new IntegratedVariableByte());
+        super((Supplier<IntegerCODEC> & Serializable) IntegratedVariableByte::new);
     }
 
 }

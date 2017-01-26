@@ -32,7 +32,7 @@ public interface ItemDistanceModel<I> {
      * @param i item
      * @return function that return the distance to the input item
      */
-    public ToDoubleFunction<I> dist(I i);
+    ToDoubleFunction<I> dist(I i);
     
     /**
      * Returns the distance between a pair of items.
@@ -41,7 +41,7 @@ public interface ItemDistanceModel<I> {
      * @param j second item
      * @return distance between the items
      */
-    public default double dist(I i, I j) {
+    default double dist(I i, I j) {
         return dist(i).applyAsDouble(j);
     }
 }

@@ -12,9 +12,11 @@ import cern.colt.function.DoubleFunction;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+
 import static cern.jet.math.Functions.identity;
 import static cern.jet.math.Functions.mult;
 import static cern.jet.math.Functions.plus;
+
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import org.ranksys.fast.preference.StreamsAbstractFastPreferenceData;
@@ -25,7 +27,9 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+
 import static java.lang.Math.sqrt;
+
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -35,13 +39,12 @@ import java.util.stream.Stream;
 
 /**
  * Probabilistic Latent Semantic Analysis of Hofmann.
- *
+ * <p>
  * T. Hofmann. Latent Semantic Models for Collaborative Filtering. ToIS, Vol 22 No. 1, January 2004.
- *
- * @author Saúl Vargas (saul.vargas@uam.es)
  *
  * @param <U> type of the users
  * @param <I> type of the items
+ * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
 
@@ -66,9 +69,9 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         return data.getUidxWithPreferences().parallel().mapToDouble(uidx -> {
             DoubleMatrix1D pU_z = pu_z.viewRow(uidx);
             DoubleMatrix1D pUi = piz.zMult(pU_z, null);
-            return data.getUidxPreferences(uidx).mapToDouble(iv -> {
-                return -iv.v2 * pUi.getQuick(iv.v1);
-            }).sum();
+            return data.getUidxPreferences(uidx)
+                    .mapToDouble(iv -> -iv.v2 * pUi.getQuick(iv.v1))
+                    .sum();
         }).sum();
 
     }
@@ -113,28 +116,28 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
     /**
      * Expectation step of the EM algorithm.
      *
-     * @param pz_u matrix of p(z|u)
-     * @param piz matrix of p(i|z)
+     * @param pz_u   matrix of p(z|u)
+     * @param piz    matrix of p(i|z)
      * @param qzData PLSA preference data (variational probability Q(z))
      */
     protected void expectation(final DenseDoubleMatrix2D pz_u, final DenseDoubleMatrix2D piz, PLSAPreferenceData<U, I> qzData) {
-        qzData.getUidxWithPreferences().parallel().forEach(uidx -> {
-            qzData.getUidxPreferences(uidx).forEach(iqz -> {
-                int iidx = iqz.v1;
-                double[] qz = ((PLSAPreferenceData.PLSAIdxPref) iqz).qz;
-                for (int z = 0; z < qz.length; z++) {
-                    qz[z] = piz.getQuick(iidx, z) * pz_u.getQuick(uidx, z);
-                }
-                normalizeQz(qz);
-            });
-        });
+        qzData.getUidxWithPreferences().parallel()
+                .forEach(uidx -> qzData.getUidxPreferences(uidx)
+                        .forEach(iqz -> {
+                            int iidx = iqz.v1;
+                            double[] qz = ((PLSAPreferenceData.PLSAIdxPref) iqz).qz;
+                            for (int z = 0; z < qz.length; z++) {
+                                qz[z] = piz.getQuick(iidx, z) * pz_u.getQuick(uidx, z);
+                            }
+                            normalizeQz(qz);
+                        }));
     }
 
     /**
      * Maximization step of the EM algorithm.
      *
-     * @param pu_z matrix of p(z|u)
-     * @param piz matrix of p(i|z)
+     * @param pu_z   matrix of p(z|u)
+     * @param piz    matrix of p(i|z)
      * @param qzData PLSA preference data (variational probability Q(z))
      */
     protected void maximization(DenseDoubleMatrix2D pu_z, final DenseDoubleMatrix2D piz, final PLSAPreferenceData<U, I> qzData) {
@@ -196,8 +199,8 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
 
     private static void normalizeQz(double[] qz) {
         double norm = 0;
-        for (int i = 0; i < qz.length; i++) {
-            norm += qz[i];
+        for (double x : qz) {
+            norm += x;
         }
         for (int i = 0; i < qz.length; i++) {
             qz[i] /= norm;
@@ -219,17 +222,15 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
          * Constructor.
          *
          * @param data preference data
-         * @param K number of aspects
+         * @param K    number of aspects
          */
-        public PLSAPreferenceData(FastPreferenceData<U, I> data, int K) {
+        PLSAPreferenceData(FastPreferenceData<U, I> data, int K) {
             super(data, data);
             this.data = data;
             this.qz = new Long2ObjectOpenHashMap<>();
-            data.getUidxWithPreferences().forEach(uidx -> {
-                data.getUidxPreferences(uidx).forEach(pref -> {
-                    putQz(uidx, pref.v1, new double[K]);
-                });
-            });
+            data.getUidxWithPreferences()
+                    .forEach(uidx -> data.getUidxPreferences(uidx)
+                            .forEach(pref -> putQz(uidx, pref.v1, new double[K])));
 
         }
 
@@ -281,21 +282,21 @@ public class PLSAFactorizer<U, I> extends Factorizer<U, I> {
         /**
          * PLSA preference data by index.
          */
-        public class PLSAIdxPref extends IdxPref {
+        private class PLSAIdxPref extends IdxPref {
 
             /**
              * Variational probabilities Q(z)
              */
-            public double[] qz;
+            private final double[] qz;
 
             /**
              * Constructor.
              *
-             * @param idx index
+             * @param idx   index
              * @param value value
-             * @param qz variational probabilities values
+             * @param qz    variational probabilities values
              */
-            public PLSAIdxPref(int idx, double value, double[] qz) {
+            PLSAIdxPref(int idx, double value, double[] qz) {
                 super(idx, value);
                 this.qz = qz;
             }

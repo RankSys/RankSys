@@ -73,7 +73,7 @@ public abstract class RelevanceModel<U, I> extends UserModel<U> {
          * @param item item to be judged as relevant
          * @return true if the item is relevant, false otherwise
          */
-        public boolean isRelevant(I item);
+        boolean isRelevant(I item);
 
         /**
          * Gain obtained by recommending the item. Should be typically
@@ -82,6 +82,6 @@ public abstract class RelevanceModel<U, I> extends UserModel<U> {
          * @param item item whose gain is calculated
          * @return numerical gain
          */
-        public double gain(I item);
+        double gain(I item);
     }
 }

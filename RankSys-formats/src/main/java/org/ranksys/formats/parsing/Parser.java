@@ -25,10 +25,10 @@ public interface Parser<T> extends Function<CharSequence, T> {
      * @param from input string
      * @return the object resulting from the parsing
      */
-    public T parse(CharSequence from);
+    T parse(CharSequence from);
 
     @Override
-    public default T apply(CharSequence from) {
+    default T apply(CharSequence from) {
         return parse(from);
     }
 

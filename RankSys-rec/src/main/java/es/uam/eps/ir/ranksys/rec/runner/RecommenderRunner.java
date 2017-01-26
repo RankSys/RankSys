@@ -31,5 +31,5 @@ public interface RecommenderRunner<U, I> {
      * @param recommender recommender to be run
      * @param consumer recommendation consumer
      */
-    public void run(Recommender<U, I> recommender, Consumer<Recommendation<U, I>> consumer);
+    void run(Recommender<U, I> recommender, Consumer<Recommendation<U, I>> consumer);
 }

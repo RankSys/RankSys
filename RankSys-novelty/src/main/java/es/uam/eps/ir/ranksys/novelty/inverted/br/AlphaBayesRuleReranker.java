@@ -64,7 +64,7 @@ public class AlphaBayesRuleReranker<U, I> extends BayesRuleReranker<U, I> {
      * @param recommender recommender whose norm is used
      */
     public AlphaBayesRuleReranker(double alpha, Stream<U> users, Recommender<U, I> recommender) {
-        this(alpha, users.parallel().map(u -> recommender.getRecommendation(u)));
+        this(alpha, users.parallel().map(recommender::getRecommendation));
     }
 
     /**
@@ -79,7 +79,7 @@ public class AlphaBayesRuleReranker<U, I> extends BayesRuleReranker<U, I> {
         return recommendations.parallel()
                 .flatMap(recommendation -> recommendation.getItems().stream())
                 .collect(
-                        () -> new Object2DoubleOpenHashMap<I>(),
+                        Object2DoubleOpenHashMap::new,
                         (m, iv) -> m.addTo(iv.v1, iv.v2),
                         (m1, m2) -> m2.object2DoubleEntrySet().forEach(e -> m1.addTo(e.getKey(), e.getDoubleValue()))
                 );

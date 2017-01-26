@@ -100,12 +100,10 @@ public abstract class AbstractSalesDiversityMetric<U, I> extends AbstractSystemM
     public void combine(SystemMetric<U, I> other) {
         AbstractSalesDiversityMetric<U, I> otherM = (AbstractSalesDiversityMetric<U, I>) other;
 
-        otherM.itemCount.object2DoubleEntrySet().forEach(e -> {
-            itemCount.addTo(e.getKey(), e.getDoubleValue());
-        });
-        otherM.itemWeight.object2DoubleEntrySet().forEach(e -> {
-            itemWeight.addTo(e.getKey(), e.getDoubleValue());
-        });
+        otherM.itemCount.object2DoubleEntrySet()
+                .forEach(e -> itemCount.addTo(e.getKey(), e.getDoubleValue()));
+        otherM.itemWeight.object2DoubleEntrySet()
+                .forEach(e -> itemWeight.addTo(e.getKey(), e.getDoubleValue()));
 
         freeNorm += otherM.freeNorm;
         numUsers += otherM.numUsers;

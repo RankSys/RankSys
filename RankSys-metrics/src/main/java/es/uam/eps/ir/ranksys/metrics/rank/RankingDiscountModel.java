@@ -25,5 +25,5 @@ public interface RankingDiscountModel {
      * @param k position in the recommendation list starting from 0
      * @return discount to be applied for the given rank position
      */
-    public double disc(int k);
+    double disc(int k);
 }

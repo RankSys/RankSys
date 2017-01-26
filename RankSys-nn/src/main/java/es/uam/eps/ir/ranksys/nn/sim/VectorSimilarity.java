@@ -103,11 +103,9 @@ public abstract class VectorSimilarity implements Similarity {
                 }
             }
         } else {
-            data.getUidxPreferences(uidx).forEach(ip -> {
-                data.getIidxPreferences(ip.v1).forEach(up -> {
-                    productMap.addTo(up.v1, ip.v2 * up.v2);
-                });
-            });
+            data.getUidxPreferences(uidx)
+                    .forEach(ip -> data.getIidxPreferences(ip.v1)
+                            .forEach(up -> productMap.addTo(up.v1, ip.v2 * up.v2)));
         }
 
         productMap.remove(uidx);
@@ -131,11 +129,9 @@ public abstract class VectorSimilarity implements Similarity {
                 }
             }
         } else {
-            data.getUidxPreferences(uidx).forEach(ip -> {
-                data.getIidxPreferences(ip.v1).forEach(up -> {
-                    productArray[up.v1] += ip.v2 * up.v2;
-                });
-            });
+            data.getUidxPreferences(uidx)
+                    .forEach(ip -> data.getIidxPreferences(ip.v1)
+                            .forEach(up -> productArray[up.v1] += ip.v2 * up.v2));
         }
 
         productArray[uidx] = 0.0;

@@ -39,7 +39,7 @@ public class SimpleBinaryPreferencesReader implements PreferencesReader {
     }
 
     @Override
-    public <U, I> Stream<Tuple3<U, I, Double>> read(InputStream in, Parser<U> up, Parser<I> ip) throws IOException {
+    public <U, I> Stream<Tuple3<U, I, Double>> read(InputStream in, Parser<U> up, Parser<I> ip) {
         return new BufferedReader(new InputStreamReader(in)).lines().map(line -> {
             CharSequence[] tokens = split(line, '\t', 3);
             U user = up.parse(tokens[0]);

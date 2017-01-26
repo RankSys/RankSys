@@ -32,7 +32,7 @@ public interface FactorizationFormat {
      * @return a factorization
      * @throws IOException when IO error
      */
-    public <U, I> Factorization<U, I> load(InputStream in, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException;
+    <U, I> Factorization<U, I> load(InputStream in, FastUserIndex<U> uIndex, FastItemIndex<I> iIndex) throws IOException;
 
     /**
      * Saves this matrix factorization to a compressed output stream.
@@ -43,6 +43,6 @@ public interface FactorizationFormat {
      * @param out output stream
      * @throws IOException when IO error
      */
-    public <U, I> void save(Factorization<U, I> factorization, OutputStream out) throws IOException;
+    <U, I> void save(Factorization<U, I> factorization, OutputStream out) throws IOException;
     
 }

@@ -60,9 +60,8 @@ public class PCItemNovelty<U, I> extends ItemNovelty<U, I> {
             itemNovelty = new Object2DoubleOpenHashMap<>();
             itemNovelty.defaultReturnValue(1.0);
             int numUsers = recommenderData.numUsersWithPreferences();
-            recommenderData.getItemsWithPreferences().forEach(i -> {
-                itemNovelty.put(i, 1 - recommenderData.numUsers(i) / (double) numUsers);
-            });
+            recommenderData.getItemsWithPreferences()
+                    .forEach(i -> itemNovelty.put(i, 1 - recommenderData.numUsers(i) / (double) numUsers));
         }
 
         @Override

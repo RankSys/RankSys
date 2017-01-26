@@ -102,9 +102,8 @@ public class PZTFactorizer<U, I> extends ALSFactorizer<U, I> {
     private static <U, I> void set_min(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, DoubleUnaryOperator confidence, double lambda, FastPreferenceData<U, I> data) {
         DoubleMatrix2D gt = getGt(p, q, lambda);
 
-        data.getUidxWithPreferences().parallel().forEach(uidx -> {
-            prepareRR1(1, p.viewRow(uidx), gt, q, data.numItems(uidx), data.getUidxPreferences(uidx), confidence, lambda);
-        });
+        data.getUidxWithPreferences().parallel()
+                .forEach(uidx -> prepareRR1(1, p.viewRow(uidx), gt, q, data.numItems(uidx), data.getUidxPreferences(uidx), confidence, lambda));
     }
 
     private static DoubleMatrix2D getGt(final DenseDoubleMatrix2D p, final DenseDoubleMatrix2D q, double lambda) {

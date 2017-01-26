@@ -12,6 +12,7 @@ import es.uam.eps.ir.ranksys.fast.index.FastFeatureIndex;
 import es.uam.eps.ir.ranksys.fast.index.FastItemIndex;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple3;
@@ -93,13 +94,13 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
     @Override
     public int numItemsWithFeatures() {
         return (int) iidxList.stream()
-                .filter(iv -> iv != null).count();
+                .filter(Objects::nonNull).count();
     }
 
     @Override
     public int numFeaturesWithItems() {
         return (int) fidxList.stream()
-                .filter(fv -> fv != null).count();
+                .filter(Objects::nonNull).count();
     }
 
     /**

@@ -25,20 +25,20 @@ public interface UserIndex<U> {
      * @param u user
      * @return true if the index contains the user, false otherwise
      */
-    public boolean containsUser(U u);
+    boolean containsUser(U u);
 
     /**
      * Counts the number of indexed users.
      *
      * @return the total number of users
      */
-    public int numUsers();
+    int numUsers();
 
     /**
      * Retrieves a stream of the indexed users.
      *
      * @return a stream of all the users
      */
-    public Stream<U> getAllUsers();
+    Stream<U> getAllUsers();
 
 }

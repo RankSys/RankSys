@@ -11,15 +11,18 @@ package es.uam.eps.ir.ranksys.novelty.inverted.neighborhood;
 import es.uam.eps.ir.ranksys.nn.neighborhood.Neighborhood;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
 import org.ranksys.core.util.tuples.Tuple2id;
+
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
  * Inverted neighborhood.
- * 
+ * <p>
  * S. Vargas and P. Castells. Improving sales diversity by recommending
  * users to items.
  *
@@ -33,10 +36,10 @@ public class InvertedNeighborhood implements Neighborhood {
     /**
      * Constructor.
      *
-     * @param n number of users/items
+     * @param n            number of users/items
      * @param neighborhood original neighborhood to be inverted
-     * @param filter filter to determine the users that require an inverted
-     * neighborhood
+     * @param filter       filter to determine the users that require an inverted
+     *                     neighborhood
      */
     public InvertedNeighborhood(int n, Neighborhood neighborhood, IntPredicate filter) {
         this.idxla = new IntArrayList[n];
@@ -47,17 +50,17 @@ public class InvertedNeighborhood implements Neighborhood {
             this.simla[idx] = new DoubleArrayList();
         });
 
-        IntStream.range(0, n).parallel().mapToObj(idx -> {
-            return tuple(idx, neighborhood.getNeighbors(idx));
-        }).forEachOrdered(in -> {
-            int idx = in.v1;
-            in.v2.forEach(is -> {
-                if (this.idxla[is.v1] != null) {
-                    this.idxla[is.v1].add(idx);
-                    this.simla[is.v1].add(is.v2);
-                }
-            });
-        });
+        IntStream.range(0, n).parallel()
+                .mapToObj(idx -> tuple(idx, neighborhood.getNeighbors(idx)))
+                .forEachOrdered(in -> {
+                    int idx = in.v1;
+                    in.v2.forEach(is -> {
+                        if (this.idxla[is.v1] != null) {
+                            this.idxla[is.v1].add(idx);
+                            this.simla[is.v1].add(is.v2);
+                        }
+                    });
+                });
     }
 
     /**

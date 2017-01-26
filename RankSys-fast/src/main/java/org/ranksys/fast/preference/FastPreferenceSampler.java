@@ -29,6 +29,6 @@ public interface FastPreferenceSampler<U, I> extends PreferenceSampler<U, I>, Fa
      *
      * @return stream of user-item fast preferences
      */
-    public Stream<Tuple2io<? extends IdxPref>> fastSample();
+    Stream<Tuple2io<? extends IdxPref>> fastSample();
 
 }

@@ -28,7 +28,7 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
     /**
      * Intent model
      */
-    protected IntentModel<U, I, F> intentModel;
+    private final IntentModel<U, I, F> intentModel;
 
     /**
      * Constructor taking the intent model
@@ -99,6 +99,6 @@ public abstract class AspectModel<U, I, F> extends UserModel<U> {
          * @param f  aspect
          * @return probability of an item given an aspect
          */
-        public abstract double pi_f(Tuple2od<I> iv, F f);
+        double pi_f(Tuple2od<I> iv, F f);
     }
 }

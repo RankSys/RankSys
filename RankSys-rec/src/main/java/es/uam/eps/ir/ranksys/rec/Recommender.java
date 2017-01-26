@@ -30,7 +30,7 @@ public interface Recommender<U, I> {
      * @param u user to be issued a recommendation
      * @return a recommendation list
      */
-    public Recommendation<U, I> getRecommendation(U u);
+    Recommendation<U, I> getRecommendation(U u);
 
     /**
      * Free recommendation. Generate recommendations without any restriction
@@ -40,7 +40,7 @@ public interface Recommender<U, I> {
      * @param maxLength maximum length of recommendation
      * @return a recommendation list
      */
-    public Recommendation<U, I> getRecommendation(U u, int maxLength);
+    Recommendation<U, I> getRecommendation(U u, int maxLength);
 
     /**
      * Filter recommendation. Recommends only the items that pass the filter.
@@ -49,7 +49,7 @@ public interface Recommender<U, I> {
      * @param filter filter to decide which items might be recommended
      * @return a recommendation list
      */
-    public Recommendation<U, I> getRecommendation(U u, Predicate<I> filter);
+    Recommendation<U, I> getRecommendation(U u, Predicate<I> filter);
 
     /**
      * Filter recommendation. Recommends only the items that pass the filter up
@@ -60,7 +60,7 @@ public interface Recommender<U, I> {
      * @param filter filter to decide which items might be recommended
      * @return a recommendation list
      */
-    public Recommendation<U, I> getRecommendation(U u, int maxLength, Predicate<I> filter);
+    Recommendation<U, I> getRecommendation(U u, int maxLength, Predicate<I> filter);
 
     /**
      * Candidates ranking. Create a list that may contain only the items
@@ -70,6 +70,6 @@ public interface Recommender<U, I> {
      * @param candidates candidate items to be included in the recommendation
      * @return a recommendation list
      */
-    public Recommendation<U, I> getRecommendation(U u, Stream<I> candidates);
+    Recommendation<U, I> getRecommendation(U u, Stream<I> candidates);
 
 }

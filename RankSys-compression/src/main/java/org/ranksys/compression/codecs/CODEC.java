@@ -38,7 +38,7 @@ public interface CODEC<T> extends Serializable {
      * @param len number of integers to be compressed
      * @return compressed representation of the array
      */
-    public T co(int[] in, int offset, int len);
+    T co(int[] in, int offset, int len);
 
     /**
      * Decompress.
@@ -49,7 +49,7 @@ public interface CODEC<T> extends Serializable {
      * @param len number of integers that need to be decompressed
      * @return currently not used
      */
-    public int dec(T t, int[] out, int outOffset, int len);
+    int dec(T t, int[] out, int outOffset, int len);
 
     /**
      * Returns statistics of the CODEC in terms of total input/output bytes
@@ -57,12 +57,12 @@ public interface CODEC<T> extends Serializable {
      *
      * @return statistics of input/output bytes.
      */
-    public long[] stats();
+    long[] stats();
     
     /**
      * Resets the collection of statistics.
      */
-    public void reset();
+    void reset();
     
     /**
      * Returns if the CODEC is integrated, i.e. requires that the input is a
@@ -70,5 +70,5 @@ public interface CODEC<T> extends Serializable {
      *
      * @return true is the CODEC is integrated, false otherwise
      */
-    public boolean isIntegrated();
+    boolean isIntegrated();
 }

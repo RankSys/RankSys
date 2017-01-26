@@ -29,12 +29,12 @@ import java.util.stream.Stream;
 public interface FastFeatureIndex<F> extends FeatureIndex<F> {
 
     @Override
-    public default boolean containsFeature(F f) {
+    default boolean containsFeature(F f) {
         return feature2fidx(f) >= 0;
     }
 
     @Override
-    public default Stream<F> getAllFeatures() {
+    default Stream<F> getAllFeatures() {
         return IntStream.range(0, numFeatures()).mapToObj(this::fidx2feature);
     }
 
@@ -43,7 +43,7 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
      *
      * @return a stream of indexes of features
      */
-    public default IntStream getAllFidx() {
+    default IntStream getAllFidx() {
         return IntStream.range(0, numFeatures());
     }
 
@@ -53,7 +53,7 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
      * @param f feature
      * @return the index of the feature, or -1 if the feature does not exist
      */
-    public int feature2fidx(F f);
+    int feature2fidx(F f);
 
     /**
      * Returns the feature represented with the index.
@@ -61,7 +61,7 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
      * @param fidx feature index
      * @return the feature whose index is fidx
      */
-    public F fidx2feature(int fidx);
+    F fidx2feature(int fidx);
 
     /**
      * Applies FastFeatureIndex::feature2fidx to the first element of the tuple.
@@ -70,7 +70,7 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
      * @param tuple feature-value tuple
      * @return fidx-value tuple
      */
-    public default <V> Tuple2io<V> feature2fidx(Tuple2<F, V> tuple) {
+    default <V> Tuple2io<V> feature2fidx(Tuple2<F, V> tuple) {
         return Tuples.tuple(feature2fidx(tuple.v1), tuple.v2);
     }
 
@@ -81,7 +81,7 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
      * @param tuple fidx-value tuple
      * @return feature-value tuple
      */
-    public default <V> Tuple2<F, V> fidx2feature(Tuple2io<V> tuple) {
+    default <V> Tuple2<F, V> fidx2feature(Tuple2io<V> tuple) {
         return Tuple.tuple(fidx2feature(tuple.v1), tuple.v2);
     }
 
@@ -91,7 +91,7 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
      * @param tuple feature-double tuple
      * @return fidx-double tuple
      */
-    public default Tuple2id feature2fidx(Tuple2od<F> tuple) {
+    default Tuple2id feature2fidx(Tuple2od<F> tuple) {
         return Tuples.tuple(feature2fidx(tuple.v1), tuple.v2);
     }
 
@@ -101,7 +101,7 @@ public interface FastFeatureIndex<F> extends FeatureIndex<F> {
      * @param tuple fidx-double tuple
      * @return feature-double tuple
      */
-    public default Tuple2od<F> fidx2feature(Tuple2id tuple) {
+    default Tuple2od<F> fidx2feature(Tuple2id tuple) {
         return Tuples.tuple(fidx2feature(tuple.v1), tuple.v2);
     }
 

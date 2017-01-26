@@ -85,18 +85,14 @@ public class AlphaXQuAD<U, I, F> extends LambdaReranker<U, I> {
         @Override
         protected double nov(Tuple2od<I> iv) {
             return uam.getItemIntents(iv.v1)
-                    .mapToDouble(f -> {
-                        return uam.pf_u(f) * iam.pi_f(iv, f) * redundancy.getDouble(f);
-                    })
+                    .mapToDouble(f -> uam.pf_u(f) * iam.pi_f(iv, f) * redundancy.getDouble(f))
                     .sum();
         }
 
         @Override
         protected void update(Tuple2od<I> biv) {
             uam.getItemIntents(biv.v1).sequential()
-                    .forEach(f -> {
-                        redundancy.put(f, redundancy.getDouble(f) * (1 - alpha * iam.pi_f(biv, f)));
-                    });
+                    .forEach(f -> redundancy.put(f, redundancy.getDouble(f) * (1 - alpha * iam.pi_f(biv, f))));
         }
 
     }

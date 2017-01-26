@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import static java.util.Comparator.comparingInt;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -78,10 +79,10 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
         this.iidxList = iidxList;
 
         uidxList.parallelStream()
-                .filter(l -> l != null)
+                .filter(Objects::nonNull)
                 .forEach(l -> l.sort(comparingInt(IdxPref::v1)));
         iidxList.parallelStream()
-                .filter(l -> l != null)
+                .filter(Objects::nonNull)
                 .forEach(l -> l.sort(comparingInt(IdxPref::v1)));
     }
 
@@ -139,13 +140,13 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
     @Override
     public int numUsersWithPreferences() {
         return (int) uidxList.stream()
-                .filter(iv -> iv != null).count();
+                .filter(Objects::nonNull).count();
     }
 
     @Override
     public int numItemsWithPreferences() {
         return (int) iidxList.stream()
-                .filter(iv -> iv != null).count();
+                .filter(Objects::nonNull).count();
     }
 
     @Override

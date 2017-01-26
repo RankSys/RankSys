@@ -78,7 +78,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .selectDistinct(UIDX)
                 .from(DATA)
                 .fetch().stream()
-                .mapToInt(r -> r.value1());
+                .mapToInt(Record1::value1);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .selectDistinct(IIDX)
                 .from(DATA)
                 .fetch().stream()
-                .mapToInt(r -> r.value1());
+                .mapToInt(Record1::value1);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
         return dsl
                 .selectDistinct(USER_ID)
                 .from(DATA).naturalJoin(USERS)
-                .fetch().stream().map(r -> r.value1());
+                .fetch().stream().map(Record1::value1);
     }
 
     @Override
@@ -165,7 +165,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .selectDistinct(ITEM_ID)
                 .from(DATA).naturalJoin(ITEMS)
                 .fetch().stream()
-                .map(r -> r.value1());
+                .map(Record1::value1);
     }
 
     @Override
@@ -210,7 +210,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .select(USER_ID)
                 .from(USERS)
                 .fetch().stream()
-                .map(r -> r.value1());
+                .map(Record1::value1);
     }
 
     @Override
@@ -236,7 +236,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .select(ITEM_ID)
                 .from(ITEMS)
                 .fetch().stream()
-                .map(r -> r.value1());
+                .map(Record1::value1);
     }
 
     @Override
@@ -263,7 +263,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .select(UIDX)
                 .from(USERS)
                 .fetch().stream()
-                .mapToInt(r -> r.value1());
+                .mapToInt(Record1::value1);
     }
 
     @Override
@@ -290,7 +290,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .select(IIDX)
                 .from(ITEMS)
                 .fetch().stream()
-                .mapToInt(r -> r.value1());
+                .mapToInt(Record1::value1);
     }
 
     @Override
@@ -348,7 +348,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .from(DATA)
                 .where(UIDX.eq(uidx))
                 .fetch().stream()
-                .mapToInt(r -> r.value1()));
+                .mapToInt(Record1::value1));
     }
 
     @Override
@@ -358,7 +358,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .from(DATA)
                 .where(UIDX.eq(uidx))
                 .fetch().stream()
-                .mapToDouble(r -> r.value1()));
+                .mapToDouble(Record1::value1));
     }
 
     @Override
@@ -368,7 +368,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .from(DATA)
                 .where(IIDX.eq(iidx))
                 .fetch().stream()
-                .mapToInt(r -> r.value1()));
+                .mapToInt(Record1::value1));
     }
 
     @Override
@@ -378,7 +378,7 @@ public class SQLPreferenceData implements FastPreferenceData<String, String>, Mu
                 .from(DATA)
                 .where(IIDX.eq(iidx))
                 .fetch().stream()
-                .mapToDouble(r -> r.value1()));
+                .mapToDouble(Record1::value1));
     }
 
     @Override

@@ -28,13 +28,13 @@ import org.ranksys.core.util.tuples.Tuples;
 public interface FastUserIndex<U> extends UserIndex<U> {
 
     @Override
-    public default boolean containsUser(U u) {
+    default boolean containsUser(U u) {
         return user2uidx(u) >= 0;
     }
 
     @Override
-    public default Stream<U> getAllUsers() {
-        return getAllUidx().mapToObj(uidx -> uidx2user(uidx));
+    default Stream<U> getAllUsers() {
+        return getAllUidx().mapToObj(this::uidx2user);
     }
 
     /**
@@ -42,7 +42,7 @@ public interface FastUserIndex<U> extends UserIndex<U> {
      *
      * @return a stream of indexes of users
      */
-    public default IntStream getAllUidx() {
+    default IntStream getAllUidx() {
         return IntStream.range(0, numUsers());
     }
 
@@ -52,7 +52,7 @@ public interface FastUserIndex<U> extends UserIndex<U> {
      * @param u user
      * @return the index of the user, or -1 if the user does not exist
      */
-    public int user2uidx(U u);
+    int user2uidx(U u);
 
     /**
      * Returns the user represented with the index.
@@ -60,7 +60,7 @@ public interface FastUserIndex<U> extends UserIndex<U> {
      * @param uidx user index
      * @return the user whose index is uidx
      */
-    public U uidx2user(int uidx);
+    U uidx2user(int uidx);
 
     /**
      * Applies FastUserIndex::user2uidx to the first element of the tuple.
@@ -69,7 +69,7 @@ public interface FastUserIndex<U> extends UserIndex<U> {
      * @param tuple user-value tuple
      * @return uidx-value tuple
      */
-    public default <V> Tuple2io<V> user2uidx(Tuple2<U, V> tuple) {
+    default <V> Tuple2io<V> user2uidx(Tuple2<U, V> tuple) {
         return Tuples.tuple(user2uidx(tuple.v1), tuple.v2);
     }
 
@@ -80,7 +80,7 @@ public interface FastUserIndex<U> extends UserIndex<U> {
      * @param tuple uidx-value tuple
      * @return user-value tuple
      */
-    public default <V> Tuple2<U, V> uidx2user(Tuple2io<V> tuple) {
+    default <V> Tuple2<U, V> uidx2user(Tuple2io<V> tuple) {
         return Tuple.tuple(uidx2user(tuple.v1), tuple.v2);
     }
 
@@ -90,7 +90,7 @@ public interface FastUserIndex<U> extends UserIndex<U> {
      * @param tuple user-double tuple
      * @return uidx-double tuple
      */
-    public default Tuple2id user2uidx(Tuple2od<U> tuple) {
+    default Tuple2id user2uidx(Tuple2od<U> tuple) {
         return Tuples.tuple(user2uidx(tuple.v1), tuple.v2);
     }
 
@@ -100,7 +100,7 @@ public interface FastUserIndex<U> extends UserIndex<U> {
      * @param tuple uidx-double tuple
      * @return user-double tuple
      */
-    public default Tuple2od<U> uidx2user(Tuple2id tuple) {
+    default Tuple2od<U> uidx2user(Tuple2id tuple) {
         return Tuples.tuple(uidx2user(tuple.v1), tuple.v2);
     }
 

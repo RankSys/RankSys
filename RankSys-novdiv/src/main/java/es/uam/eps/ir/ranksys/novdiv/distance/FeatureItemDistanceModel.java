@@ -45,9 +45,7 @@ public abstract class FeatureItemDistanceModel<I, F, V> implements ItemDistanceM
     public ToDoubleFunction<I> dist(I i) {
         Stream<Tuple2<F, V>> features1 = featureData.getItemFeatures(i);
         ToDoubleFunction<Stream<Tuple2<F, V>>> iDist = dist(features1);
-        return j -> {
-            return iDist.applyAsDouble(featureData.getItemFeatures(j));
-        };
+        return j -> iDist.applyAsDouble(featureData.getItemFeatures(j));
     }
 
     /**

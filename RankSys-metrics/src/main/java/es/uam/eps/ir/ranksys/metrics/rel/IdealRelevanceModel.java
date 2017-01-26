@@ -71,7 +71,7 @@ public abstract class IdealRelevanceModel<U, I> extends RelevanceModel<U, I> {
          *
          * @return set of items relevant to the user
          */
-        public Set<I> getRelevantItems();
+        Set<I> getRelevantItems();
 
     }
 }

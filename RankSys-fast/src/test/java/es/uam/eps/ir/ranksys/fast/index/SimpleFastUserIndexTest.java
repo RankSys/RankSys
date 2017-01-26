@@ -41,21 +41,17 @@ public class SimpleFastUserIndexTest {
 
         assertEquals(userIndex.numUsers(), N);
 
-        rnd.ints(1000, 0, N).forEach(uidx -> {
-            assertTrue(userIndex.uidx2user(uidx).equals(users.get(uidx)));
-        });
+        rnd.ints(1000, 0, N)
+                .forEach(uidx -> assertTrue(userIndex.uidx2user(uidx).equals(users.get(uidx))));
 
-        rnd.ints(1000, 0, N).mapToObj(Integer::toString).forEach(user -> {
-            assertTrue(userIndex.user2uidx(user) == users.indexOf(user));
-        });
+        rnd.ints(1000, 0, N).mapToObj(Integer::toString)
+                .forEach(user -> assertTrue(userIndex.user2uidx(user) == users.indexOf(user)));
 
-        rnd.ints(1000, 0, N).mapToObj(Integer::toString).forEach(user -> {
-            assertTrue(userIndex.containsUser(user));
-        });
+        rnd.ints(1000, 0, N).mapToObj(Integer::toString)
+                .forEach(user -> assertTrue(userIndex.containsUser(user)));
 
-        rnd.ints(1000, N, 2 * N).mapToObj(Integer::toString).forEach(user -> {
-            assertFalse(userIndex.containsUser(user));
-        });
+        rnd.ints(1000, N, 2 * N).mapToObj(Integer::toString)
+                .forEach(user -> assertFalse(userIndex.containsUser(user)));
 
         assertEquals(userIndex.getAllUsers().collect(toSet()), new HashSet<>(users));
     }

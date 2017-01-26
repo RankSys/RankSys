@@ -9,6 +9,7 @@
 package org.ranksys.formats.rec;
 
 import es.uam.eps.ir.ranksys.core.Recommendation;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,10 +27,9 @@ import java.util.stream.Stream;
 /**
  * Recommendation writers and readers with a common format.
  *
- * @author Saúl Vargas (saul.vargas@uam.es)
- *
  * @param <U> type of the users
  * @param <I> type of the items
+ * @author Saúl Vargas (saul.vargas@uam.es)
  */
 public interface RecommendationFormat<U, I> {
 
@@ -40,10 +40,10 @@ public interface RecommendationFormat<U, I> {
      * @return a recommendation writer
      * @throws IOException if path does not exist or IO error
      */
-    public default Writer<U, I> getWriter(Path path) throws IOException {
+    default Writer<U, I> getWriter(Path path) throws IOException {
         return getWriter(Files.newOutputStream(path));
     }
-    
+
     /**
      * Gets a writer for a file path.
      *
@@ -51,7 +51,7 @@ public interface RecommendationFormat<U, I> {
      * @return a recommendation writer
      * @throws IOException if path does not exist or IO error
      */
-    public default Writer<U, I> getWriter(String path) throws IOException {
+    default Writer<U, I> getWriter(String path) throws IOException {
         return getWriter(new File(path));
     }
 
@@ -62,7 +62,7 @@ public interface RecommendationFormat<U, I> {
      * @return a recommendation writer
      * @throws IOException if path does not exist or IO error
      */
-    public default Writer<U, I> getWriter(File file) throws IOException {
+    default Writer<U, I> getWriter(File file) throws IOException {
         return getWriter(new FileOutputStream(file));
     }
 
@@ -73,7 +73,7 @@ public interface RecommendationFormat<U, I> {
      * @return a recommendation writer
      * @throws IOException if path does not exist or IO error
      */
-    public Writer<U, I> getWriter(OutputStream out) throws IOException;
+    Writer<U, I> getWriter(OutputStream out) throws IOException;
 
     /**
      * Recommendation writer.
@@ -81,7 +81,7 @@ public interface RecommendationFormat<U, I> {
      * @param <U> type of the users
      * @param <I> type of the items
      */
-    public interface Writer<U, I> extends Closeable, Consumer<Recommendation<U, I>> {
+    interface Writer<U, I> extends Closeable, Consumer<Recommendation<U, I>> {
 
         /**
          * Writes the recommendation.
@@ -89,10 +89,10 @@ public interface RecommendationFormat<U, I> {
          * @param recommendation to be written
          * @throws IOException when IO error
          */
-        public void write(Recommendation<U, I> recommendation) throws IOException;
+        void write(Recommendation<U, I> recommendation) throws IOException;
 
         @Override
-        public default void accept(Recommendation<U, I> recommendation) {
+        default void accept(Recommendation<U, I> recommendation) {
             try {
                 write(recommendation);
             } catch (IOException ex) {
@@ -109,10 +109,10 @@ public interface RecommendationFormat<U, I> {
      * @return a recommendation reader
      * @throws IOException when IO error
      */
-    public default Reader<U, I> getReader(Path path) throws IOException {
+    default Reader<U, I> getReader(Path path) throws IOException {
         return getReader(Files.newInputStream(path));
     }
-    
+
     /**
      * Gets a reader for a file path.
      *
@@ -120,7 +120,7 @@ public interface RecommendationFormat<U, I> {
      * @return a recommendation reader
      * @throws IOException when IO error
      */
-    public default Reader<U, I> getReader(String path) throws IOException {
+    default Reader<U, I> getReader(String path) throws IOException {
         return getReader(new File(path));
     }
 
@@ -131,7 +131,7 @@ public interface RecommendationFormat<U, I> {
      * @return a recommendation reader
      * @throws IOException when IO error
      */
-    public default Reader<U, I> getReader(File file) throws IOException {
+    default Reader<U, I> getReader(File file) throws IOException {
         return getReader(new FileInputStream(file));
     }
 
@@ -142,7 +142,7 @@ public interface RecommendationFormat<U, I> {
      * @return a recommendation reader
      * @throws IOException when IO error
      */
-    public Reader<U, I> getReader(InputStream in) throws IOException;
+    Reader<U, I> getReader(InputStream in) throws IOException;
 
     /**
      * Recommendation reader.
@@ -150,23 +150,18 @@ public interface RecommendationFormat<U, I> {
      * @param <U> type of the users
      * @param <I> type of the items
      */
-    public interface Reader<U, I> extends Supplier<Stream<Recommendation<U, I>>> {
+    interface Reader<U, I> extends Supplier<Stream<Recommendation<U, I>>> {
 
         /**
          * Reads all recommendations.
          *
          * @return a stream of recommendations
-         * @throws IOException when IO error
          */
-        public Stream<Recommendation<U, I>> readAll() throws IOException;
+        Stream<Recommendation<U, I>> readAll();
 
         @Override
-        public default Stream<Recommendation<U, I>> get() {
-            try {
-                return readAll();
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
+        default Stream<Recommendation<U, I>> get() {
+            return readAll();
         }
 
     }

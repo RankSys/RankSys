@@ -32,7 +32,7 @@ public interface FMFormat {
      * @return factorisation machine for recommendation tasks
      * @throws IOException when I/O problems
      */
-    public <U, I> PreferenceFM load(InputStream in, FastUserIndex<U> users, FastItemIndex<I> items) throws IOException;
+    <U, I> PreferenceFM load(InputStream in, FastUserIndex<U> users, FastItemIndex<I> items) throws IOException;
 
     /**
      * Saves a factorisation machine in an output stream.
@@ -43,6 +43,6 @@ public interface FMFormat {
      * @param out output stream where the factorisation machine is written
      * @throws IOException when I/O problems
      */
-    public <U, I> void save(PreferenceFM fm, OutputStream out) throws IOException;
+    <U, I> void save(PreferenceFM fm, OutputStream out) throws IOException;
 
 }

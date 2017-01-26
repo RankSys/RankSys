@@ -23,7 +23,7 @@ public class Simple16CODEC extends LemireCODEC {
      * Constructor.
      */
     public Simple16CODEC() {
-        super((Supplier<IntegerCODEC> & Serializable) () -> new Simple16());
+        super((Supplier<IntegerCODEC> & Serializable) Simple16::new);
     }
     
 }

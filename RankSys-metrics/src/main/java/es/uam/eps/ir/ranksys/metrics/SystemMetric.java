@@ -28,14 +28,14 @@ public interface SystemMetric<U, I> {
      *
      * @param recommendation recommendation to be added to the computation.
      */
-    public abstract void add(Recommendation<U, I> recommendation);
+    void add(Recommendation<U, I> recommendation);
 
     /**
      * Evaluates the metric for the recommendations added so far.
      *
      * @return result of the metric for the recommendations previously added
      */
-    public abstract double evaluate();
+    double evaluate();
     
     /**
      * Combines the recommendations added to other system metric to this one.
@@ -43,11 +43,11 @@ public interface SystemMetric<U, I> {
      * @param other other system metric, should be of the same or compatible
      * class
      */
-    public abstract void combine(SystemMetric<U, I> other);
+    void combine(SystemMetric<U, I> other);
     
     /**
      * Resets the metric by discarding the recommendations previously added.
      *
      */
-    public abstract void reset();
+    void reset();
 }

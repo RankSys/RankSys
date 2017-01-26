@@ -40,7 +40,7 @@ public class IteratorsAbstractFastPreferenceDataTest {
                         new IdxPref(35, 5.0),
                         new IdxPref(45, 6.0)
                 },
-                preferences.getUidxPreferences(0).toArray(n -> new IdxPref[n]));
+                preferences.getUidxPreferences(0).toArray(IdxPref[]::new));
 
         Assert.assertArrayEquals(
                 new IdxPref[]{
@@ -50,7 +50,7 @@ public class IteratorsAbstractFastPreferenceDataTest {
                         new IdxPref(101, 3.0),
                         new IdxPref(102, 2.0)
                 },
-                preferences.getIidxPreferences(0).toArray(n -> new IdxPref[n]));
+                preferences.getIidxPreferences(0).toArray(IdxPref[]::new));
     }
 
     private static class MockPreferenceDataTest<U, I> extends IteratorsAbstractFastPreferenceData<U, I> {

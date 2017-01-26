@@ -55,11 +55,7 @@ public class ScoresAspectModel<U, I, F> extends AspectModel<U, I, F> {
         @Override
         public ItemAspectModel<I, F> getItemAspectModel(List<Tuple2od<I>> items) {
             Object2DoubleOpenHashMap<F> probNorm = new Object2DoubleOpenHashMap<>();
-            items.forEach(iv -> {
-                getItemIntents(iv.v1).forEach(f -> {
-                    probNorm.addTo(f, iv.v2);
-                });
-            });
+            items.forEach(iv -> getItemIntents(iv.v1).forEach(f -> probNorm.addTo(f, iv.v2)));
 
             return (iv, f) -> iv.v2 / probNorm.getDouble(f);
         }

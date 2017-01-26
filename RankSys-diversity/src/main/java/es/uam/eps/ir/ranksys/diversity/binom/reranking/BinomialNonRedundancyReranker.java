@@ -93,7 +93,7 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
         protected double nov(Tuple2od<I> itemValue) {
             Set<F> itemFeatures = featureData.getItemFeatures(itemValue.v1)
                     .map(Tuple2::v1)
-                    .collect(Collectors.toCollection(() -> new HashSet<>()));
+                    .collect(Collectors.toCollection(HashSet::new));
 
             double iNonRed = featureCount.keySet().stream()
                     .mapToDouble(f -> {

@@ -14,14 +14,13 @@ import java.util.List;
 
 /**
  * Relevance-based aspect model for eXplicit Query Aspect Diversification re-ranker.
- *
+ * <p>
  * S. Vargas, P. Castells and D. Vallet. Explicit relevance models in intent-oriented Information Retrieval diversification. SIGIR 2012.
- *
- * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
  *
  * @param <U> user type
  * @param <I> item type
  * @param <F> aspect type
+ * @author Jacek Wasilewski (jacek.wasilewski@insight-centre.org)
  */
 public class ScoresRelevanceAspectModel<U, I, F> extends AspectModel<U, I, F> {
 
@@ -56,13 +55,12 @@ public class ScoresRelevanceAspectModel<U, I, F> extends AspectModel<U, I, F> {
         @Override
         public ItemAspectModel<I, F> getItemAspectModel(List<Tuple2od<I>> items) {
             Object2DoubleOpenHashMap<F> probNorm = new Object2DoubleOpenHashMap<>();
-            items.forEach(iv -> {
-                getItemIntents(iv.v1).forEach(f -> {
-                    if (iv.v2 > probNorm.getOrDefault(f, 0.0)) {
-                        probNorm.put(f, iv.v2);
-                    }
-                });
-            });
+            items.forEach(iv -> getItemIntents(iv.v1)
+                    .forEach(f -> {
+                        if (iv.v2 > probNorm.getOrDefault(f, 0.0)) {
+                            probNorm.put(f, iv.v2);
+                        }
+                    }));
 
             return (iv, f) -> (Math.pow(2, iv.v2 / probNorm.getDouble(f)) - 1) / 2.0;
         }

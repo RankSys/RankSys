@@ -40,9 +40,8 @@ public class UsersReader {
      * @param in input stream to read from
      * @param up user parser
      * @return stream of users
-     * @throws IOException when I/O problems
      */
-    public static <U> Stream<U> read(InputStream in, Parser<U> up) throws IOException {
+    public static <U> Stream<U> read(InputStream in, Parser<U> up) {
         return Utils.readElemens(in, up);
     }
 

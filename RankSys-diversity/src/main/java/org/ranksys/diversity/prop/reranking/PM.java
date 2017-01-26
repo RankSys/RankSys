@@ -69,11 +69,9 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
             this.featureCount = new Object2DoubleOpenHashMap<>();
             featureCount.defaultReturnValue(0.0);
             this.probNorm = new Object2DoubleOpenHashMap<>();
-            recommendation.getItems().forEach(i -> {
-                featureData.getItemFeatures(i.v1).sequential().forEach(fv -> {
-                    probNorm.addTo(fv.v1, i.v2);
-                });
-            });
+            recommendation.getItems()
+                    .forEach(i -> featureData.getItemFeatures(i.v1).sequential()
+                            .forEach(fv -> probNorm.addTo(fv.v1, i.v2)));
             this.lcf = getLcf();
         }
 

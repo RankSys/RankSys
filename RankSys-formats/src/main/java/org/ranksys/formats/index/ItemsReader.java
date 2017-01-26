@@ -40,9 +40,8 @@ public class ItemsReader {
      * @param in input stream to read from
      * @param ip item parser
      * @return stream of items
-     * @throws IOException when I/O problems
      */
-    public static <I> Stream<I> read(InputStream in, Parser<I> ip) throws IOException {
+    public static <I> Stream<I> read(InputStream in, Parser<I> ip) {
         return Utils.readElemens(in, ip);
     }
 }

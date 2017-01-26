@@ -63,9 +63,8 @@ public class CPR<U, I, F> extends AbstractRecommendationMetric<U, I> {
         double cpr = 0.0;
         for (Tuple2od<I> iv : recommendation.getItems()) {
             if (userRelModel.isRelevant(iv.v1)) {
-                featureData.getItemFeatures(iv.v1).forEach(fv -> {
-                    count.addTo(fv.v1, 1);
-                });
+                featureData.getItemFeatures(iv.v1)
+                        .forEach(fv -> count.addTo(fv.v1, 1));
             } else {
                 nr++;
             }

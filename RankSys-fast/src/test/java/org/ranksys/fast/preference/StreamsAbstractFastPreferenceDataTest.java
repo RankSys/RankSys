@@ -8,12 +8,15 @@
 package org.ranksys.fast.preference;
 
 import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 /**
@@ -32,19 +35,19 @@ public class StreamsAbstractFastPreferenceDataTest {
 
         List<Integer> idxs = new ArrayList<>();
         List<Double> vs = new ArrayList<>();
-        
+
         preferences.getUidxIidxs(0).forEachRemaining(idxs::add);
         assertEquals(idxs, Arrays.asList(8, 9, 11, 12, 35, 45));
-        
+
         preferences.getUidxVs(0).forEachRemaining(vs::add);
         assertEquals(vs, Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0, 6.0));
 
         idxs.clear();
         vs.clear();
-        
+
         preferences.getIidxUidxs(0).forEachRemaining(idxs::add);
         assertEquals(idxs, Arrays.asList(18, 20, 100, 101, 102));
-        
+
         preferences.getIidxVs(0).forEachRemaining(vs::add);
         assertEquals(vs, Arrays.asList(6.0, 5.0, 4.0, 3.0, 2.0));
     }
@@ -77,25 +80,25 @@ public class StreamsAbstractFastPreferenceDataTest {
 
         @Override
         public Stream<? extends IdxPref> getUidxPreferences(int uidx) {
-            return Arrays.asList(
-                        new IdxPref(8, 1.0),
-                        new IdxPref(9, 2.0),
-                        new IdxPref(11, 3.0),
-                        new IdxPref(12, 4.0),
-                        new IdxPref(35, 5.0),
-                        new IdxPref(45, 6.0)
-                ).stream();
+            return Stream.of(
+                    new IdxPref(8, 1.0),
+                    new IdxPref(9, 2.0),
+                    new IdxPref(11, 3.0),
+                    new IdxPref(12, 4.0),
+                    new IdxPref(35, 5.0),
+                    new IdxPref(45, 6.0)
+            );
         }
 
         @Override
         public Stream<? extends IdxPref> getIidxPreferences(int iidx) {
-            return                 Arrays.asList(
-                        new IdxPref(18, 6.0),
-                        new IdxPref(20, 5.0),
-                        new IdxPref(100, 4.0),
-                        new IdxPref(101, 3.0),
-                        new IdxPref(102, 2.0)
-                ).stream();
+            return Stream.of(
+                    new IdxPref(18, 6.0),
+                    new IdxPref(20, 5.0),
+                    new IdxPref(100, 4.0),
+                    new IdxPref(101, 3.0),
+                    new IdxPref(102, 2.0)
+            );
         }
 
         @Override

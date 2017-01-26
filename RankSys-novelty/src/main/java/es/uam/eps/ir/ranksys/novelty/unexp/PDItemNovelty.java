@@ -65,7 +65,7 @@ public class PDItemNovelty<U, I> extends ItemNovelty<U, I> {
             ToDoubleFunction<I> iDist = dist.dist(i);
             return recommenderData.getUserPreferences(u)
                     .map(Tuple2od::v1)
-                    .mapToDouble(j -> iDist.applyAsDouble(j))
+                    .mapToDouble(iDist)
                     .filter(v -> !Double.isNaN(v))
                     .average().orElse(0.0);
         }
