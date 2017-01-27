@@ -8,6 +8,7 @@
 package org.ranksys.formats.preference;
 
 import es.uam.eps.ir.ranksys.fast.preference.FastPreferenceData;
+import es.uam.eps.ir.ranksys.fast.preference.IdxPref;
 import es.uam.eps.ir.ranksys.fast.preference.TransposedPreferenceData;
 import org.jooq.lambda.Unchecked;
 import org.ranksys.core.util.tuples.Tuple2io;
@@ -61,7 +62,7 @@ public class CompressibleRatingPreferencesFormat {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
                 prefs.getUidxWithPreferences().forEach(Unchecked.intConsumer(uidx -> {
                     String a = prefs.getUidxPreferences(uidx)
-                            .sorted(Comparator.comparingInt(p -> p.v1))
+                            .sorted(Comparator.comparingInt(IdxPref::v1))
                             .map(p -> p.v1 + "\t" + (int) p.v2)
                             .collect(joining("\t"));
 
