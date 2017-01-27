@@ -20,7 +20,6 @@ import org.ranksys.core.util.tuples.Tuple2io;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -84,7 +83,7 @@ public class BinaryCODECPreferenceData<U, I, Cu, Ci> extends AbstractCODECPrefer
     private static Stream<Tuple2io<int[]>> ul(FastPreferenceData<?, ?> preferences) {
         return preferences.getUidxWithPreferences().mapToObj(k -> {
             IdxPref[] pairs = preferences.getUidxPreferences(k)
-                    .sorted(Comparator.comparingInt(p -> p.v1))
+                    .sorted((p1, p2) -> Integer.compare(p1.v1, p2.v1))
                     .toArray(IdxPref[]::new);
             int[] idxs = new int[pairs.length];
             for (int i = 0; i < pairs.length; i++) {
