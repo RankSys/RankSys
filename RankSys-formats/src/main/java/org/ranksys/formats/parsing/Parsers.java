@@ -8,10 +8,11 @@
  */
 package org.ranksys.formats.parsing;
 
-import static java.lang.Double.parseDouble;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
+
+import static java.lang.Double.parseDouble;
 import static java.util.stream.IntStream.range;
 
 /**
@@ -71,7 +72,7 @@ public class Parsers {
     /**
      * Parse to Double.
      */
-    public static Parser<Double> dp = from -> pdp.applyAsDouble(from);
+    public static Parser<Double> dp = pdp::applyAsDouble;
 
     /**
      * Parse to Void.

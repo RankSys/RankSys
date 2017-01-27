@@ -9,7 +9,6 @@ package org.ranksys.formats.preference;
 
 import static es.uam.eps.ir.ranksys.core.util.FastStringSplitter.split;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import static java.lang.Double.parseDouble;
