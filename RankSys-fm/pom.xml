@@ -16,6 +16,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     
     <artifactId>RankSys-fm</artifactId>
     <packaging>jar</packaging>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>RankSys module, providing factorisation machines for recommendation tasks using JavaFM.</description>
+    <url>http://ranksys.org</url>
     
     <repositories>
         <repository>

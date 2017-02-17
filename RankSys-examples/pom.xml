@@ -20,6 +20,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <artifactId>RankSys-examples</artifactId>
     <packaging>jar</packaging>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>RankSys module, providing examples of usage of the other modules.</description>
+    <url>http://ranksys.org</url>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -74,6 +78,11 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>RankSys-lda</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ranksys</groupId>
+            <artifactId>RankSys-fm</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -20,6 +20,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <artifactId>RankSys-core</artifactId>
     <packaging>jar</packaging>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>RankSys module, providing common and auxiliary classes of the framework.</description>
+    <url>http://ranksys.org</url>
+
     <dependencies>
         <dependency>
             <groupId>it.unimi.dsi</groupId>

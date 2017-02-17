@@ -20,6 +20,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <artifactId>RankSys-mf</artifactId>
     <packaging>jar</packaging>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>RankSys module, providing matrix factorization recommendation algorithms.</description>
+    <url>http://ranksys.org</url>
+    
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

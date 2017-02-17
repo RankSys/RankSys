@@ -15,6 +15,11 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     </parent>
     <artifactId>RankSys-formats</artifactId>
     <packaging>jar</packaging>
+    
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>RankSys module, providing utilities for reading and writing into different formats of preference data, recommendations, etc.</description>
+    <url>http://ranksys.org</url>
+    
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

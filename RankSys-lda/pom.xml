@@ -16,6 +16,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <artifactId>RankSys-lda</artifactId>
     <packaging>jar</packaging>
     
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>RankSys module, providing Latent Dirichlet Allocation for collaborative filtering recommendation algorithms.</description>
+    <url>http://ranksys.org</url>
+    
     <dependencies>
         <dependency>
             <groupId>cc.mallet</groupId>

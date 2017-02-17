@@ -14,6 +14,11 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         <artifactId>RankSys</artifactId>
         <version>0.5.0-SNAPSHOT</version>
     </parent>
+    <artifactId>RankSys-compression</artifactId>
+    
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>RankSys module, providing state-of-art compression techniques for in-memory collaborative filtering.</description>
+    <url>http://ranksys.org</url>
     
     <repositories>
         <repository>
@@ -21,8 +26,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
-    
-    <artifactId>RankSys-compression</artifactId>
+
     <packaging>jar</packaging>
     <dependencies>
         <dependency>

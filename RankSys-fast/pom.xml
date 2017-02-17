@@ -20,6 +20,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <artifactId>RankSys-fast</artifactId>
     <packaging>jar</packaging>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>RankSys module, providing support for fast and efficient implementation of data structures and algorithms.</description>
+    <url>http://ranksys.org</url>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
