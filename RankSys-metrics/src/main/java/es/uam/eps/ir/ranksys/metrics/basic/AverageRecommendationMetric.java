@@ -68,7 +68,9 @@ public class AverageRecommendationMetric<U, I> extends AbstractSystemMetric<U, I
         double v = metric.evaluate(recommendation);
 
         if (!ignoreNaN || !Double.isNaN(v)) {
-            sum += v;
+            if (!Double.isNaN(v)) {
+                sum += v;
+            }
 
             if (!allUsers) {
                 numUsers++;
