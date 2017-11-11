@@ -1,3 +1,5 @@
+# IMPORTANT NOTICE: this project is now abandoned and will receive not maintenance from its creators
+
 # RankSys: Java 8 Recommender Systems framework for novelty, diversity and much more
 
 ## [Team](https://github.com/RankSys/RankSys/wiki/Team) || [References](https://github.com/RankSys/RankSys/wiki/References) || [Javadoc](http://ranksys.org/javadoc/) || [Wiki](https://github.com/RankSys/RankSys/wiki/) || [Twitter](https://twitter.com/ranksys)
