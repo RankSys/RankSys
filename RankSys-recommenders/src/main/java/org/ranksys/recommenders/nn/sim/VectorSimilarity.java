@@ -73,14 +73,22 @@ public abstract class VectorSimilarity implements Similarity {
         Int2DoubleOpenHashMap map = new Int2DoubleOpenHashMap();
         data.getUidxPreferences(idx1).forEach(iv -> map.put(iv.v1, iv.v2));
 
-        double norm2A = norm2Map.get(idx1);
+        double norm2A;
+        if(dense)
+        {
+            norm2A = norm2Array[idx1];
+        }
+        else
+        {
+            norm2A = norm2Map.get(idx1);
+        }
 
         return idx2 -> {
             double product = data.getUidxPreferences(idx2)
                     .mapToDouble(iv -> iv.v2 * map.get(iv.v1))
                     .sum();
 
-            return sim(product, norm2A, norm2Map.get(idx2));
+            return sim(product, norm2A, dense ? norm2Array[idx2] : norm2Map.get(idx2));
         };
     }
 

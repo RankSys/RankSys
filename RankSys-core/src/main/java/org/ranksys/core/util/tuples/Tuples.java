@@ -48,4 +48,16 @@ public class Tuples {
     public static Tuple2id tuple(int v1, double v2) {
         return new Tuple2id(v1, v2);
     }
+    
+    /**
+     * Creates a tuple of object-object.
+     * 
+     * @param <T3> type of object
+     * @param v1 object value
+     * @param v2 object value
+     * @return tuple
+     */
+    public static <T3> Tuple2oo tuple(T3 v1, T3 v2) {
+        return new Tuple2oo<>(v1,v2);
+    }
 }

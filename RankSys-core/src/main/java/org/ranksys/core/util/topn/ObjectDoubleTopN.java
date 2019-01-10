@@ -10,6 +10,8 @@ package org.ranksys.core.util.topn;
 
 import org.ranksys.core.util.tuples.Tuple2od;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
+import org.ranksys.core.util.unties.IdentifierUntiePolicy;
+import org.ranksys.core.util.unties.UntiePolicy;
 
 /**
  * Bounded min-heap to keep just the top-n greatest object-double pairs according to the value of the double.
@@ -23,6 +25,7 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Tuple2od<T>> {
     private final T[] keys;
     private final double[] values;
 
+    private UntiePolicy<T> untie;
     /**
      * Constructor.
      *
@@ -33,6 +36,7 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Tuple2od<T>> {
         super(capacity);
         keys = (T[]) new Object[capacity];
         values = new double[capacity];
+        untie = new IdentifierUntiePolicy<>();
     }
 
     /**
@@ -66,7 +70,7 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Tuple2od<T>> {
         if (c != 0) {
             return c;
         } else {
-            c = ((Comparable<T>) keys[i]).compareTo(e.v1);
+            c = untie.comparator().compare(keys[i], e.v1);
             return c;
         }
     }
@@ -78,7 +82,7 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Tuple2od<T>> {
         if (c != 0) {
             return c;
         } else {
-            c = ((Comparable<T>) keys[i]).compareTo(keys[j]);
+            c = untie.comparator().compare(keys[i], keys[j]);
             return c;
         }
     }

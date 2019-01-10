@@ -19,6 +19,7 @@ import java.util.stream.Stream;
  * Bi-map-like structure to back fast version of user/item/feature indexes. It keeps to maps: id-to-index and index-to-id. Value of indexes go from 0 (included) to the number of elements (excluded).
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * @author Javier Sanz-Cruzado (javier.sanz-cruzado@uam.es)
  *
  * @param <T> type of the user/item/feature
  */
@@ -52,6 +53,31 @@ public class IdxIndex<T> implements Serializable {
         } else {
             return idx;
         }
+    }
+    
+    /**
+     * Removes an element from the structure.
+     * @param t element to be removed
+     * @return the previous index of the element.
+     */
+    public int remove(T t) {
+        int idx = t2imap.getInt(t);
+        if(idx == -1)
+        {
+            return -1;
+        }
+        else
+        {
+            for(int i = idx + 1; i < this.size(); ++i)
+            {
+                T elem = i2tmap.get(i);
+                t2imap.put(elem, i - 1);
+            }
+            t2imap.remove(t);
+            i2tmap.remove(idx);
+        }
+        
+        return idx;
     }
 
     /**

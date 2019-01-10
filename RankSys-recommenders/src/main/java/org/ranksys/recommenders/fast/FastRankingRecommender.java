@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
 import org.ranksys.core.util.tuples.Tuple2id;
+import org.ranksys.core.util.unties.UntiePolicy;
 
 /**
  * Recommender for top-n recommendations. It selects and orders the items whose
@@ -31,6 +32,12 @@ import org.ranksys.core.util.tuples.Tuple2id;
  */
 public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
+    /**
+     * Policy for solving score ties. By default, it is null, and the policy
+     * orders them by id.
+     */
+    protected UntiePolicy<Integer> untie = null;
+    
     /**
      * Constructor.
      *
@@ -50,6 +57,7 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
         Int2DoubleMap scoresMap = getScoresMap(uidx);
 
         final IntDoubleTopN topN = new IntDoubleTopN(min(maxLength, scoresMap.size()));
+        if(untie != null) topN.setUntiePolicy(this.untie);
         scoresMap.int2DoubleEntrySet().forEach(e -> {
             int iidx = e.getIntKey();
             double score = e.getDoubleValue();
@@ -73,4 +81,14 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
      * @return a map of item-score pairs
      */
     public abstract Int2DoubleMap getScoresMap(int uidx);
+    
+    /**
+     * Sets a policy for solving score ties. By default, it is null, and the policy
+     * orders them by id.
+     * @param policy the new policy, null if we want to order them by id.
+     */
+    public void setUntiePolicy(UntiePolicy policy)
+    {
+        this.untie = policy;
+    }
 }

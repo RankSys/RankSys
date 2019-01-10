@@ -64,6 +64,15 @@ public class SimpleFastFeatureIndex<F> implements FastFeatureIndex<F> {
     protected int add(F f) {
         return fMap.add(f);
     }
+    
+    /**
+     * Removes a item from the index. If the item does not exist, nothing is done
+     * @param i id of the item
+     * @return old index of the item, -1 if it was not in the index.
+     */
+    protected int remove(F i) {
+        return fMap.remove(i);
+    }
 
     /**
      * Creates a feature index from a stream of feature objects.

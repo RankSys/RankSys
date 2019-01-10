@@ -61,5 +61,5 @@ public class SimpleFastUserIndexTest {
 
         assertEquals(userIndex.getAllUsers().collect(toSet()), new HashSet<>(users));
     }
-
+    
 }

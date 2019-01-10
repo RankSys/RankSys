@@ -66,12 +66,23 @@ public class RandomRecommender<U, I> extends AbstractFastRecommender<U, I> {
         int j = s;
         for (int i = 0; i < N; i++) {
             Tuple2id iv = randomList.get(j);
-            while (!filter.test(iv.v1)) {
+            boolean breakflag = false;
+            while (!filter.test(iv.v1)) { // This could provide an infinite loop. FIX
                 j = (j + 1) % randomList.size();
                 iv = randomList.get(j);
+                if(s == j)
+                {
+                    breakflag = true;
+                    break;
+                }
             }
-            recommended.add(iv);
-            j = (j + 1) % randomList.size();
+            
+            if(!breakflag)
+            {
+                recommended.add(iv);
+                j = (j + 1) % randomList.size();
+            }
+            
             if (s == j) {
                 break;
             }

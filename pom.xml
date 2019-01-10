@@ -13,7 +13,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
     <artifactId>RankSys</artifactId>
     <groupId>org.ranksys</groupId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0-updateable-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>

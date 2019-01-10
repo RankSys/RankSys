@@ -65,6 +65,15 @@ public class SimpleFastItemIndex<I> implements FastItemIndex<I>, Serializable {
     protected int add(I i) {
         return iMap.add(i);
     }
+    
+    /**
+     * Removes a item from the index. If the item does not exist, nothing is done
+     * @param i id of the item
+     * @return old index of the item, -1 if it was not in the index.
+     */
+    protected int remove(I i) {
+        return iMap.remove(i);
+    }
 
     /**
      * Creates an item index from a stream of item objects.

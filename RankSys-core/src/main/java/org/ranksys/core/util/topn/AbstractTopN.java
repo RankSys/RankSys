@@ -238,5 +238,5 @@ public abstract class AbstractTopN<T> extends AbstractCollection<T> {
     private static int right(int i) {
         return (i + 1) * 2;
     }
-
+    
 }

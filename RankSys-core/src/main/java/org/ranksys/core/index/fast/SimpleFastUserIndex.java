@@ -61,8 +61,20 @@ public class SimpleFastUserIndex<U> implements FastUserIndex<U>, Serializable {
      * @param u id of the user
      * @return index of the user
      */
-    protected int add(U u) {
+    protected int add(U u) 
+    {
         return uMap.add(u);
+    }
+    
+    /**
+     * Removes a user from the index. If the user did not previously exist,
+     * nothing is done.
+     * @param u id of the user.
+     * @return previous index of the user.
+     */
+    protected int remove(U u)
+    {
+       return this.uMap.remove(u);
     }
 
     /**
