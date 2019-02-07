@@ -60,7 +60,8 @@ public class MFRecommender<U, I> extends AbstractFastRecommender<U, I> {
         }
 
         IntDoubleTopN topN = new IntDoubleTopN(min(maxLength, factorization.numItems()));
-
+        if(untie != null) topN.setUntiePolicy(untie);
+        
         DoubleMatrix1D r = factorization.getItemMatrix().zMult(pu, null);
         for (int iidx = 0; iidx < r.size(); iidx++) {
             if (filter.test(iidx)) {

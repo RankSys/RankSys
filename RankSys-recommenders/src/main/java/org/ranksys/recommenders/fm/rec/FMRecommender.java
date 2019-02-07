@@ -48,7 +48,7 @@ public class FMRecommender<U, I> extends AbstractFastRecommender<U, I> {
             maxLength = numItems();
         }
         IntDoubleTopN topN = new IntDoubleTopN(maxLength);
-
+        if(untie != null) topN.setUntiePolicy(untie);
         getAllIidx().filter(filter).forEach(iidx -> {
             topN.add(iidx, fm.predict(uidx, new IdxPref(iidx, NaN)));
         });

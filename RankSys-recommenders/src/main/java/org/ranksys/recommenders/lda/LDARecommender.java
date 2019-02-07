@@ -47,7 +47,7 @@ public class LDARecommender<U, I> extends AbstractFastRecommender<U, I> {
     public FastRecommendation getRecommendation(int uidx, int maxLength, IntPredicate filter) {
 
         IntDoubleTopN topN = new IntDoubleTopN(min(maxLength, numItems()));
-
+        if(untie != null) topN.setUntiePolicy(untie);
         for (int iidx = 0; iidx < numItems(); iidx++) {
             if (filter.test(iidx)) {
                 topN.add(iidx, score(topicModel, uidx, iidx));

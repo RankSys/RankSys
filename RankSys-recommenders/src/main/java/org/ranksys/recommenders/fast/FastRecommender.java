@@ -14,6 +14,7 @@ import org.ranksys.core.index.fast.FastItemIndex;
 import org.ranksys.core.index.fast.FastUserIndex;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
+import org.ranksys.core.util.unties.UntiePolicy;
 
 /**
  * Fast recommender. A version that uses the functionalities of RankSys-fast,
@@ -74,5 +75,10 @@ public interface FastRecommender<U, I> extends Recommender<U, I>, FastUserIndex<
      * @return a recommendation list
      */
     public FastRecommendation getRecommendation(int uidx, IntStream candidates);
-
+    /**
+     * Sets a policy for solving score ties. By default, it is null, and the policy
+     * orders them by id.
+     * @param policy the new policy, null if we want to order them by id.
+     */
+    public void setUntiePolicy(UntiePolicy policy);
 }

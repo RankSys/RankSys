@@ -26,8 +26,6 @@ import org.jooq.lambda.function.Function4;
 import org.jooq.lambda.tuple.Tuple3;
 import org.jooq.lambda.tuple.Tuple4;
 import org.ranksys.core.preference.IdPref;
-import org.ranksys.core.preference.fast.FastPointWisePreferenceData;
-import org.ranksys.core.preference.fast.StreamsAbstractFastPreferenceData;
 
 /**
  * Simple implementation of FastPreferenceData backed by nested lists.
@@ -151,7 +149,7 @@ public class SimpleFastPreferenceData<U, I> extends StreamsAbstractFastPreferenc
     @Override
     public Optional<IdxPref> getPreference(int uidx, int iidx) {
         List<IdxPref> uList = uidxList.get(uidx);
-
+        
         int low = 0;
         int high = uList.size() - 1;
 

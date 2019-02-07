@@ -32,11 +32,7 @@ import org.ranksys.core.util.unties.UntiePolicy;
  */
 public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommender<U, I> {
 
-    /**
-     * Policy for solving score ties. By default, it is null, and the policy
-     * orders them by id.
-     */
-    protected UntiePolicy<Integer> untie = null;
+
     
     /**
      * Constructor.
@@ -82,13 +78,5 @@ public abstract class FastRankingRecommender<U, I> extends AbstractFastRecommend
      */
     public abstract Int2DoubleMap getScoresMap(int uidx);
     
-    /**
-     * Sets a policy for solving score ties. By default, it is null, and the policy
-     * orders them by id.
-     * @param policy the new policy, null if we want to order them by id.
-     */
-    public void setUntiePolicy(UntiePolicy policy)
-    {
-        this.untie = policy;
-    }
+
 }
