@@ -27,7 +27,7 @@ import org.ranksys.core.index.fast.updateable.SimpleFastUpdateableUserIndex;
 import org.ranksys.core.preference.fast.FastPreferenceData;
 import org.ranksys.core.preference.fast.SimpleFastPreferenceData;
 import org.ranksys.core.util.tuples.Tuple2od;
-import org.ranksys.core.util.unties.RandomUntiePolicy;
+import org.ranksys.core.util.unties.fast.RandomUntiePolicy;
 import org.ranksys.core.util.unties.UntiePolicy;
 import org.ranksys.recommenders.fast.FastRankingRecommender;
 
@@ -84,24 +84,7 @@ public class UntieTest
             {
                 assertEquals(items.get(items.size()-i-1), list.get(i).v1);
             }
-        }
-        
-        UntiePolicy<Integer> policy = new RandomUntiePolicy<>(prefData);
-        fastRankingRec.setUntiePolicy(policy);
-        
-        for(String u : users)
-        {
-            Recommendation<String, String> rec = fastRankingRec.getRecommendation(u,10);
-            List<Tuple2od<String>> list = rec.getItems();
-            List<String> untielist = ((RandomUntiePolicy<String, String>) policy).fillerList(u).collect(toList());
-            for(int i = 0; i < 10; ++i)
-            {
-                assertEquals(list.get(i).v1, untielist.get(i));
-            }
-            
-        }
-        
-        
+        }       
     }
     
     private class AuxRecommender<U,I> extends FastRankingRecommender<U,I>

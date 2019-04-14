@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.ranksys.core.util.unties.UntiePolicy;
+import org.ranksys.core.util.unties.fast.FastUntiePolicy;
 
 /**
  * Abstract (fast) recommender. It implements the free and candidate-based recommendation methods as variants of the filter recommendation.
@@ -46,7 +46,7 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
      * Policy for solving score ties. By default, it is null, and the policy
      * orders them by id.
      */
-    protected UntiePolicy<Integer> untie = null;
+    protected FastUntiePolicy<I> untie = null;
 
     /**
      * Constructor.
@@ -150,7 +150,7 @@ public abstract class AbstractFastRecommender<U, I> extends AbstractRecommender<
      * @param policy the new policy, null if we want to order them by id.
      */
     @Override
-    public void setUntiePolicy(UntiePolicy policy)
+    public void setUntiePolicy(FastUntiePolicy<I> policy)
     {
         this.untie = policy;
     }

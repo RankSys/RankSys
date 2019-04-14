@@ -6,12 +6,12 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.core.preferences.fast.updateable;
+package org.ranksys.core.preference.fast.updateable;
 
 import org.ranksys.core.index.fast.updateable.FastUpdateableItemIndex;
 import org.ranksys.core.index.fast.updateable.FastUpdateableUserIndex;
 import org.ranksys.core.preference.fast.FastPreferenceData;
-import org.ranksys.core.preferences.updateable.UpdateablePreferenceData;
+import org.ranksys.core.preference.updateable.UpdateablePreferenceData;
 
 /**
  * Interface for updateable preference data.

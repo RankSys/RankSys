@@ -4,17 +4,23 @@
  * and open the template in the editor.
  */
 
-package org.ranksys.core.util.unties;
+package org.ranksys.core.util.unties.fast;
 
 import java.util.Comparator;
+import org.ranksys.core.index.fast.FastItemIndex;
 
 /**
- * Basic untie element which uses 
+ * Basic untie element which uses the identifiers of the elements
  * @author Javier Sanz-Cruzado Puig (javier.sanz-cruzado@uam.es)
  * @param <T> The type of the element.
  */
-public class IdentifierUntiePolicy<T> implements UntiePolicy<T> 
+public class IdentifierUntiePolicy<T> extends AbstractFastUntiePolicy<T> 
 {
+    public IdentifierUntiePolicy(FastItemIndex<T> index)
+    {
+        super(index);
+    }
+    
     @Override
     public Comparator<T> comparator()
     {
@@ -25,5 +31,11 @@ public class IdentifierUntiePolicy<T> implements UntiePolicy<T>
     public void update()
     {
         
+    }
+
+    @Override
+    public Comparator<Integer> fastComparator()
+    {
+        return (x,y) -> ((Comparable<T>) index.iidx2item(x)).compareTo(index.iidx2item(y));
     }
 }

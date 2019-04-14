@@ -10,7 +10,6 @@ package org.ranksys.core.util.topn;
 
 import org.ranksys.core.util.tuples.Tuple2od;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
-import org.ranksys.core.util.unties.IdentifierUntiePolicy;
 import org.ranksys.core.util.unties.UntiePolicy;
 
 /**
@@ -36,7 +35,6 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Tuple2od<T>> {
         super(capacity);
         keys = (T[]) new Object[capacity];
         values = new double[capacity];
-        untie = new IdentifierUntiePolicy<>();
     }
 
     /**
@@ -70,7 +68,10 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Tuple2od<T>> {
         if (c != 0) {
             return c;
         } else {
-            c = untie.comparator().compare(keys[i], e.v1);
+            if(untie == null)
+                c = ((Comparable<T>) keys[i]).compareTo(e.v1);
+            else
+                c = untie.comparator().compare(keys[i], e.v1);
             return c;
         }
     }
@@ -82,7 +83,10 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Tuple2od<T>> {
         if (c != 0) {
             return c;
         } else {
-            c = untie.comparator().compare(keys[i], keys[j]);
+            if(untie == null)
+                c = ((Comparable<T>) keys[i]).compareTo(keys[j]);
+            else
+                c = untie.comparator().compare(keys[i], keys[j]);
             return c;
         }
     }
@@ -96,5 +100,9 @@ public class ObjectDoubleTopN<T> extends AbstractTopN<Tuple2od<T>> {
         values[i] = values[j];
         values[j] = v;
     }
-
+    
+    public void setUntiePolicy(UntiePolicy<T> policy)
+    {
+        this.untie = policy;
+    }
 }

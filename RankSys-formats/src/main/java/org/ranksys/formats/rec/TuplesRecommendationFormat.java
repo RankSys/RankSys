@@ -147,6 +147,12 @@ public class TuplesRecommendationFormat<U, I> implements RecommendationFormat<U,
                         return new Recommendation<>(user, items);
                     });
         }
+        
+        @Override
+        public void close() throws IOException
+        {
+            this.in.close();
+        }
 
     }
 

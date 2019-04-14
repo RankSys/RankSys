@@ -160,6 +160,11 @@ public interface RecommendationFormat<U, I> {
          */
         public Stream<Recommendation<U, I>> readAll() throws IOException;
 
+        /**
+         * Closes the reader.
+         * @throws IOException when IO error. 
+         */
+        public void close() throws IOException;
         @Override
         public default Stream<Recommendation<U, I>> get() {
             try {

@@ -118,6 +118,12 @@ public class MahoutRecommendationFormat<U, I> implements RecommendationFormat<U,
                     .map(Unchecked.function(this::loadPart))
                     .reduce(Stream.empty(), Stream::concat);
         }
+        
+        @Override
+        public void close() throws IOException
+        {
+            
+        }
 
         private Stream<Recommendation<U, I>> loadPart(BufferedReader reader) throws IOException {
             return reader.lines().map(line -> {

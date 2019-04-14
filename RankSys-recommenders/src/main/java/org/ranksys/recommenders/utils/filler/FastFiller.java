@@ -1,16 +1,16 @@
 /* 
- * Copyright (C) 2016 RankSys http://ranksys.org
+ * Copyright (C) 2019 RankSys http://ranksys.org
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.core.util.filler;
+package org.ranksys.recommenders.utils.filler;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
-import org.ranksys.core.Recommendation;
+import org.ranksys.core.fast.FastRecommendation;
 
 /**
  * Fast version of the filler class.
@@ -36,7 +36,7 @@ public interface FastFiller<U,I> extends Filler<U,I>
      * @param pred a predicate for filtering the possible recommendations.
      * @return the new recommendation if everything is OK, null otherwise.
      */
-    public Recommendation<U,I> fastFill(Recommendation<U,I> rec, int cutoff, Function<U, IntPredicate> pred);
+    public FastRecommendation fastFill(FastRecommendation rec, int cutoff, Function<U, IntPredicate> pred);
 
 
 }

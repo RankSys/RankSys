@@ -26,7 +26,7 @@ import org.ranksys.core.index.fast.updateable.FastUpdateableUserIndex;
 import org.ranksys.core.index.fast.updateable.SimpleFastUpdateableItemIndex;
 import org.ranksys.core.index.fast.updateable.SimpleFastUpdateableUserIndex;
 import org.ranksys.core.preference.IdPref;
-import org.ranksys.core.preferences.fast.updateable.SimpleFastUpdateablePreferenceData;
+import org.ranksys.core.preference.fast.updateable.SimpleFastUpdateablePreferenceData;
 
 /**
  * Class for testing the simple fast updateable preference data.

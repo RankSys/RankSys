@@ -8,11 +8,9 @@
  */
 package org.ranksys.core.util.topn;
 
-import org.ranksys.core.util.topn.AbstractTopN;
 import org.ranksys.core.util.tuples.Tuple2id;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
-import org.ranksys.core.util.unties.IdentifierUntiePolicy;
-import org.ranksys.core.util.unties.UntiePolicy;
+import org.ranksys.core.util.unties.fast.FastUntiePolicy;
 
 /**
  * Bounded min-heap to keep just the top-n greatest integer-double pairs according to the value of the double.
@@ -23,7 +21,7 @@ public class IntDoubleTopN extends AbstractTopN<Tuple2id> {
 
     private final int[] keys;
     private final double[] values;
-    private UntiePolicy<Integer> untie = null;
+    private FastUntiePolicy<?> untie = null;
     /**
      * Constructor.
      *
@@ -69,7 +67,7 @@ public class IntDoubleTopN extends AbstractTopN<Tuple2id> {
             if(untie == null)
                 c = Integer.compare(keys[i], k);
             else
-                c = untie.comparator().compare(keys[i], k);
+                c = untie.fastComparator().compare(keys[i], k);
             return c;
         }
     }
@@ -83,7 +81,7 @@ public class IntDoubleTopN extends AbstractTopN<Tuple2id> {
             if(untie == null)
                 c = Integer.compare(keys[i], keys[j]);
             else
-                c = untie.comparator().compare(keys[i], keys[j]);
+                c = untie.fastComparator().compare(keys[i], keys[j]);
             return c;
         }
     }
@@ -98,7 +96,7 @@ public class IntDoubleTopN extends AbstractTopN<Tuple2id> {
         values[j] = v;
     }
     
-    public void setUntiePolicy(UntiePolicy<Integer> policy)
+    public void setUntiePolicy(FastUntiePolicy<?> policy)
     {
         this.untie = policy;
     }

@@ -7,7 +7,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.ranksys.core.preferences.fast.updateable;
+package org.ranksys.core.preference.fast.updateable;
 
 import org.ranksys.core.preference.fast.FastPointWisePreferenceData;
 

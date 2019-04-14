@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.function.IntPredicate;
 import static java.util.stream.Collectors.toList;
 import org.ranksys.core.util.tuples.Tuple2id;
-import org.ranksys.core.util.unties.UntiePolicy;
 
 /**
  * Recommender for top-n recommendations. It selects and orders the items whose

@@ -20,5 +20,8 @@ public interface UntiePolicy<T>
      */
     public Comparator<T> comparator();
     
+    /**
+     * Updates the untie policy.
+     */
     public void update();
 }
