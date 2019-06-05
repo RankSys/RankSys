@@ -65,6 +65,6 @@ public class AveragePrecision<U, I> extends AbstractRecommendationMetric<U, I> {
             }
         }
 
-        return ap / (double) min(cutoff, userRelModel.getRelevantItems().size());
+        return ap / (double) userRelModel.getRelevantItems().size();
     }
 }
