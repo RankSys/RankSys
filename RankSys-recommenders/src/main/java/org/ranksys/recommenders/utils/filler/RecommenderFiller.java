@@ -55,7 +55,7 @@ public class RecommenderFiller<U,I> extends AbstractFastFiller<U,I>
             List<I> list = new ArrayList<>();
             IntList intlist = new IntArrayList();
             
-            rec.getItems().stream().forEach(i -> 
+            rec.getItems().forEach(i ->
             {
                 list.add(i.v1);
                 intlist.add(this.prefData.item2iidx(i.v1));
@@ -83,14 +83,14 @@ public class RecommenderFiller<U,I> extends AbstractFastFiller<U,I>
             List<I> list = new ArrayList<>();
             IntList intlist = new IntArrayList();
             
-            rec.getIidxs().stream().forEach(i -> 
+            rec.getIidxs().forEach(i ->
             {
                 intlist.add(i.v1);
                 list.add(this.prefData.iidx2item(i.v1));
             });
             
             this.recs.put(user, list);
-            this.fastrecs.put(uidx, intlist);
+            this.fastrecs.put((int) uidx, intlist);
         });
     }
     
@@ -103,7 +103,7 @@ public class RecommenderFiller<U,I> extends AbstractFastFiller<U,I>
     @Override
     public IntStream fillerList(int uidx)
     {
-        return this.fastrecs.get(uidx).stream().mapToInt(x->x);
+        return this.fastrecs.get(uidx).intStream();
         
     }
 

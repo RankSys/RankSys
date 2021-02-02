@@ -51,7 +51,7 @@ public abstract class VectorFeatureItemDistanceModel<I, F> extends FeatureItemDi
         DoubleAdder norm1 = new DoubleAdder();
 
         features1.forEach(fv -> {
-            auxMap.put(fv.v1, fv.v2);
+            auxMap.put(fv.v1, (double) fv.v2);
             norm1.add(fv.v2 * fv.v2);
         });
 

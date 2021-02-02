@@ -45,6 +45,8 @@ import org.ranksys.recommenders.lda.LDAModelEstimator;
 import org.ranksys.recommenders.lda.LDARecommender;
 import org.ranksys.recommenders.mf.Factorization;
 import org.ranksys.recommenders.mf.als.HKVFactorizer;
+import org.ranksys.recommenders.mf.als.ImplicitPZTFactorizer;
+import org.ranksys.recommenders.mf.als.MixedPZTFactorizer;
 import org.ranksys.recommenders.mf.als.PZTFactorizer;
 import org.ranksys.recommenders.mf.plsa.PLSAFactorizer;
 import org.ranksys.recommenders.mf.rec.MFRecommender;
@@ -84,14 +86,10 @@ public class RecommenderExample {
         Map<String, Supplier<Recommender<Long, Long>>> recMap = new HashMap<>();
 
         // random recommendation
-        recMap.put("rnd", () -> {
-            return new RandomRecommender<>(trainData, trainData);
-        });
+        recMap.put("rnd", () -> new RandomRecommender<>(trainData, trainData));
 
         // most-popular recommendation
-        recMap.put("pop", () -> {
-            return new PopularityRecommender<>(trainData);
-        });
+        recMap.put("pop", () -> new PopularityRecommender<>(trainData));
 
         // user-based nearest neighbors
         recMap.put("ub", () -> {
@@ -141,6 +139,45 @@ public class RecommenderExample {
             return new MFRecommender<>(userIndex, itemIndex, factorization);
         });
 
+        // aux implicit matrix factorization of Pilaszy et al. 2010
+        recMap.put("ipzt", () -> {
+            int k = 50;
+            double lambda = 0.1;
+            double alpha = 1.0;
+            DoubleUnaryOperator confidence = x -> 1 + alpha * x;
+            int numIter = 20;
+
+            Factorization<Long, Long> factorization = new ImplicitPZTFactorizer<Long, Long>(lambda, confidence, numIter).factorize(k, trainData);
+
+            return new MFRecommender<>(userIndex, itemIndex, factorization);
+        });
+
+        // aux implicit matrix factorization of Pilaszy et al. 2010
+        recMap.put("mpzt1", () -> {
+            int k = 50;
+            double lambda = 0.1;
+            double alpha = 1.0;
+            DoubleUnaryOperator confidence = x -> 1 + alpha * x;
+            int numIter = 20;
+
+            Factorization<Long, Long> factorization = new MixedPZTFactorizer<Long, Long>(lambda, confidence, numIter, true).factorize(k, trainData);
+
+            return new MFRecommender<>(userIndex, itemIndex, factorization);
+        });
+
+        // aux implicit matrix factorization of Pilaszy et al. 2010
+        recMap.put("mpzt0", () -> {
+            int k = 50;
+            double lambda = 0.1;
+            double alpha = 1.0;
+            DoubleUnaryOperator confidence = x -> 1 + alpha * x;
+            int numIter = 20;
+
+            Factorization<Long, Long> factorization = new MixedPZTFactorizer<Long, Long>(lambda, confidence, numIter, false).factorize(k, trainData);
+
+            return new MFRecommender<>(userIndex, itemIndex, factorization);
+        });
+
         // probabilistic latent semantic analysis of Hofmann 2004
         recMap.put("plsa", () -> {
             int k = 50;
@@ -176,7 +213,7 @@ public class RecommenderExample {
 
             PreferenceFM<Long, Long> prefFm = new BPRLearner<>(learnRate, numIter, regW, regM, userIndex, itemIndex).learn(trainData, testData, K, sdev);
 
-            return new FMRecommender<Long, Long>(prefFm);
+            return new FMRecommender<>(prefFm);
         }));
 
         // Factorisation machine usinga RMSE-like loss with balanced sampling of negative
@@ -194,7 +231,7 @@ public class RecommenderExample {
             
             PreferenceFM<Long, Long> prefFm = new RMSELearner<>(learnRate, numIter, regB, regW, regM, negativeProp, userIndex, itemIndex).learn(trainData, testData, K, sdev);
 
-            return new FMRecommender<Long, Long>(prefFm);
+            return new FMRecommender<>(prefFm);
         }));
 
         ////////////////////////////////

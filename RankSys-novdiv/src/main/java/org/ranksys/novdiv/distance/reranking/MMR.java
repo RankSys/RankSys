@@ -84,7 +84,7 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
         protected void update(Tuple2od<I> bestItemValue) {
             I bestItem = bestItemValue.v1;
             ToDoubleFunction<I> bDist = dist.dist(bestItem);
-            avgDist.remove(bestItem);
+            avgDist.removeDouble(bestItem);
 
             n++;
             avgDist.object2DoubleEntrySet().forEach(e -> {

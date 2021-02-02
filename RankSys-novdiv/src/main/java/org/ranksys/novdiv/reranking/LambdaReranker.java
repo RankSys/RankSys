@@ -121,7 +121,7 @@ public abstract class LambdaReranker<U, I> extends GreedyReranker<U, I> {
             novMap = new Object2DoubleOpenHashMap<>();
             relStats = new Stats();
             novStats = new Stats();
-            remainingI.forEach(i -> {
+            remainingI.intStream().forEach(i -> {
                 Tuple2od<I> itemValue = list.get(i);
                 double nov = nov(itemValue);
                 novMap.put(itemValue.v1, nov);

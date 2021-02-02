@@ -140,7 +140,7 @@ public abstract class GreedyReranker<U, I> extends PermutationReranker<U, I> {
         protected int selectItem(IntSortedSet remainingI, List<Tuple2od<I>> list) {
             double[] max = new double[]{Double.NEGATIVE_INFINITY};
             int[] bestI = new int[]{remainingI.firstInt()};
-            remainingI.forEach(i -> {
+            remainingI.intStream().forEach(i -> {
                 double value = value(list.get(i));
                 if (isNaN(value)) {
                     return;

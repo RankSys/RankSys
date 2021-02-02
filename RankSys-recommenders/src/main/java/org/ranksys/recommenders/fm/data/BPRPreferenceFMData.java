@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.Random;
+import java.util.function.IntConsumer;
 import java.util.stream.Stream;
 import static org.jooq.lambda.Seq.seq;
 import org.ranksys.javafm.FMInstance;
@@ -22,6 +23,7 @@ import org.ranksys.javafm.data.FMData;
  * Samples user preferences for a BPR-like loss minimisation.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
+ * @author Javier Sanz-Cruzado (javier.sanz-cruzado@uam.es)
  */
 public class BPRPreferenceFMData implements FMData {
 
@@ -80,13 +82,13 @@ public class BPRPreferenceFMData implements FMData {
 
     @Override
     public Stream<? extends FMInstance> stream() {
-        return uidxs.stream()
+        return uidxs.intStream().boxed()
                 .flatMap(uidx -> {
                     IntSet uidxIidxs = new IntOpenHashSet();
-                    prefs.getUidxIidxs(uidx).forEachRemaining(uidxIidxs::add);
+                    prefs.getUidxIidxs(uidx).forEachRemaining((IntConsumer) uidxIidxs::add);
 
                     return seq(rnd.ints(iidxs.size(), 0, iidxs.size()).map(iidxs::getInt))
-                            .filter(jidx -> !uidxIidxs.contains(jidx))
+                            .filter(jidx -> !uidxIidxs.contains(jidx.intValue()))
                             .limit(uidxIidxs.size())
                             .zip(uidxIidxs)
                             .map(t -> getInstance(uidx, t.v2, t.v1))

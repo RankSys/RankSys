@@ -73,7 +73,7 @@ public class IdxIndex<T> implements Serializable {
                 T elem = i2tmap.get(i);
                 t2imap.put(elem, i - 1);
             }
-            t2imap.remove(t);
+            t2imap.removeInt(t);
             i2tmap.remove(idx);
         }
         

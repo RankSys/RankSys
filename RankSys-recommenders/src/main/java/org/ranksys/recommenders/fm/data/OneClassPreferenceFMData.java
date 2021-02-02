@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.stream.Stream;
 import org.ranksys.javafm.FMInstance;
 import org.ranksys.javafm.data.FMData;
@@ -25,6 +27,7 @@ import org.ranksys.javafm.data.FMData;
  * for collaborative filtering.
  *
  * @author Saúl Vargas (Saul@VargasSandoval.es)
+ * @author Javier Sanz-Cruzado (javier.sanz-cruzado@uam.es)
  */
 public class OneClassPreferenceFMData implements FMData {
 
@@ -86,16 +89,15 @@ public class OneClassPreferenceFMData implements FMData {
 
     @Override
     public Stream<? extends FMInstance> stream() {
-        return uidxs.stream()
+        return uidxs.intStream().boxed()
                 .flatMap(uidx -> {
                     IntSet uidxIidxs = new IntOpenHashSet();
-                    prefs.getUidxIidxs(uidx).forEachRemaining(uidxIidxs::add);
+                    prefs.getUidxIidxs(uidx).forEachRemaining((IntConsumer) uidxIidxs::add);
 
                     List<FMInstance> instances = new ArrayList<>();
 
                     // adding positive examples
-                    uidxIidxs
-                            .forEach(iidx -> instances.add(getInstance(uidx, iidx, 1.0)));
+                    uidxIidxs.forEach((IntConsumer) iidx -> instances.add(getInstance(uidx, iidx, 1.0)));
 
                     // adding negative examples
                     rnd.ints(iidxs.size(), 0, iidxs.size()).map(iidxs::getInt)
