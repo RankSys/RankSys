@@ -7,7 +7,7 @@
  */
 package org.ranksys.novdiv.prop.metrics;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import org.ranksys.core.Recommendation;
 import org.ranksys.novdiv.binom.BinomialModel;
 import org.ranksys.metrics.AbstractRecommendationMetric;
@@ -31,7 +31,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
 public class CPR<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
     private final BinomialModel<U, I, F> binomialModel;
-    private final FeatureData<I, F, ?> featureData;
+    private final ItemFeatureData<I, F, ?> featureData;
     private final int cutoff;
     private final RelevanceModel<U, I> relModel;
 
@@ -43,7 +43,7 @@ public class CPR<U, I, F> extends AbstractRecommendationMetric<U, I> {
      * @param cutoff metric cutoff
      * @param relModel relevance model
      */
-    public CPR(BinomialModel<U, I, F> binomialModel, FeatureData<I, F, ?> featureData, int cutoff, RelevanceModel<U, I> relModel) {
+    public CPR(BinomialModel<U, I, F> binomialModel, ItemFeatureData<I, F, ?> featureData, int cutoff, RelevanceModel<U, I> relModel) {
         this.binomialModel = binomialModel;
         this.featureData = featureData;
         this.cutoff = cutoff;

@@ -9,7 +9,7 @@
 package org.ranksys.evaluation.runner.fast;
 
 import org.ranksys.core.preference.fast.FastPreferenceData;
-import org.ranksys.core.feature.fast.FastFeatureData;
+import org.ranksys.core.feature.item.fast.FastItemFeatureData;
 import org.ranksys.core.index.fast.FastUserIndex;
 import org.ranksys.core.preference.fast.IdxPref;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -65,7 +65,7 @@ public class FastFilters {
      * @return item filters that return true when there is any feature
      * information for the item
      */
-    public static <U, I, F> Function<U, IntPredicate> withFeatures(FastFeatureData<I, F, ?> featureData) {
+    public static <U, I, F> Function<U, IntPredicate> withFeatures(FastItemFeatureData<I, F, ?> featureData) {
         IntSet itemsWithFeatures = new IntOpenHashSet();
         featureData.getIidxWithFeatures().forEach(iidx -> itemsWithFeatures.add(iidx));
         return user -> iidx -> itemsWithFeatures.contains(iidx);

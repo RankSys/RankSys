@@ -8,10 +8,9 @@
  */
 package org.ranksys.novdiv.intentaware.metrics;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import org.ranksys.core.Recommendation;
 import org.ranksys.core.model.UserModel;
-import org.ranksys.core.model.UserModel.Model;
 import org.ranksys.metrics.AbstractRecommendationMetric;
 import org.ranksys.metrics.rank.LogarithmicDiscountModel;
 import org.ranksys.metrics.rank.RankingDiscountModel;
@@ -42,7 +41,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
     private final int cutoff;
     private final double alpha;
     private final IdealRelevanceModel<U, I> relModel;
-    private final FeatureData<I, F, ?> featureData;
+    private final ItemFeatureData<I, F, ?> featureData;
     private final AlphaNDCGIdeal idcg;
     private final RankingDiscountModel disc = new LogarithmicDiscountModel();
 
@@ -54,7 +53,7 @@ public class AlphaNDCG<U, I, F> extends AbstractRecommendationMetric<U, I> {
      * @param featureData feature data
      * @param relModel relevance model
      */
-    public AlphaNDCG(int cutoff, double alpha, FeatureData<I, F, ?> featureData, BinaryRelevanceModel<U, I> relModel) {
+    public AlphaNDCG(int cutoff, double alpha, ItemFeatureData<I, F, ?> featureData, BinaryRelevanceModel<U, I> relModel) {
         super();
         this.cutoff = cutoff;
         this.alpha = alpha;

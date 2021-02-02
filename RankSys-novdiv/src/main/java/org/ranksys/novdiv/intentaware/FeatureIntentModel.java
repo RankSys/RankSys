@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.intentaware;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import org.jooq.lambda.tuple.Tuple2;
 
@@ -38,7 +38,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
     /**
      * item features data
      */
-    protected final FeatureData<I, F, ?> featureData;
+    protected final ItemFeatureData<I, F, ?> featureData;
 
     /**
      * features norms
@@ -52,7 +52,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
      * @param totalData preference data
      * @param featureData feature data
      */
-    public FeatureIntentModel(Stream<U> targetUsers, PreferenceData<U, I> totalData, FeatureData<I, F, ?> featureData) {
+    public FeatureIntentModel(Stream<U> targetUsers, PreferenceData<U, I> totalData, ItemFeatureData<I, F, ?> featureData) {
         super(targetUsers);
         this.totalData = totalData;
         this.featureData = featureData;
@@ -65,7 +65,7 @@ public class FeatureIntentModel<U, I, F> extends IntentModel<U, I, F> {
      * @param totalData preference data
      * @param featureData feature data
      */
-    public FeatureIntentModel(PreferenceData<U, I> totalData, FeatureData<I, F, ?> featureData) {
+    public FeatureIntentModel(PreferenceData<U, I> totalData, ItemFeatureData<I, F, ?> featureData) {
         super();
         this.totalData = totalData;
         this.featureData = featureData;

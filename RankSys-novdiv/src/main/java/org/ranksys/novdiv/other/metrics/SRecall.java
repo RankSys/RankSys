@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.other.metrics;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import org.ranksys.core.Recommendation;
 import org.ranksys.metrics.AbstractRecommendationMetric;
 import org.ranksys.metrics.rel.RelevanceModel;
@@ -33,7 +33,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
  */
 public class SRecall<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
-    private final FeatureData<I, F, ?> featureData;
+    private final ItemFeatureData<I, F, ?> featureData;
     private final int cutoff;
 
     /**
@@ -48,7 +48,7 @@ public class SRecall<U, I, F> extends AbstractRecommendationMetric<U, I> {
      * @param cutoff maximum length of the recommendation lists to evaluate
      * @param relModel relevance model
      */
-    public SRecall(FeatureData<I, F, ?> featureData, int cutoff, RelevanceModel<U, I> relModel) {
+    public SRecall(ItemFeatureData<I, F, ?> featureData, int cutoff, RelevanceModel<U, I> relModel) {
         this.featureData = featureData;
         this.cutoff = cutoff;
         this.relModel = relModel;

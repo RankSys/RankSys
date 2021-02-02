@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.distance;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 
 /**
  * Vector cosine item distance model.
@@ -25,7 +25,7 @@ public class CosineFeatureItemDistanceModel<I, F> extends VectorFeatureItemDista
      *
      * @param featureData feature data
      */
-    public CosineFeatureItemDistanceModel(FeatureData<I, F, Double> featureData) {
+    public CosineFeatureItemDistanceModel(ItemFeatureData<I, F, Double> featureData) {
         super(featureData);
     }
 

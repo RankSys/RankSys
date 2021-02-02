@@ -8,8 +8,8 @@
  */
 package org.ranksys.examples;
 
-import org.ranksys.core.feature.FeatureData;
-import org.ranksys.core.feature.SimpleFeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
+import org.ranksys.core.feature.item.SimpleItemFeatureData;
 import org.ranksys.novdiv.distance.metrics.EILD;
 import org.ranksys.novdiv.intentaware.FeatureIntentModel;
 import org.ranksys.novdiv.intentaware.IntentModel;
@@ -70,7 +70,7 @@ public class MetricExample {
         // EVALUATED AT CUTOFF 10
         int cutoff = 10;
         // ITEM - FEATURE file
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(featurePath, lp, sp));
+        ItemFeatureData<Long, String, Double> featureData = SimpleItemFeatureData.load(SimpleFeaturesReader.get().read(featurePath, lp, sp));
         // COSINE DISTANCE
         ItemDistanceModel<Long> dist = new CosineFeatureItemDistanceModel<>(featureData);
         // BINARY RELEVANCE

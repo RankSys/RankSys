@@ -6,7 +6,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.core.feature;
+package org.ranksys.core.feature.item;
 
 import org.ranksys.core.index.FeatureIndex;
 import org.ranksys.core.index.ItemIndex;
@@ -23,7 +23,7 @@ import org.jooq.lambda.tuple.Tuple2;
  * @param <F> type of the features
  * @param <V> type of the information about item-feature pairs
  */
-public interface FeatureData<I, F, V> extends ItemIndex<I>, FeatureIndex<F> {
+public interface ItemFeatureData<I, F, V> extends ItemIndex<I>, FeatureIndex<F> {
 
     /**
      * Returns the number of items with features.

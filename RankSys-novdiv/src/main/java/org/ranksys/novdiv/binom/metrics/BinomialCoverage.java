@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.binom.metrics;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import org.ranksys.novdiv.binom.BinomialModel;
 import org.ranksys.metrics.rel.RelevanceModel;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -35,7 +35,7 @@ public class BinomialCoverage<U, I, F> extends BinomialMetric<U, I, F> {
      * @param cutoff maximum length of the recommendation list to be evaluated
      * @param relModel relevance model
      */
-    public BinomialCoverage(BinomialModel<U, I, F> binomialModel, FeatureData<I, F, ?> featureData, int cutoff, RelevanceModel<U, I> relModel) {
+    public BinomialCoverage(BinomialModel<U, I, F> binomialModel, ItemFeatureData<I, F, ?> featureData, int cutoff, RelevanceModel<U, I> relModel) {
         super(binomialModel, featureData, cutoff, relModel);
     }
 

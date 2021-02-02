@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.distance;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple2;
@@ -24,14 +24,14 @@ import org.jooq.lambda.tuple.Tuple2;
  */
 public abstract class FeatureItemDistanceModel<I, F, V> implements ItemDistanceModel<I> {
 
-    private final FeatureData<I, F, V> featureData;
+    private final ItemFeatureData<I, F, V> featureData;
 
     /**
      * Constructor.
      *
      * @param featureData feature data
      */
-    public FeatureItemDistanceModel(FeatureData<I, F, V> featureData) {
+    public FeatureItemDistanceModel(ItemFeatureData<I, F, V> featureData) {
         this.featureData = featureData;
     }
 

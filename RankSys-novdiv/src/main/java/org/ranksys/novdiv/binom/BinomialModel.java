@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.binom;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import org.ranksys.core.model.UserModel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
@@ -33,7 +33,7 @@ import org.ranksys.core.preference.PreferenceData;
 public class BinomialModel<U, I, F> extends UserModel<U> {
 
     private final PreferenceData<U, I> recommenderData;
-    private final FeatureData<I, F, ?> featureData;
+    private final ItemFeatureData<I, F, ?> featureData;
     private final Object2DoubleMap<F> globalFeatureProbs;
     private final double alpha;
 
@@ -46,7 +46,7 @@ public class BinomialModel<U, I, F> extends UserModel<U> {
      * @param featureData feature data
      * @param alpha generality-personalization parameter
      */
-    public BinomialModel(boolean caching, Stream<U> targetUsers, PreferenceData<U, I> recommenderData, FeatureData<I, F, ?> featureData, double alpha) {
+    public BinomialModel(boolean caching, Stream<U> targetUsers, PreferenceData<U, I> recommenderData, ItemFeatureData<I, F, ?> featureData, double alpha) {
         super(caching, targetUsers);
         this.recommenderData = recommenderData;
         this.featureData = featureData;

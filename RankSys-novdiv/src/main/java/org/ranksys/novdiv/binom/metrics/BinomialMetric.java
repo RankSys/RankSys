@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.binom.metrics;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import org.ranksys.core.Recommendation;
 import org.ranksys.novdiv.binom.BinomialModel;
 import org.ranksys.metrics.AbstractRecommendationMetric;
@@ -31,7 +31,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
 public abstract class BinomialMetric<U, I, F> extends AbstractRecommendationMetric<U, I> {
 
     private final BinomialModel<U, I, F> binomialModel;
-    private final FeatureData<I, F, ?> featureData;
+    private final ItemFeatureData<I, F, ?> featureData;
     private final int cutoff;
 
     /**
@@ -47,7 +47,7 @@ public abstract class BinomialMetric<U, I, F> extends AbstractRecommendationMetr
      * @param cutoff maximum length of the recommendation list to be evaluated
      * @param relModel relevance model
      */
-    public BinomialMetric(BinomialModel<U, I, F> binomialModel, FeatureData<I, F, ?> featureData, int cutoff, RelevanceModel<U, I> relModel) {
+    public BinomialMetric(BinomialModel<U, I, F> binomialModel, ItemFeatureData<I, F, ?> featureData, int cutoff, RelevanceModel<U, I> relModel) {
         this.binomialModel = binomialModel;
         this.featureData = featureData;
         this.cutoff = cutoff;

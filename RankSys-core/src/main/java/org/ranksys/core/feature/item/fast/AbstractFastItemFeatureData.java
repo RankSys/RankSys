@@ -6,24 +6,27 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.core.feature.fast;
+package org.ranksys.core.feature.item.fast;
 
 import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple2;
 import org.ranksys.core.index.fast.FastFeatureIndex;
 import org.ranksys.core.index.fast.FastItemIndex;
+import org.ranksys.core.util.tuples.Tuple2io;
 
 /**
- * Abstract FastFeatureData, implementing the interfaces of FastItemIndex and
+ * Abstract FastItemFeatureData, implementing the interfaces of FastItemIndex and
  * FastFeatureIndex by delegating to implementations of these.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * @author Javier Sanz-Cruzado (javier.sanz-cruzado@uam.es)
  * 
  * @param <I> type of the items
  * @param <F> type of the features
  * @param <V> type of the information about item-feature pairs
  */
-public abstract class AbstractFastFeatureData<I, F, V> implements FastFeatureData<I, F, V> {
+public abstract class AbstractFastItemFeatureData<I, F, V> implements FastItemFeatureData<I, F, V>
+{
 
     private final FastItemIndex<I> ii;
     private final FastFeatureIndex<F> fi;
@@ -34,7 +37,7 @@ public abstract class AbstractFastFeatureData<I, F, V> implements FastFeatureDat
      * @param ii item index
      * @param fi feature index
      */
-    protected AbstractFastFeatureData(FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
+    protected AbstractFastItemFeatureData(FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
         this.ii = ii;
         this.fi = fi;
     }
@@ -117,6 +120,16 @@ public abstract class AbstractFastFeatureData<I, F, V> implements FastFeatureDat
     @Override
     public F fidx2feature(int fidx) {
         return fi.fidx2feature(fidx);
+    }
+
+    @Override
+    public <V> Tuple2<F, V> fidx2feature(Tuple2io<V> tuple) {
+        return fi.fidx2feature(tuple);
+    }
+
+    @Override
+    public <V> Tuple2<I, V> iidx2item(Tuple2io<V> tuple) {
+        return ii.iidx2item(tuple);
     }
 
 }
