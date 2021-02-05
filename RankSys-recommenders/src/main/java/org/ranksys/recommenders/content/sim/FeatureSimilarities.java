@@ -52,7 +52,7 @@ public class FeatureSimilarities
             @Override
             protected double sim(double product, double norm2A, double norm2B)
             {
-                return product / sqrt(norm2A*norm2B);
+                return product /sqrt(norm2A*norm2B);
             }
         };
     }

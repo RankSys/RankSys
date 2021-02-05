@@ -73,7 +73,7 @@ public class SimpleUserProfile<U, F> extends MapFastUserFeatureData<U,F,Double>
         fidxMap.forEach((fidx, fMap) ->
             fMap.forEach((uidx, value) ->
             {
-                if(uidxMap.containsKey(uidx))
+                if(!uidxMap.containsKey(uidx))
                 {
                     uidxMap.put(uidx, new HashMap<>());
                 }

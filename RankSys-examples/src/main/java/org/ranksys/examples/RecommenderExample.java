@@ -40,7 +40,7 @@ import org.ranksys.formats.rec.SimpleRecommendationFormat;
 import org.ranksys.recommenders.Recommender;
 import org.ranksys.recommenders.basic.PopularityRecommender;
 import org.ranksys.recommenders.basic.RandomRecommender;
-import org.ranksys.recommenders.content.RocchioRecommender;
+import org.ranksys.recommenders.content.CentroidBasedRecommender;
 import org.ranksys.recommenders.content.SimpleUserProfile;
 import org.ranksys.recommenders.content.item.sim.ItemFeatureSimilarities;
 import org.ranksys.recommenders.content.item.sim.ItemFeatureSimilarity;
@@ -251,10 +251,10 @@ public class RecommenderExample {
         }));
 
         // Content-based algorithm.
-        recMap.put("rocchio", () -> {
+        recMap.put("centroid", () -> {
             SimpleUserProfile<Long, String> userProfile = SimpleUserProfile.load(trainData, itemFeatData);
             UserItemFeatureSimilarity<Long, Long> similarity = UserItemFeatureSimilarities.vectorCosine(userProfile, itemFeatData, false);
-            return new RocchioRecommender<>(similarity);
+            return new CentroidBasedRecommender<>(similarity);
         });
 
         // Content-based kNN

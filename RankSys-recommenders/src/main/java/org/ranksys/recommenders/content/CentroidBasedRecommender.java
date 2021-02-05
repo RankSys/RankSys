@@ -26,7 +26,7 @@ import org.ranksys.recommenders.fast.FastRankingRecommender;
  * @param <U> type of the users
  * @param <I> type of the items
  */
-public class RocchioRecommender<U,I> extends FastRankingRecommender<U, I>
+public class CentroidBasedRecommender<U,I> extends FastRankingRecommender<U, I>
 {
     /**
      * User-item feature similarity.
@@ -38,7 +38,7 @@ public class RocchioRecommender<U,I> extends FastRankingRecommender<U, I>
      *
      * @param similarity user-item feature-based similarity.
      */
-    public RocchioRecommender(UserItemFeatureSimilarity<U,I> similarity)
+    public CentroidBasedRecommender(UserItemFeatureSimilarity<U,I> similarity)
     {
         super(similarity, similarity);
         this.similarity = similarity;
