@@ -8,20 +8,17 @@
  */
 package org.ranksys.novdiv.intentaware
 
-import org.ranksys.core.feature.FeatureData
-import org.ranksys.core.feature.SimpleFeatureData
+import org.ranksys.core.feature.item.ItemFeatureData
+import org.ranksys.core.feature.item.SimpleItemFeatureData
 import org.ranksys.core.preference.PreferenceData
 import org.ranksys.core.preference.SimplePreferenceData
-import org.ranksys.core.util.FastStringSplitter
 import org.ranksys.formats.feature.SimpleFeaturesReader
 import static org.ranksys.formats.parsing.Parsers.lp
 import static org.ranksys.formats.parsing.Parsers.sp
 import org.ranksys.formats.preference.SimpleRatingPreferencesReader
-import org.jooq.lambda.tuple.Tuple
 import spock.lang.Specification
 
 import java.util.stream.Collectors
-import java.util.stream.Stream
 
 import static spock.util.matcher.HamcrestSupport.that
 import static spock.util.matcher.HamcrestMatchers.closeTo
@@ -38,7 +35,7 @@ class UserIntentModelSpec extends Specification {
 
         PreferenceData trainData = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(ratings, lp, lp));
         
-        FeatureData featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(features, lp, sp));
+        ItemFeatureData featureData = SimpleItemFeatureData.load(SimpleFeaturesReader.get().read(features, lp, sp));
         
         intentModel = new FeatureIntentModel(trainData.getUsersWithPreferences(), trainData, featureData);
     }

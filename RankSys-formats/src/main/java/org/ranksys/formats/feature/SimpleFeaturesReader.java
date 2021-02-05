@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple3;
 import org.ranksys.formats.parsing.Parser;
+import org.ranksys.formats.parsing.Parsers;
 
 /**
  * Reads a file of tab-separated item-feat-value triples, one per line.
@@ -49,8 +50,8 @@ public class SimpleFeaturesReader implements FeaturesReader {
             String[] tokens = line.split("\t", 3);
             I item = ip.parse(tokens[0]);
             F feat = fp.parse(tokens[1]);
-
-            return Tuple.tuple(item, feat, 1.0);
+            double value = Parsers.dp.parse(tokens[2]);
+            return Tuple.tuple(item, feat, value);
         });
     }
 }

@@ -8,6 +8,6 @@
  */
 
 /**
- * Fast versions of FeatureData.
+ * Classes for accessing item-feature data.
  */
-package org.ranksys.core.feature.fast;
+package org.ranksys.core.feature.item;

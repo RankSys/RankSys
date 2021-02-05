@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.distance;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 
 /**
  * Vector Jaccard item distance model.
@@ -25,7 +25,7 @@ public class JaccardFeatureItemDistanceModel<I, F> extends VectorFeatureItemDist
      *
      * @param featureData feature data
      */
-    public JaccardFeatureItemDistanceModel(FeatureData<I, F, Double> featureData) {
+    public JaccardFeatureItemDistanceModel(ItemFeatureData<I, F, Double> featureData) {
         super(featureData);
     }
 

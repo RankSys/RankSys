@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.binom.reranking;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import org.ranksys.core.Recommendation;
 import org.ranksys.novdiv.binom.BinomialModel;
 import org.ranksys.novdiv.reranking.LambdaReranker;
@@ -31,7 +31,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
  */
 public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
 
-    private final FeatureData<I, F, ?> featureData;
+    private final ItemFeatureData<I, F, ?> featureData;
     private final BinomialModel<U, I, F> binomialModel;
 
     /**
@@ -42,7 +42,7 @@ public class BinomialCoverageReranker<U, I, F> extends LambdaReranker<U, I> {
      * @param lambda trade-off between relevance and novelty
      * @param cutoff number of items to be greedily selected
      */
-    public BinomialCoverageReranker(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
+    public BinomialCoverageReranker(ItemFeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
         super(lambda, cutoff, true);
         this.featureData = featureData;
         this.binomialModel = binomialModel;

@@ -6,7 +6,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.core.feature.fast;
+package org.ranksys.core.feature.item.fast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.ranksys.core.util.tuples.Tuple2io;
 import static org.ranksys.core.util.tuples.Tuples.tuple;
 
 /**
- * Simple implementation of FastFeatureData backed by nested lists.
+ * Simple implementation of FastItemFeatureData backed by nested lists.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  *
@@ -27,7 +27,8 @@ import static org.ranksys.core.util.tuples.Tuples.tuple;
  * @param <F> type of the features
  * @param <V> type of the information about item-feature pairs
  */
-public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F, V> {
+public class SimpleFastItemFeatureData<I, F, V> extends AbstractFastItemFeatureData<I, F, V>
+{
 
     private final List<List<Tuple2io<V>>> iidxList;
     private final List<List<Tuple2io<V>>> fidxList;
@@ -40,7 +41,7 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
      * @param ii item index
      * @param fi feature index
      */
-    protected SimpleFastFeatureData(List<List<Tuple2io<V>>> iidxList, List<List<Tuple2io<V>>> fidxList, FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
+    protected SimpleFastItemFeatureData(List<List<Tuple2io<V>>> iidxList, List<List<Tuple2io<V>>> fidxList, FastItemIndex<I> ii, FastFeatureIndex<F> fi) {
         super(ii, fi);
         this.iidxList = iidxList;
         this.fidxList = fidxList;
@@ -113,7 +114,7 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
      * @param fIndex feat index
      * @return a SimpleFastFeatureData containing the information from the input triples
      */
-    public static <I, F, V> SimpleFastFeatureData<I, F, V> load(Stream<Tuple3<I, F, V>> tuples, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) {
+    public static <I, F, V> SimpleFastItemFeatureData<I, F, V> load(Stream<Tuple3<I, F, V>> tuples, FastItemIndex<I> iIndex, FastFeatureIndex<F> fIndex) {
 
         List<List<Tuple2io<V>>> iidxList = new ArrayList<>();
         for (int iidx = 0; iidx < iIndex.numItems(); iidx++) {
@@ -148,7 +149,7 @@ public class SimpleFastFeatureData<I, F, V> extends AbstractFastFeatureData<I, F
             fList.add(tuple(iidx, t.v3));
         });
 
-        return new SimpleFastFeatureData<>(iidxList, fidxList, iIndex, fIndex);
+        return new SimpleFastItemFeatureData<>(iidxList, fidxList, iIndex, fIndex);
     }
 
 }

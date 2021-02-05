@@ -7,9 +7,8 @@
  */
 package org.ranksys.novdiv.binom;
 
-import org.ranksys.novdiv.binom.BinomialModel;
-import org.ranksys.core.feature.FeatureData;
-import org.ranksys.core.feature.SimpleFeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
+import org.ranksys.core.feature.item.SimpleItemFeatureData;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import java.util.stream.Stream;
@@ -27,7 +26,7 @@ import org.ranksys.core.preference.SimplePreferenceData;
  */
 public class BinomialModelTest {
 
-    private FeatureData<Integer, Integer, Double> featureData;
+    private ItemFeatureData<Integer, Integer, Double> featureData;
     private PreferenceData<Integer, Integer> preferences;
 
     /**
@@ -35,7 +34,7 @@ public class BinomialModelTest {
      */
     @Before
     public void loadData() {
-        featureData = SimpleFeatureData.load(Stream.of(
+        featureData = SimpleItemFeatureData.load(Stream.of(
                 tuple(1, 1, 1.0),
                 tuple(2, 1, 1.0),
                 tuple(3, 2, 1.0)

@@ -8,7 +8,7 @@
  */
 package org.ranksys.novdiv.distance;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.concurrent.atomic.DoubleAdder;
@@ -32,7 +32,7 @@ public abstract class VectorFeatureItemDistanceModel<I, F> extends FeatureItemDi
      *
      * @param featureData feature data
      */
-    public VectorFeatureItemDistanceModel(FeatureData<I, F, Double> featureData) {
+    public VectorFeatureItemDistanceModel(ItemFeatureData<I, F, Double> featureData) {
         super(featureData);
     }
 

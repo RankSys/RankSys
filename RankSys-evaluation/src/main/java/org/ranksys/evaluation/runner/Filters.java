@@ -8,7 +8,7 @@
  */
 package org.ranksys.evaluation.runner;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -61,7 +61,7 @@ public class Filters {
      * @param featureData feature data
      * @return item filters that return true when there is any feature information for the item
      */
-    public static <U, I, F> Function<U, Predicate<I>> withFeatures(FeatureData<I, F, ?> featureData) {
+    public static <U, I, F> Function<U, Predicate<I>> withFeatures(ItemFeatureData<I, F, ?> featureData) {
         Set<I> itemsWithFeatures = featureData.getItemsWithFeatures().collect(Collectors.toSet());
         return user -> item -> itemsWithFeatures.contains(item);
     }

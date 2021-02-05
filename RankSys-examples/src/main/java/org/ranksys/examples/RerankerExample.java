@@ -13,8 +13,8 @@ import org.ranksys.novdiv.intentaware.FeatureIntentModel;
 import org.ranksys.novdiv.intentaware.AspectModel;
 import org.ranksys.novdiv.intentaware.IntentModel;
 import org.ranksys.novdiv.intentaware.ScoresRelevanceAspectModel;
-import org.ranksys.core.feature.FeatureData;
-import org.ranksys.core.feature.SimpleFeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
+import org.ranksys.core.feature.item.SimpleItemFeatureData;
 import org.ranksys.novdiv.distance.reranking.MMR;
 import org.ranksys.novdiv.intentaware.reranking.AlphaXQuAD;
 import org.ranksys.novdiv.intentaware.reranking.XQuAD;
@@ -50,7 +50,7 @@ public class RerankerExample {
         double lambda = 0.5;
         int cutoff = 100;
         PreferenceData<Long, Long> trainData = SimplePreferenceData.load(SimpleRatingPreferencesReader.get().read(trainDataPath, lp, lp));
-        FeatureData<Long, String, Double> featureData = SimpleFeatureData.load(SimpleFeaturesReader.get().read(featurePath, lp, sp));
+        ItemFeatureData<Long, String, Double> featureData = SimpleItemFeatureData.load(SimpleFeaturesReader.get().read(featurePath, lp, sp));
 
         Map<String, Supplier<Reranker<Long, Long>>> rerankersMap = new HashMap<>();
 

@@ -6,7 +6,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.core.feature;
+package org.ranksys.core.feature.item;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,8 @@ import org.jooq.lambda.tuple.Tuple3;
  * @param <F> type of the features
  * @param <V> type of the information about item-feature pairs
  */
-public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
+public class SimpleItemFeatureData<I, F, V> implements ItemFeatureData<I, F, V>
+{
 
     private final Map<I, List<Tuple2<F, V>>> itemMap;
     private final Map<F, List<Tuple2<I, V>>> featMap;
@@ -38,7 +39,7 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
      * @param itemMap item to features map
      * @param featMap feature to items map
      */
-    protected SimpleFeatureData(Map<I, List<Tuple2<F, V>>> itemMap, Map<F, List<Tuple2<I, V>>> featMap) {
+    protected SimpleItemFeatureData(Map<I, List<Tuple2<F, V>>> itemMap, Map<F, List<Tuple2<I, V>>> featMap) {
         this.itemMap = itemMap;
         this.featMap = featMap;
     }
@@ -122,7 +123,7 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
      * @param tuples stream of item-feat-value triples
      * @return a feature data object
      */
-    public static <I, F, V> SimpleFeatureData<I, F, V> load(Stream<Tuple3<I, F, V>> tuples) {
+    public static <I, F, V> SimpleItemFeatureData<I, F, V> load(Stream<Tuple3<I, F, V>> tuples) {
         Map<I, List<Tuple2<F, V>>> itemMap = new HashMap<>();
         Map<F, List<Tuple2<I, V>>> featMap = new HashMap<>();
 
@@ -131,6 +132,6 @@ public class SimpleFeatureData<I, F, V> implements FeatureData<I, F, V> {
             featMap.computeIfAbsent(t.v2, v2 -> new ArrayList<>()).add(tuple(t.v1, t.v3));
         });
 
-        return new SimpleFeatureData<>(itemMap, featMap);
+        return new SimpleItemFeatureData<>(itemMap, featMap);
     }
 }

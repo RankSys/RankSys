@@ -6,9 +6,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.ranksys.core.feature.fast;
+package org.ranksys.core.feature.item.fast;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.ranksys.core.index.fast.FastFeatureIndex;
@@ -25,7 +25,7 @@ import org.ranksys.core.util.tuples.Tuple2io;
  * @param <F> type of the features
  * @param <V> type of the information about item-feature pairs
  */
-public interface FastFeatureData<I, F, V> extends FeatureData<I, F, V>, FastItemIndex<I>, FastFeatureIndex<F> {
+public interface FastItemFeatureData<I, F, V> extends ItemFeatureData<I, F, V>, FastItemIndex<I>, FastFeatureIndex<F> {
 
     /**
      * Returns the features associated with an item.

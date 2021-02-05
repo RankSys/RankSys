@@ -7,7 +7,7 @@
  */
 package org.ranksys.novdiv.prop.reranking;
 
-import org.ranksys.core.feature.FeatureData;
+import org.ranksys.core.feature.item.ItemFeatureData;
 import org.ranksys.core.Recommendation;
 import org.ranksys.novdiv.binom.BinomialModel;
 import org.ranksys.novdiv.reranking.GreedyReranker;
@@ -30,7 +30,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
 public class PM<U, I, F> extends GreedyReranker<U, I> {
 
     private final double lambda;
-    private final FeatureData<I, F, ?> featureData;
+    private final ItemFeatureData<I, F, ?> featureData;
     private final BinomialModel<U, I, F> binomialModel;
 
     /**
@@ -41,7 +41,7 @@ public class PM<U, I, F> extends GreedyReranker<U, I> {
      * @param lambda relevance-diversity tradeoff
      * @param cutoff metric cutoff
      */
-    public PM(FeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
+    public PM(ItemFeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
         super(cutoff);
         this.lambda = lambda;
         this.featureData = featureData;

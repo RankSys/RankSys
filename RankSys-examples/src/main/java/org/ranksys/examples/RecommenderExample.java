@@ -19,24 +19,33 @@ import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.jooq.lambda.Unchecked;
-import org.ranksys.core.index.fast.FastItemIndex;
-import org.ranksys.core.index.fast.FastUserIndex;
-import org.ranksys.core.index.fast.SimpleFastItemIndex;
-import org.ranksys.core.index.fast.SimpleFastUserIndex;
+import org.ranksys.core.feature.item.fast.FastItemFeatureData;
+import org.ranksys.core.feature.item.fast.SimpleFastItemFeatureData;
+import org.ranksys.core.index.fast.*;
 import org.ranksys.core.preference.fast.FastPreferenceData;
 import org.ranksys.core.preference.fast.SimpleFastPreferenceData;
 import org.ranksys.evaluation.runner.RecommenderRunner;
 import org.ranksys.evaluation.runner.fast.FastFilterRecommenderRunner;
 import org.ranksys.evaluation.runner.fast.FastFilters;
+import org.ranksys.formats.feature.SimpleFeaturesReader;
+import org.ranksys.formats.index.FeatsReader;
 import org.ranksys.formats.index.ItemsReader;
 import org.ranksys.formats.index.UsersReader;
 import static org.ranksys.formats.parsing.Parsers.lp;
+import static org.ranksys.formats.parsing.Parsers.sp;
+
 import org.ranksys.formats.preference.SimpleRatingPreferencesReader;
 import org.ranksys.formats.rec.RecommendationFormat;
 import org.ranksys.formats.rec.SimpleRecommendationFormat;
 import org.ranksys.recommenders.Recommender;
 import org.ranksys.recommenders.basic.PopularityRecommender;
 import org.ranksys.recommenders.basic.RandomRecommender;
+import org.ranksys.recommenders.content.CentroidBasedRecommender;
+import org.ranksys.recommenders.content.SimpleUserProfile;
+import org.ranksys.recommenders.content.item.sim.ItemFeatureSimilarities;
+import org.ranksys.recommenders.content.item.sim.ItemFeatureSimilarity;
+import org.ranksys.recommenders.content.useritem.sim.UserItemFeatureSimilarities;
+import org.ranksys.recommenders.content.useritem.sim.UserItemFeatureSimilarity;
 import org.ranksys.recommenders.fm.PreferenceFM;
 import org.ranksys.recommenders.fm.learner.BPRLearner;
 import org.ranksys.recommenders.fm.learner.RMSELearner;
@@ -66,6 +75,7 @@ import org.ranksys.recommenders.nn.user.sim.UserSimilarity;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * @author Javier Sanz-Cruzado (javier.sanz-cruzado@uam.es)
  */
 public class RecommenderExample {
 
@@ -75,10 +85,16 @@ public class RecommenderExample {
         String trainDataPath = args[2];
         String testDataPath = args[3];
 
+        String featuresPath = args[4];
+        String featDataPath = args[5];
+
         FastUserIndex<Long> userIndex = SimpleFastUserIndex.load(UsersReader.read(userPath, lp));
         FastItemIndex<Long> itemIndex = SimpleFastItemIndex.load(ItemsReader.read(itemPath, lp));
         FastPreferenceData<Long, Long> trainData = SimpleFastPreferenceData.load(SimpleRatingPreferencesReader.get().read(trainDataPath, lp, lp), userIndex, itemIndex);
         FastPreferenceData<Long, Long> testData = SimpleFastPreferenceData.load(SimpleRatingPreferencesReader.get().read(testDataPath, lp, lp), userIndex, itemIndex);
+
+        FastFeatureIndex<String> featIndex = SimpleFastFeatureIndex.load(FeatsReader.read(featuresPath, sp));
+        FastItemFeatureData<Long, String, Double> itemFeatData = SimpleFastItemFeatureData.load(SimpleFeaturesReader.get().read(featDataPath,lp, sp), itemIndex, featIndex);
 
         //////////////////
         // RECOMMENDERS //
@@ -216,7 +232,7 @@ public class RecommenderExample {
             return new FMRecommender<>(prefFm);
         }));
 
-        // Factorisation machine usinga RMSE-like loss with balanced sampling of negative
+        // Factorisation machine using a RMSE-like loss with balanced sampling of negative
         // instances
         recMap.put("fm-rmse", Unchecked.supplier(() -> {
 
@@ -233,6 +249,24 @@ public class RecommenderExample {
 
             return new FMRecommender<>(prefFm);
         }));
+
+        // Content-based algorithm.
+        recMap.put("centroid", () -> {
+            SimpleUserProfile<Long, String> userProfile = SimpleUserProfile.load(trainData, itemFeatData);
+            UserItemFeatureSimilarity<Long, Long> similarity = UserItemFeatureSimilarities.vectorCosine(userProfile, itemFeatData, false);
+            return new CentroidBasedRecommender<>(similarity);
+        });
+
+        // Content-based kNN
+        recMap.put("content-ib", () -> {
+            double alpha = 0.5;
+            int k = 10;
+            int q = 1;
+            ItemFeatureSimilarity<Long> similarity = ItemFeatureSimilarities.setCosine(itemFeatData, false, alpha);
+            ItemNeighborhood<Long> neigh = ItemNeighborhoods.topK(similarity, k);
+
+            return new ItemNeighborhoodRecommender<>(trainData, neigh, q);
+        });
 
         ////////////////////////////////
         // GENERATING RECOMMENDATIONS //
