@@ -20,6 +20,7 @@ import org.ranksys.novdiv.intentaware.reranking.AlphaXQuAD;
 import org.ranksys.novdiv.intentaware.reranking.XQuAD;
 import org.ranksys.novdiv.distance.ItemDistanceModel;
 import org.ranksys.novdiv.distance.JaccardFeatureItemDistanceModel;
+import org.ranksys.novdiv.normalizer.Normalizers;
 import org.ranksys.novdiv.reranking.Reranker;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,7 @@ import org.ranksys.formats.rec.SimpleRecommendationFormat;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * @author Javier Sanz-Cruzado (javier.sanz-cruzado@uam.es)
  */
 public class RerankerExample {
 
@@ -62,14 +64,14 @@ public class RerankerExample {
         rerankersMap.put("xQuAD", () -> {
             IntentModel<Long, Long, String> intentModel = new FeatureIntentModel<>(trainData, featureData);
             AspectModel<Long, Long, String> aspectModel = new ScoresAspectModel<>(intentModel);
-            return new XQuAD<>(aspectModel, lambda, cutoff, true);
+            return new XQuAD<>(aspectModel, lambda, cutoff, Normalizers.zscore());
         });
 
         rerankersMap.put("RxQuAD", () -> {
             double alpha = 0.5;
             IntentModel<Long, Long, String> intentModel = new FeatureIntentModel<>(trainData, featureData);
             AspectModel<Long, Long, String> aspectModel = new ScoresRelevanceAspectModel<>(intentModel);
-            return new AlphaXQuAD<>(aspectModel, alpha, lambda, cutoff, true);
+            return new AlphaXQuAD<>(aspectModel, alpha, lambda, cutoff, Normalizers.zscore());
         });
 
         RecommendationFormat<Long, Long> format = new SimpleRecommendationFormat<>(lp, lp);

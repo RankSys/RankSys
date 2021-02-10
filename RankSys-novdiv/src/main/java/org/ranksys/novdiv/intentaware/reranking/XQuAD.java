@@ -9,6 +9,9 @@
 package org.ranksys.novdiv.intentaware.reranking;
 
 import org.ranksys.novdiv.intentaware.AspectModel;
+import org.ranksys.novdiv.normalizer.Normalizer;
+
+import java.util.function.Supplier;
 
 /**
  * eXplicit Query Aspect Diversification re-ranker.
@@ -21,6 +24,7 @@ import org.ranksys.novdiv.intentaware.AspectModel;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * @author Javier Sanz-Cruzado (javier.sanz-cruzado@uam.es)
  * 
  * @param <U> type of the users
  * @param <I> type of the items
@@ -37,7 +41,7 @@ public class XQuAD<U, I, F> extends AlphaXQuAD<U, I, F> {
      * @param norm normalize the linear combination between relevance and 
      * novelty
      */
-    public XQuAD(AspectModel<U, I, F> aspectModel, double lambda, int cutoff, boolean norm) {
+    public XQuAD(AspectModel<U, I, F> aspectModel, double lambda, int cutoff, Supplier<Normalizer<I>> norm) {
         super(aspectModel, 1.0, lambda, cutoff, norm);
     }
 

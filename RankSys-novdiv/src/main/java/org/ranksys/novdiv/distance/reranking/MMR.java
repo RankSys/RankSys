@@ -10,8 +10,12 @@ package org.ranksys.novdiv.distance.reranking;
 
 import org.ranksys.core.Recommendation;
 import org.ranksys.novdiv.distance.ItemDistanceModel;
+import org.ranksys.novdiv.normalizer.Normalizer;
+import org.ranksys.novdiv.normalizer.Normalizers;
 import org.ranksys.novdiv.reranking.LambdaReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+
+import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
 import org.ranksys.core.util.tuples.Tuple2od;
 
@@ -24,6 +28,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * @author Javier Sanz-Cruzado (javier.sanz-cruzado@uam.es)
  *
  * @param <U> type of the users
  * @param <I> type of the items
@@ -40,7 +45,21 @@ public class MMR<U, I> extends LambdaReranker<U, I> {
      * @param dist item distance model
      */
     public MMR(double lambda, int cutoff, ItemDistanceModel<I> dist) {
-        super(lambda, cutoff, true);
+        super(lambda, cutoff, Normalizers.zscore());
+
+        this.dist = dist;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param lambda trade-off parameter of the linear combination
+     * @param cutoff how many items are re-ranked by the greedy selection.
+     * @param dist item distance model
+     * @param norm supplier for normalizing functions.
+     */
+    public MMR(double lambda, int cutoff, ItemDistanceModel<I> dist, Supplier<Normalizer<I>> norm) {
+        super(lambda, cutoff, norm);
 
         this.dist = dist;
     }

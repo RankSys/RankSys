@@ -13,7 +13,10 @@ import org.ranksys.core.Recommendation;
 import org.ranksys.core.util.tuples.Tuple2od;
 import org.ranksys.novdiv.intentaware.AspectModel;
 import org.ranksys.novdiv.intentaware.AspectModel.ItemAspectModel;
+import org.ranksys.novdiv.normalizer.Normalizer;
 import org.ranksys.novdiv.reranking.LambdaReranker;
+
+import java.util.function.Supplier;
 
 /**
  * eXplicit Query Aspect Diversification re-ranker with parametrised tolerance
@@ -24,6 +27,7 @@ import org.ranksys.novdiv.reranking.LambdaReranker;
  * 
  * @author Saúl Vargas (saul.vargas@uam.es)
  * @author Pablo Castells (pablo.castells@uam.es)
+ * @author Javier Sanz-Cruzado (javier.sanz-cruzado@uam.es)
  * 
  * @param <U> type of the users
  * @param <I> type of the items
@@ -44,10 +48,9 @@ public class AlphaXQuAD<U, I, F> extends LambdaReranker<U, I> {
      * @param alpha tolerance to redundancy parameter
      * @param lambda trade-off between novelty and relevance
      * @param cutoff number of items to be greedily selected
-     * @param norm normalize the linear combination between relevance and 
-     * novelty
+     * @param norm normalization
      */
-    public AlphaXQuAD(AspectModel<U, I, F> aspectModel, double alpha, double lambda, int cutoff, boolean norm) {
+    public AlphaXQuAD(AspectModel<U, I, F> aspectModel, double alpha, double lambda, int cutoff, Supplier<Normalizer<I>> norm) {
         super(lambda, cutoff, norm);
         this.aspectModel = aspectModel;
         this.alpha = alpha;

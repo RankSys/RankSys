@@ -11,12 +11,15 @@ package org.ranksys.novdiv.binom.reranking;
 import org.ranksys.core.feature.item.ItemFeatureData;
 import org.ranksys.core.Recommendation;
 import org.ranksys.novdiv.binom.BinomialModel;
+import org.ranksys.novdiv.normalizer.Normalizer;
+import org.ranksys.novdiv.normalizer.Normalizers;
 import org.ranksys.novdiv.reranking.LambdaReranker;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.jooq.lambda.tuple.Tuple2;
 import org.ranksys.core.util.tuples.Tuple2od;
@@ -28,6 +31,7 @@ import org.ranksys.core.util.tuples.Tuple2od;
  * and size-awareness in genre diversity for Recommender Systems. RecSys 2014.
  *
  * @author Saúl Vargas (saul.vargas@uam.es)
+ * @author Javier Sanz-Cruzado (javier.sanz-cruzado@uam.es)
  * 
  * @param <U> type of the users
  * @param <I> type of the items
@@ -47,7 +51,22 @@ public class BinomialNonRedundancyReranker<U, I, F> extends LambdaReranker<U, I>
      * @param cutoff number of items to be greedily selected
      */
     public BinomialNonRedundancyReranker(ItemFeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff) {
-        super(lambda, cutoff, true);
+        super(lambda, cutoff, Normalizers.zscore());
+        this.featureData = featureData;
+        this.binomialModel = binomialModel;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param featureData feature data
+     * @param binomialModel binomial model
+     * @param lambda trade-off between relevance and novelty
+     * @param cutoff number of items to be greedily selected
+     * @param norm supplier for normalizing functions
+     */
+    public BinomialNonRedundancyReranker(ItemFeatureData<I, F, ?> featureData, BinomialModel<U, I, F> binomialModel, double lambda, int cutoff, Supplier<Normalizer<I>> norm) {
+        super(lambda, cutoff, norm);
         this.featureData = featureData;
         this.binomialModel = binomialModel;
     }
